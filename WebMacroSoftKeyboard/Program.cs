@@ -1,14 +1,11 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebMacroSoftKeyboard.Data;
 using System.IO;
+using System.Threading;
 
 namespace WebMacroSoftKeyboard
 {
@@ -17,6 +14,7 @@ namespace WebMacroSoftKeyboard
         public static void Main(string[] args)
         {
             var dataDir = Constants.DataDirectory;
+            Console.WriteLine($"Using Data Directory: {dataDir}");
             if (!Directory.Exists(dataDir))
             {
                 Directory.CreateDirectory(dataDir);
@@ -29,6 +27,22 @@ namespace WebMacroSoftKeyboard
             CreateDbIfNotExists(host);
 
             host.Run();
+
+            var thread = new Thread(
+            delegate () //Use a delegate here instead of a new ThreadStart
+            {
+                Thread.Sleep(1000);
+                //example.StaRequired(); //Whatever you want to call with STA
+            })
+            {
+                IsBackground = false,
+                Priority = ThreadPriority.Normal
+            };
+
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start(); //Start the thread
+            thread.Join(); //Block the calling thread
+
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -40,19 +54,18 @@ namespace WebMacroSoftKeyboard
 
         private static void CreateDbIfNotExists(IHost host)
         {
-            using (var scope = host.Services.CreateScope())
+            using var scope = host.Services.CreateScope();
+
+            var services = scope.ServiceProvider;
+            try
             {
-                var services = scope.ServiceProvider;
-                try
-                {
-                    var context = services.GetRequiredService<ClientContext>();
-                    ClientInitializer.Initialize(context);
-                }
-                catch (Exception ex)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred creating the DB.");
-                }
+                var context = services.GetRequiredService<ClientContext>();
+                ClientInitializer.Initialize(context);
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred creating the DB.");
             }
         }
     }
