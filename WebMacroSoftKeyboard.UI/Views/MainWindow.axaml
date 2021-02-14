@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:WebMacroSoftKeyboard.UI.ViewModels"
+        xmlns:data="clr-namespace:WebMacroSoftKeyboard.Data;assembly=WebMacroSoftKeyboard.Data"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -8,10 +9,32 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="WebMacroSoftKeyboard.UI">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
+  <Design.DataContext>
+    <vm:MainWindowViewModel/>
+  </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+  <Window.DataTemplates>
+    <DataTemplate DataType="{x:Type data:Client}">
+      <StackPanel Margin="8">
+        <TextBlock Text="{Binding ClientIp}"></TextBlock>
+        <TextBlock Text="{Binding Code}"></TextBlock>
+      </StackPanel>
+    </DataTemplate>
+  </Window.DataTemplates>
+
+  <DockPanel LastChildFill="True">
+
+    <ContentControl DockPanel.Dock="Top" Content="{Binding LastClientRequest}"></ContentControl>
+
+    <Separator Height="2" HorizontalAlignment="Stretch" Margin="8" DockPanel.Dock="Top"></Separator>
+
+    <TextBox  DockPanel.Dock="Top" Text="Test"></TextBox>
+
+    <Button  DockPanel.Dock="Top" Content="Blubb"></Button>
+
+    <CheckBox  DockPanel.Dock="Top" IsChecked="True" Content="Check"></CheckBox>
+    
+    <ListBox  DockPanel.Dock="Bottom" Items="{Binding Clients}" />
+  </DockPanel>
 
 </Window>

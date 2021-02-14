@@ -1,9 +1,9 @@
+using EntityFrameworkCore.Triggers;
 using Microsoft.EntityFrameworkCore;
-using WebMacroSoftKeyboard.Models;
 
 namespace WebMacroSoftKeyboard.Data
 {
-    public class ClientContext : DbContext
+    public class ClientContext : DbContextWithTriggers
     {
         public ClientContext(DbContextOptions<ClientContext> options) : base(options)
         {

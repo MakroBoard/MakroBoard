@@ -5,12 +5,12 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using WebMacroSoftKeyboard.Data;
 using System.IO;
-using System.Threading;
 using WebMacroSoftKeyboard.UI;
 using Avalonia;
 using WebMacroSoftKeyboard.UI.Views;
 using Avalonia.Controls;
 using System.Threading.Tasks;
+using WebMacroSoftKeyboard.UI.ViewModels;
 
 namespace WebMacroSoftKeyboard
 {
@@ -25,24 +25,29 @@ namespace WebMacroSoftKeyboard
                 Directory.CreateDirectory(dataDir);
             }
 
+
             //CreateHostBuilder(args).Build().Run();
             var host = CreateHostBuilder(args).Build();
             //new Host();
+            using var scope = host.Services.CreateScope();
 
-            CreateDbIfNotExists(host);
+            var services = scope.ServiceProvider;
+
+            CreateDbIfNotExists(services);
 
 
             Task.Run(() =>
             {
-                var app = new App();
-                AppBuilder.Configure(() => new App())
+                var app = new App(services);
+                AppBuilder.Configure(() => app)
                     //_ = AppBuilder.Configure(app)
                     .UsePlatformDetect()
                     .SetupWithoutStarting();
 
                 //var dialog = new MainWindow();
                 //dialog.Show();
-                app.RunWithMainWindow<MainWindow>();
+                app.Run(new MainWindow { DataContext = new MainWindowViewModel(services) });
+                //app.RunWithMainWindow<MainWindow>();
             });
 
             host.Run();
@@ -64,6 +69,8 @@ namespace WebMacroSoftKeyboard
 
         }
 
+
+
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
@@ -71,11 +78,8 @@ namespace WebMacroSoftKeyboard
                     webBuilder.UseStartup<Startup>();
                 });
 
-        private static void CreateDbIfNotExists(IHost host)
+        private static void CreateDbIfNotExists(IServiceProvider services)
         {
-            using var scope = host.Services.CreateScope();
-
-            var services = scope.ServiceProvider;
             try
             {
                 var context = services.GetRequiredService<ClientContext>();

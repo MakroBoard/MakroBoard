@@ -15,11 +15,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.2" />
   </ItemGroup>
 
   <ItemGroup>
+
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRoot)**" />
     <None Remove="$(SpaRoot)**" />
@@ -27,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WebMacroSoftKeyboard.Data\WebMacroSoftKeyboard.Data.csproj" />
     <ProjectReference Include="..\WebMacroSoftKeyboard.UI\WebMacroSoftKeyboard.UI.csproj" />
   </ItemGroup>
 

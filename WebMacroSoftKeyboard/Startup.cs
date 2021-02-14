@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.IO;
 using WebMacroSoftKeyboard.Data;
-using WebMacroSoftKeyboard.UI.Interface;
 
 namespace WebMacroSoftKeyboard
 {
@@ -42,8 +41,6 @@ namespace WebMacroSoftKeyboard
             {
                 configuration.RootPath = "ClientApp/dist";
             });
-
-            services.AddSingleton(DataInterface.Instance);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

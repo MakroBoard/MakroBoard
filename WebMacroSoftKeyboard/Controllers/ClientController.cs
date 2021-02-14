@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebMacroSoftKeyboard.Data;
-using WebMacroSoftKeyboard.Models;
 
 namespace WebMacroSoftKeyboard.Controllers
 {
