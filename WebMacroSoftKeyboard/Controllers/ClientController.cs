@@ -8,6 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using WebMacroSoftKeyboard.Data;
 
+// QR Code auf Localhost
+// auf Handy -> Code anzeigen
+// auf Rechner -> Code anzeigen und bestätigen
+
 namespace WebMacroSoftKeyboard.Controllers
 {
     [ApiController]

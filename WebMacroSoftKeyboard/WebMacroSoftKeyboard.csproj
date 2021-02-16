@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebMacroSoftKeyboard.Data\WebMacroSoftKeyboard.Data.csproj" />
-    <ProjectReference Include="..\WebMacroSoftKeyboard.UI\WebMacroSoftKeyboard.UI.csproj" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
