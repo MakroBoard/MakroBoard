@@ -16,7 +16,6 @@ export class CheckServerTokenGuard implements CanActivate {
     var t = localStorage.getItem("serverToken");
     if (!t) {
       return this.router.parseUrl('/login');
-
     }
 
     return true;
