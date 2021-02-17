@@ -25,12 +25,34 @@ namespace WebMacroSoftKeyboard.Controllers
             _Context = context;
         }
 
+        // GET: api/lastrequesttoken
+        [HttpGet("lastrequesttoken")]
+        public async Task<ActionResult<Client>> GetLastRequestToken()
+        {
+            var lastClient = await _Context.Clients.LastAsync();
+            return lastClient;
+            //var clientIp = Request.HttpContext.Connection.RemoteIpAddress;
+            //var token = new Random().Next(10000, 99999);
+
+            //var client = new Client
+            //{
+            //    Code = token,
+            //    ClientIp = clientIp.ToString(),
+            //};
+
+            //Console.WriteLine($"RequestToken: {client.ClientIp} - {client.Code}");
+
+            //await _Context.Clients.AddAsync(client);
+            //await _Context.SaveChangesAsync();
+
+            //return Ok();
+        }
+
         // GET: api/RequestToken
-        [HttpGet("requesttoken")]
-        public async Task<ActionResult> GetRequestToken()
+        [HttpGet("submittoken/{token}")]
+        public async Task<ActionResult> GetSubmitToken(int token)
         {
             var clientIp = Request.HttpContext.Connection.RemoteIpAddress;
-            var token = new Random().Next(10000, 99999);
 
             var client = new Client
             {
@@ -44,24 +66,6 @@ namespace WebMacroSoftKeyboard.Controllers
             await _Context.SaveChangesAsync();
 
             return Ok();
-        }
-
-        // GET: api/RequestToken
-        [HttpGet("{token}")]
-        public async Task<ActionResult<string>> GetSubmitToken(long token)
-        {
-            var clientIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            var client = await _Context.Clients.FirstOrDefaultAsync(c => c.ClientIp.Equals(clientIp, StringComparison.OrdinalIgnoreCase));
-
-            if (client == null)
-            {
-                return NotFound();
-            }
-
-            client.Token = Guid.NewGuid().ToString();
-            await _Context.SaveChangesAsync();
-
-            return client.Token;
         }
     }
 }
