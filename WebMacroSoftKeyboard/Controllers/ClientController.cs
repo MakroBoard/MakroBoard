@@ -25,12 +25,13 @@ namespace WebMacroSoftKeyboard.Controllers
             _Context = context;
         }
 
-        // GET: api/lastrequesttoken
-        [HttpGet("lastrequesttoken")]
-        public async Task<ActionResult<Client>> GetLastRequestToken()
+        // GET: api/client/requesttokens
+        [HttpGet("requesttokens")]
+        public async Task<ActionResult<Client[]>> GetRequestTokens()
         {
-            var lastClient = await _Context.Clients.LastAsync();
-            return lastClient;
+            var currentTime = DateTime.Now;
+            var currentClients = await _Context.Clients.Where(x => x.State == ClientState.None && x.ValidUntil < currentTime).ToArrayAsync();
+            return Ok(currentClients);
             //var clientIp = Request.HttpContext.Connection.RemoteIpAddress;
             //var token = new Random().Next(10000, 99999);
 
@@ -48,24 +49,41 @@ namespace WebMacroSoftKeyboard.Controllers
             //return Ok();
         }
 
-        // GET: api/RequestToken
-        [HttpGet("submittoken/{token}")]
-        public async Task<ActionResult> GetSubmitToken(int token)
+        /// <summary>
+        /// GET: api/client/submittoken?code=12345
+        //[HttpGet("submittoken")]
+        [HttpPost("submitcode")]
+        public async Task<ActionResult<DateTime>> PostSubmitCode(int code)
         {
-            var clientIp = Request.HttpContext.Connection.RemoteIpAddress;
+            var clientIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
 
-            var client = new Client
+            var client = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(clientIp));
+            if (client != null)
             {
-                Code = token,
-                ClientIp = clientIp.ToString(),
-            };
+                client.Code = code;
+                client.ValidUntil = DateTime.UtcNow.AddMinutes(5);
+                client.State = ClientState.None;
 
-            Console.WriteLine($"RequestToken: {client.ClientIp} - {client.Code}");
+                _Context.Clients.Update(client);
 
-            await _Context.Clients.AddAsync(client);
+                Console.WriteLine($"Update existing Client: {client.ClientIp} - {client.Code}");
+            }
+            else
+            {
+                client = new Client
+                {
+                    Code = code,
+                    ValidUntil = DateTime.UtcNow.AddMinutes(5),
+                    ClientIp = clientIp,
+                };
+                await _Context.Clients.AddAsync(client);
+
+                Console.WriteLine($"Add new Client: {client.ClientIp} - {client.Code}");
+            }
+
             await _Context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(client.ValidUntil);
         }
     }
 }

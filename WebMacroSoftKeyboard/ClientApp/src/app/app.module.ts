@@ -8,6 +8,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCardModule } from '@angular/material/card';
 import { HttpClientModule } from '@angular/common/http';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -41,6 +42,7 @@ import { IsLocalHostPipe } from './pipes/is-local-host.pipe';
     MatSidenavModule,
     FlexLayoutModule,
     MatCardModule,
+    MatProgressBarModule
   ],
   providers: [IsLocalHostPipe],
   bootstrap: [AppComponent]
