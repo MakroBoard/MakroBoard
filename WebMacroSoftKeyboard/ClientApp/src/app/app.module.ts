@@ -19,6 +19,7 @@ import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ConfigComponent } from './components/config/config.component';
 import { IsLocalHostPipe } from './pipes/is-local-host.pipe';
+import { ClientComponent } from './components/client/client.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { IsLocalHostPipe } from './pipes/is-local-host.pipe';
     HomeComponent,
     NavbarComponent,
     ConfigComponent,
-    IsLocalHostPipe
+    IsLocalHostPipe,
+    ClientComponent
   ],
   imports: [
     BrowserModule,

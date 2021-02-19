@@ -1,0 +1,11 @@
+<mat-card *ngIf="client != undefined">
+  <!--<p fxLayout="row" fxLayoutAlign="center center" *ngIf="title != undefined">{{title}}</p>-->
+  
+  <div>{{client.clientIp}}</div>
+  <div>{{client.code}}</div>
+  <div>{{client.validUntil}}</div>
+
+  <!--<small>{{client.ValidUntil | date: 'HH:mm:ss'}}</small>-->
+  <mat-progress-bar mode="determinate" [value]="Progress"></mat-progress-bar>
+
+</mat-card>

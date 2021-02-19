@@ -1,5 +1,4 @@
-<div>
-  <div *ngFor="let client of clients">
-    <div>{{client.code}}</div>
-  </div>
+<div *ngFor="let client of clients" >
+  <app-client [client]="client">
+  </app-client>
 </div>
