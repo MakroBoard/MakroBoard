@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ConfigService } from '../../Services/config.service';
+import { Client } from '../../Models/Client';
+import { DataService } from '../../Services/data.service';
 
 @Component({
   selector: 'app-config',
@@ -9,15 +10,23 @@ import { ConfigService } from '../../Services/config.service';
 export class ConfigComponent implements OnInit
 {
 
-  constructor(private configService: ConfigService) { }
+  public clients: Client[] = new Array<Client>();
+
+  constructor(private dataService: DataService) { }
 
   ngOnInit(): void
   {
-    this.configService.getRequestTokens().subscribe({
-      next: (data) =>
+    this.dataService.addClientsListener().subscribe({
+      next: (client: Client) =>
       {
+        this.clients.push(client);
       }
-    })
+    });
+    //this.configService.getRequestTokens().subscribe({
+    //  next: (data) =>
+    //  {
+    //  }
+    //})
 
   }
 

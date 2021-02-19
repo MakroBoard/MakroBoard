@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.IO;
 using WebMacroSoftKeyboard.Data;
+using WebMacroSoftKeyboard.HubConfig;
 
 namespace WebMacroSoftKeyboard
 {
@@ -26,6 +27,16 @@ namespace WebMacroSoftKeyboard
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder => builder
+                .WithOrigins("http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+            });
+
+
             var sqliteConnectionString = $"Filename={Path.Combine(Constants.DataDirectory, "wmsk.db")}";
             services.AddDbContext<ClientContext>(options =>
                options.UseSqlite(sqliteConnectionString));
@@ -35,6 +46,7 @@ namespace WebMacroSoftKeyboard
                 services.AddDatabaseDeveloperPageExceptionFilter();
             }
 
+            services.AddSignalR();
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -65,12 +77,15 @@ namespace WebMacroSoftKeyboard
             }
 
             app.UseRouting();
+            app.UseCors("CorsPolicy");
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+
+                endpoints.MapHub<ClientHub>("/hub/clients");
             });
 
             app.UseSpa(spa =>

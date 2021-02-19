@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WebMacroSoftKeyboard.Data;
+using WebMacroSoftKeyboard.HubConfig;
 
 // QR Code auf Localhost
 // auf Handy -> Code anzeigen
@@ -19,10 +18,12 @@ namespace WebMacroSoftKeyboard.Controllers
     public class ClientController : ControllerBase
     {
         private readonly ClientContext _Context;
+        private readonly IHubContext<ClientHub> _ClientHub;
 
-        public ClientController(ClientContext context)
+        public ClientController(ClientContext context, IHubContext<ClientHub> clientHub)
         {
             _Context = context;
+            _ClientHub = clientHub;
         }
 
         // GET: api/client/requesttokens
@@ -53,7 +54,7 @@ namespace WebMacroSoftKeyboard.Controllers
         /// GET: api/client/submittoken?code=12345
         //[HttpGet("submittoken")]
         [HttpPost("submitcode")]
-        public async Task<ActionResult<DateTime>> PostSubmitCode(int code)
+        public async Task<ActionResult<DateTime>> PostSubmitCode([FromBody] int code)
         {
             var clientIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
 
@@ -82,6 +83,9 @@ namespace WebMacroSoftKeyboard.Controllers
             }
 
             await _Context.SaveChangesAsync();
+
+            // TODO Groups
+            await _ClientHub.Clients./*Group("adminClients")*/All.SendAsync("AddSubmitCode", client);
 
             return Ok(client.ValidUntil);
         }
