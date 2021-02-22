@@ -1,17 +1,17 @@
 <mat-card *ngIf="client != undefined">
   <!--<p fxLayout="row" fxLayoutAlign="center center" *ngIf="title != undefined">{{title}}</p>-->
 
-  <div>{{client.clientIp}}</div>
-  <div>{{client.code}}</div>
-  <div>{{client.validUntil}}</div>
+  <div>{{client.ClientIp}}</div>
+  <div>{{client.Code}}</div>
+  <div>{{client.ValidUntil}}</div>
 
 
   <div *ngIf="client.StateNone()">
     <mat-progress-bar mode="determinate" [value]="Progress"></mat-progress-bar>
-    <button mat-raised-button color="accent" (click)="confirmClient()">Accent</button>
+    <button mat-raised-button color="accent" (click)="confirmClient()">Confirm Client</button>
   </div>
-  <div *ngIf="client.StateNone()">
-    <mat-progress-bar mode="determinate" [value]="Progress"></mat-progress-bar>
+  <div *ngIf="client.StateConfirmed()">
+    <!--<button mat-raised-button color="accent" (click)="removeClient()">Remove Client</button>-->
   </div>
   <!--<small>{{client.ValidUntil | date: 'HH:mm:ss'}}</small>-->
 

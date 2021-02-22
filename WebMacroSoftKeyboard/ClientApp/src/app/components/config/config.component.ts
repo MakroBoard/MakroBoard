@@ -19,7 +19,7 @@ export class ConfigComponent implements OnInit
     this.dataService.addClientsListener().subscribe({
       next: (client: Client) =>
       {
-        let oldClient = this.clients.find(c => c.clientIp == client.clientIp);
+        let oldClient = this.clients.find(c => c.ClientIp == client.ClientIp);
         if (oldClient != undefined)
         {
           const index = this.clients.indexOf(oldClient, 0);

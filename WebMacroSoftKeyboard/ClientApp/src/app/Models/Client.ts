@@ -5,24 +5,24 @@ import { Adapter } from "./aDAPTER";
 export class Client
 {
   constructor(
-    public clientIp: string,
-    public code: number,
-    public id: number,
-    public lastConnection: Date | undefined,
-    public registerDate: Date | undefined,
-    public token: string | undefined,
-    public validUntil: Date | undefined,
-    public state: ClientState)
+    public ID: number,
+    public Code: number,
+    public ValidUntil: Date | undefined,
+    public Token: string | undefined,
+    public ClientIp: string,
+    public RegisterDate: Date | undefined,
+    public LastConnection: Date | undefined,
+    public State: ClientState)
   { }
 
   public StateConfirmed()
   {
-    return this.state == ClientState.Confirmed;
+    return this.State == ClientState.Confirmed;
   }
 
   public StateNone()
   {
-    return this.state == ClientState.None;
+    return this.State == ClientState.None;
   }
 }
 
@@ -40,7 +40,7 @@ export class ClientAdapter implements Adapter<Client>
 {
   adapt(item: any): Client
   {
-    return new Client(item.clientIp, item.code, item.id, new Date(item.lastConnection), new Date(item.registerDate), item.token, new Date(item.validUntil), item.state);
+    return new Client(item.id, item.code, new Date(item.validUntil), item.token, item.clientIp, new Date(item.registerDate), new Date(item.lastConnection), item.state);
   }
 
 }

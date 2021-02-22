@@ -25,17 +25,17 @@ export class ClientComponent implements OnInit
   {
     this._client = client;
 
-    if (this._client == undefined || this._client.validUntil == undefined)
+    if (this._client == undefined || this._client.ValidUntil == undefined)
     {
       return;
     }
 
-    this.ValidDuration = this._client.validUntil.getTime() - new Date().getTime();
+    this.ValidDuration = this._client.ValidUntil.getTime() - new Date().getTime();
     this.progressTimerSubscription = this.progressTimer.subscribe(() =>
     {
-      if (this._client != undefined && this._client.validUntil != undefined)
+      if (this._client != undefined && this._client.ValidUntil != undefined)
       {
-        let remaining = this._client.validUntil.getTime() - new Date().getTime();
+        let remaining = this._client.ValidUntil.getTime() - new Date().getTime();
         this.Progress = remaining / this.ValidDuration * 100.0;
         if (this.Progress >= 100 && this.progressTimerSubscription != undefined)
         {
@@ -56,6 +56,14 @@ export class ClientComponent implements OnInit
 
   confirmClient()
   {
-    this.dataService.
+    if (this.client != undefined)
+    {
+      this.dataService.confirmClient(this.client).subscribe({
+        error: e =>
+        {
+          console.log(e);
+        }
+      });
+    }
   }
 }

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -40,11 +39,6 @@ namespace WebMacroSoftKeyboard
             var sqliteConnectionString = $"Filename={Path.Combine(Constants.DataDirectory, "wmsk.db")}";
             services.AddDbContext<ClientContext>(options =>
                options.UseSqlite(sqliteConnectionString));
-
-       //     services.AddDefaultIdentity<IdentityUser>(
-       //options => options.SignIn.RequireConfirmedAccount = true)
-       //.AddRoles<IdentityRole>()
-       //.AddEntityFrameworkStores<ApplicationDbContext>();
 
             if (_Env.IsDevelopment())
             {

@@ -29,7 +29,7 @@ export class DataService
   {
     return new Observable<Client>((observableClients) =>
     {
-      this.clientsHubConnection.on('AddOrUpdatClient', (client: Client) =>
+      this.clientsHubConnection.on('AddOrUpdateClient', (client: Client) =>
       {
         observableClients.next(this.clientAdapter.adapt(client));
       });
@@ -42,9 +42,8 @@ export class DataService
       .pipe(map((d) => new Date(d.toString())));
   }
 
-  public confirmClient(client: Client)
+  public confirmClient(client: Client): Observable<any>
   {
-    return this.http.post<Date>(environment.apiUrl + "client/confirmclient/", client, { responseType: 'json' })
-      .pipe(map((d) => new Date(d.toString())));
+    return this.http.post(environment.apiUrl + "client/confirmclient/", client, { responseType: 'json' });
   }
 }

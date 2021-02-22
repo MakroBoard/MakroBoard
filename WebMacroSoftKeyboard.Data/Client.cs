@@ -24,4 +24,13 @@ namespace WebMacroSoftKeyboard.Data
         Confirmed,
         Blocked
     }
+
+    public class Session
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
+        public string ClientIp { get; set; }
+        public string ClientId { get; set; }
+    }
 }

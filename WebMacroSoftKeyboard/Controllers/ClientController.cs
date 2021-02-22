@@ -87,19 +87,16 @@ namespace WebMacroSoftKeyboard.Controllers
             await _Context.SaveChangesAsync();
 
             // TODO Groups
-            await _ClientHub.Clients./*Group("adminClients")*/All.SendAsync("AddSubmitCode", client);
+            await _ClientHub.Clients./*Group("adminClients")*/All.SendAsync("AddOrUpdateClient", client);
 
             return Ok(client.ValidUntil);
         }
 
         /// <summary>
         /// GET: api/client/confirmclient
-        //[HttpGet("submittoken")]
         [HttpPost("confirmclient")]
-        public async Task<ActionResult<DateTime>> PostConfirmClient([FromBody] Client client)
+        public async Task<ActionResult> PostConfirmClient([FromBody] Client client)
         {
-            //var clientIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
-
             var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(client.ClientIp, StringComparison.Ordinal) && x.Code.Equals(client.Code));
             if (currentClient == null)
             {
@@ -107,48 +104,19 @@ namespace WebMacroSoftKeyboard.Controllers
             }
 
 
-            byte[] bytes = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes($"WMSK_{client.ClientIp}{client.Code}{DateTime.Now:O}{Constants.Seed}{new Random().Next()}"));
+            byte[] bytes = SHA512.Create().ComputeHash(Encoding.UTF8.GetBytes($"WMSK_{client.ClientIp}{client.Code}{DateTime.Now:O}{Constants.Seed}{new Random().Next()}"));
 
-            var token = bytes.ToString();
+            var token = Encoding.UTF8.GetString(bytes);
             currentClient.Token = token;
             currentClient.State = ClientState.Confirmed;
 
             await _Context.SaveChangesAsync();
-            await _ClientHub.Clients./*Group("adminClients")*/All.SendAsync("AddOrUpdatClient", client);
+            await _ClientHub.Clients./*Group("adminClients")*/All.SendAsync("AddOrUpdateClient", client);
 
-            _ClientHub.Clients.User
+            var targetClients = await _Context.Sessions.Where(x => x.ClientIp.Equals(client.ClientIp, StringComparison.OrdinalIgnoreCase)).ToListAsync();
+            await _ClientHub.Clients.Clients(targetClients.Select(x => x.ClientId)).SendAsync("AddOrUpdateToken", token);
 
-
-            //var client = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(clientIp));
-            //if (client != null)
-            //{
-            //    client.Code = code;
-            //    client.ValidUntil = DateTime.UtcNow.AddMinutes(0.5);
-            //    client.State = ClientState.None;
-
-            //    _Context.Clients.Update(client);
-
-            //    Console.WriteLine($"Update existing Client: {client.ClientIp} - {client.Code}");
-            //}
-            //else
-            //{
-            //    client = new Client
-            //    {
-            //        Code = code,
-            //        ValidUntil = DateTime.UtcNow.AddMinutes(5),
-            //        ClientIp = clientIp,
-            //    };
-            //    await _Context.Clients.AddAsync(client);
-
-            //    Console.WriteLine($"Add new Client: {client.ClientIp} - {client.Code}");
-            //}
-
-            //await _Context.SaveChangesAsync();
-
-            // TODO Groups
-            //await _ClientHub.Clients./*Group("adminClients")*/All.SendAsync("AddSubmitCode", client);
-
-            return Ok(client.ValidUntil);
+            return Ok();
         }
 
     }

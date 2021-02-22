@@ -10,6 +10,7 @@ namespace WebMacroSoftKeyboard.Data
         }
 
         public DbSet<Client> Clients { get; set; }
+        public DbSet<Session> Sessions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
