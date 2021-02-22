@@ -5,7 +5,7 @@ import * as signalR from "@microsoft/signalr";
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment.prod';
-import { Client } from '../Models/Client';
+import { Client, ClientAdapter } from '../Models/Client';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class DataService
 {
   private clientsHubConnection: signalR.HubConnection
 
-  constructor(private http: HttpClient)
+  constructor(private http: HttpClient, private clientAdapter: ClientAdapter)
   {
     this.clientsHubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.hubUrl + 'clients')
@@ -29,9 +29,9 @@ export class DataService
   {
     return new Observable<Client>((observableClients) =>
     {
-      this.clientsHubConnection.on('AddSubmitCode', (client: Client) =>
+      this.clientsHubConnection.on('AddOrUpdatClient', (client: Client) =>
       {
-        observableClients.next(client);
+        observableClients.next(this.clientAdapter.adapt(client));
       });
     });
   }
@@ -39,6 +39,12 @@ export class DataService
   public submitCode(code: number): Observable<Date>
   {
     return this.http.post<Date>(environment.apiUrl + "client/submitcode/", code, { responseType: 'json' })
+      .pipe(map((d) => new Date(d.toString())));
+  }
+
+  public confirmClient(client: Client)
+  {
+    return this.http.post<Date>(environment.apiUrl + "client/confirmclient/", client, { responseType: 'json' })
       .pipe(map((d) => new Date(d.toString())));
   }
 }

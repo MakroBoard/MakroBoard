@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit
           {
             let remaining = this.ValidUntil.getTime() - new Date().getTime();
             this.Progress = remaining / this.ValidDuration * 100.0;
-            if (this.Progress >= 100 && this.progressTimerSubscription != undefined)
+            if (this.Progress <= 0 && this.progressTimerSubscription != undefined)
             {
               this.progressTimerSubscription.unsubscribe();
               this.setNewToken();

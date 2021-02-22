@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using WebMacroSoftKeyboard.Data;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text.Unicode;
+using System.Text;
 
 namespace WebMacroSoftKeyboard
 {
@@ -12,12 +15,9 @@ namespace WebMacroSoftKeyboard
     {
         public static void Main(string[] args)
         {
-            var dataDir = Constants.DataDirectory;
-            Console.WriteLine($"Using Data Directory: {dataDir}");
-            if (!Directory.Exists(dataDir))
-            {
-                Directory.CreateDirectory(dataDir);
-            }
+            Console.WriteLine($"Using Data Directory: { Constants.DataDirectory}");
+            InitializeDataDir();
+            InitializeInstanceSeed();
 
             var host = CreateHostBuilder(args).Build();
             using var scope = host.Services.CreateScope();
@@ -25,8 +25,29 @@ namespace WebMacroSoftKeyboard
             var services = scope.ServiceProvider;
 
             CreateDbIfNotExists(services);
-          
+
             host.Run();
+        }
+
+        private static void InitializeInstanceSeed()
+        {
+            if (File.Exists(Constants.SeedFileName))
+            {
+                Constants.Seed = File.ReadAllText(Constants.SeedFileName);
+            }
+            else
+            {
+                Constants.Seed = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes($"WMSK_{DateTime.Now:O}{new Random().Next()}")).ToString();
+                File.WriteAllText(Constants.SeedFileName, Constants.Seed);
+            }
+        }
+
+        private static void InitializeDataDir()
+        {
+            if (!Directory.Exists(Constants.DataDirectory))
+            {
+                Directory.CreateDirectory(Constants.DataDirectory);
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using WebMacroSoftKeyboard.Data;
 using WebMacroSoftKeyboard.HubConfig;
@@ -51,7 +53,7 @@ namespace WebMacroSoftKeyboard.Controllers
         }
 
         /// <summary>
-        /// GET: api/client/submittoken?code=12345
+        /// GET: api/client/submittoken
         //[HttpGet("submittoken")]
         [HttpPost("submitcode")]
         public async Task<ActionResult<DateTime>> PostSubmitCode([FromBody] int code)
@@ -62,7 +64,7 @@ namespace WebMacroSoftKeyboard.Controllers
             if (client != null)
             {
                 client.Code = code;
-                client.ValidUntil = DateTime.UtcNow.AddMinutes(5);
+                client.ValidUntil = DateTime.UtcNow.AddMinutes(0.5);
                 client.State = ClientState.None;
 
                 _Context.Clients.Update(client);
@@ -89,5 +91,65 @@ namespace WebMacroSoftKeyboard.Controllers
 
             return Ok(client.ValidUntil);
         }
+
+        /// <summary>
+        /// GET: api/client/confirmclient
+        //[HttpGet("submittoken")]
+        [HttpPost("confirmclient")]
+        public async Task<ActionResult<DateTime>> PostConfirmClient([FromBody] Client client)
+        {
+            //var clientIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+
+            var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(client.ClientIp, StringComparison.Ordinal) && x.Code.Equals(client.Code));
+            if (currentClient == null)
+            {
+                return BadRequest("No suitable client found.");
+            }
+
+
+            byte[] bytes = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes($"WMSK_{client.ClientIp}{client.Code}{DateTime.Now:O}{Constants.Seed}{new Random().Next()}"));
+
+            var token = bytes.ToString();
+            currentClient.Token = token;
+            currentClient.State = ClientState.Confirmed;
+
+            await _Context.SaveChangesAsync();
+            await _ClientHub.Clients./*Group("adminClients")*/All.SendAsync("AddOrUpdatClient", client);
+
+            _ClientHub.Clients.User
+
+
+            //var client = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(clientIp));
+            //if (client != null)
+            //{
+            //    client.Code = code;
+            //    client.ValidUntil = DateTime.UtcNow.AddMinutes(0.5);
+            //    client.State = ClientState.None;
+
+            //    _Context.Clients.Update(client);
+
+            //    Console.WriteLine($"Update existing Client: {client.ClientIp} - {client.Code}");
+            //}
+            //else
+            //{
+            //    client = new Client
+            //    {
+            //        Code = code,
+            //        ValidUntil = DateTime.UtcNow.AddMinutes(5),
+            //        ClientIp = clientIp,
+            //    };
+            //    await _Context.Clients.AddAsync(client);
+
+            //    Console.WriteLine($"Add new Client: {client.ClientIp} - {client.Code}");
+            //}
+
+            //await _Context.SaveChangesAsync();
+
+            // TODO Groups
+            //await _ClientHub.Clients./*Group("adminClients")*/All.SendAsync("AddSubmitCode", client);
+
+            return Ok(client.ValidUntil);
+        }
+
     }
 }

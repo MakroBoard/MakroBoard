@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable, Subscription, timer } from 'rxjs';
 import { Client } from '../../Models/Client';
+import { DataService } from '../../Services/data.service';
 
 @Component({
   selector: 'app-client',
@@ -46,10 +47,15 @@ export class ClientComponent implements OnInit
   private _client: Client | undefined;
 
 
-  constructor() { }
+  constructor(private dataService: DataService) { }
 
   ngOnInit(): void
   {
   }
 
+
+  confirmClient()
+  {
+    this.dataService.
+  }
 }

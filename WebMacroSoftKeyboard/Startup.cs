@@ -41,6 +41,11 @@ namespace WebMacroSoftKeyboard
             services.AddDbContext<ClientContext>(options =>
                options.UseSqlite(sqliteConnectionString));
 
+       //     services.AddDefaultIdentity<IdentityUser>(
+       //options => options.SignIn.RequireConfirmedAccount = true)
+       //.AddRoles<IdentityRole>()
+       //.AddEntityFrameworkStores<ApplicationDbContext>();
+
             if (_Env.IsDevelopment())
             {
                 services.AddDatabaseDeveloperPageExceptionFilter();
