@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using WebMacroSoftKeyboard.Controllers;
 using WebMacroSoftKeyboard.Data;
 
 namespace WebMacroSoftKeyboard.HubConfig
@@ -10,7 +12,7 @@ namespace WebMacroSoftKeyboard.HubConfig
     public class ClientHub : Hub
     {
         private readonly ClientContext _ClientContext;
-        
+
         public ClientHub(ClientContext clientContext)
         {
             _ClientContext = clientContext;
@@ -21,6 +23,12 @@ namespace WebMacroSoftKeyboard.HubConfig
             var ip = Context.GetHttpContext().Connection.RemoteIpAddress.ToString();
             await _ClientContext.Sessions.AddAsync(new Session { ClientIp = ip, ClientId = Context.ConnectionId });
             await _ClientContext.SaveChangesAsync();
+
+            var clients = await _ClientContext.Clients.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
+            foreach (var client in clients)
+            {
+                await Clients./*Group("adminClients")*/All.SendAsync(ClientMethods.AddOrUpdateClient, client);
+            }
             await base.OnConnectedAsync();
         }
 
