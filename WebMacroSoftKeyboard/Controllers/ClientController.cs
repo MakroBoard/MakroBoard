@@ -111,7 +111,7 @@ namespace WebMacroSoftKeyboard.Controllers
             currentClient.State = ClientState.Confirmed;
 
             await _Context.SaveChangesAsync();
-            await _ClientHub.Clients./*Group("adminClients")*/All.SendAsync(ClientMethods.AddOrUpdateClient, client);
+            await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, client);
 
             var targetClients = await _Context.Sessions.Where(x => x.ClientIp.Equals(client.ClientIp, StringComparison.OrdinalIgnoreCase)).ToListAsync();
             await _ClientHub.Clients.Clients(targetClients.Select(x => x.ClientId)).SendAsync(ClientMethods.AddOrUpdateToken, token);

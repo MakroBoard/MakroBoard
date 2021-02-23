@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using WebMacroSoftKeyboard.Controllers;
 using WebMacroSoftKeyboard.Data;
@@ -13,6 +14,11 @@ namespace WebMacroSoftKeyboard.HubConfig
     {
         private readonly ClientContext _ClientContext;
 
+        private bool IsLocalHost(IPAddress ipAddress)
+        {
+            return IPAddress.IsLoopback(ipAddress);
+        }
+
         public ClientHub(ClientContext clientContext)
         {
             _ClientContext = clientContext;
@@ -20,15 +26,27 @@ namespace WebMacroSoftKeyboard.HubConfig
 
         public async override Task OnConnectedAsync()
         {
-            var ip = Context.GetHttpContext().Connection.RemoteIpAddress.ToString();
-            await _ClientContext.Sessions.AddAsync(new Session { ClientIp = ip, ClientId = Context.ConnectionId });
+            var ipAddress = Context.GetHttpContext().Connection.RemoteIpAddress;
+            if (ipAddress == null)
+            {
+                Context.Abort();
+                return;
+            }
+
+            await _ClientContext.Sessions.AddAsync(new Session { ClientIp = ipAddress.ToString(), ClientId = Context.ConnectionId });
             await _ClientContext.SaveChangesAsync();
 
             var clients = await _ClientContext.Clients.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
             foreach (var client in clients)
             {
-                await Clients./*Group("adminClients")*/All.SendAsync(ClientMethods.AddOrUpdateClient, client);
+                await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateClient, client);
             }
+
+            if (IsLocalHost(ipAddress))
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup);
+            }
+
             await base.OnConnectedAsync();
         }
 
@@ -41,6 +59,8 @@ namespace WebMacroSoftKeyboard.HubConfig
             {
                 _ClientContext.Sessions.Remove(sessionToRemove);
             }
+
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup);
 
             await base.OnDisconnectedAsync(exception);
         }
