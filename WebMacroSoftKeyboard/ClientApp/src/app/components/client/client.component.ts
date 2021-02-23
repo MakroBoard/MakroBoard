@@ -66,4 +66,17 @@ export class ClientComponent implements OnInit
       });
     }
   }
+
+  removeClient()
+  {
+    if (this.client != undefined)
+    {
+      this.dataService.removeClient(this.client).subscribe({
+        error: e =>
+        {
+          console.log(e);
+        }
+      });
+    }
+  }
 }

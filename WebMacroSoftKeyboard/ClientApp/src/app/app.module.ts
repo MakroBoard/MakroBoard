@@ -7,7 +7,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCardModule } from '@angular/material/card';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 
@@ -21,6 +21,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { ConfigComponent } from './components/config/config.component';
 import { IsLocalHostPipe } from './pipes/is-local-host.pipe';
 import { ClientComponent } from './components/client/client.component';
+import { AuthIntercepter } from './authintercepter';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,12 @@ import { ClientComponent } from './components/client/client.component';
     MatProgressBarModule,
     MatTabsModule
   ],
-  providers: [IsLocalHostPipe],
+  providers: [IsLocalHostPipe,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthIntercepter,
+      multi: true,
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

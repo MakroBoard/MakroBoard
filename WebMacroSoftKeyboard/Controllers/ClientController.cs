@@ -52,6 +52,18 @@ namespace WebMacroSoftKeyboard.Controllers
             //return Ok();
         }
 
+        [HttpGet("checktoken")]
+        public async Task<ActionResult<bool>> GetCheckToken([FromHeader] string authorization)
+        {
+            var clientIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+
+            var client = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(clientIp) && x.Token.Equals(authorization));
+            var result = client != null && client.State == ClientState.Confirmed;
+            return Ok(result);
+        }
+
+
+
         /// <summary>
         /// GET: api/client/submittoken
         //[HttpGet("submittoken")]
@@ -73,7 +85,7 @@ namespace WebMacroSoftKeyboard.Controllers
             }
             else
             {
-                client = new Client
+                client = new Data.Client
                 {
                     Code = code,
                     ValidUntil = DateTime.UtcNow.AddMinutes(5),
@@ -87,7 +99,7 @@ namespace WebMacroSoftKeyboard.Controllers
             await _Context.SaveChangesAsync();
 
             // TODO Groups
-            await _ClientHub.Clients./*Group("adminClients")*/All.SendAsync(ClientMethods.AddOrUpdateClient, client);
+            await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, client);
 
             return Ok(client.ValidUntil);
         }
@@ -95,26 +107,48 @@ namespace WebMacroSoftKeyboard.Controllers
         /// <summary>
         /// GET: api/client/confirmclient
         [HttpPost("confirmclient")]
-        public async Task<ActionResult> PostConfirmClient([FromBody] Client client)
+        public async Task<ActionResult> PostConfirmClient([FromBody] ApiModels.Client client)
         {
-            var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(client.ClientIp, StringComparison.Ordinal) && x.Code.Equals(client.Code));
+            var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(client.ClientIp) && x.Code.Equals(client.Code));
             if (currentClient == null)
             {
                 return BadRequest("No suitable client found.");
             }
 
-
             byte[] bytes = SHA512.Create().ComputeHash(Encoding.UTF8.GetBytes($"WMSK_{client.ClientIp}{client.Code}{DateTime.Now:O}{Constants.Seed}{new Random().Next()}"));
 
-            var token = Encoding.UTF8.GetString(bytes);
+            // Latin1 is required for Communication in Headers
+            var token = Convert.ToBase64String(bytes);
             currentClient.Token = token;
             currentClient.State = ClientState.Confirmed;
+            client.State = (int)ClientState.Confirmed;
 
             await _Context.SaveChangesAsync();
-            await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, client);
+            await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, currentClient);
 
-            var targetClients = await _Context.Sessions.Where(x => x.ClientIp.Equals(client.ClientIp, StringComparison.OrdinalIgnoreCase)).ToListAsync();
-            await _ClientHub.Clients.Clients(targetClients.Select(x => x.ClientId)).SendAsync(ClientMethods.AddOrUpdateToken, token);
+            var targetClients = (await _Context.Sessions.Where(x => x.ClientIp.Equals(client.ClientIp)).ToListAsync()).Select(x => x.ClientId);
+            await _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, token);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// GET: api/client/confirmclient
+        [HttpPost("removeClient")]
+        public async Task<ActionResult> PostRemoveClient([FromBody] ApiModels.Client client)
+        {
+            var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(client.ClientIp) && x.Code.Equals(client.Code));
+            if (currentClient == null)
+            {
+                return BadRequest("No suitable client found.");
+            }
+
+            _Context.Clients.Remove(currentClient);
+            await _Context.SaveChangesAsync();
+            await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.RemoveClient, client);
+
+            var targetClients = (await _Context.Sessions.Where(x => x.ClientIp.Equals(client.ClientIp)).ToListAsync()).Select(x => x.ClientId);
+            await _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, string.Empty);
 
             return Ok();
         }

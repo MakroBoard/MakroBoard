@@ -16,7 +16,7 @@ export class ConfigComponent implements OnInit
 
   ngOnInit(): void
   {
-    this.dataService.addClientsListener().subscribe({
+    this.dataService.onClientAddOrUpdate().subscribe({
       next: (client: Client) =>
       {
         let oldClient = this.clients.find(c => c.ClientIp == client.ClientIp);
@@ -32,12 +32,21 @@ export class ConfigComponent implements OnInit
         this.clients.push(client);
       }
     });
-    //this.configService.getRequestTokens().subscribe({
-    //  next: (data) =>
-    //  {
-    //  }
-    //})
 
+    this.dataService.onClientRemove().subscribe({
+      next: (client: Client) =>
+      {
+        let oldClient = this.clients.find(c => c.ClientIp == client.ClientIp);
+        if (oldClient != undefined)
+        {
+          const index = this.clients.indexOf(oldClient, 0);
+          if (index > -1)
+          {
+            this.clients.splice(index, 1);
+          }
+        }
+      }
+    });
   }
 
 }

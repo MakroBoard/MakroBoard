@@ -8,10 +8,15 @@
 
   <div *ngIf="client.StateNone()">
     <mat-progress-bar mode="determinate" [value]="Progress"></mat-progress-bar>
-    <button mat-raised-button color="accent" (click)="confirmClient()">Confirm Client</button>
+    <button mat-raised-button color="accent" (click)="confirmClient()">
+      <mat-icon>verified</mat-icon> Confirm Client
+    </button>
   </div>
   <div *ngIf="client.StateConfirmed()">
     <!--<button mat-raised-button color="accent" (click)="removeClient()">Remove Client</button>-->
+    <button mat-raised-button color="accent" (click)="removeClient()">
+      <mat-icon>delete</mat-icon> Remove Client
+    </button>
   </div>
   <!--<small>{{client.ValidUntil | date: 'HH:mm:ss'}}</small>-->
 

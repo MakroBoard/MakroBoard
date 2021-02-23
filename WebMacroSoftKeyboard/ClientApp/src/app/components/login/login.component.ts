@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../../Services/data.service';
 import { Observable, Subscription, timer } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,13 +18,39 @@ export class LoginComponent implements OnInit
   public Progress: number = 0;
   private progressTimerSubscription: Subscription | undefined = undefined;
 
-  constructor(private dataService: DataService)
+  constructor(private dataService: DataService, private router: Router)
   {
 
   }
 
   ngOnInit(): void
   {
+    this.initToken();
+  }
+
+  async initToken(): Promise<void>
+  {
+    this.dataService.onAddOrUpdateToken().subscribe({
+      next: token =>
+      {
+        this.router.navigate(['/']);
+        if (this.progressTimerSubscription != undefined)
+        {
+          this.progressTimerSubscription.unsubscribe();
+          this.progressTimerSubscription = undefined;
+          this.ValidUntil == undefined;
+          this.Progress = 0;
+        }
+      }
+    });
+
+    var isTokenValid =  await this.dataService.checkToken();
+    if (isTokenValid)
+    {
+      this.router.navigate(['/']);
+      return;
+    }
+
     this.setNewToken();
   }
 

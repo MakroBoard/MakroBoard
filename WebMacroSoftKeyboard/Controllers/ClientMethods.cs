@@ -9,5 +9,6 @@ namespace WebMacroSoftKeyboard.Controllers
     {
         public const string AddOrUpdateClient = "AddOrUpdateClient";
         public const string AddOrUpdateToken = "AddOrUpdateToken";
+        public const string RemoveClient = "RemoveClient";
     }
 }

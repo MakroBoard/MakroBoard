@@ -12,6 +12,10 @@ namespace WebMacroSoftKeyboard.Data
         {
             context.Database.EnsureCreated();
 
+            if (context.Sessions.Any())
+            {
+                context.Sessions.RemoveRange(context.Sessions);
+            }
             //// Look for any students.
             //if (context.Students.Any())
             //{

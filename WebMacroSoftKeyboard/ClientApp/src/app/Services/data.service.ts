@@ -1,7 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import * as signalR from "@microsoft/signalr";
+import { error } from 'protractor';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment.prod';
@@ -25,7 +26,7 @@ export class DataService
       .catch(err => console.log('Error while starting connection: ' + err))
   }
 
-  public addClientsListener(): Observable<Client>
+  public onClientAddOrUpdate(): Observable<Client>
   {
     return new Observable<Client>((observableClients) =>
     {
@@ -34,6 +35,44 @@ export class DataService
         observableClients.next(this.clientAdapter.adapt(client));
       });
     });
+  }
+
+  public onClientRemove(): Observable<Client>
+  {
+    return new Observable<Client>((observableClients) =>
+    {
+      this.clientsHubConnection.on('RemoveClient', (client: Client) =>
+      {
+        localStorage.removeItem('token');
+        observableClients.next(this.clientAdapter.adapt(client));
+      });
+    });
+  }
+
+  public onAddOrUpdateToken(): Observable<string>
+  {
+    return new Observable<string>((observableTokens) =>
+    {
+      this.clientsHubConnection.on('AddOrUpdateToken', (token: string) =>
+      {
+        localStorage.setItem('token', token);
+        observableTokens.next(token);
+      });
+    });
+  }
+
+  public async checkToken(): Promise<boolean>
+  {
+    var token = localStorage.getItem('token');
+    if (token == null)
+    {
+      return false;
+    }
+    else
+    {
+      var isTokenValid = await this.http.get<boolean>(environment.apiUrl + "client/checktoken/", { responseType: 'json' }).toPromise();
+      return isTokenValid;
+    }
   }
 
   public submitCode(code: number): Observable<Date>
@@ -46,4 +85,10 @@ export class DataService
   {
     return this.http.post(environment.apiUrl + "client/confirmclient/", client, { responseType: 'json' });
   }
+
+  public removeClient(client: Client): Observable<any>
+  {
+    return this.http.post(environment.apiUrl + "client/removeClient/", client, { responseType: 'json' });
+  }
+
 }
