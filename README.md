@@ -50,13 +50,16 @@ Pages
 
 Pagecollections
 -> Pages
+-> (show on which devices, default All)
 
-(Pagecollections to devices)
 
 ## Ideas / Todos
 
 *Settings for Webserverport
 *Setting pluginsreload
+*OBS Websockets
+*Virtual Midi Actions
+*Local Media Control Actions
 
 
 
