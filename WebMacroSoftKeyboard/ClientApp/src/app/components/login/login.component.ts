@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DataService } from '../../Services/data.service';
 import { Observable, Subscription, timer } from 'rxjs';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit
+export class LoginComponent implements OnInit, OnDestroy
 {
 
   private progressTimer: Observable<number> = timer(0, 1000);
@@ -17,10 +17,15 @@ export class LoginComponent implements OnInit
   public ValidUntil: Date | undefined = undefined;
   public Progress: number = 0;
   private progressTimerSubscription: Subscription | undefined = undefined;
+  private addOrUpdateTokenSubscription: Subscription | undefined = undefined;
 
   constructor(private dataService: DataService, private router: Router)
   {
 
+  }
+  ngOnDestroy(): void
+  {
+    this.addOrUpdateTokenSubscription?.unsubscribe();
   }
 
   ngOnInit(): void
@@ -30,7 +35,7 @@ export class LoginComponent implements OnInit
 
   async initToken(): Promise<void>
   {
-    this.dataService.onAddOrUpdateToken().subscribe({
+    this.addOrUpdateTokenSubscription = this.dataService.onAddOrUpdateToken().subscribe({
       next: token =>
       {
         this.router.navigate(['/']);
@@ -44,7 +49,7 @@ export class LoginComponent implements OnInit
       }
     });
 
-    var isTokenValid =  await this.dataService.checkToken();
+    var isTokenValid = await this.dataService.checkToken();
     if (isTokenValid)
     {
       this.router.navigate(['/']);

@@ -1,23 +1,26 @@
 <mat-card *ngIf="client != undefined">
-  <!--<p fxLayout="row" fxLayoutAlign="center center" *ngIf="title != undefined">{{title}}</p>-->
+  <div fxLayout="row wrap" fxLayoutAlign="space-between none">
+    <div fxFlex="auto">
+      <div>IP: {{client.ClientIp}}</div>
+      <div>Code: {{client.Code}}</div>
+      <div *ngIf="client.StateNone()">{{client.ValidUntil | date: 'HH:mm:ss'}}</div>
+    </div>
 
-  <div>{{client.ClientIp}}</div>
-  <div>{{client.Code}}</div>
-  <div>{{client.ValidUntil}}</div>
-
+    <div fxFlex="shrink">
+      <div >
+        <button *ngIf="client.StateNone()" mat-raised-button color="accent" (click)="confirmClient()">
+          <mat-icon>verified</mat-icon> Confirm Client
+        </button>
+     
+        <button *ngIf="client.StateConfirmed()" mat-raised-button color="accent" (click)="removeClient()">
+          <mat-icon>delete</mat-icon> Remove Client
+        </button>
+      </div>
+    </div>
+  </div>
 
   <div *ngIf="client.StateNone()">
     <mat-progress-bar mode="determinate" [value]="Progress"></mat-progress-bar>
-    <button mat-raised-button color="accent" (click)="confirmClient()">
-      <mat-icon>verified</mat-icon> Confirm Client
-    </button>
   </div>
-  <div *ngIf="client.StateConfirmed()">
-    <!--<button mat-raised-button color="accent" (click)="removeClient()">Remove Client</button>-->
-    <button mat-raised-button color="accent" (click)="removeClient()">
-      <mat-icon>delete</mat-icon> Remove Client
-    </button>
-  </div>
-  <!--<small>{{client.ValidUntil | date: 'HH:mm:ss'}}</small>-->
 
 </mat-card>

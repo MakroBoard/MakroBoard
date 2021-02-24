@@ -14,22 +14,57 @@ import { Client, ClientAdapter } from '../Models/Client';
 export class DataService
 {
   private clientsHubConnection: signalR.HubConnection
+  private clientCache: Array<Client> = new Array<Client>();
 
   constructor(private http: HttpClient, private clientAdapter: ClientAdapter)
   {
     this.clientsHubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.hubUrl + 'clients')
       .build();
+    this.initCache();
     this.clientsHubConnection
       .start()
       .then(() => console.log('Connection started'))
-      .catch(err => console.log('Error while starting connection: ' + err))
+      .catch(err => console.log('Error while starting connection: ' + err));
+  }
+
+  private initCache(): void
+  {
+    this.onClientAddOrUpdate().subscribe({
+      next: client =>
+      {
+        this.removeOldClientFromCache(client);
+        this.clientCache.push(client);
+      }
+    });
+    this.onClientRemove().subscribe({
+      next: client =>
+      {
+        this.removeOldClientFromCache(client);
+      }
+    });
+    this.onAddOrUpdateToken();
+  }
+
+  private removeOldClientFromCache(client: Client)
+  {
+    let oldClient = this.clientCache.find(c => c.ClientIp == client.ClientIp);
+    if (oldClient != undefined)
+    {
+      const index = this.clientCache.indexOf(oldClient, 0);
+      if (index > -1)
+      {
+        this.clientCache.splice(index, 1);
+      }
+    }
   }
 
   public onClientAddOrUpdate(): Observable<Client>
   {
     return new Observable<Client>((observableClients) =>
     {
+      this.clientCache.forEach(c => observableClients.next(c));
+
       this.clientsHubConnection.on('AddOrUpdateClient', (client: Client) =>
       {
         observableClients.next(this.clientAdapter.adapt(client));
