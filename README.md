@@ -43,7 +43,7 @@ Control
 
 Panels
 -> Action(s)
--> View
+-> View  + If / Else (Toggle) (perhaps possibillity to mix all View types here)
 
 Pages
 -> Panels
@@ -60,6 +60,12 @@ Pagecollections
 *OBS Websockets
 *Virtual Midi Actions
 *Local Media Control Actions
+*PC Performancestatus view
+*Clock view
+*Teamspeak view :D
+*Discord view 
+*Maybe way in the future: Ableton control interface? :D
+
 
 
 
