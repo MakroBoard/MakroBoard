@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using WebMacroSoftKeyboard.ActionFilters;
 using WebMacroSoftKeyboard.Data;
 using WebMacroSoftKeyboard.HubConfig;
 
@@ -107,6 +108,7 @@ namespace WebMacroSoftKeyboard.Controllers
         /// <summary>
         /// GET: api/client/confirmclient
         [HttpPost("confirmclient")]
+        [LocalHost]
         public async Task<ActionResult> PostConfirmClient([FromBody] ApiModels.Client client)
         {
             var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(client.ClientIp) && x.Code.Equals(client.Code));
@@ -134,6 +136,7 @@ namespace WebMacroSoftKeyboard.Controllers
         /// <summary>
         /// GET: api/client/confirmclient
         [HttpPost("removeClient")]
+        [LocalHost]
         public async Task<ActionResult> PostRemoveClient([FromBody] ApiModels.Client client)
         {
             var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(client.ClientIp) && x.Code.Equals(client.Code));

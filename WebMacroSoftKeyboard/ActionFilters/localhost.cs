@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace WebMacroSoftKeyboard.ActionFilters
 {
-    public class LocalhostAttribute : ActionFilterAttribute
+    public class LocalHostAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
