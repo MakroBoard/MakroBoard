@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Prise.DependencyInjection;
 using System.IO;
 using WebMacroSoftKeyboard.Data;
 using WebMacroSoftKeyboard.HubConfig;
@@ -45,6 +46,7 @@ namespace WebMacroSoftKeyboard
                 services.AddDatabaseDeveloperPageExceptionFilter();
             }
 
+            services.AddPrise();
             services.AddSignalR();
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
