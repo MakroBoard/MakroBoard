@@ -117,7 +117,6 @@ namespace WebMacroSoftKeyboard.Controllers
 
             byte[] bytes = SHA512.Create().ComputeHash(Encoding.UTF8.GetBytes($"WMSK_{client.ClientIp}{client.Code}{DateTime.Now:O}{Constants.Seed}{new Random().Next()}"));
 
-            // Latin1 is required for Communication in Headers
             var token = Convert.ToBase64String(bytes);
             currentClient.Token = token;
             currentClient.State = ClientState.Confirmed;
