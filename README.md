@@ -26,45 +26,45 @@ There is no released version so far, you have to follow the development document
 ## Structure
 
 Control
--> Actions -> Key, Exec, ..., Makro(Ablauf von Actions), Selection
-    -> Key
-    -> Application
-    -> Makro
-    -> Selection
-    -> (HTTP/WS call)
-    -> Direct HTTP/WS call from client
--> View
-    -> Text
-    -> Image
-    -> Material icons
-    -> List
-    -> Interactive List
-    -> HTTP content
+- Actions - Key, Exec, ..., Makro(Ablauf von Actions), Selection
+    - Key
+    - Application
+    - Makro
+    - Selection
+    - (HTTP/WS call)
+    - Direct HTTP/WS call from client
+- View
+    - Text
+    - Image
+    - Material icons
+    - List
+    - Interactive List
+    - HTTP content
 
 Panels
--> Action(s)
--> View  + If / Else (Toggle) (perhaps possibillity to mix all View types here)
+- Action(s)
+- View  + If / Else (Toggle) (perhaps possibillity to mix all View types here)
 
 Pages
--> Panels
+- Panels
 
 Pagecollections
--> Pages
--> (show on which devices, default All)
+- Pages
+- (show on which devices, default All)
 
 
 ## Ideas / Todos
 
-*Settings for Webserverport
-*Setting pluginsreload
-*OBS Websockets
-*Virtual Midi Actions
-*Local Media Control Actions
-*PC Performancestatus view
-*Clock view
-*Teamspeak view :D
-*Discord view 
-*Maybe way in the future: Ableton control interface? :D
+* Settings for Webserverport
+* Setting pluginsreload
+* OBS Websockets
+* Virtual Midi Actions
+* Local Media Control Actions
+* PC Performancestatus view
+* Clock view
+* Teamspeak view :D
+* Discord view 
+* Maybe way in the future: Ableton control interface? :D
 
 
 
