@@ -57,6 +57,21 @@ Pagecollections
 - (show on which devices, default All)
 
 
+## ControlDB Structure
+* Pages
+    - SymbolicName
+    - Label
+    * Group
+        - SymbolicName
+        - Label
+        * Panel (Visualize Control)
+            - PluginName
+            - SymbolicName
+            - ConfigData: json
+
+
+
+
 ## Ideas / Todos
 
 * Settings for Webserverport
