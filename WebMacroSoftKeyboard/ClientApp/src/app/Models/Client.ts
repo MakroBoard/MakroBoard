@@ -1,6 +1,6 @@
 // app/core/course.model.ts
 import { Injectable } from "@angular/core";
-import { Adapter } from "./aDAPTER";
+import { Adapter } from "./Adapter";
 
 export class Client
 {
