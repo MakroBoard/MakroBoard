@@ -35,15 +35,19 @@ Control
     - Direct HTTP/WS call from client
 - View
     - Text
+    - If / Else Text
     - Image
+    - If / Else Image
     - Material icons
+    - If / Else Material icons
     - List
     - Interactive List
     - HTTP content
+    - If / Else HTTP content
 
 Panels
-- Action(s)
-- View  + If / Else (Toggle) (perhaps possibillity to mix all View types here)
+- Action
+- Viewconfig
 
 Pages
 - Panels
