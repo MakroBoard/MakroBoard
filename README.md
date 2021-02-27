@@ -67,7 +67,9 @@ Pagecollections
         * Panel (Visualize Control)
             - PluginName
             - SymbolicName
-            - ConfigData: json
+            * ConfigParameter
+                - SymbolicName
+                - Value (any/string)
 
 
 

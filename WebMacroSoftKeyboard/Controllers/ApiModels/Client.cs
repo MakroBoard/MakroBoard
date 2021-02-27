@@ -13,5 +13,4 @@ namespace WebMacroSoftKeyboard.Controllers.ApiModels
         public string LastConnection { get; set; }
         public int State { get; set; }
     }
-
 }

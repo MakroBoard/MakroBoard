@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using WebMacroSoftKeyboard.Controllers.ApiModels;
 using WebMacroSoftKeyboard.Data;
 using WebMacroSoftKeyboard.HubConfig;
 using WebMacroSoftKeyboard.PluginContract;
@@ -31,8 +32,8 @@ namespace WebMacroSoftKeyboard.Controllers
         }
 
         // GET: api/client/requesttokens
-        [HttpGet("controls")]
-        public async Task<ActionResult> GetControls()
+        [HttpGet("availablecontrols")]
+        public async Task<ActionResult> GetAvailableControls()
         {
             var pathToBinDebug = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var pluginDir = Path.GetFullPath(Path.Combine(pathToBinDebug, "../../../../PluginOutput"));
@@ -51,7 +52,7 @@ namespace WebMacroSoftKeyboard.Controllers
                 }
             }
 
-            var controls = new List<Control>();
+            var plugins = new List<Plugin>();
 
 
             // Create an instance of plugin types
@@ -61,12 +62,28 @@ namespace WebMacroSoftKeyboard.Controllers
                 {
                     // This assumes the implementation of IPlugin has a parameterless constructor
                     var plugin = (IWebMacroSoftKeyboardPlugin)Activator.CreateInstance(pluginType);
-                    var cs = await plugin.GetControls().ConfigureAwait(false);
-                    controls.AddRange(cs);
+                    var pluginControls = await plugin.GetControls().ConfigureAwait(false);
+                    plugins.Add(CreatePluginModel(plugin.GetType().Name, pluginControls));
                 }
             }
 
-            return Ok(controls);
+            return Ok(plugins);
+        }
+
+
+        private static Plugin CreatePluginModel(string pluginName, IEnumerable<PluginContract.Control> controls)
+        {
+            return new Plugin(pluginName, controls.Select(x => new ApiModels.Control(x.SymbolicName, new ApiModels.View(x.View.Type), new ApiModels.ConfigParameters(x.ConfigParameters.Select(c => CreateConfigParameter(c)).ToList()))));
+        }
+
+        private static ApiModels.ConfigParameter CreateConfigParameter(PluginContract.ConfigParameter configParameter)
+        {
+            return configParameter switch
+            {
+                StringConfigParameter scp => new ApiModels.ConfigParameter(configParameter.SymbolicName, scp.ValidationRegEx),
+                IntConfigParameter icp => new ApiModels.ConfigParameter(configParameter.SymbolicName, icp.MinValue, icp.MaxValue),
+                _ => throw new ArgumentOutOfRangeException(nameof(configParameter), $"ConfigParameterType {configParameter.GetType().FullName} is not yet supported!"),
+            };
         }
     }
 }

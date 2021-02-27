@@ -12,42 +12,45 @@ namespace WebMacroSoftKeyboard.Plugin.Keyboard
         public override async Task<IEnumerable<Control>> GetControls()
         {
             var controls = new List<Control>();
-            for (int i = char.MinValue; i <= char.MaxValue; i++)
-            {
-                char c = Convert.ToChar(i);
-                if (!char.IsControl(c))
-                {
-                    controls.Add(new KeyboardControl(nameof(KeyboardPlugin), c));
-                }
-            }
-
+            controls.Add(new KeyboardControl());
             var result = await Task.FromResult(controls).ConfigureAwait(false);
-
             return result;
         }
 
         public async override Task<Control> GetControl(string symbolicName)
         {
-            return await Task.FromResult(new KeyboardControl(nameof(KeyboardPlugin), symbolicName.Last())).ConfigureAwait(false);
+            return await Task.FromResult(new KeyboardControl()).ConfigureAwait(false);
         }
     }
 
     public class KeyboardControl : Control
     {
-        private readonly char _Char;
-
-        public KeyboardControl(string pluginName, char c) : base(pluginName, $"keyboard_{c}", $"Press {c}")
+        private const string _ConfigChar = "char";
+        public KeyboardControl() : base()
         {
-            View = new ButtonView(ExecuteChar);
-            _Char = c;
+            View = new ButtonView($"Press Key", ExecuteChar);
+            ConfigParameters = new ConfigParameters
+            {
+                new StringConfigParameter(_ConfigChar, "[\x00-\x7F]")
+            };
         }
 
-        private string ExecuteChar()
+        private string ExecuteChar(ConfigValues configValues)
         {
-            new Robot().KeyPress(_Char);
-            return $"Pressed {_Char}";
+            if (configValues.TryGetConfigValue(_ConfigChar, out var configValue))
+            {
+                // TODO Better Convert
+                new Robot().KeyPress(configValue.Value.ToString().Last());
+                return $"Pressed {configValue.Value}";
+            }
+
+            return "Config value not found!";
         }
 
         public override View View { get; }
+
+        public override string SymbolicName => $"Keyboard";
+
+        public override ConfigParameters ConfigParameters { get; }
     }
 }

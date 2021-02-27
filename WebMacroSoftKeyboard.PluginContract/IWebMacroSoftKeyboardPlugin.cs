@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
@@ -24,11 +25,13 @@ namespace WebMacroSoftKeyboard.PluginContract
         }
     }
 
-    public class View : PropertyChangedBase
+    public abstract class View : PropertyChangedBase
     {
         internal View()
         {
         }
+
+        public abstract string Type { get; }
 
         public virtual string Label { get; }
 
@@ -37,37 +40,132 @@ namespace WebMacroSoftKeyboard.PluginContract
 
     public sealed class ImageView : View
     {
-
+        public override string Type => "Image";
     }
 
     public sealed class ButtonView : View
     {
-        private readonly Func<string> _Execute;
+        private readonly Func<ConfigValues, string> _Execute;
+        private string _Label;
 
-        public ButtonView([NotNull] Func<string> execute)
+
+        public ButtonView(Func<ConfigValues, string> execute)
         {
             _Execute = execute;
         }
 
-        public string Execute()
+        public ButtonView(string label, Func<ConfigValues, string> execute) : this(execute)
         {
-            return _Execute?.Invoke() ?? "No Action defined";
+            _Label = label;
+        }
+
+        public override string Type => "Button";
+
+        public override string Label => _Label;
+
+        public string Execute(ConfigValues configValues)
+        {
+            return _Execute?.Invoke(configValues) ?? "No Action defined";
         }
     }
 
-    public abstract class Control
+    public sealed class SlideView : View
     {
-        protected Control(string symbolicName)
+        private Func<double, string> _Execute;
+
+        public SlideView(double min, double max, [NotNull] Func<double, string> execute)
+        {
+            Min = min;
+            Max = max;
+            _Execute = execute;
+        }
+
+        public override string Type => "Slider";
+
+        public double Min { get; }
+        public double Max { get; }
+
+        public string Execute(double value)
+        {
+            return _Execute?.Invoke(value) ?? "No Action defined";
+        }
+    }
+
+    public class ConfigParameter
+    {
+        protected ConfigParameter(string symbolicName)
         {
             SymbolicName = symbolicName;
+        }
+
+        public string SymbolicName { get; }
+    }
+
+    public class StringConfigParameter : ConfigParameter
+    {
+        public StringConfigParameter(string symbolicName, string validationRegEx) : base(symbolicName)
+        {
+            ValidationRegEx = validationRegEx;
+        }
+
+        public string ValidationRegEx { get; }
+    }
+
+    public class IntConfigParameter : ConfigParameter
+    {
+        public IntConfigParameter(string symbolicName, int minValue, int maxValue) : base(symbolicName)
+        {
+            MinValue = minValue;
+            MaxValue = maxValue;
+        }
+
+        public int MinValue { get; }
+        public int MaxValue { get; }
+    }
+
+    public class ConfigParameters : Collection<ConfigParameter>
+    {
+
+    }
+
+    public class ConfigValue
+    {
+        public ConfigValue(string symbolicName, object value)
+        {
+            SymbolicName = symbolicName;
+            Value = value;
+        }
+
+        public string SymbolicName { get; }
+
+        public object Value { get; }
+    }
+
+    public class ConfigValues : Collection<ConfigValue>
+    {
+        public bool TryGetConfigValue(string symbolicName, out ConfigValue configValue)
+        {
+            configValue = this.FirstOrDefault(x => x.SymbolicName.Equals(symbolicName, StringComparison.Ordinal));
+            return configValue != null;
+        }
+    }
+
+
+
+    public abstract class Control
+    {
+        protected Control()
+        {
         }
 
         /// <summary>
         /// SymbolicName to identify the control
         /// </summary>
-        public string SymbolicName { get; }
+        public abstract string SymbolicName { get; }
 
         public abstract View View { get; }
+
+        public abstract ConfigParameters ConfigParameters { get; }
     }
 
     public interface IWebMacroSoftKeyboardPlugin
