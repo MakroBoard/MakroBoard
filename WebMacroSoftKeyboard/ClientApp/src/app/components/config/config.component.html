@@ -1,4 +1,5 @@
-<mat-tab-group>
+<mat-tab-group [selectedIndex]="selectedTab"
+               (selectedIndexChange)="selectedTabChanged($event)">
   <mat-tab>
     <ng-template mat-tab-label>
       <mat-icon class="tab-icon">devices</mat-icon>
@@ -13,10 +14,10 @@
 
   <mat-tab>
     <ng-template mat-tab-label>
-      <mat-icon class="example-tab-icon">thumb_up</mat-icon>
-      Hier können Aktionen und Abläufe definiert werden
+      <mat-icon class="tab-icon">reorder</mat-icon>
+      Available Controls
     </ng-template>
-    Hier können Aktionen und Abläufe definiert werden
+    <app-available-controls></app-available-controls>
   </mat-tab>
 
   <mat-tab>

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment.prod';
 import { Client, ClientAdapter } from '../Models/Client';
-import { ControlsAdapter } from '../Models/Controls';
+import { Plugin, ControlsAdapter } from '../Models/Controls';
 
 @Injectable({
   providedIn: 'root'
@@ -127,9 +127,9 @@ export class DataService
     return this.http.post(environment.apiUrl + "client/removeClient/", client, { responseType: 'json' });
   }
 
-  public getAvailableControls(client: Client): Observable<any>
+  public getAvailableControls(): Promise<Array<Plugin>>
   {
     return this.http.get(environment.apiUrl + "controls/availablecontrols/", { responseType: 'json' })
-      .pipe(map((d) => (d as Array<any>).map(p => this.controlsAdapter.adapt(p))));
+      .pipe(map((d) => (d as Array<any>).map(p => this.controlsAdapter.adapt(p)))).toPromise();
   }
 }

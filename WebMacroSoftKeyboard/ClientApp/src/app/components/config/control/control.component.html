@@ -1,0 +1,15 @@
+<div *ngIf="control != undefined" fxLayout="row wrap">
+  <div fxFlex>
+    <h3>{{ control.symbolicName }}: <small>{{control.view.viewType}}</small></h3>
+    <div>Configparameters</div>
+    <div class="ml-1">
+      <div *ngFor="let configParameter of control.configParameters">
+        <app-config-parameter [configParameter]="configParameter"></app-config-parameter>
+        <mat-divider></mat-divider>
+      </div>
+    </div>
+  </div>
+  <div fxFlex="50">
+    TODO PREVIEW + TestExecute
+  </div>
+</div>

@@ -10,6 +10,9 @@ import { MatCardModule } from '@angular/material/card';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatInputModule } from '@angular/material/input';
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,6 +25,11 @@ import { ConfigComponent } from './components/config/config.component';
 import { IsLocalHostPipe } from './pipes/is-local-host.pipe';
 import { ClientComponent } from './components/client/client.component';
 import { AuthIntercepter } from './authintercepter';
+import { AvailableControlsComponent } from './components/config/available-controls/available-controls.component';
+import { PluginComponent } from './components/config/plugin/plugin.component';
+import { ControlComponent } from './components/config/control/control.component';
+import { ConfigParameterComponent } from './components/config/config-parameter/config-parameter.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -31,7 +39,11 @@ import { AuthIntercepter } from './authintercepter';
     NavbarComponent,
     ConfigComponent,
     IsLocalHostPipe,
-    ClientComponent
+    ClientComponent,
+    AvailableControlsComponent,
+    PluginComponent,
+    ControlComponent,
+    ConfigParameterComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +59,10 @@ import { AuthIntercepter } from './authintercepter';
     FlexLayoutModule,
     MatCardModule,
     MatProgressBarModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDividerModule,
+    MatInputModule,
+    ReactiveFormsModule 
   ],
   providers: [IsLocalHostPipe,
     {

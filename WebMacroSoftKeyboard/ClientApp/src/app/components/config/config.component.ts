@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Client } from '../../Models/Client';
 import { DataService } from '../../Services/data.service';
 
@@ -9,10 +10,13 @@ import { DataService } from '../../Services/data.service';
 })
 export class ConfigComponent implements OnInit
 {
-
+  public selectedTab: number;
   public clients: Client[] = new Array<Client>();
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService)
+  {
+    this.selectedTab = +(localStorage.getItem("configTabIndex") ?? 0);
+  }
 
   ngOnInit(): void
   {
@@ -25,7 +29,7 @@ export class ConfigComponent implements OnInit
           const index = this.clients.indexOf(oldClient, 0);
           if (index > -1)
           {
-            this.clients.splice (index, 1);
+            this.clients.splice(index, 1);
           }
         }
 
@@ -47,6 +51,12 @@ export class ConfigComponent implements OnInit
         }
       }
     });
+
   }
 
+  selectedTabChanged(selectedTab: number): void
+  {
+    this.selectedTab = selectedTab;
+    localStorage.setItem("configTabIndex", this.selectedTab.toString());
+  }
 }
