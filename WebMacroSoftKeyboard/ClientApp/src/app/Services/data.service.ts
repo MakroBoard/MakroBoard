@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment.prod';
 import { Client, ClientAdapter } from '../Models/Client';
+import { ControlsAdapter } from '../Models/Controls';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class DataService
   private clientsHubConnection: signalR.HubConnection
   private clientCache: Array<Client> = new Array<Client>();
 
-  constructor(private http: HttpClient, private clientAdapter: ClientAdapter)
+  constructor(private http: HttpClient, private clientAdapter: ClientAdapter, private controlsAdapter: ControlsAdapter)
   {
     this.clientsHubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.hubUrl + 'clients')
@@ -126,4 +127,9 @@ export class DataService
     return this.http.post(environment.apiUrl + "client/removeClient/", client, { responseType: 'json' });
   }
 
+  public getAvailableControls(client: Client): Observable<any>
+  {
+    return this.http.get(environment.apiUrl + "controls/availablecontrols/", { responseType: 'json' })
+      .pipe(map((d) => (d as Array<any>).map(p => this.controlsAdapter.adapt(p))));
+  }
 }
