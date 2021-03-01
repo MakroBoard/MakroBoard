@@ -1,0 +1,7 @@
+<mat-card class="no-padding">
+  <container-element [ngSwitch]="panel.control.view.viewType">
+    <app-button *ngSwitchCase="'Button'" [panel]="panel"></app-button>
+
+    <div *ngSwitchDefault>ViewType not implemented: {{panel.control.view.viewType}}</div>
+  </container-element>
+</mat-card>

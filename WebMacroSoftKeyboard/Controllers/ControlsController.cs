@@ -73,7 +73,7 @@ namespace WebMacroSoftKeyboard.Controllers
 
         private static Plugin CreatePluginModel(string pluginName, IEnumerable<PluginContract.Control> controls)
         {
-            return new Plugin(pluginName, controls.Select(x => new ApiModels.Control(x.SymbolicName, new ApiModels.View(x.View.Type), new ApiModels.ConfigParameters(x.ConfigParameters.Select(c => CreateConfigParameter(c)).ToList()))));
+            return new Plugin(pluginName, controls.Select(x => new ApiModels.Control(x.SymbolicName, new ApiModels.View(x.View.Type, new ApiModels.ConfigParameters(x.View.ConfigParameters.Select(c => CreateConfigParameter(c)).ToList())), new ApiModels.ConfigParameters(x.ConfigParameters.Select(c => CreateConfigParameter(c)).ToList()))));
         }
 
         private static ApiModels.ConfigParameter CreateConfigParameter(PluginContract.ConfigParameter configParameter)

@@ -1,15 +1,18 @@
 <div *ngIf="control != undefined" fxLayout="row wrap">
   <div fxFlex>
     <h3>{{ control.symbolicName }}: <small>{{control.view.viewType}}</small></h3>
+    <div *ngFor="let viewConfigParameter of control.view.configParameters; index as i">
+      <app-config-parameter [configParameter]="viewConfigParameter" [value]="viewConfigValues[i]"></app-config-parameter>
+    </div>
     <div>Configparameters</div>
     <div class="ml-1">
-      <div *ngFor="let configParameter of control.configParameters">
-        <app-config-parameter [configParameter]="configParameter"></app-config-parameter>
-        <mat-divider></mat-divider>
+      <div *ngFor="let configParameter of control.configParameters; index as i">
+        <app-config-parameter [configParameter]="configParameter" [value]="configValues[i]"></app-config-parameter>
       </div>
     </div>
   </div>
   <div fxFlex="50">
-    TODO PREVIEW + TestExecute
+    <h3>Preview</h3>
+    <app-panel [panel]="panel"></app-panel>
   </div>
 </div>

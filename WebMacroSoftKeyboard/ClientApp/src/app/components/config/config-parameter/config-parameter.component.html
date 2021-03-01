@@ -2,7 +2,7 @@
   <div *ngIf="configParameter.parameterType == 'string'">
     <mat-form-field>
       <mat-label>{{configParameter.symbolicName}}</mat-label>
-      <input matInput [formControl]="formControl" [pattern]="configParameter.validationRegEx">
+      <input matInput [formControl]="formControl" [(ngModel)]="value.value" [pattern]="configParameter.validationRegEx">
       <mat-error *ngIf="formControl != undefined && formControl.hasError('pattern')">
         <small>Input has to Match RegEx"{{configParameter.validationRegEx}}"</small>
       </mat-error>
