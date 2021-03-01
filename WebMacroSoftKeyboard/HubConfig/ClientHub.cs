@@ -33,7 +33,8 @@ namespace WebMacroSoftKeyboard.HubConfig
                 return;
             }
 
-            var existingClient = await _DatabaseContext.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(ipAddress));
+           
+            var existingClient = await _DatabaseContext.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(ipAddress.ToString()));
 
             if (existingClient == null)
             {
@@ -65,7 +66,7 @@ namespace WebMacroSoftKeyboard.HubConfig
             var sessionToRemove = await _DatabaseContext.Sessions.FirstOrDefaultAsync(x => x.ClientSignalrId == Context.ConnectionId);
             if (sessionToRemove != null)
             {
-                _DatabaseContext.Sessions.Remove(sessionToRemove);
+              var test =  _DatabaseContext.Sessions.Remove(sessionToRemove);
             }
 
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup);

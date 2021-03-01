@@ -18,7 +18,7 @@ namespace WebMacroSoftKeyboard.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Client>().ToTable("Client");
+            modelBuilder.Entity<Client>().ToTable("Client").HasAlternateKey(c => c.ClientIp);
             modelBuilder.Entity<Panel>().ToTable("Panels");
             modelBuilder.Entity<Group>().ToTable("Groups");
             modelBuilder.Entity<Page>().ToTable("Pages");
