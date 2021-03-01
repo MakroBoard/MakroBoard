@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment.prod';
 import { Client, ClientAdapter } from '../Models/Client';
+import { ConfigValue } from '../Models/ConfigValue';
 import { ControlsAdapter } from "../Models/ControlsAdapter";
 import { Plugin } from "../Models/Plugin";
 
@@ -15,6 +16,7 @@ import { Plugin } from "../Models/Plugin";
 })
 export class DataService
 {
+
   private clientsHubConnection: signalR.HubConnection
   private clientCache: Array<Client> = new Array<Client>();
 
@@ -132,5 +134,10 @@ export class DataService
   {
     return this.http.get(environment.apiUrl + "controls/availablecontrols/", { responseType: 'json' })
       .pipe(map((d) => (d as Array<any>).map(p => this.controlsAdapter.adapt(p)))).toPromise();
+  }
+
+  public executeControl(symbolicName: string, configValues: Array<ConfigValue>) : Promise<any>
+  {
+    return this.http.post(environment.apiUrl + "controls/execute/", { symbolicName: symbolicName, configValues: configValues }, { responseType: 'json' }).toPromise();
   }
 }

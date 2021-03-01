@@ -106,7 +106,8 @@ namespace WebMacroSoftKeyboard.Controllers
         }
 
         /// <summary>
-        /// GET: api/client/confirmclient
+        /// POST: api/client/confirmclient
+        /// </summary>
         [HttpPost("confirmclient")]
         [LocalHost]
         public async Task<ActionResult> PostConfirmClient([FromBody] ApiModels.Client client)

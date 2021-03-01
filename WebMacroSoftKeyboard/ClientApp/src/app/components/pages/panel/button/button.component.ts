@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Panel } from '../../../../Models/Panel';
+import { DataService } from '../../../../Services/data.service';
 
 @Component({
   selector: 'app-button',
@@ -12,7 +13,7 @@ export class ButtonComponent implements OnInit
   @Input()
   public panel!: Panel;
 
-  constructor() { }
+  constructor(private dataService: DataService) { }
 
   ngOnInit(): void
   {
@@ -20,7 +21,7 @@ export class ButtonComponent implements OnInit
 
   execute(): void
   {
-    alert(this.panel.control.symbolicName);
+    this.dataService.executeControl(this.panel.control.symbolicName, this.panel.configValues);
   }
 
 

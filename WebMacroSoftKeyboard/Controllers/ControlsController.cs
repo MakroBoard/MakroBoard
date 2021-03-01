@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
+using WebMacroSoftKeyboard.ActionFilters;
 using WebMacroSoftKeyboard.Controllers.ApiModels;
 using WebMacroSoftKeyboard.Data;
 using WebMacroSoftKeyboard.HubConfig;
@@ -33,7 +35,22 @@ namespace WebMacroSoftKeyboard.Controllers
 
         // GET: api/client/requesttokens
         [HttpGet("availablecontrols")]
+        [LocalHost]
         public async Task<ActionResult> GetAvailableControls()
+        {
+            var plugins = await LoadAllPlugins().ConfigureAwait(false);
+
+            var result = new List<Plugin>();
+            foreach (var plugin in plugins)
+            {
+                var pluginControls = await plugin.GetControls().ConfigureAwait(false);
+                result.Add(CreatePluginModel(plugin.GetType().Name, pluginControls));
+            }
+
+            return Ok(result);
+        }
+
+        private static async Task<List<IWebMacroSoftKeyboardPlugin>> LoadAllPlugins()
         {
             var pathToBinDebug = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var pluginDir = Path.GetFullPath(Path.Combine(pathToBinDebug, "../../../../PluginOutput"));
@@ -52,7 +69,7 @@ namespace WebMacroSoftKeyboard.Controllers
                 }
             }
 
-            var plugins = new List<Plugin>();
+            var plugins = new List<IWebMacroSoftKeyboardPlugin>();
 
 
             // Create an instance of plugin types
@@ -61,13 +78,76 @@ namespace WebMacroSoftKeyboard.Controllers
                 foreach (var pluginType in loader.LoadDefaultAssembly().GetTypes().Where(t => typeof(IWebMacroSoftKeyboardPlugin).IsAssignableFrom(t) && !t.IsAbstract))
                 {
                     // This assumes the implementation of IPlugin has a parameterless constructor
-                    var plugin = (IWebMacroSoftKeyboardPlugin)Activator.CreateInstance(pluginType);
-                    var pluginControls = await plugin.GetControls().ConfigureAwait(false);
-                    plugins.Add(CreatePluginModel(plugin.GetType().Name, pluginControls));
+                    plugins.Add((IWebMacroSoftKeyboardPlugin)Activator.CreateInstance(pluginType));
                 }
             }
 
-            return Ok(plugins);
+            return plugins;
+        }
+
+        /// <summary>
+        /// POST: api/controls/confirmclient
+        /// </summary>
+        [HttpPost("execute")]
+        [LocalHost]
+        public async Task<ActionResult> PostExecute([FromBody] JsonElement data)
+        {
+            var symbolicName = string.Empty;
+            ApiModels.ConfigValues configValues = null;
+            foreach (var element in data.EnumerateObject())
+            {
+                switch (element.Name)
+                {
+                    case "symbolicName":
+                        symbolicName = element.Value.GetString();
+                        break;
+                    case "configValues":
+                        var json = element.Value.GetRawText();#
+
+                        // TODO Deseriaize
+                        configValues = JsonSerializer.Deserialize<ApiModels.ConfigValues>(json);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(data), $"Data Property {element.Name} is not yet implemented!");
+                }
+            }
+
+            var plugins = await LoadAllPlugins().ConfigureAwait(false);
+            foreach (var plugin in plugins)
+            {
+                try
+                {
+                    var control = await plugin.GetControl(symbolicName);
+                    if (control != null)
+                    {
+                        switch (control.View)
+                        {
+                            case ButtonView bv:
+                                var cv = new PluginContract.ConfigValues();
+                                foreach (var c in configValues)
+                                {
+                                    cv.Add(new PluginContract.ConfigValue(c.SymbolicName, c.Value));
+                                }
+                                bv.Execute(cv);
+                                break;
+                            default:
+                                throw new NotSupportedException($"ViewType {control.View.GetType().Name} is not yet implemented.");
+                        }
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to execute: { e.Message }");
+                }
+            }
+            //var control = plugins.SelectMany(x => x.Controls).FirstOrDefault(x => x.SymbolicName.Equals(symbolicName, StringComparison.OrdinalIgnoreCase));
+            //if (control == null)
+            //{
+            //    return StatusCode(418);
+            //}
+
+            return Ok();
         }
 
 
