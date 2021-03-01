@@ -20,10 +20,10 @@ namespace WebMacroSoftKeyboard.Controllers
     [Route("api/[controller]")]
     public class ClientController : ControllerBase
     {
-        private readonly ClientContext _Context;
+        private readonly DatabaseContext _Context;
         private readonly IHubContext<ClientHub> _ClientHub;
 
-        public ClientController(ClientContext context, IHubContext<ClientHub> clientHub)
+        public ClientController(DatabaseContext context, IHubContext<ClientHub> clientHub)
         {
             _Context = context;
             _ClientHub = clientHub;
@@ -127,7 +127,7 @@ namespace WebMacroSoftKeyboard.Controllers
             await _Context.SaveChangesAsync();
             await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, currentClient);
 
-            var targetClients = (await _Context.Sessions.Where(x => x.ClientIp.Equals(client.ClientIp)).ToListAsync()).Select(x => x.ClientId);
+            var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(client.ClientIp)).ToListAsync()).Select(x => x.ClientSignalrId);
             await _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, token);
 
             return Ok();
@@ -149,7 +149,7 @@ namespace WebMacroSoftKeyboard.Controllers
             await _Context.SaveChangesAsync();
             await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.RemoveClient, client);
 
-            var targetClients = (await _Context.Sessions.Where(x => x.ClientIp.Equals(client.ClientIp)).ToListAsync()).Select(x => x.ClientId);
+            var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(client.ClientIp)).ToListAsync()).Select(x => x.ClientSignalrId);
             await _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, string.Empty);
 
             return Ok();

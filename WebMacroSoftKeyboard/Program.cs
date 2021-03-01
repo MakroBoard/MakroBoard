@@ -62,8 +62,8 @@ namespace WebMacroSoftKeyboard
         {
             try
             {
-                var context = services.GetRequiredService<ClientContext>();
-                ClientInitializer.Initialize(context);
+                var context = services.GetRequiredService<DatabaseContext>();
+                DatabaseInitializer.Initialize(context);
             }
             catch (Exception ex)
             {
