@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ConfigParameter } from '../../../Models/Controls';
+import { ConfigValue } from "../../../Models/ConfigValue";
+import { ConfigParameter } from "../../../Models/ConfigParameter";
 
 @Component({
   selector: 'app-config-parameter',
@@ -12,7 +13,10 @@ export class ConfigParameterComponent implements OnInit
 
 
   @Input()
-  public configParameter: ConfigParameter | undefined;
+  public configParameter!: ConfigParameter;
+
+  @Input()
+  public value!: ConfigValue;
 
   public formControl: FormControl = new FormControl();
 

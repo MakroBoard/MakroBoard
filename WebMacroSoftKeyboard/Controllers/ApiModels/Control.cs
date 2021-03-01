@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace WebMacroSoftKeyboard.Controllers.ApiModels
 {
@@ -34,14 +35,17 @@ namespace WebMacroSoftKeyboard.Controllers.ApiModels
 
     public class View
     {
-        public View(string viewType)
+        public View(string viewType, ConfigParameters configParameters)
         {
             ViewType = viewType;
+            ConfigParameters = configParameters;
         }
 
         public string ViewType { get; }
 
         public string Value { get; }
+
+        public ConfigParameters ConfigParameters { get; }
     }
 
     public class ConfigParameter
@@ -79,7 +83,7 @@ namespace WebMacroSoftKeyboard.Controllers.ApiModels
 
         }
 
-        public ConfigParameters(IList<ConfigParameter> configParameters): base(configParameters)
+        public ConfigParameters(IList<ConfigParameter> configParameters) : base(configParameters)
         {
 
         }

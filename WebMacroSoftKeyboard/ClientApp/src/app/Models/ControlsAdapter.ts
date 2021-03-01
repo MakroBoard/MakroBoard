@@ -1,42 +1,9 @@
-// app/core/course.model.ts
 import { Injectable } from "@angular/core";
 import { Adapter } from "./Adapter";
-
-export class Plugin
-{
-  constructor(
-    public pluginName: string,
-    public controls: Array<Control>)
-  { }
-}
-
-export class Control
-{
-  constructor(
-    public symbolicName: string,
-    public view: View,
-    public configParameters: Array<ConfigParameter>)
-  { }
-}
-
-export class View
-{
-  constructor(
-    public viewType: string)
-  { }
-}
-
-
-export class ConfigParameter
-{
-  constructor(
-    public symbolicName: string,
-    public parameterType: string,
-    public validationRegEx: string,
-    public minValue: number,
-    public maxValue: number)
-  { }
-}
+import { ConfigParameter } from "./ConfigParameter";
+import { Plugin } from "./Plugin";
+import { View } from "./View";
+import { Control } from "./Control";
 
 
 @Injectable({
@@ -56,7 +23,7 @@ export class ControlsAdapter implements Adapter<Plugin>
 
   adaptView(item: any): View
   {
-    return new View(item.viewType);
+    return new View(item.viewType, item.configParameters.map((cp: any) => this.adaptConfigParameter(cp)));
   }
 
   adaptConfigParameter(item: any): ConfigParameter

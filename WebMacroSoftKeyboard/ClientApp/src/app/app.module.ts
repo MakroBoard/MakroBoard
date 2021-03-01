@@ -30,6 +30,9 @@ import { PluginComponent } from './components/config/plugin/plugin.component';
 import { ControlComponent } from './components/config/control/control.component';
 import { ConfigParameterComponent } from './components/config/config-parameter/config-parameter.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { PanelComponent } from './components/pages/panel/panel.component';
+import { ButtonComponent } from './components/pages/panel/button/button.component';
+import { ConfigValuePipe } from './pipes/config-value.pipe';
 
 @NgModule({
   declarations: [
@@ -43,7 +46,10 @@ import { ReactiveFormsModule } from '@angular/forms';
     AvailableControlsComponent,
     PluginComponent,
     ControlComponent,
-    ConfigParameterComponent
+    ConfigParameterComponent,
+    PanelComponent,
+    ButtonComponent,
+    ConfigValuePipe
   ],
   imports: [
     BrowserModule,

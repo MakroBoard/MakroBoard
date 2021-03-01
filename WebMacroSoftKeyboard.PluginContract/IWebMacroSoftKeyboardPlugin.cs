@@ -29,11 +29,14 @@ namespace WebMacroSoftKeyboard.PluginContract
     {
         internal View()
         {
+            ConfigParameters = new ConfigParameters { new StringConfigParameter("label", ".*") };
         }
 
         public abstract string Type { get; }
 
         public virtual string Label { get; }
+
+        public ConfigParameters ConfigParameters { get; }
 
         public virtual Bitmap BackgroundImage { get; }
     }

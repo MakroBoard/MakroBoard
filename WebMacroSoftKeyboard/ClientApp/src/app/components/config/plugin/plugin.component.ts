@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Plugin } from '../../../Models/Controls';
+import { Plugin } from "../../../Models/Plugin";
 
 @Component({
   selector: 'app-plugin',

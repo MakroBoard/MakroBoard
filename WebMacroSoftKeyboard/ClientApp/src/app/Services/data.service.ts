@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment.prod';
 import { Client, ClientAdapter } from '../Models/Client';
-import { Plugin, ControlsAdapter } from '../Models/Controls';
+import { ControlsAdapter } from "../Models/ControlsAdapter";
+import { Plugin } from "../Models/Plugin";
 
 @Injectable({
   providedIn: 'root'
