@@ -9,9 +9,9 @@ namespace WebMacroSoftKeyboard.ActionFilters
 {
     public class AuthenticatedClientAttribute : ActionFilterAttribute
     {
-        private ClientContext _Context;
+        private DatabaseContext _Context;
 
-        public AuthenticatedClientAttribute(ClientContext context)
+        public AuthenticatedClientAttribute(DatabaseContext context)
         {
             _Context = context;
         }

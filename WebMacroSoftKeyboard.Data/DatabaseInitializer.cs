@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace WebMacroSoftKeyboard.Data
 {
-    public static class ClientInitializer
+    public static class DatabaseInitializer
     {
-        public static void Initialize(ClientContext context)
+        public static void Initialize(DatabaseContext context)
         {
             context.Database.EnsureCreated();
 

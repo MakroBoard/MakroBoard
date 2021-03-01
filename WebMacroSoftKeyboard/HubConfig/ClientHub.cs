@@ -12,16 +12,16 @@ namespace WebMacroSoftKeyboard.HubConfig
 {
     public class ClientHub : Hub
     {
-        private readonly ClientContext _ClientContext;
+        private readonly DatabaseContext _DatabaseContext;
 
         private bool IsLocalHost(IPAddress ipAddress)
         {
             return IPAddress.IsLoopback(ipAddress);
         }
 
-        public ClientHub(ClientContext clientContext)
+        public ClientHub(DatabaseContext databaseContext)
         {
-            _ClientContext = clientContext;
+            _DatabaseContext = databaseContext;
         }
 
         public async override Task OnConnectedAsync()
@@ -33,10 +33,19 @@ namespace WebMacroSoftKeyboard.HubConfig
                 return;
             }
 
-            await _ClientContext.Sessions.AddAsync(new Session { ClientIp = ipAddress.ToString(), ClientId = Context.ConnectionId });
-            await _ClientContext.SaveChangesAsync();
+           
+            var existingClient = await _DatabaseContext.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(ipAddress.ToString()));
 
-            var clients = await _ClientContext.Clients.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
+            if (existingClient == null)
+            {
+                existingClient = new Client {ClientIp = ipAddress.ToString(),RegisterDate = DateTime.UtcNow };
+            }
+            existingClient.LastConnection = DateTime.UtcNow;
+
+            await _DatabaseContext.Sessions.AddAsync(new Session { ClientSignalrId = Context.ConnectionId, Client = existingClient });
+            await _DatabaseContext.SaveChangesAsync();
+
+            var clients = await _DatabaseContext.Clients.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
             foreach (var client in clients)
             {
                 await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateClient, client);
@@ -54,10 +63,10 @@ namespace WebMacroSoftKeyboard.HubConfig
         {
             var ip = Context.GetHttpContext().Connection.RemoteIpAddress.ToString();
 
-            var sessionToRemove = await _ClientContext.Sessions.FirstOrDefaultAsync(x => x.ClientId == Context.ConnectionId);
+            var sessionToRemove = await _DatabaseContext.Sessions.FirstOrDefaultAsync(x => x.ClientSignalrId == Context.ConnectionId);
             if (sessionToRemove != null)
             {
-                _ClientContext.Sessions.Remove(sessionToRemove);
+              var test =  _DatabaseContext.Sessions.Remove(sessionToRemove);
             }
 
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup);

@@ -37,8 +37,9 @@ namespace WebMacroSoftKeyboard
 
 
             var sqliteConnectionString = $"Filename={Path.Combine(Constants.DataDirectory, "wmsk.db")}";
-            services.AddDbContext<ClientContext>(options =>
-               options.UseSqlite(sqliteConnectionString));
+            services.AddDbContext<DatabaseContext>(options => options.UseSqlite(sqliteConnectionString));
+
+            
 
             if (_Env.IsDevelopment())
             {

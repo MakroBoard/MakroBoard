@@ -24,10 +24,10 @@ namespace WebMacroSoftKeyboard.Controllers
     [Route("api/[controller]")]
     public class ControlsController : ControllerBase
     {
-        private readonly ClientContext _Context;
+        private readonly DatabaseContext _Context;
         private readonly IHubContext<ClientHub> _ClientHub;
 
-        public ControlsController(ClientContext context, IHubContext<ClientHub> clientHub)
+        public ControlsController(DatabaseContext context, IHubContext<ClientHub> clientHub)
         {
             _Context = context;
             _ClientHub = clientHub;

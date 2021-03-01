@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,6 +17,7 @@ namespace WebMacroSoftKeyboard.Data
         public DateTime RegisterDate { get; set; }
         public DateTime LastConnection { get; set; }
         public ClientState State { get; set; }
+        public List<Session> Sessions { get; set; }
     }
 
     public enum ClientState
@@ -30,7 +32,9 @@ namespace WebMacroSoftKeyboard.Data
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
-        public string ClientIp { get; set; }
-        public string ClientId { get; set; }
+        public string ClientSignalrId { get; set; }
+        public int ClientID { get; set; }
+        [ForeignKey("ClientID")]
+        public Client Client { get; set; }
     }
 }
