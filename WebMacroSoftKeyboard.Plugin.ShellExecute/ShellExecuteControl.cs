@@ -26,11 +26,14 @@ namespace WebMacroSoftKeyboard.Plugin.ShellExecute
 
             try
             {
-                var process = Process.Start(command.Value.ToString());
-                //process.WaitForExitAsync()
+                var process = Process.Start(new ProcessStartInfo(command.Value.ToString())
+                {
+                    UseShellExecute = true
+                });
             }
-            catch(Exception e)
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return "Could not execute command";
             }
 

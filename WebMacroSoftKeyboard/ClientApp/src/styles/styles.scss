@@ -38,8 +38,15 @@ $WebMacroSoftKeyboardAngularClient-theme: mat-light-theme((
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  min-height: 100vh;
+  height: auto;
+  margin: 0;
+}
+
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 
 .space {
@@ -52,6 +59,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 
-.no-padding{
-    padding: 0!important;
+.no-padding {
+  padding: 0 !important;
 }
