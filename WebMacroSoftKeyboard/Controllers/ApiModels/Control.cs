@@ -16,8 +16,6 @@ namespace WebMacroSoftKeyboard.Controllers.ApiModels
         public IEnumerable<Control> Controls { get; }
     }
 
-
-
     public class Control
     {
         public Control(string symbolicName, View view, ConfigParameters configParameters)

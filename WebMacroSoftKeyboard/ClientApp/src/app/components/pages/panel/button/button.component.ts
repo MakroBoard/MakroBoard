@@ -23,6 +23,4 @@ export class ButtonComponent implements OnInit
   {
     this.dataService.executeControl(this.panel.control.symbolicName, this.panel.configValues);
   }
-
-
 }

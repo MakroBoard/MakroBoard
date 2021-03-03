@@ -13,6 +13,8 @@ using WebMacroSoftKeyboard.Controllers.ApiModels;
 using WebMacroSoftKeyboard.Data;
 using WebMacroSoftKeyboard.HubConfig;
 using WebMacroSoftKeyboard.PluginContract;
+using WebMacroSoftKeyboard.PluginContract.Parameters;
+using WebMacroSoftKeyboard.PluginContract.Views;
 
 // QR Code auf Localhost
 // auf Handy -> Code anzeigen
@@ -102,10 +104,12 @@ namespace WebMacroSoftKeyboard.Controllers
                         symbolicName = element.Value.GetString();
                         break;
                     case "configValues":
-                        var json = element.Value.GetRawText();#
-
+                        var json = element.Value.GetRawText();
                         // TODO Deseriaize
-                        configValues = JsonSerializer.Deserialize<ApiModels.ConfigValues>(json);
+                        configValues = JsonSerializer.Deserialize<ApiModels.ConfigValues>(json, new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true,
+                        });
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(data), $"Data Property {element.Name} is not yet implemented!");
@@ -126,7 +130,22 @@ namespace WebMacroSoftKeyboard.Controllers
                                 var cv = new PluginContract.ConfigValues();
                                 foreach (var c in configValues)
                                 {
-                                    cv.Add(new PluginContract.ConfigValue(c.SymbolicName, c.Value));
+                                    if (c.Value is JsonElement jsonElement)
+                                    {
+                                        var configParameter = control.ConfigParameters.First(x => x.SymbolicName.Equals(c.SymbolicName, StringComparison.OrdinalIgnoreCase));
+                                        switch (configParameter)
+                                        {
+                                            case StringConfigParameter scp:
+                                                cv.Add(new PluginContract.ConfigValue(c.SymbolicName, jsonElement.GetString()));
+                                                break;
+                                            default:
+                                                throw new NotSupportedException("This is not yet supported!");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        cv.Add(new PluginContract.ConfigValue(c.SymbolicName, c.Value));
+                                    }
                                 }
                                 bv.Execute(cv);
                                 break;
@@ -153,10 +172,10 @@ namespace WebMacroSoftKeyboard.Controllers
 
         private static Plugin CreatePluginModel(string pluginName, IEnumerable<PluginContract.Control> controls)
         {
-            return new Plugin(pluginName, controls.Select(x => new ApiModels.Control(x.SymbolicName, new ApiModels.View(x.View.Type, new ApiModels.ConfigParameters(x.View.ConfigParameters.Select(c => CreateConfigParameter(c)).ToList())), new ApiModels.ConfigParameters(x.ConfigParameters.Select(c => CreateConfigParameter(c)).ToList()))));
+            return new Plugin(pluginName, controls.Select(x => new ApiModels.Control(x.SymbolicName, new ApiModels.View(x.View.Type.ToString(), new ApiModels.ConfigParameters(x.View.ConfigParameters.Select(c => CreateConfigParameter(c)).ToList())), new ApiModels.ConfigParameters(x.ConfigParameters.Select(c => CreateConfigParameter(c)).ToList()))));
         }
 
-        private static ApiModels.ConfigParameter CreateConfigParameter(PluginContract.ConfigParameter configParameter)
+        private static ApiModels.ConfigParameter CreateConfigParameter(PluginContract.Parameters.ConfigParameter configParameter)
         {
             return configParameter switch
             {

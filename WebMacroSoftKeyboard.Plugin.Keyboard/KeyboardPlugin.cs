@@ -1,9 +1,12 @@
 ﻿using Desktop.Robot;
+using Desktop.Robot.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebMacroSoftKeyboard.PluginContract;
+using WebMacroSoftKeyboard.PluginContract.Parameters;
+using WebMacroSoftKeyboard.PluginContract.Views;
 
 namespace WebMacroSoftKeyboard.Plugin.Keyboard
 {
@@ -11,8 +14,11 @@ namespace WebMacroSoftKeyboard.Plugin.Keyboard
     {
         public override async Task<IEnumerable<Control>> GetControls()
         {
-            var controls = new List<Control>();
-            controls.Add(new KeyboardControl());
+            var controls = new List<Control>
+            {
+                new KeyboardControl()
+            };
+
             var result = await Task.FromResult(controls).ConfigureAwait(false);
             return result;
         }
@@ -29,10 +35,7 @@ namespace WebMacroSoftKeyboard.Plugin.Keyboard
         public KeyboardControl() : base()
         {
             View = new ButtonView($"Press Key", ExecuteChar);
-            ConfigParameters = new ConfigParameters
-            {
-                new StringConfigParameter(_ConfigChar, "[\x00-\x7F]")
-            };
+            AddConfigParameter(new StringConfigParameter(_ConfigChar, string.Empty, "[\x00-\x7F]"));
         }
 
         private string ExecuteChar(ConfigValues configValues)
@@ -40,7 +43,7 @@ namespace WebMacroSoftKeyboard.Plugin.Keyboard
             if (configValues.TryGetConfigValue(_ConfigChar, out var configValue))
             {
                 // TODO Better Convert
-                new Robot().KeyPress(configValue.Value.ToString().Last());
+                new Robot().Type(configValue.Value.ToString());
                 return $"Pressed {configValue.Value}";
             }
 
@@ -50,7 +53,5 @@ namespace WebMacroSoftKeyboard.Plugin.Keyboard
         public override View View { get; }
 
         public override string SymbolicName => $"Keyboard";
-
-        public override ConfigParameters ConfigParameters { get; }
     }
 }

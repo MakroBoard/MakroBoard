@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<PackageReference Include="Prise.Plugin" Version="2.1.0" />-->
     <PackageReference Include="Desktop.Robot" Version="1.0.0-alpha" />
   </ItemGroup>
 </Project>

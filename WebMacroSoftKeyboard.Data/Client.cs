@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace WebMacroSoftKeyboard.Data
 {
@@ -17,6 +18,8 @@ namespace WebMacroSoftKeyboard.Data
         public DateTime RegisterDate { get; set; }
         public DateTime LastConnection { get; set; }
         public ClientState State { get; set; }
+        
+        [JsonIgnore]
         public List<Session> Sessions { get; set; }
     }
 
