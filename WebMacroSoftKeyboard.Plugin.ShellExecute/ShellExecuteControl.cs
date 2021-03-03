@@ -10,12 +10,14 @@ namespace WebMacroSoftKeyboard.Plugin.ShellExecute
     {
         private const string _ConfigExecutable = "executable";
         private const string _ConfigArguments = "arguments";
+        private const string _ConfigWaitForExit = "Wait for Exit";
 
         public ShellExecuteControl() : base()
         {
             View = new ButtonView($"Execute", ExecuteCommand);
             AddConfigParameter(new StringConfigParameter(_ConfigExecutable, string.Empty, ".*"));
             AddConfigParameter(new StringConfigParameter(_ConfigArguments, string.Empty, ".*"));
+            AddConfigParameter(new BoolConfigParameter(_ConfigWaitForExit,false));
             //AddConfigParameter(new BoolConfigParameter(_ConfigCommand, false));
         }
 
@@ -26,9 +28,11 @@ namespace WebMacroSoftKeyboard.Plugin.ShellExecute
                 return "No Command defined!";
             }
             arg.TryGetConfigValue(_ConfigArguments, out var arguments);
+            arg.TryGetConfigValue(_ConfigWaitForExit, out var waitforexit);
 
             try
             {
+                Console.WriteLine(waitforexit.ToString());
                 var process = Process.Start(new ProcessStartInfo(command.Value.ToString(),arguments.Value.ToString())
                 {
                     UseShellExecute = true

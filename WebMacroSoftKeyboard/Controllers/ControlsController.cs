@@ -179,8 +179,9 @@ namespace WebMacroSoftKeyboard.Controllers
         {
             return configParameter switch
             {
-                StringConfigParameter scp => new ApiModels.ConfigParameter(configParameter.SymbolicName, scp.ValidationRegEx),
+                StringConfigParameter scp => new ApiModels.ConfigParameter(configParameter.SymbolicName, scp.DefaultValue, scp.ValidationRegEx),
                 IntConfigParameter icp => new ApiModels.ConfigParameter(configParameter.SymbolicName, icp.MinValue, icp.MaxValue),
+                BoolConfigParameter bcp => new ApiModels.ConfigParameter(configParameter.SymbolicName, bcp.DefaultValue),
                 _ => throw new ArgumentOutOfRangeException(nameof(configParameter), $"ConfigParameterType {configParameter.GetType().FullName} is not yet supported!"),
             };
         }
