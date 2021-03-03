@@ -29,10 +29,12 @@ import { AvailableControlsComponent } from './components/config/available-contro
 import { PluginComponent } from './components/config/plugin/plugin.component';
 import { ControlComponent } from './components/config/control/control.component';
 import { ConfigParameterComponent } from './components/config/config-parameter/config-parameter.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PanelComponent } from './components/pages/panel/panel.component';
 import { ButtonComponent } from './components/pages/panel/button/button.component';
 import { ConfigValuePipe } from './pipes/config-value.pipe';
+import { FilterPipe } from './pipes/filter.pipe';
+import { PageComponent } from './components/pages/page/page.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import { ConfigValuePipe } from './pipes/config-value.pipe';
     ConfigParameterComponent,
     PanelComponent,
     ButtonComponent,
-    ConfigValuePipe
+    ConfigValuePipe,
+    FilterPipe,
+    PageComponent
   ],
   imports: [
     BrowserModule,
@@ -68,6 +72,7 @@ import { ConfigValuePipe } from './pipes/config-value.pipe';
     MatTabsModule,
     MatDividerModule,
     MatInputModule,
+    FormsModule,
     ReactiveFormsModule 
   ],
   providers: [IsLocalHostPipe,

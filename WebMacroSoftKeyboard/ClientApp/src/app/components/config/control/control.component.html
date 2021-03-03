@@ -1,4 +1,4 @@
-<div *ngIf="control != undefined" fxLayout="row wrap">
+<div *ngIf="control != undefined" fxLayout="row wrap" class="m1">
   <div fxFlex>
     <h3>{{ control.symbolicName }}: <small>{{control.view.viewType}}</small></h3>
     <div *ngFor="let viewConfigParameter of control.view.configParameters; index as i">

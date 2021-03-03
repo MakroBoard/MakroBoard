@@ -10,6 +10,7 @@ import { DataService } from '../../../Services/data.service';
 export class AvailableControlsComponent implements OnInit
 {
   public plugins: Array<Plugin> = new Array<Plugin>();
+  public searchText: string = '';
 
   constructor(private dataService: DataService) { }
 

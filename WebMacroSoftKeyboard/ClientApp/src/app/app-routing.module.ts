@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ConfigComponent } from './components/config/config.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
+import { PageComponent } from './components/pages/page/page.component';
 import { CheckLocalHostGuardGuard } from './guards/check-local-host-guard.guard';
 import { CheckServerTokenGuard } from './guards/check-server-token.guard';
 
@@ -10,6 +11,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [CheckServerTokenGuard] },
   { path: 'config', component: ConfigComponent, canActivate: [CheckLocalHostGuardGuard] },
   { path: 'login', component: LoginComponent },
+  { path: 'page/:name', component: PageComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];
 

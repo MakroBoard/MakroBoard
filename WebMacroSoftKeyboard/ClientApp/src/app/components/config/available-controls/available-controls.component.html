@@ -1,3 +1,13 @@
-<div *ngFor="let plugin of plugins">
+<div class="form-group m1"  fxLayout="column" fxLayoutAlign=" stretch">
+  <mat-form-field appearance="fill">
+    <mat-label>Filter</mat-label>
+    <span matPrefix>
+      <mat-icon aria-hidden="false" aria-label="Filter Icon">search</mat-icon> 
+    </span>
+    <input matInput [(ngModel)]="searchText">
+  </mat-form-field>
+</div>
+
+<div *ngFor="let plugin of plugins | filter: searchText">
   <app-plugin [plugin]="plugin"></app-plugin>
 </div>
