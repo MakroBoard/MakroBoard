@@ -25,6 +25,11 @@ namespace WebMacroSoftKeyboard.Plugin.Keyboard
 
         public async override Task<Control> GetControl(string symbolicName)
         {
+            if(!symbolicName.Equals("Keyboard"))
+            {
+                return null;
+            }
+
             return await Task.FromResult(new KeyboardControl()).ConfigureAwait(false);
         }
     }
@@ -52,6 +57,6 @@ namespace WebMacroSoftKeyboard.Plugin.Keyboard
 
         public override View View { get; }
 
-        public override string SymbolicName => $"Keyboard";
+        public override string SymbolicName => "Keyboard";
     }
 }
