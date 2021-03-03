@@ -88,7 +88,9 @@ Pagecollections
 * Maybe way in the future: Ableton control interface? :D
 
 
+## Docu todo:
 
+* shell executor linux use bash or zsh with -c parameter and the whole command in quotation marks to run commants with pipe 
 
 
 
