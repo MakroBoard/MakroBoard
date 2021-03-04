@@ -20,8 +20,12 @@ There is no released version so far, you have to follow the development document
 
 ### Building and starting the application
 * go to the WebMacroSoftKeyboard\ClientApp and run `npm install`
-* in vscode / visual Studio you can just hit F5 or use the build tasks
-* you can also use the shell `dotnet build` or `dotnet publish`
+* go to the WebMacroSoftKeyboard\ClientApp and run `npm start` to start the frontend
+* in vscode / visual studio you can now just hit F5 or use the build tasks to start the backend
+* you can also use the shell `dotnet build` or `dotnet publish` in the root of the repo to start the backend
+
+### Building the documentation
+Currently you can only build the documentation on a Windows client. Install [docfx](https://dotnet.github.io/docfx/tutorial/docfx_getting_started.html#2-use-docfx-as-a-command-line-tool) via the prefered way, clone the WMSK repo, go with an administrative shell to the `Docs` folder and run `docfx --serve`. Then you can navigate with the prefered Webbrowser to `http://localhost:8080/`
 
 ## Structure
 
