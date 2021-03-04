@@ -28,10 +28,7 @@ namespace WebMacroSoftKeyboard.Plugin.ShellExecute
                 return "No Command defined!";
             }
 
-            if (!arg.TryGetConfigValue(_ConfigArguments, out var arguments))
-            {
-                return "No Command defined!";
-            }
+            _ = arg.TryGetConfigValue(_ConfigArguments, out var arguments);
 
             bool waitForExit = false;
             if (arg.TryGetConfigValue(_ConfigWaitForExit, out var waitForExitParameter) && waitForExitParameter?.Value is bool b)
@@ -41,7 +38,7 @@ namespace WebMacroSoftKeyboard.Plugin.ShellExecute
 
             try
             {
-                var process = Process.Start(new ProcessStartInfo(command.Value.ToString(), arguments.Value?.ToString())
+                var process = Process.Start(new ProcessStartInfo(command.Value.ToString(), arguments?.Value?.ToString())
                 {
                     UseShellExecute = true
                 });
