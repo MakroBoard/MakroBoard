@@ -138,6 +138,9 @@ namespace WebMacroSoftKeyboard.Controllers
                                             case StringConfigParameter scp:
                                                 cv.Add(new PluginContract.ConfigValue(c.SymbolicName, jsonElement.GetString()));
                                                 break;
+                                            case BoolConfigParameter bcp:
+                                                cv.Add(new PluginContract.ConfigValue(c.SymbolicName, jsonElement.GetBoolean()));
+                                                break;
                                             default:
                                                 throw new NotSupportedException("This is not yet supported!");
                                         }

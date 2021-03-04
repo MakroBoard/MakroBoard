@@ -17,7 +17,7 @@ namespace WebMacroSoftKeyboard.Plugin.ShellExecute
             View = new ButtonView($"Execute", ExecuteCommand);
             AddConfigParameter(new StringConfigParameter(_ConfigExecutable, string.Empty, ".*"));
             AddConfigParameter(new StringConfigParameter(_ConfigArguments, string.Empty, ".*"));
-            AddConfigParameter(new BoolConfigParameter(_ConfigWaitForExit,false));
+            AddConfigParameter(new BoolConfigParameter(_ConfigWaitForExit, false));
             //AddConfigParameter(new BoolConfigParameter(_ConfigCommand, false));
         }
 
@@ -27,20 +27,32 @@ namespace WebMacroSoftKeyboard.Plugin.ShellExecute
             {
                 return "No Command defined!";
             }
-            arg.TryGetConfigValue(_ConfigArguments, out var arguments);
-            arg.TryGetConfigValue(_ConfigWaitForExit, out var waitforexit);
+
+            if (!arg.TryGetConfigValue(_ConfigArguments, out var arguments))
+            {
+                return "No Command defined!";
+            }
+
+            bool waitForExit = false;
+            if (arg.TryGetConfigValue(_ConfigWaitForExit, out var waitForExitParameter) && waitForExitParameter?.Value is bool b)
+            {
+                waitForExit = b;
+            }
 
             try
             {
-                Console.WriteLine(waitforexit.ToString());
-                var process = Process.Start(new ProcessStartInfo(command.Value.ToString(),arguments.Value.ToString())
+                var process = Process.Start(new ProcessStartInfo(command.Value.ToString(), arguments.Value?.ToString())
                 {
                     UseShellExecute = true
                 });
+                if (waitForExit)
+                {
+                    process.WaitForExit();
+                    return $"Successfully exited. ExitCode: {process.ExitCode}";
+                }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
                 return "Could not execute command";
             }
 
