@@ -12,6 +12,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
+import {MatRadioModule} from '@angular/material/radio';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -73,7 +74,8 @@ import { PageComponent } from './components/pages/page/page.component';
     MatDividerModule,
     MatInputModule,
     FormsModule,
-    ReactiveFormsModule 
+    MatRadioModule,
+    ReactiveFormsModule
   ],
   providers: [IsLocalHostPipe,
     {
