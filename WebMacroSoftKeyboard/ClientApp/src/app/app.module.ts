@@ -13,6 +13,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -36,6 +37,7 @@ import { ButtonComponent } from './components/pages/panel/button/button.componen
 import { ConfigValuePipe } from './pipes/config-value.pipe';
 import { FilterPipe } from './pipes/filter.pipe';
 import { PageComponent } from './components/pages/page/page.component';
+import { AddPageComponent } from './components/home/add-page/add-page.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +56,8 @@ import { PageComponent } from './components/pages/page/page.component';
     ButtonComponent,
     ConfigValuePipe,
     FilterPipe,
-    PageComponent
+    PageComponent,
+    AddPageComponent
   ],
   imports: [
     BrowserModule,
@@ -75,7 +78,8 @@ import { PageComponent } from './components/pages/page/page.component';
     MatInputModule,
     FormsModule,
     MatCheckboxModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogModule
   ],
   providers: [IsLocalHostPipe,
     {

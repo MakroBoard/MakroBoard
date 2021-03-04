@@ -136,8 +136,13 @@ export class DataService
       .pipe(map((d) => (d as Array<any>).map(p => this.controlsAdapter.adapt(p)))).toPromise();
   }
 
-  public executeControl(symbolicName: string, configValues: Array<ConfigValue>) : Promise<any>
+  public executeControl(symbolicName: string, configValues: Array<ConfigValue>): Promise<any>
   {
     return this.http.post(environment.apiUrl + "controls/execute/", { symbolicName: symbolicName, configValues: configValues }, { responseType: 'json' }).toPromise();
+  }
+
+  public addNewPage(label: string, icon: string): Promise<any>
+  {
+    return this.http.post(environment.apiUrl + "layout/addpage/", { label: label, icon: icon }, { responseType: 'json' }).toPromise();
   }
 }

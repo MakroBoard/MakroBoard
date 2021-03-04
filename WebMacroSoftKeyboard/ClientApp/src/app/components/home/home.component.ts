@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Page } from '../../Models/Page';
 import { Panel } from '../../Models/Panel';
+import { DataService } from '../../Services/data.service';
+import { AddPageComponent } from './add-page/add-page.component';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +15,7 @@ export class HomeComponent implements OnInit
 
   public pages: Array<Page> = new Array<Page>();
 
-  constructor() { }
+  constructor(public dialog: MatDialog, private dataService: DataService) { }
 
   ngOnInit(): void
   {
@@ -20,7 +23,15 @@ export class HomeComponent implements OnInit
 
   addNewPage()
   {
-    this.pages.push(new Page("New Page " + (this.pages.length + 1), "web", new Array<Panel>()));
+    const dialogRef = this.dialog.open(AddPageComponent);
+
+    dialogRef.afterClosed().subscribe(result =>
+    {
+      this.dataService.addNewPage(dialogRef.componentInstance.label, dialogRef.componentInstance.icon);
+
+      console.log(`Dialog result: ${result}`);
+    });
+    //this.pages.push(new Page("New Page " + (this.pages.length + 1), "web", new Array<Panel>()));
   }
 
 }

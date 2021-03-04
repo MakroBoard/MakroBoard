@@ -23,7 +23,7 @@
     </mat-card-actions>-->
     </mat-card>
 
-    <mat-card class="page-card m1 p0" >
+    <mat-card *ngIf="'' | isLocalHost" class="page-card m1 p0" >
 
       <button mat-button fxFill (click)="addNewPage()">
         <!--<mat-card-header>

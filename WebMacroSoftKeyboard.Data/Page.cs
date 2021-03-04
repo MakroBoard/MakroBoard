@@ -11,6 +11,8 @@ namespace WebMacroSoftKeyboard.Data
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
         public string SymbolicName { get; set; }
+        public string Label { get; set; }
+        public string Icon { get; set; }
         public List<Group> Groups { get; set; }
 
     }
