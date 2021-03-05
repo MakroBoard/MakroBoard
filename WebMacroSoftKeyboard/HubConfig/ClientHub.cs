@@ -33,27 +33,39 @@ namespace WebMacroSoftKeyboard.HubConfig
                 return;
             }
 
-           
+
             var existingClient = await _DatabaseContext.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(ipAddress.ToString()));
 
             if (existingClient == null)
             {
-                existingClient = new Client {ClientIp = ipAddress.ToString(),RegisterDate = DateTime.UtcNow };
+                existingClient = new Client { ClientIp = ipAddress.ToString(), RegisterDate = DateTime.UtcNow };
             }
             existingClient.LastConnection = DateTime.UtcNow;
 
             await _DatabaseContext.Sessions.AddAsync(new Session { ClientSignalrId = Context.ConnectionId, Client = existingClient });
             await _DatabaseContext.SaveChangesAsync();
 
-            var clients = await _DatabaseContext.Clients.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
-            foreach (var client in clients)
-            {
-                await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateClient, client);
-            }
+
 
             if (IsLocalHost(ipAddress))
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup);
+
+                var clients = await _DatabaseContext.Clients.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
+                foreach (var client in clients)
+                {
+                    await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateClient, client);
+                }
+            }
+            else
+            {
+                // Any sync needed?
+            }
+
+            var pages = await _DatabaseContext.Pages.ToListAsync();
+            foreach (var page in pages)
+            {
+                await Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, page);
             }
 
             await base.OnConnectedAsync();
@@ -66,7 +78,7 @@ namespace WebMacroSoftKeyboard.HubConfig
             var sessionToRemove = await _DatabaseContext.Sessions.FirstOrDefaultAsync(x => x.ClientSignalrId == Context.ConnectionId);
             if (sessionToRemove != null)
             {
-              var test =  _DatabaseContext.Sessions.Remove(sessionToRemove);
+                var test = _DatabaseContext.Sessions.Remove(sessionToRemove);
             }
 
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup);

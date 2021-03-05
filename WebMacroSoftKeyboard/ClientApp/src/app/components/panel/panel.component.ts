@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Panel } from '../../../Models/Panel';
+import { Panel } from '../../Models/Panel';
 
 @Component({
   selector: 'app-panel',

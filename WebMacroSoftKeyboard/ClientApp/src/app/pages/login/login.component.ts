@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit, OnDestroy
 {
-
   private progressTimer: Observable<number> = timer(0, 1000);
   private ValidDuration: number = 0;
   public Code: number = 0;

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Panel } from '../../../../Models/Panel';
-import { DataService } from '../../../../Services/data.service';
+import { Panel } from '../../../Models/Panel';
+import { DataService } from '../../../Services/data.service';
 
 @Component({
   selector: 'app-button',

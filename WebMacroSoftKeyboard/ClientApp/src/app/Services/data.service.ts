@@ -8,8 +8,8 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment.prod';
 import { Client, ClientAdapter } from '../Models/Client';
 import { ConfigValue } from '../Models/ConfigValue';
-import { ControlsAdapter } from "../Models/ControlsAdapter";
-import { Plugin } from "../Models/Plugin";
+import { Page, PageAdapter } from '../Models/Page';
+import { Plugin, PluginAdapter } from "../Models/Plugin";
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +19,9 @@ export class DataService
 
   private clientsHubConnection: signalR.HubConnection
   private clientCache: Array<Client> = new Array<Client>();
+  private pageCache: Array<Page> = new Array<Page>();
 
-  constructor(private http: HttpClient, private clientAdapter: ClientAdapter, private controlsAdapter: ControlsAdapter)
+  constructor(private http: HttpClient, private clientAdapter: ClientAdapter, private pageAdapter: PageAdapter, private pluginAdapter: PluginAdapter)
   {
     this.clientsHubConnection = new signalR.HubConnectionBuilder()
       .withUrl(environment.hubUrl + 'clients')
@@ -48,6 +49,12 @@ export class DataService
       }
     });
     this.onAddOrUpdateToken();
+    this.onPageAddOrUpdate().subscribe({
+      next: page =>
+      {
+        this.pageCache.push(page);
+      }
+    });
   }
 
   private removeOldClientFromCache(client: Client)
@@ -100,6 +107,20 @@ export class DataService
     });
   }
 
+  public onPageAddOrUpdate(): Observable<Page>
+  {
+    return new Observable<Page>((observables) =>
+    {
+      this.pageCache.forEach(c => observables.next(c));
+
+      this.clientsHubConnection.on('AddOrUpdatePage', (page: Page) =>
+      {
+        observables.next(this.pageAdapter.adapt(page));
+      });
+    });
+  }
+
+
   public async checkToken(): Promise<boolean>
   {
     var token = localStorage.getItem('token');
@@ -133,7 +154,7 @@ export class DataService
   public getAvailableControls(): Promise<Array<Plugin>>
   {
     return this.http.get(environment.apiUrl + "controls/availablecontrols/", { responseType: 'json' })
-      .pipe(map((d) => (d as Array<any>).map(p => this.controlsAdapter.adapt(p)))).toPromise();
+      .pipe(map((d) => (d as Array<any>).map(p => this.pluginAdapter.adapt(p)))).toPromise();
   }
 
   public executeControl(symbolicName: string, configValues: Array<ConfigValue>): Promise<any>

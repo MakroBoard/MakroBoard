@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ConfigComponent } from './components/config/config.component';
-import { HomeComponent } from './components/home/home.component';
-import { LoginComponent } from './components/login/login.component';
-import { PageComponent } from './components/pages/page/page.component';
+
+import { PageComponent } from './pages/page/page.component';
 import { CheckLocalHostGuardGuard } from './guards/check-local-host-guard.guard';
 import { CheckServerTokenGuard } from './guards/check-server-token.guard';
+import { HomeComponent } from './pages/home/home.component';
+import { ConfigComponent } from './pages/config/config.component';
+import { LoginComponent } from './pages/login/login.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [CheckServerTokenGuard] },

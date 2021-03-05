@@ -20,24 +20,24 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LoginComponent } from './components/login/login.component';
-import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-import { ConfigComponent } from './components/config/config.component';
 import { IsLocalHostPipe } from './pipes/is-local-host.pipe';
 import { ClientComponent } from './components/client/client.component';
 import { AuthIntercepter } from './authintercepter';
-import { AvailableControlsComponent } from './components/config/available-controls/available-controls.component';
-import { PluginComponent } from './components/config/plugin/plugin.component';
-import { ControlComponent } from './components/config/control/control.component';
-import { ConfigParameterComponent } from './components/config/config-parameter/config-parameter.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PanelComponent } from './components/pages/panel/panel.component';
-import { ButtonComponent } from './components/pages/panel/button/button.component';
+import { PanelComponent } from './components/panel/panel.component';
+import { ButtonComponent } from './components/panel/button/button.component';
 import { ConfigValuePipe } from './pipes/config-value.pipe';
 import { FilterPipe } from './pipes/filter.pipe';
-import { PageComponent } from './components/pages/page/page.component';
-import { AddPageComponent } from './components/home/add-page/add-page.component';
+import { PageComponent } from './pages/page/page.component';
+import { LoginComponent } from './pages/login/login.component';
+import { HomeComponent } from './pages/home/home.component';
+import { AddPageComponent } from './components/add-page/add-page.component';
+import { PluginComponent } from './pages/config/plugin/plugin.component';
+import { AvailableControlsComponent } from './pages/config/available-controls/available-controls.component';
+import { ConfigComponent } from './pages/config/config.component';
+import { ConfigParameterComponent } from './pages/config/config-parameter/config-parameter.component';
+import { ControlComponent } from './pages/config/control/control.component';
 
 @NgModule({
   declarations: [

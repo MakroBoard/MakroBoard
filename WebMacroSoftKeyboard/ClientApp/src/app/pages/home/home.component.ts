@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Page } from '../../Models/Page';
 import { Panel } from '../../Models/Panel';
 import { DataService } from '../../Services/data.service';
-import { AddPageComponent } from './add-page/add-page.component';
+import { AddPageComponent } from '../../components/add-page/add-page.component';
 
 @Component({
   selector: 'app-home',
@@ -15,10 +15,19 @@ export class HomeComponent implements OnInit
 
   public pages: Array<Page> = new Array<Page>();
 
-  constructor(public dialog: MatDialog, private dataService: DataService) { }
+  constructor(public dialog: MatDialog, private dataService: DataService)
+  {
+   
+  }
 
   ngOnInit(): void
   {
+    this.dataService.onPageAddOrUpdate().subscribe({
+      next: page =>
+      {
+        this.pages.push(page);
+      }
+    });
   }
 
   addNewPage()
