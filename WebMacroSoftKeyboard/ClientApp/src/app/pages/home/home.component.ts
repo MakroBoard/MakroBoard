@@ -36,9 +36,10 @@ export class HomeComponent implements OnInit
 
     dialogRef.afterClosed().subscribe(result =>
     {
-      this.dataService.addNewPage(dialogRef.componentInstance.label, dialogRef.componentInstance.icon);
-
-      console.log(`Dialog result: ${result}`);
+      if (result === true)
+      {
+        this.dataService.addNewPage(dialogRef.componentInstance.label, dialogRef.componentInstance.icon);
+      }
     });
     //this.pages.push(new Page("New Page " + (this.pages.length + 1), "web", new Array<Panel>()));
   }
