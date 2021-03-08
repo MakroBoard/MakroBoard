@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Plugin } from "../../../Models/Plugin";
-import { DataService } from '../../../Services/data.service';
+import { Plugin } from "../../Models/Plugin";
+import { DataService } from '../../Services/data.service';
 
 @Component({
   selector: 'app-available-controls',

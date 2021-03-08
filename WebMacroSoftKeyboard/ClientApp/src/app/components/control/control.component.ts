@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ConfigValue } from '../../../Models/ConfigValue';
-import { Control } from '../../../Models/Control';
-import { Panel } from '../../../Models/Panel';
+import { ConfigValue } from '../../Models/ConfigValue';
+import { Control } from '../../Models/Control';
+import { Panel } from '../../Models/Panel';
 
 @Component({
   selector: 'app-control',

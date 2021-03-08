@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, Output } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ConfigValue } from "../../../Models/ConfigValue";
-import { ConfigParameter } from "../../../Models/ConfigParameter";
+import { ConfigParameter } from '../../Models/ConfigParameter';
+import { ConfigValue } from '../../Models/ConfigValue';
 
 @Component({
   selector: 'app-config-parameter',

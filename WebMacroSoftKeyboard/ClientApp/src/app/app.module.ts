@@ -16,6 +16,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 
 
+import { NgxMasonryModule } from 'ngx-masonry';
+
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -33,11 +36,12 @@ import { PageComponent } from './pages/page/page.component';
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
 import { AddPageComponent } from './components/add-page/add-page.component';
-import { PluginComponent } from './pages/config/plugin/plugin.component';
-import { AvailableControlsComponent } from './pages/config/available-controls/available-controls.component';
+import { AvailableControlsComponent } from './components/available-controls/available-controls.component';
 import { ConfigComponent } from './pages/config/config.component';
-import { ConfigParameterComponent } from './pages/config/config-parameter/config-parameter.component';
-import { ControlComponent } from './pages/config/control/control.component';
+import { AddPanelComponent } from './components/add-panel/add-panel.component';
+import { PluginComponent } from './components/plugin/plugin.component';
+import { ConfigParameterComponent } from './components/config-parameter/config-parameter.component';
+import { ControlComponent } from './components/control/control.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +61,8 @@ import { ControlComponent } from './pages/config/control/control.component';
     ConfigValuePipe,
     FilterPipe,
     PageComponent,
-    AddPageComponent
+    AddPageComponent,
+    AddPanelComponent
   ],
   imports: [
     BrowserModule,
@@ -79,7 +84,8 @@ import { ControlComponent } from './pages/config/control/control.component';
     FormsModule,
     MatCheckboxModule,
     ReactiveFormsModule,
-    MatDialogModule
+    MatDialogModule,
+    NgxMasonryModule
   ],
   providers: [IsLocalHostPipe,
     {

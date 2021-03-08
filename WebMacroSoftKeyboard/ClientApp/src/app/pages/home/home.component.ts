@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Page } from '../../Models/Page';
-import { Panel } from '../../Models/Panel';
 import { DataService } from '../../Services/data.service';
 import { AddPageComponent } from '../../components/add-page/add-page.component';
 

@@ -1,1 +1,13 @@
-<p>page works!</p>
+<div>
+  <ngx-masonry [options]="masonryOptions">
+    <div ngxMasonryItem class="masonry-item" *ngFor="let panel of panels">
+      <app-panel [panel]="panel"></app-panel>
+    </div>
+  </ngx-masonry>
+
+  <div class="add-panel" *ngIf="'' | isLocalHost" >
+    <button mat-fab color="accent" aria-label="Add new Panel" (click)="addNewPanel()">>
+      <mat-icon>library_add</mat-icon>
+    </button>
+  </div>
+</div>

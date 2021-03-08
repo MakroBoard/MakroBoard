@@ -37,7 +37,7 @@ namespace WebMacroSoftKeyboard
             }
             else
             {
-                
+
                 Constants.Seed = Encoding.UTF8.GetString(SHA512.Create().ComputeHash(Encoding.UTF8.GetBytes($"WMSK_{DateTime.Now:O}{new Random().Next()}")));
                 File.WriteAllText(Constants.SeedFileName, Constants.Seed);
             }
