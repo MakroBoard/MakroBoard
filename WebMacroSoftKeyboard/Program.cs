@@ -77,11 +77,10 @@ namespace WebMacroSoftKeyboard
                 {
                     webBuilder.UseStartup<Startup>()
                     .ConfigureLogging(logging =>
-                {
-                    logging.ClearProviders();
-                    logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
-                })
-                .UseNLog();
+                    {
+                        logging.ClearProviders();
+                        logging.SetMinimumLevel(LogLevel.Trace);
+                    }).UseNLog();
                 });
 
         private static void CreateDbIfNotExists(IServiceProvider services)
