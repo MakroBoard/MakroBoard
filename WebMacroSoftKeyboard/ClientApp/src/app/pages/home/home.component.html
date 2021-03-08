@@ -2,41 +2,45 @@
 
   <div fxLayout="row wrap">
 
-    <mat-card class="page-card m1 p0" *ngFor="let page of pages">
-      <button mat-button fxFill [routerLink]="'/page/' + page.symbolicName">
-        <mat-card-header>
-          <!--<div mat-card-avatar>
+    <div fxFlex.lt-sm="100%" fxFlex.lt-md="50%" fxFlex.lt-lg="25%" fxFlex.lt-xl="20%" fxFlex.gt-xl="12.5%" *ngFor="let page of pages">
+      <mat-card class="page-card m1 p0">
+        <button mat-button fxFill [routerLink]="'/page/' + page.symbolicName">
+          <mat-card-header>
+            <!--<div mat-card-avatar>
+              <mat-icon aria-hidden="false" aria-label="Plugin">{{page.icon}}</mat-icon>
+            </div>-->
+            <mat-card-title>{{page.label}}</mat-card-title>
+            <mat-card-subtitle># Panels: {{page.panels?.length || 0}}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content fxLayout="column" fxLayoutAlign="center center">
             <mat-icon aria-hidden="false" aria-label="Plugin">{{page.icon}}</mat-icon>
-          </div>-->
-          <mat-card-title>{{page.label}}</mat-card-title>
-          <mat-card-subtitle># Panels: {{page.panels?.length || 0}}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content fxLayout="column" fxLayoutAlign="center center">
-          <mat-icon aria-hidden="false" aria-label="Plugin">{{page.icon}}</mat-icon>
-        </mat-card-content>
-      </button>
-    </mat-card>
+          </mat-card-content>
+        </button>
+      </mat-card>
+    </div>
+    <div *ngIf="'' | isLocalHost" fxFlex.lt-sm="100%" fxFlex.lt-md="50%" fxFlex.lt-lg="25%" fxFlex.lt-xl="20%" fxFlex.gt-xl="12.5%">
+      <mat-card  class="page-card m1 p0">
 
-    <mat-card *ngIf="'' | isLocalHost" class="page-card m1 p0">
-
-      <button mat-button fxFill (click)="addNewPage()">
-        <!--<mat-card-header>
-          <div mat-card-avatar>
-            <mat-icon aria-hidden="false" aria-label="Plugin">{{page.icon}}</mat-icon>
-          </div>
-          <mat-card-title>{{page.label}}</mat-card-title>
-          <mat-card-subtitle># Panels: {{page.panels.length}}</mat-card-subtitle>
-        </mat-card-header>-->
-        <mat-card-content fxLayout="column" fxLayoutAlign="center center">
-          <mat-icon aria-hidden="false" aria-label="Plugin">add_circle_outline</mat-icon>
-          <div>add new Page</div>
-        </mat-card-content>
-        <!--<mat-card-actions>
-          <button mat-button>LIKE</button>
-          <button mat-button>SHARE</button>
-        </mat-card-actions>-->
-      </button>
-    </mat-card>
+        <button mat-button fxFill (click)="addNewPage()">
+          <!--<mat-card-header>
+            <div mat-card-avatar>
+              <mat-icon aria-hidden="false" aria-label="Plugin">{{page.icon}}</mat-icon>
+            </div>
+            <mat-card-title>{{page.label}}</mat-card-title>
+            <mat-card-subtitle># Panels: {{page.panels.length}}</mat-card-subtitle>
+          </mat-card-header>-->
+          <mat-card-content fxLayout="column" fxLayoutAlign="center center">
+            hi
+            <mat-icon aria-hidden="false" aria-label="Plugin">add_circle_outline</mat-icon>
+            <div>add new Page</div>
+          </mat-card-content>
+          <!--<mat-card-actions>
+            <button mat-button>LIKE</button>
+            <button mat-button>SHARE</button>
+          </mat-card-actions>-->
+        </button>
+      </mat-card>
+    </div>
   </div>
 
 </div>
