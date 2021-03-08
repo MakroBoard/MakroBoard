@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Security.Cryptography;
@@ -20,11 +21,13 @@ namespace WebMacroSoftKeyboard.Controllers
     [Route("api/[controller]")]
     public class ClientController : ControllerBase
     {
+        private readonly ILogger<ClientController> _logger;
         private readonly DatabaseContext _Context;
         private readonly IHubContext<ClientHub> _ClientHub;
 
-        public ClientController(DatabaseContext context, IHubContext<ClientHub> clientHub)
+        public ClientController(ILogger<ClientController> logger, DatabaseContext context, IHubContext<ClientHub> clientHub)
         {
+            _logger = logger;
             _Context = context;
             _ClientHub = clientHub;
         }
@@ -82,7 +85,7 @@ namespace WebMacroSoftKeyboard.Controllers
 
                 _Context.Clients.Update(client);
 
-                Console.WriteLine($"Update existing Client: {client.ClientIp} - {client.Code}");
+                _logger.LogDebug($"Update existing Client: {client.ClientIp} - {client.Code}");
             }
             else
             {
@@ -94,7 +97,7 @@ namespace WebMacroSoftKeyboard.Controllers
                 };
                 await _Context.Clients.AddAsync(client);
 
-                Console.WriteLine($"Add new Client: {client.ClientIp} - {client.Code}");
+                 _logger.LogDebug($"Add new Client: {client.ClientIp} - {client.Code}");
             }
 
             await _Context.SaveChangesAsync();

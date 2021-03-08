@@ -1,6 +1,7 @@
 ﻿using McMaster.NETCore.Plugins;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,11 +29,13 @@ namespace WebMacroSoftKeyboard.Controllers
     [Route("api/[controller]")]
     public class LayoutController : ControllerBase
     {
+        private readonly ILogger<LayoutController> _logger;
         private readonly DatabaseContext _Context;
         private readonly IHubContext<ClientHub> _ClientHub;
 
-        public LayoutController(DatabaseContext context, IHubContext<ClientHub> clientHub)
+        public LayoutController(ILogger<LayoutController> logger, DatabaseContext context, IHubContext<ClientHub> clientHub)
         {
+            _logger = logger;
             _Context = context;
             _ClientHub = clientHub;
         }

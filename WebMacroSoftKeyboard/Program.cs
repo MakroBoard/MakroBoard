@@ -8,6 +8,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text.Unicode;
 using System.Text;
+using NLog.Web;
 
 namespace WebMacroSoftKeyboard
 {
@@ -15,19 +16,38 @@ namespace WebMacroSoftKeyboard
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine($"Using Data Directory: { Constants.DataDirectory}");
-            InitializeDataDir();
-            InitializeInstanceSeed();
+            // NLog: setup the logger first to catch all errors
+            var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            try
+            {
+                logger.Debug("init log");
+                logger.Debug($"Using Data Directory: { Constants.DataDirectory}");
+                InitializeDataDir();
+                InitializeInstanceSeed();
 
-            var host = CreateHostBuilder(args).Build();
-            using var scope = host.Services.CreateScope();
+                var host = CreateHostBuilder(args).Build();
+                using var scope = host.Services.CreateScope();
 
-            var services = scope.ServiceProvider;
+                var services = scope.ServiceProvider;
 
-            CreateDbIfNotExists(services);
+                CreateDbIfNotExists(services);
 
-            host.Run();
+                host.Run();
+            }
+            catch (Exception ex)
+            {
+                //NLog: catch setup errors
+                logger.Error(ex, "Stopped program because of exception");
+                throw;
+            }
+            finally
+            {
+                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+                NLog.LogManager.Shutdown();
+            }
+
         }
+
 
         private static void InitializeInstanceSeed()
         {
@@ -55,7 +75,13 @@ namespace WebMacroSoftKeyboard
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                    .ConfigureLogging(logging =>
+                {
+                    logging.ClearProviders();
+                    logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                })
+                .UseNLog();
                 });
 
         private static void CreateDbIfNotExists(IServiceProvider services)

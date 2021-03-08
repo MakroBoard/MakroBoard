@@ -1,6 +1,7 @@
 ﻿using McMaster.NETCore.Plugins;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,11 +27,13 @@ namespace WebMacroSoftKeyboard.Controllers
     [Route("api/[controller]")]
     public class ControlsController : ControllerBase
     {
+        private readonly ILogger<ControlsController> _logger;
         private readonly DatabaseContext _Context;
         private readonly IHubContext<ClientHub> _ClientHub;
 
-        public ControlsController(DatabaseContext context, IHubContext<ClientHub> clientHub)
+        public ControlsController(ILogger<ControlsController> logger, DatabaseContext context, IHubContext<ClientHub> clientHub)
         {
+            _logger = logger;
             _Context = context;
             _ClientHub = clientHub;
         }
@@ -160,7 +163,7 @@ namespace WebMacroSoftKeyboard.Controllers
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Failed to execute: { e.Message }");
+                    _logger.LogError($"Failed to execute: { e.Message }");
                 }
             }
             //var control = plugins.SelectMany(x => x.Controls).FirstOrDefault(x => x.SymbolicName.Equals(symbolicName, StringComparison.OrdinalIgnoreCase));
