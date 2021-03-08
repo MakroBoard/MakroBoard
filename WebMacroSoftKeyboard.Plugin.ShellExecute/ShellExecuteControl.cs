@@ -27,7 +27,7 @@ namespace WebMacroSoftKeyboard.Plugin.ShellExecute
         {
             if (!arg.TryGetConfigValue(_ConfigExecutable, out var command) || command?.Value == null || string.IsNullOrEmpty(command.Value.ToString()))
             {
-                _logger.Error("No Command defined!",arg, command);
+                _logger.Error("No Command defined!", arg, command);
                 return "No Command defined!";
             }
 
@@ -48,17 +48,17 @@ namespace WebMacroSoftKeyboard.Plugin.ShellExecute
                 if (waitForExit)
                 {
                     process.WaitForExit();
-                    _logger.Debug($"Successfully exited. ExitCode: {process.ExitCode}",arg,command);
+                    _logger.Debug($"Successfully exited. ExitCode: {process.ExitCode}", arg, command);
                     return $"Successfully exited. ExitCode: {process.ExitCode}";
                 }
             }
             catch (Exception e)
             {
-                _logger.Error("Could not execute command",arg, command ,e);
+                _logger.Error("Could not execute command", arg, command, e);
                 return "Could not execute command";
             }
-            
-            _logger.Debug("Successfully started!",arg,command);
+
+            _logger.Debug("Successfully started!", arg, command);
             return "Successfully Started!";
         }
 
