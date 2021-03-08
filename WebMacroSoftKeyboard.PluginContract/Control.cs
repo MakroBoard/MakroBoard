@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NLog;
 using WebMacroSoftKeyboard.PluginContract.Parameters;
 using WebMacroSoftKeyboard.PluginContract.Views;
 
@@ -6,9 +7,11 @@ namespace WebMacroSoftKeyboard.PluginContract
 {
     public abstract class Control
     {
+        private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
         private IList<ConfigParameter> _ConfigParameters = new List<ConfigParameter>();
         protected Control()
         {
+            
             ConfigParameters = new ConfigParameters(_ConfigParameters);
         }
 

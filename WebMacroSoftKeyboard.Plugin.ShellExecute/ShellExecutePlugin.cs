@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NLog;
 using WebMacroSoftKeyboard.PluginContract;
 
 namespace WebMacroSoftKeyboard.Plugin.ShellExecute
 {
     public class ShellExecutePlugin : WebMacroSoftKeyboardPluginBase
     {
-      
+      private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
         public async override Task<IEnumerable<Control>> GetControls()
         {
             var controls = new List<Control>
