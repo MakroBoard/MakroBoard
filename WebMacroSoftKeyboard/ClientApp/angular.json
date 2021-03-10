@@ -37,7 +37,10 @@
               "src/styles/material.scss",
               "src/styles/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "ngx-masonry"
+            ]
           },
           "configurations": {
             "production": {

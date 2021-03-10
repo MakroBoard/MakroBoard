@@ -14,6 +14,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatListModule } from '@angular/material/list';
 
 
 import { NgxMasonryModule } from 'ngx-masonry';
@@ -85,7 +86,8 @@ import { ControlComponent } from './components/control/control.component';
     MatCheckboxModule,
     ReactiveFormsModule,
     MatDialogModule,
-    NgxMasonryModule
+    NgxMasonryModule,
+    MatListModule
   ],
   providers: [IsLocalHostPipe,
     {

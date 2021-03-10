@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Plugin } from '../../Models/Plugin';
+import { DataService } from '../../Services/data.service';
 
 @Component({
   selector: 'app-add-panel',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AddPanelComponent implements OnInit {
 
-  constructor() { }
+  public plugins: Array<Plugin> = new Array<Plugin>();
+  public searchText: string = '';
 
-  ngOnInit(): void {
+  constructor(private dataService: DataService) { }
+
+  ngOnInit(): void
+  {
+    this.dataService.getAvailableControls().then((plugins: Array<Plugin>) =>
+    {
+      this.plugins = plugins;
+    });
   }
 
 }
