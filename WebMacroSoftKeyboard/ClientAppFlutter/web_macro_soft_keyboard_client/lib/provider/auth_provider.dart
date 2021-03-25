@@ -36,6 +36,14 @@ class AuthProvider {
   }
 
   Stream<LoginCode> submitCode() async* {
+    var loginCode = await getNewLoginCode();
+    Duration timerDuration = loginCode.validUntil.difference(DateTime.now());
+    Timer(timerDuration, () => {});
+
+    yield loginCode;
+  }
+
+  Future<LoginCode> getNewLoginCode() async {
     Random random = new Random();
 
     //Random 10000 - 99999
@@ -49,10 +57,14 @@ class AuthProvider {
         },
         body: json.encode(randomNumber),
       );
+
       var dateTime = DateTime.parse(json.decode(response.body));
-      yield LoginCode(code: randomNumber, validUntil: dateTime);
+
+      return LoginCode(code: randomNumber, validUntil: dateTime);
     } on Exception catch (e) {
       print('never reached' + e.toString());
     }
+
+    return LoginCode(code: -1, validUntil: DateTime.now());
   }
 }
