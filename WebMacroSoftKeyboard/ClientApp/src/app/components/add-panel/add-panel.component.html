@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Add new Panel</h2>
 <mat-dialog-content class="mat-typography">
 
-  <!--<div class="form-group m1" fxLayout="column" fxLayoutAlign=" stretch">
+  <div class="form-group m1" fxLayout="column" fxLayoutAlign=" stretch">
     <mat-form-field appearance="fill">
       <mat-label>Filter</mat-label>
       <span matPrefix>
@@ -9,13 +9,14 @@
       </span>
       <input matInput [(ngModel)]="searchText">
     </mat-form-field>
-  </div>-->
+  </div>
 
-  <!--<mat-selection-list #plúginList [multiple]="false">
+  <mat-selection-list #plúginList [multiple]="false">
     <mat-list-option *ngFor="let plugin of plugins" [value]="plugin">
-      {{plugin.symbolicName}}
+
+      {{plugin.pluginName}}
     </mat-list-option>
-  </mat-selection-list>-->
+  </mat-selection-list>
 
 
   <!--<div *ngFor="let plugin of plugins | filter: searchText">

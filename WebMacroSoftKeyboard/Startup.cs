@@ -29,10 +29,12 @@ namespace WebMacroSoftKeyboard
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy", builder => builder
-                .WithOrigins("http://localhost:4200")
+                //.WithOrigins("http://localhost:4200", "*")
+                .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                .AllowCredentials());
+                //.AllowCredentials()
+                );
             });
 
 
