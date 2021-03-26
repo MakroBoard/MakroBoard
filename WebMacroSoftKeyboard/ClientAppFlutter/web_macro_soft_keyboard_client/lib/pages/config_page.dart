@@ -7,12 +7,28 @@ class ConfigPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Config'),
-      ),
-      body: Container(
-        child: Text("Blubb"),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          bottom: TabBar(
+            tabs: [
+              Tab(
+                icon: Icon(Icons.devices),
+                text: "AvailableClients",
+              ),
+              Tab(icon: Icon(Icons.settings_display)),
+              // Tab(icon: Icon(Icons.directions_bike)),
+            ],
+          ),
+          title: Text('Tabs Demo'),
+        ),
+        body: TabBarView(
+          children: [
+            Icon(Icons.directions_car),
+            Icon(Icons.directions_transit),
+          ],
+        ),
       ),
     );
   }
