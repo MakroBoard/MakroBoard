@@ -2,7 +2,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:web_macro_soft_keyboard_client/guards/auth_guard.dart';
+import 'package:web_macro_soft_keyboard_client/pages/config_page.dart';
 import 'package:web_macro_soft_keyboard_client/pages/login_page.dart';
+import 'package:web_macro_soft_keyboard_client/pages/splash_screen.dart';
 import 'package:web_macro_soft_keyboard_client/provider/env_provider.dart';
 
 import 'pages/homePage.dart';
@@ -20,13 +22,9 @@ class AppModule extends Module {
   // Provide all the routes for your module
   @override
   final List<ModularRoute> routes = [
-    ChildRoute(
-      '/',
-      child: (_, __) => HomePage(key: UniqueKey()),
-      guards: [
-        AuthGuard(),
-      ],
-    ),
+    ChildRoute('/', child: (_, __) => SplashScreen()),
+    ChildRoute('/home', child: (_, __) => HomePage(key: UniqueKey()), guards: [AuthGuard()]),
+    ChildRoute('/config', child: (_, __) => ConfigPage(key: UniqueKey())),
     ChildRoute('/login', child: (_, __) => LoginPage(key: UniqueKey())),
   ];
 

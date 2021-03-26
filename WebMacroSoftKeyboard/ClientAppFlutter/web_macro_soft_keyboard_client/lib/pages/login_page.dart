@@ -11,27 +11,48 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Client anmelden'),
+        actions: [
+          TextButton(
+            child: Icon(
+              Icons.settings,
+              size: 24,
+              color: Colors.white,
+            ),
+            onPressed: () => Modular.to.pushNamed(
+              '/config',
+            ),
+          )
+        ],
       ),
-      body: Container(
-        child: Center(
-          child: StreamBuilder<LoginCode>(
-            stream: Modular.get<AuthProvider>().submitCode(),
-            builder: (context, snapshot) => !snapshot.hasData
-                ? Text("No Code Available")
-                : Column(
-                    children: [
-                      Text(snapshot.data!.code.toString()),
-                      Text(DateFormat("HH:mm:ss").format(snapshot.data!.validUntil.toLocal())),
-                    ],
-                    mainAxisAlignment: MainAxisAlignment.center,
-                  ),
-          ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Card(
+              child: Padding(
+                padding: EdgeInsets.all(16),
+                child: StreamBuilder<LoginCode>(
+                  stream: Modular.get<AuthProvider>().submitCode(),
+                  builder: (context, snapshot) => !snapshot.hasData
+                      ? Text("No Code Available")
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Öffnen sie auf ihrem Zielsystem die Configuration und bestätigen Sie den Code."),
+                            Text(
+                              snapshot.data!.code.toString(),
+                              style: TextStyle(fontSize: 64),
+                            ),
+                            Text("Code gültig bis: " + DateFormat("HH:mm:ss").format(snapshot.data!.validUntil.toLocal())),
+                          ],
+                        ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
-    );
-    return Container(
-      child: Text("Blubb"),
     );
   }
 }
