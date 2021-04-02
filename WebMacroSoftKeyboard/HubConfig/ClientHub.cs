@@ -26,6 +26,7 @@ namespace WebMacroSoftKeyboard.HubConfig
 
         public async override Task OnConnectedAsync()
         {
+            var ctx = Context.GetHttpContext();
             var ipAddress = Context.GetHttpContext().Connection.RemoteIpAddress;
             if (ipAddress == null)
             {

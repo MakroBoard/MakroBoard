@@ -65,7 +65,7 @@ namespace WebMacroSoftKeyboard.Controllers
             var result = client != null && client.State == ClientState.Confirmed;
             return Ok(result);
         }
-
+    
 
 
         /// <summary>

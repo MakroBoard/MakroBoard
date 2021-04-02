@@ -48,7 +48,7 @@ namespace WebMacroSoftKeyboard
                 services.AddDatabaseDeveloperPageExceptionFilter();
             }
 
-            services.AddSignalR();
+            services.AddSignalR(o => { o.EnableDetailedErrors = _Env.IsDevelopment(); });
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

@@ -18,4 +18,16 @@ class Client {
     required this.LastConnection,
     required this.State,
   });
+
+  Client.empty()
+      : ID = -1,
+        Code = -1,
+        ValidUntil = '',
+        Token = '',
+        ClientIp = '',
+        RegisterDate = '',
+        LastConnection = '',
+        State = -1;
+
+  bool get isEmpty => ID < 0;
 }
