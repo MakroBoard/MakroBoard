@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart' as http;
 import 'package:signalr_core/signalr_core.dart';
@@ -50,19 +51,19 @@ class DataProvider {
       _connection!.on('AddOrUpdateClient', (clients) {
         for (var client in clients!) {
           var existingClient = currentClients.firstWhere(
-            (element) => element.ID == client["id"],
+            (element) => element.id == client["id"],
             orElse: () => Client.empty(),
           );
 
           var newClient = Client(
-            ID: client["id"],
-            ClientIp: client["clientIp"],
-            Code: client["code"],
-            LastConnection: client["lastConnection"],
-            RegisterDate: client["registerDate"],
-            State: client["state"],
-            Token: client["token"],
-            ValidUntil: client["validUntil"],
+            id: client["id"],
+            clientIp: client["clientIp"],
+            code: client["code"],
+            lastConnection: client["lastConnection"],
+            registerDate: client["registerDate"],
+            state: client["state"],
+            token: client["token"],
+            validUntil: client["validUntil"],
           );
           if (existingClient.isEmpty) {
             currentClients.add(newClient);

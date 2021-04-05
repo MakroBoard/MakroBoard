@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:web_macro_soft_keyboard_client/models/client.dart';
-import 'package:web_macro_soft_keyboard_client/provider/auth_provider.dart';
 import 'package:web_macro_soft_keyboard_client/provider/data_provider.dart';
-import 'package:web_macro_soft_keyboard_client/provider/env_provider.dart';
 
 class ConfigPage extends StatelessWidget {
   const ConfigPage({required Key key}) : super(key: key);
@@ -47,13 +45,13 @@ class ConfigPage extends StatelessWidget {
                                   leading: Icon(
                                     Icons.device_unknown,
                                   ),
-                                  title: Text("Client:" + client.ClientIp),
-                                  subtitle: Text("Token: " + client.Code.toString()),
+                                  title: Text("Client:" + client.clientIp),
+                                  subtitle: Text("Token: " + client.code.toString()),
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    client.State == 1
+                                    client.state == 1
                                         ? TextButton.icon(
                                             onPressed: () => {Modular.get<DataProvider>().confirmClient(client)},
                                             icon: Icon(Icons.check),
