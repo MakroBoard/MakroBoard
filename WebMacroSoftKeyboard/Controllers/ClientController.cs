@@ -65,7 +65,7 @@ namespace WebMacroSoftKeyboard.Controllers
             var result = client != null && client.State == ClientState.Confirmed;
             return Ok(result);
         }
-    
+
 
 
         /// <summary>
@@ -129,6 +129,9 @@ namespace WebMacroSoftKeyboard.Controllers
             client.State = (int)ClientState.Confirmed;
 
             await _Context.SaveChangesAsync();
+
+            _logger.LogDebug($"Confirm Client: {currentClient.ClientIp} - {currentClient.Code}");
+
             await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, currentClient);
 
             var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(client.ClientIp)).ToListAsync()).Select(x => x.ClientSignalrId);
@@ -151,6 +154,9 @@ namespace WebMacroSoftKeyboard.Controllers
 
             _Context.Clients.Remove(currentClient);
             await _Context.SaveChangesAsync();
+
+            _logger.LogDebug($"Remove Client: {currentClient.ClientIp} - {currentClient.Code}");
+
             await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.RemoveClient, client);
 
             var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(client.ClientIp)).ToListAsync()).Select(x => x.ClientSignalrId);

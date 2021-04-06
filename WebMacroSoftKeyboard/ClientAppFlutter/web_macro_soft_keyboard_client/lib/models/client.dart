@@ -2,7 +2,7 @@ class Client {
   final int id;
   final int code;
   final String validUntil;
-  final String token;
+  final String? token;
   final String clientIp;
   final String registerDate;
   final String lastConnection;
