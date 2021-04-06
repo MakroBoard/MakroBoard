@@ -34,7 +34,7 @@
     <None Remove="$(SpaRoot)**" />
     <None Remove="ClientAppFlutter\**" />
     <None Remove="ClientApp\**" />
-    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+    <None Include="$(SpaRoot)**" />
   </ItemGroup>
 
   <ItemGroup>
