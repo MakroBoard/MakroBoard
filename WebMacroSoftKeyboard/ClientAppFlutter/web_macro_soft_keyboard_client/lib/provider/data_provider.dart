@@ -55,16 +55,7 @@ class DataProvider {
             orElse: () => Client.empty(),
           );
 
-          var newClient = Client(
-            id: client["id"],
-            clientIp: client["clientIp"],
-            code: client["code"],
-            lastConnection: client["lastConnection"],
-            registerDate: client["registerDate"],
-            state: client["state"],
-            token: client["token"],
-            validUntil: client["validUntil"],
-          );
+          var newClient = Client.fromJson(client);
           if (existingClient.isEmpty) {
             currentClients.add(newClient);
           } else {
@@ -76,8 +67,13 @@ class DataProvider {
         }
       });
 
-      _connection!.on('RemoveClient', (client) {
-        // print(message.toString());
+      _connection!.on('RemoveClient', (clients) {
+        for (var client in clients!) {
+          currentClients.removeWhere(
+            (element) => element.id == client["id"],
+          );
+          streamClientController.add(currentClients);
+        }
       });
     } on Exception catch (e) {
       // TODO
