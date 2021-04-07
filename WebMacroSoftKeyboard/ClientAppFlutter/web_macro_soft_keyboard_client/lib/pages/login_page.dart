@@ -4,8 +4,20 @@ import 'package:intl/intl.dart';
 import 'package:web_macro_soft_keyboard_client/models/login_code.dart';
 import 'package:web_macro_soft_keyboard_client/provider/auth_provider.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({required Key key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    // Modular.get<AuthProvider>().isAuthenticated().then((isAutenticated) => {if (isAutenticated) Modular.to.navigate('/home') else Modular.to.navigate('/login')});
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -34,7 +34,6 @@ namespace WebMacroSoftKeyboard.HubConfig
                 return;
             }
 
-
             var existingClient = await _DatabaseContext.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(ipAddress.ToString()));
 
             if (existingClient == null)

@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signalr_core/signalr_core.dart';
 import 'package:web_macro_soft_keyboard_client/models/client.dart';
 
@@ -48,7 +49,7 @@ class DataProvider {
           .build();
 
       await _connection!.start();
-      _connection!.on('AddOrUpdateClient', (clients) {
+      _connection!.on('AddOrUpdateClient', (clients) async {
         for (var client in clients!) {
           var existingClient = currentClients.firstWhere(
             (element) => element.id == client["id"],
@@ -64,6 +65,14 @@ class DataProvider {
           }
 
           streamClientController.add(currentClients);
+        }
+      });
+
+      await _connection!.start();
+      _connection!.on('AddOrUpdateToken', (tokens) async {
+        for (var token in tokens!) {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          var setToken = await prefs.setString('token', token.toString());
         }
       });
 

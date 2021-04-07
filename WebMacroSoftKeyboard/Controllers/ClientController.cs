@@ -103,7 +103,7 @@ namespace WebMacroSoftKeyboard.Controllers
             await _Context.SaveChangesAsync();
 
             // TODO Groups
-            await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, client);
+            _ = _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, client);
 
             return Ok(client.ValidUntil);
         }
@@ -132,10 +132,10 @@ namespace WebMacroSoftKeyboard.Controllers
 
             _logger.LogDebug($"Confirm Client: {currentClient.ClientIp} - {currentClient.Code}");
 
-            await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, currentClient);
+            _ = _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, currentClient);
 
             var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(client.ClientIp)).ToListAsync()).Select(x => x.ClientSignalrId);
-            await _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, token);
+            _ = _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, token);
 
             return Ok();
         }
@@ -156,11 +156,12 @@ namespace WebMacroSoftKeyboard.Controllers
             await _Context.SaveChangesAsync();
 
             _logger.LogDebug($"Remove Client: {currentClient.ClientIp} - {currentClient.Code}");
-
-            await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.RemoveClient, client);
-
+            
             var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(client.ClientIp)).ToListAsync()).Select(x => x.ClientSignalrId);
-            await _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, string.Empty);
+            _ = _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, string.Empty);
+
+            _ = _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.RemoveClient, client);
+
 
             return Ok();
         }
