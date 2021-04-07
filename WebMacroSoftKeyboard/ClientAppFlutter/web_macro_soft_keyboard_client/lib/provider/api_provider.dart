@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,10 +11,12 @@ import 'package:web_macro_soft_keyboard_client/models/client.dart';
 import 'env_provider.dart';
 
 @Injectable() // ← Injectable annotation
-class DataProvider {
+class ApiProvider {
   static const String requestTokenUrl = "/hub/clients";
   static const String confirmClientUrl = "/api/client/confirmclient";
   static const String removeClientUrl = "/api/client/removeClient";
+  static const String checkTokenUrl = "/api/client/checktoken";
+  static const String submitCodeUrl = "/api/client/submitcode";
 
   StreamController<List<Client>> streamClientController = StreamController<List<Client>>.broadcast();
   List<Client> currentClients = [];
@@ -24,7 +24,7 @@ class DataProvider {
   HubConnection? _connection;
 
   final EnvProvider envProvider;
-  DataProvider({
+  ApiProvider({
     required this.envProvider, // ← The parameters of the constructur will define the generated binding
   }) {
     // Stream<Client> subscribeClients() async* {
@@ -87,6 +87,33 @@ class DataProvider {
     } on Exception catch (e) {
       // TODO
     }
+  }
+
+  Future<bool> isAuthenticated() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? authToken = prefs.getString('token');
+    if (authToken == null) {
+      return false;
+    }
+    var response = await http.get(
+      Uri.http(envProvider.getBaseUrl(), checkTokenUrl),
+      headers: {HttpHeaders.authorizationHeader: authToken},
+    );
+
+    return true;
+  }
+
+  Future<DateTime> submitCode(int code) async {
+    var response = await http.post(
+      Uri.https(envProvider.getBaseUrl(), submitCodeUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode(code),
+    );
+
+    var dateTime = DateTime.parse(json.decode(response.body));
+    return dateTime;
   }
 
   Future confirmClient(Client client) async {

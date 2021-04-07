@@ -5,7 +5,7 @@ import 'package:web_macro_soft_keyboard_client/guards/auth_guard.dart';
 import 'package:web_macro_soft_keyboard_client/pages/config_page.dart';
 import 'package:web_macro_soft_keyboard_client/pages/login_page.dart';
 import 'package:web_macro_soft_keyboard_client/pages/splash_screen.dart';
-import 'package:web_macro_soft_keyboard_client/provider/data_provider.dart';
+import 'package:web_macro_soft_keyboard_client/provider/api_provider.dart';
 import 'package:web_macro_soft_keyboard_client/provider/env_provider.dart';
 
 import 'pages/homePage.dart';
@@ -17,12 +17,12 @@ class AppModule extends Module {
   @override
   final List<Bind> binds = [
     Bind.singleton((i) => EnvProvider()),
-    Bind.singleton<DataProvider>((i) {
-      var dataProvider = DataProvider(envProvider: i<EnvProvider>());
+    Bind.singleton<ApiProvider>((i) {
+      var dataProvider = ApiProvider(envProvider: i<EnvProvider>());
       dataProvider.initialize();
       return dataProvider;
     }),
-    Bind.lazySingleton((i) => AuthProvider(envProvider: i<EnvProvider>())),
+    Bind.lazySingleton((i) => AuthProvider(apiProvider: i<ApiProvider>())),
   ];
 
   // Provide all the routes for your module

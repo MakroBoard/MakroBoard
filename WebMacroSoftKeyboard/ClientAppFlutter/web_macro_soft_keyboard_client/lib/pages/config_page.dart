@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:web_macro_soft_keyboard_client/models/client.dart';
-import 'package:web_macro_soft_keyboard_client/provider/data_provider.dart';
+import 'package:web_macro_soft_keyboard_client/provider/api_provider.dart';
 
 class ConfigPage extends StatelessWidget {
   const ConfigPage({required Key key}) : super(key: key);
@@ -27,8 +27,8 @@ class ConfigPage extends StatelessWidget {
         body: TabBarView(
           children: [
             StreamBuilder<List<Client>>(
-              stream: Modular.get<DataProvider>().clients,
-              initialData: Modular.get<DataProvider>().currentClients,
+              stream: Modular.get<ApiProvider>().clients,
+              initialData: Modular.get<ApiProvider>().currentClients,
               builder: (context, snapshot) => !snapshot.hasData
                   ? Text("No Code Available")
                   : ListView.builder(
@@ -53,12 +53,12 @@ class ConfigPage extends StatelessWidget {
                                   children: [
                                     client.state == 1
                                         ? TextButton.icon(
-                                            onPressed: () => {Modular.get<DataProvider>().confirmClient(client)},
+                                            onPressed: () => {Modular.get<ApiProvider>().confirmClient(client)},
                                             icon: Icon(Icons.check),
                                             label: Text("Freischalten"),
                                           )
                                         : TextButton.icon(
-                                            onPressed: () => {Modular.get<DataProvider>().removeClient(client)},
+                                            onPressed: () => {Modular.get<ApiProvider>().removeClient(client)},
                                             icon: Icon(Icons.remove),
                                             label: Text("Löschen"),
                                           ),
