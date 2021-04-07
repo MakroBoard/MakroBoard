@@ -68,7 +68,6 @@ class ApiProvider {
         }
       });
 
-      await _connection!.start();
       _connection!.on('AddOrUpdateToken', (tokens) async {
         for (var token in tokens!) {
           SharedPreferences prefs = await SharedPreferences.getInstance();
