@@ -15,9 +15,6 @@ class HomePage extends StatelessWidget {
         child: TokenTest(key: UniqueKey()),
       ),
     );
-    return Container(
-      child: Text("Blubb"),
-    );
   }
 }
 
