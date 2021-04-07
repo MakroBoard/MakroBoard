@@ -55,21 +55,21 @@ jobs:
     - name: Build linux dotnet
       run: dotnet publish -r linux-x64 -c release
     - name: make upload folders
-      run: mkdir /upload && mkdir /upload/linuxhost && mkdir /upload/linuxclient && mkdir /upload/web && mkdir /upload/android 
+      run: mkdir upload && mkdir upload/linuxhost && mkdir upload/linuxclient && mkdir upload/web && mkdir upload/android 
     - name: copy linux client
-      run: cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/linux/release/bundle/* /upload/linuxclient/
+      run: cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/linux/release/bundle/* upload/linuxclient/
     - name: copy linux Host
-      run: cp -rf ./WebMacroSoftKeyboard/bin/Release/net5.0/linux-x64/publish/* /upload/linuxhost/
+      run: cp -rf ./WebMacroSoftKeyboard/bin/Release/net5.0/linux-x64/publish/* upload/linuxhost/
     - name: copy webapp
-      run: cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/web/* /upload/web/
+      run: cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/web/* upload/web/
     - name: copy android
-      run: cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/app/outputs/flutter-apk/* /upload/android/
+      run: cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/app/outputs/flutter-apk/* upload/android/
     - name: find uploads
-      run: find /upload/
+      run: find upload/
     - uses: actions/upload-artifact@v2
       with:
         name: latest
-        path: /upload/
+        path: upload/
 
 
   # build_windows:
