@@ -16,7 +16,9 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
 
-    // Modular.get<AuthProvider>().isAuthenticated().then((isAutenticated) => {if (isAutenticated) Modular.to.navigate('/home') else Modular.to.navigate('/login')});
+    Modular.get<AuthProvider>().waitForAuthenticated().then(
+          (isAutenticated) => {if (isAutenticated) Modular.to.navigate('/home') else Modular.to.navigate('/login')},
+        );
   }
 
   @override

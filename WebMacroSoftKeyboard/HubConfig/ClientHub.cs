@@ -54,7 +54,7 @@ namespace WebMacroSoftKeyboard.HubConfig
                 var clients = await _DatabaseContext.Clients.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
                 foreach (var client in clients)
                 {
-                    await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateClient, client);
+                    _ = Clients.Caller.SendAsync(ClientMethods.AddOrUpdateClient, client);
                 }
             }
             else
@@ -62,10 +62,15 @@ namespace WebMacroSoftKeyboard.HubConfig
                 // Any sync needed?
             }
 
+            if (existingClient.State == ClientState.Confirmed)
+            {
+                Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token);
+            }
+
             var pages = await _DatabaseContext.Pages.ToListAsync();
             foreach (var page in pages)
             {
-                await Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, page);
+                _ = Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, page);
             }
 
             await base.OnConnectedAsync();

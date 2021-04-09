@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_modular/flutter_modular.dart';
@@ -7,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signalr_core/signalr_core.dart';
 import 'package:web_macro_soft_keyboard_client/models/client.dart';
+import 'package:web_macro_soft_keyboard_client/models/page.dart';
 
 import 'env_provider.dart';
 
@@ -19,8 +21,10 @@ class ApiProvider {
   static const String submitCodeUrl = "/api/client/submitcode";
 
   StreamController<List<Client>> streamClientController = StreamController<List<Client>>.broadcast();
+  StreamController<String> streamTokenController = StreamController<String>.broadcast();
   List<Client> currentClients = [];
   Stream<List<Client>> get clients => streamClientController.stream;
+  Stream<String> get token => streamTokenController.stream;
   HubConnection? _connection;
 
   final EnvProvider envProvider;
@@ -49,57 +53,93 @@ class ApiProvider {
           .build();
 
       await _connection!.start();
-      _connection!.on('AddOrUpdateClient', (clients) async {
-        for (var client in clients!) {
-          var existingClient = currentClients.firstWhere(
-            (element) => element.id == client["id"],
-            orElse: () => Client.empty(),
-          );
-
-          var newClient = Client.fromJson(client);
-          if (existingClient.isEmpty) {
-            currentClients.add(newClient);
-          } else {
-            var index = currentClients.indexOf(existingClient);
-            currentClients[index] = newClient;
-          }
-
-          streamClientController.add(currentClients);
-        }
-      });
-
-      _connection!.on('AddOrUpdateToken', (tokens) async {
-        for (var token in tokens!) {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          var setToken = await prefs.setString('token', token.toString());
-        }
-      });
-
-      _connection!.on('RemoveClient', (clients) {
-        for (var client in clients!) {
-          currentClients.removeWhere(
-            (element) => element.id == client["id"],
-          );
-          streamClientController.add(currentClients);
-        }
-      });
+      _connection!.on('AddOrUpdateClient', _onAddOrUpdateClient);
+      _connection!.on('AddOrUpdateToken', _onAddOrUpdateToken);
+      _connection!.on('RemoveClient', _onRemoveClient);
+      _connection!.on('AddOrUpdatePage', _onAddOrUpdatePage);
     } on Exception catch (e) {
       // TODO
     }
   }
 
+  void _onRemoveClient(clients) {
+    for (var client in clients!) {
+      currentClients.removeWhere(
+        (element) => element.id == client["id"],
+      );
+      streamClientController.add(currentClients);
+    }
+  }
+
+  void _onAddOrUpdateToken(tokens) async {
+    for (var newToken in tokens!) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var newTokenString = newToken.toString();
+      var setToken = await prefs.setString('token', newTokenString);
+      if (setToken) {
+        streamTokenController.add(newTokenString);
+      }
+    }
+  }
+
+  void _onAddOrUpdateClient(clients) async {
+    for (var client in clients!) {
+      var existingClient = currentClients.firstWhere(
+        (element) => element.id == client["id"],
+        orElse: () => Client.empty(),
+      );
+
+      var newClient = Client.fromJson(client);
+      if (existingClient.isEmpty) {
+        currentClients.add(newClient);
+      } else {
+        var index = currentClients.indexOf(existingClient);
+        currentClients[index] = newClient;
+      }
+
+      streamClientController.add(currentClients);
+    }
+  }
+
+  void _onAddOrUpdatePage(pages) async {
+    for (var page in pages!) {
+      // var existingClient = currentClients.firstWhere(
+      //   (element) => element.id == client["id"],
+      //   orElse: () => Client.empty(),
+      // );
+
+      var newClient = Page.fromJson(page);
+      // if (existingClient.isEmpty) {
+      //   currentClients.add(newClient);
+      // } else {
+      //   var index = currentClients.indexOf(existingClient);
+      //   currentClients[index] = newClient;
+      // }
+
+      // streamClientController.add(currentClients);
+    }
+  }
+
   Future<bool> isAuthenticated() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? authToken = prefs.getString('token');
-    if (authToken == null) {
+    // return false;
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? authToken = prefs.getString('token');
+      if (authToken == null) {
+        return false;
+      }
+      var response = await http.get(
+        Uri.https(envProvider.getBaseUrl(), checkTokenUrl),
+        headers: <String, String>{
+          HttpHeaders.authorizationHeader: authToken,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      return true;
+    } on Exception catch (e) {
+      log('Exception: ' + e.toString());
       return false;
     }
-    var response = await http.get(
-      Uri.http(envProvider.getBaseUrl(), checkTokenUrl),
-      headers: {HttpHeaders.authorizationHeader: authToken},
-    );
-
-    return true;
   }
 
   Future<DateTime> submitCode(int code) async {

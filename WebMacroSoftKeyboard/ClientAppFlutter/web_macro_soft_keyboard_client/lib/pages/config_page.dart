@@ -53,14 +53,14 @@ class ConfigPage extends StatelessWidget {
                                   children: [
                                     client.state == 1
                                         ? TextButton.icon(
-                                            onPressed: () => {Modular.get<ApiProvider>().confirmClient(client)},
-                                            icon: Icon(Icons.check),
-                                            label: Text("Freischalten"),
-                                          )
-                                        : TextButton.icon(
                                             onPressed: () => {Modular.get<ApiProvider>().removeClient(client)},
                                             icon: Icon(Icons.remove),
                                             label: Text("Löschen"),
+                                          )
+                                        : TextButton.icon(
+                                            onPressed: () => {Modular.get<ApiProvider>().confirmClient(client)},
+                                            icon: Icon(Icons.check),
+                                            label: Text("Freischalten"),
                                           ),
                                   ],
                                 ),

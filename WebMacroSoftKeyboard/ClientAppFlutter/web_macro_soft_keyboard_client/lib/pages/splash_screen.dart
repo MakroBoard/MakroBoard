@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:web_macro_soft_keyboard_client/provider/api_provider.dart';
 import 'package:web_macro_soft_keyboard_client/provider/auth_provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -11,8 +12,16 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    initialize();
+  }
 
-    Modular.get<AuthProvider>().isAuthenticated().then((isAutenticated) => {if (isAutenticated) Modular.to.navigate('/home') else Modular.to.navigate('/login')});
+  void initialize() async {
+    var isAuthenticated = await Modular.get<AuthProvider>().isAuthenticated();
+    if (isAuthenticated) {
+      Modular.to.navigate('/home');
+    } else {
+      Modular.to.navigate('/login');
+    }
   }
 
   @override

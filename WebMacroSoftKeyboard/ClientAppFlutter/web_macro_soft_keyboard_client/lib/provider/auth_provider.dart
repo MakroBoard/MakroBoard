@@ -17,6 +17,12 @@ class AuthProvider {
     return await apiProvider.isAuthenticated();
   }
 
+  Future<bool> waitForAuthenticated() async {
+    var token = await apiProvider.token.first;
+
+    return true;
+  }
+
   Stream<LoginCode> submitCode() async* {
     while (!(await isAuthenticated())) {
       var loginCode = await _getNewLoginCode();

@@ -17,11 +17,7 @@ class AppModule extends Module {
   @override
   final List<Bind> binds = [
     Bind.singleton((i) => EnvProvider()),
-    Bind.singleton<ApiProvider>((i) {
-      var dataProvider = ApiProvider(envProvider: i<EnvProvider>());
-      dataProvider.initialize();
-      return dataProvider;
-    }),
+    Bind.singleton<ApiProvider>((i) => ApiProvider(envProvider: i<EnvProvider>())),
     Bind.lazySingleton((i) => AuthProvider(apiProvider: i<ApiProvider>())),
   ];
 
