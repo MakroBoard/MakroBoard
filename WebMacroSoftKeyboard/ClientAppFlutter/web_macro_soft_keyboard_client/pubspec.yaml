@@ -31,6 +31,7 @@ dependencies:
   http: ^0.13.1
   intl: ^0.17.0
   signalr_core: ^1.1.0
+  property_changed_notifier: ^0.2.0
 
 
 dev_dependencies:
