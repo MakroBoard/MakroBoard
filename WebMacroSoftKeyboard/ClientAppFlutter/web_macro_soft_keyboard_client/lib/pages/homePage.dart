@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:web_macro_soft_keyboard_client/provider/auth_provider.dart';
+import 'package:web_macro_soft_keyboard_client/widgets/WmskAppBar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({required Key key}) : super(key: key);
@@ -8,9 +9,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
+      appBar: WmskAppBar(title: "Home").getAppBar(context),
       body: Container(
         child: TokenTest(key: UniqueKey()),
       ),
