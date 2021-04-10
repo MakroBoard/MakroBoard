@@ -3,6 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
 import 'package:web_macro_soft_keyboard_client/models/login_code.dart';
 import 'package:web_macro_soft_keyboard_client/provider/auth_provider.dart';
+import 'package:web_macro_soft_keyboard_client/widgets/WmskAppBar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({required Key key}) : super(key: key);
@@ -24,21 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Client anmelden'),
-        actions: [
-          TextButton(
-            child: Icon(
-              Icons.settings,
-              size: 24,
-              color: Colors.white,
-            ),
-            onPressed: () => Modular.to.pushNamed(
-              '/config',
-            ),
-          )
-        ],
-      ),
+      appBar: WmskAppBar(title: 'Client anmelden').getAppBar(context),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

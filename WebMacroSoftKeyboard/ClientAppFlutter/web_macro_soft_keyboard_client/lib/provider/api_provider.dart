@@ -7,6 +7,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signalr_core/signalr_core.dart';
+import 'package:web_macro_soft_keyboard_client/models/Plugin.dart';
 import 'package:web_macro_soft_keyboard_client/models/client.dart';
 import 'package:web_macro_soft_keyboard_client/models/page.dart';
 
@@ -19,6 +20,7 @@ class ApiProvider {
   static const String removeClientUrl = "/api/client/removeClient";
   static const String checkTokenUrl = "/api/client/checktoken";
   static const String submitCodeUrl = "/api/client/submitcode";
+  static const String getControlsUrl = "/api/controls/availablecontrols";
 
   StreamController<List<Client>> streamClientController = StreamController<List<Client>>.broadcast();
   StreamController<String> streamTokenController = StreamController<String>.broadcast();
@@ -188,5 +190,27 @@ class ApiProvider {
     } on Exception catch (e) {
       print('never reached' + e.toString());
     }
+  }
+
+  Future<List<Plugin>> getAvailableControls() async {
+    try {
+      var response = await http.get(
+        Uri.https(envProvider.getBaseUrl(), getControlsUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      var jsonData = json.decode(response.body);
+      var result = List.castFrom(jsonData).map((jsonPlugin) => Plugin.fromJson(jsonPlugin)).toList();
+
+      return result;
+      // var dateTime = DateTime.parse(json.decode(response.body));
+      // return LoginCode(code: randomNumber, validUntil: dateTime);
+    } on Exception catch (e) {
+      print('never reached' + e.toString());
+    }
+
+    return List.empty();
   }
 }

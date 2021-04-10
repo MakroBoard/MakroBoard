@@ -51,7 +51,7 @@ namespace WebMacroSoftKeyboard.HubConfig
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup);
 
-                var clients = await _DatabaseContext.Clients.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
+                var clients = await _DatabaseContext.Clients.ToListAsync();//.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
                 foreach (var client in clients)
                 {
                     _ = Clients.Caller.SendAsync(ClientMethods.AddOrUpdateClient, client);

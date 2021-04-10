@@ -16,6 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void initialize() async {
+    await Modular.get<ApiProvider>().initialize();
     var isAuthenticated = await Modular.get<AuthProvider>().isAuthenticated();
     if (isAuthenticated) {
       Modular.to.navigate('/home');
