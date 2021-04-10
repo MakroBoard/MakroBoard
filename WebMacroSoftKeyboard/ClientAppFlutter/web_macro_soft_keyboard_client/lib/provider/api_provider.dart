@@ -7,7 +7,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:signalr_core/signalr_core.dart';
+import 'package:web_macro_soft_keyboard_client/models/Control.dart';
 import 'package:web_macro_soft_keyboard_client/models/Plugin.dart';
+import 'package:web_macro_soft_keyboard_client/models/ViewConfigValue.dart';
 import 'package:web_macro_soft_keyboard_client/models/client.dart';
 import 'package:web_macro_soft_keyboard_client/models/page.dart';
 
@@ -21,6 +23,7 @@ class ApiProvider {
   static const String checkTokenUrl = "/api/client/checktoken";
   static const String submitCodeUrl = "/api/client/submitcode";
   static const String getControlsUrl = "/api/controls/availablecontrols";
+  static const String executeControlUrl = "/api/controls/execute";
 
   StreamController<List<Client>> streamClientController = StreamController<List<Client>>.broadcast();
   StreamController<String> streamTokenController = StreamController<String>.broadcast();
@@ -212,5 +215,23 @@ class ApiProvider {
     }
 
     return List.empty();
+  }
+
+  Future executeControl(Control control, List<ViewConfigValue> configValues) async {
+    try {
+      var jsonBody = json.encode({"symbolicName": control.symbolicName, "configValues": configValues});
+      var response = await http.post(
+        Uri.https(envProvider.getBaseUrl(), executeControlUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonBody,
+      );
+
+      // var dateTime = DateTime.parse(json.decode(response.body));
+      // return LoginCode(code: randomNumber, validUntil: dateTime);
+    } on Exception catch (e) {
+      print('never reached' + e.toString());
+    }
   }
 }
