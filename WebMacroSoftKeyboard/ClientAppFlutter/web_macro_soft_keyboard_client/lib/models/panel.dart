@@ -1,4 +1,4 @@
-import 'ConfigParameter.dart';
+import 'ViewConfigParameter.dart';
 
 class Panel {
   final int id;
@@ -7,7 +7,7 @@ class Panel {
   final String pluginName;
   final String symbolicName;
   final int order;
-  final List<ConfigParameter> configParameters;
+  final List<ViewConfigParameter> configParameters;
 
   Panel({
     required this.id,
@@ -26,5 +26,5 @@ class Panel {
         pluginName = json["pluginName"],
         symbolicName = json["symbolicName"],
         order = json["order"],
-        configParameters = List.castFrom(json["configParameters"]).map<ConfigParameter>((jsonConfigParameter) => ConfigParameter.fromJson(jsonConfigParameter)).toList();
+        configParameters = List.castFrom(json["configParameters"]).map<ViewConfigParameter>((jsonConfigParameter) => ViewConfigParameter.fromJson(jsonConfigParameter)).toList();
 }

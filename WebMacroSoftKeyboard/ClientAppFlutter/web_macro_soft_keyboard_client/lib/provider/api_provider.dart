@@ -60,7 +60,7 @@ class ApiProvider {
       _connection!.on('RemoveClient', _onRemoveClient);
       _connection!.on('AddOrUpdatePage', _onAddOrUpdatePage);
     } on Exception catch (e) {
-      // TODO
+      print(e.toString());
     }
   }
 

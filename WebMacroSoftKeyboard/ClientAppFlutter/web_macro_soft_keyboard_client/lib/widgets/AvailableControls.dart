@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:web_macro_soft_keyboard_client/models/ConfigParameter.dart';
-import 'package:web_macro_soft_keyboard_client/models/Control.dart';
+import 'package:web_macro_soft_keyboard_client/models/ViewConfigParameter.dart';
 import 'package:web_macro_soft_keyboard_client/models/Plugin.dart';
-import 'package:web_macro_soft_keyboard_client/pages/config_page.dart';
 import 'package:web_macro_soft_keyboard_client/provider/api_provider.dart';
 
 class AvailableControls extends StatelessWidget {
@@ -54,21 +52,33 @@ class AvailableControls extends StatelessWidget {
             itemBuilder: (context, index) {
               var control = plugin.controls[index];
               return Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        control.symbolicName,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              control.symbolicName,
+                            ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: control.configParameters.length,
+                              itemBuilder: (context, index) => _creteConfigParameter(control.configParameters[index]),
+                            )
+                          ],
+                        ),
                       ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: control.configParameters.length,
-                        itemBuilder: (context, index) => _creteConfigParameter(control.configParameters[index]),
-                      )
-                    ],
-                  ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("PlaceHolder"),
+                      ),
+                    )
+                  ],
                 ),
               );
             },
@@ -76,7 +86,7 @@ class AvailableControls extends StatelessWidget {
         ],
       );
 
-  Widget _creteConfigParameter(ConfigParameter configParameter) {
+  Widget _creteConfigParameter(ViewConfigParameter configParameter) {
     return Row(
       children: [
         // Text(configParameter.symbolicName),
@@ -85,7 +95,7 @@ class AvailableControls extends StatelessWidget {
     );
   }
 
-  Widget _createConfigParameterInput(ConfigParameter configParameter) {
+  Widget _createConfigParameterInput(ViewConfigParameter configParameter) {
     switch (configParameter.configParameterType) {
       case ConfigParameterType.string:
         return TextField(

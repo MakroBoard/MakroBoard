@@ -1,9 +1,9 @@
-import 'ConfigParameter.dart';
+import 'ViewConfigParameter.dart';
 
 class View {
   final String viewType;
   final String? value;
-  final List<ConfigParameter> configParameters;
+  final List<ViewConfigParameter> configParameters;
 
   View({
     required this.viewType,
@@ -14,5 +14,5 @@ class View {
   View.fromJson(Map<String, dynamic> json)
       : viewType = json["viewType"],
         value = json["value"],
-        configParameters = List.castFrom(json["configParameters"]).map<ConfigParameter>((jsonConfigParameter) => ConfigParameter.fromJson(jsonConfigParameter)).toList();
+        configParameters = List.castFrom(json["configParameters"]).map<ViewConfigParameter>((jsonConfigParameter) => ViewConfigParameter.fromJson(jsonConfigParameter)).toList();
 }
