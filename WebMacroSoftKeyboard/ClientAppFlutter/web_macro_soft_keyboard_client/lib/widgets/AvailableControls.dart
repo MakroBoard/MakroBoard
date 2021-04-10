@@ -131,7 +131,7 @@ class AvailableControls extends StatelessWidget {
     switch (control.view.viewType) {
       case "Button":
         return TextButton(
-          onPressed: () => {},
+          onPressed: () => Modular.get<ApiProvider>().executeControl(control, configValues),
           child: Text(viewConfigValues.firstWhere((element) => element.symbolicName == "label").value.toString()),
         );
       case "Image":
