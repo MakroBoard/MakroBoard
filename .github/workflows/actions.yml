@@ -41,15 +41,9 @@ jobs:
     - name: flutter build apk 
       working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
       run: flutter build apk
-    - name: flutter clean
-      working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client
-      run: flutter clean
     - name: flutter build web
       working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
       run: flutter build web
-    - name: flutter clean
-      working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client
-      run: flutter clean
     - name: flutter config linux
       working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
       run: flutter config --enable-linux-desktop 
@@ -82,6 +76,9 @@ jobs:
       run: cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/app/outputs/flutter-apk/* upload/android/
     - name: find uploads
       run: find upload/
+    - name: ul temp
+      if: ${{ env.ACT }}
+      run: curl -Ffile=@MakroBoard_client_x64.AppImage 'http://10.10.10.225:25478/upload?token=HALLO123456'
     - uses: actions/upload-artifact@v2
       if: ${{ !env.ACT }}
       with:
@@ -134,9 +131,7 @@ jobs:
   #   - name: flutter build ios
   #     working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
   #     run: flutter build ios --release --no-codesign      
-      # - name: flutter clean
-      # working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client
-      # run: flutter clean
+
   #   - name: flutter config macos
   #     working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
   #     run: flutter config --enable-macos-desktop
