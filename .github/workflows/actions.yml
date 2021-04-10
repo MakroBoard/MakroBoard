@@ -40,7 +40,7 @@ jobs:
       run: flutter pub get
     - name: flutter build apk 
       working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
-      run: flutter build apk --release
+      run: flutter build apk
     - name: flutter clean
       working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client
       run: flutter clean
