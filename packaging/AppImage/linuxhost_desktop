@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=%%%VERSION%%%
+Type=Application
+Terminal=false
+Name=MakroBoardHost
+Exec=WebMacroSoftKeyboard %u
+Icon=MakroBoardHost
+Categories=Utility;
