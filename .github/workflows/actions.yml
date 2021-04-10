@@ -64,16 +64,16 @@ jobs:
       run: dotnet publish -r linux-x64 -c release
 
     - name: prepare appimage linxuclient x64 dir
-      run: mkdir -p ./appimage/web_macro_soft_keyboard_client_x64.AppDir &&  cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/linux/release/bundle/* ./appimage/web_macro_soft_keyboard_client_x64.AppDir/ && cp ./packaging/AppImage/linuxclient_Apprun ./appimage/web_macro_soft_keyboard_client_x64.AppDir/AppRun && chmod +x ./appimage/web_macro_soft_keyboard_client_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/web_macro_soft_keyboard_client_x64.AppDir/WebMarcoSoftKeyboardClient.png && cp ./packaging/AppImage/linux_desktop ./appimage/web_macro_soft_keyboard_client_x64.AppDir/web_macro_soft_keyboard_client_x64.desktop && sed -i "s|%%%VERSION%%%|1.0.0|g" ./appimage/web_macro_soft_keyboard_client_x64.AppDir/web_macro_soft_keyboard_client_x64.desktop
+      run: mkdir -p ./appimage/MakroBoard_client_x64.AppDir &&  cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/linux/release/bundle/* ./appimage/MakroBoard_client_x64.AppDir/ && cp ./packaging/AppImage/linuxclient_Apprun ./appimage/web_macro_soft_keyboard_client_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_client_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_client_x64.AppDir/MakroBoardClient.png && cp ./packaging/AppImage/linux_desktop ./appimage/MakroBoard_client_x64.AppDir/MakroBoard_client_x64.desktop && sed -i "s|%%%VERSION%%%|1.0.0|g" ./appimage/MakroBoard_client_x64.AppDir/MakroBoard_client_x64.desktop
     - name: build appimage linuxclient x64
-      run: appimagetool-x86_64.AppImage ./appimage/web_macro_soft_keyboard_client_x64.AppDir/ web_macro_soft_keyboard_client_x64.AppImage
+      run: appimagetool-x86_64.AppImage ./appimage/MakroBoard_client_x64.AppDir/ MakroBoard_client_x64.AppImage
 
     - name: make upload folders
       run: mkdir upload && mkdir upload/linuxhost_x64 && mkdir upload/linuxclient_x64 && mkdir upload/linuxclient_appimage_x64 && mkdir upload/web && mkdir upload/android 
     - name: copy linux client x64
       run: cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/linux/release/bundle/* upload/linuxclient_x64/ 
     - name: copy linux client appimage x64  
-      run: cp -rf web_macro_soft_keyboard_client_x64.AppImage upload/linuxclient_appimage_x64/
+      run: cp -rf MakroBoard_client_x64.AppImage upload/linuxclient_appimage_x64/
     - name: copy linux Host x64
       run: cp -rf ./WebMacroSoftKeyboard/bin/Release/net5.0/linux-x64/publish/* upload/linuxhost_x64/
     - name: copy webapp

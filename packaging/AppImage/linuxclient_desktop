@@ -2,7 +2,7 @@
 Version=%%%VERSION%%%
 Type=Application
 Terminal=false
-Name=WebMarcoSoftKeyboardClient
-Exec=build %u
-Icon=WebMarcoSoftKeyboardClient
+Name=MakroBoardClient
+Exec=MakroBoardClient %u
+Icon=MakroBoardClient
 Categories=Utility;
