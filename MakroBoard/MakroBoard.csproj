@@ -1,0 +1,180 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <IsPackable>false</IsPackable>
+    <SpaRoot>wwwroot\</SpaRoot>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+
+    <!-- Set this to true if you enable server-side prerendering -->
+    <BuildServerSideRenderer>false</BuildServerSideRenderer>
+    <UserSecretsId>0bce7fd0-e6f3-4b6a-af05-3d8938e10671</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.2" />
+    <!--<PackageReference Include="Prise" Version="2.1.0" />-->
+    <PackageReference Include="McMaster.NETCore.Plugins" Version="1.3.1" />
+    <PackageReference Include="NLog" Version="4.7.8" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+
+    <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="ClientAppFlutter\**" />
+    <Compile Remove="ClientApp\**" />
+    <Content Remove="$(SpaRoot)**" />
+    <Content Remove="ClientAppFlutter\**" />
+    <Content Remove="ClientApp\**" />
+    <EmbeddedResource Remove="ClientAppFlutter\**" />
+    <EmbeddedResource Remove="ClientApp\**" />
+    <None Remove="$(SpaRoot)**" />
+    <None Remove="ClientAppFlutter\**" />
+    <None Remove="ClientApp\**" />
+    <None Include="$(SpaRoot)**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\.browserslistrc" />
+    <None Remove="ClientApp\.editorconfig" />
+    <None Remove="ClientApp\.gitignore" />
+    <None Remove="ClientApp\.npmrc" />
+    <None Remove="ClientApp\angular.json" />
+    <None Remove="ClientApp\e2e\protractor.conf.js" />
+    <None Remove="ClientApp\e2e\src\app.e2e-spec.ts" />
+    <None Remove="ClientApp\e2e\src\app.po.ts" />
+    <None Remove="ClientApp\e2e\tsconfig.json" />
+    <None Remove="ClientApp\karma.conf.js" />
+    <None Remove="ClientApp\package-lock.json" />
+    <None Remove="ClientApp\package.json" />
+    <None Remove="ClientApp\README.md" />
+    <None Remove="ClientApp\src\app\app-routing.module.ts" />
+    <None Remove="ClientApp\src\app\app.component.html" />
+    <None Remove="ClientApp\src\app\app.component.scss" />
+    <None Remove="ClientApp\src\app\app.component.spec.ts" />
+    <None Remove="ClientApp\src\app\app.component.ts" />
+    <None Remove="ClientApp\src\app\app.module.ts" />
+    <None Remove="ClientApp\src\app\authintercepter.spec.ts" />
+    <None Remove="ClientApp\src\app\authintercepter.ts" />
+    <None Remove="ClientApp\src\app\components\add-page\add-page.component.html" />
+    <None Remove="ClientApp\src\app\components\add-page\add-page.component.scss" />
+    <None Remove="ClientApp\src\app\components\add-page\add-page.component.spec.ts" />
+    <None Remove="ClientApp\src\app\components\add-page\add-page.component.ts" />
+    <None Remove="ClientApp\src\app\components\add-panel\add-panel.component.html" />
+    <None Remove="ClientApp\src\app\components\add-panel\add-panel.component.scss" />
+    <None Remove="ClientApp\src\app\components\add-panel\add-panel.component.spec.ts" />
+    <None Remove="ClientApp\src\app\components\add-panel\add-panel.component.ts" />
+    <None Remove="ClientApp\src\app\components\available-controls\available-controls.component.html" />
+    <None Remove="ClientApp\src\app\components\available-controls\available-controls.component.scss" />
+    <None Remove="ClientApp\src\app\components\available-controls\available-controls.component.spec.ts" />
+    <None Remove="ClientApp\src\app\components\available-controls\available-controls.component.ts" />
+    <None Remove="ClientApp\src\app\components\client\client.component.html" />
+    <None Remove="ClientApp\src\app\components\client\client.component.scss" />
+    <None Remove="ClientApp\src\app\components\client\client.component.spec.ts" />
+    <None Remove="ClientApp\src\app\components\client\client.component.ts" />
+    <None Remove="ClientApp\src\app\components\config-parameter\config-parameter.component.html" />
+    <None Remove="ClientApp\src\app\components\config-parameter\config-parameter.component.scss" />
+    <None Remove="ClientApp\src\app\components\config-parameter\config-parameter.component.spec.ts" />
+    <None Remove="ClientApp\src\app\components\config-parameter\config-parameter.component.ts" />
+    <None Remove="ClientApp\src\app\components\control\control.component.html" />
+    <None Remove="ClientApp\src\app\components\control\control.component.scss" />
+    <None Remove="ClientApp\src\app\components\control\control.component.spec.ts" />
+    <None Remove="ClientApp\src\app\components\control\control.component.ts" />
+    <None Remove="ClientApp\src\app\components\navbar\navbar.component.html" />
+    <None Remove="ClientApp\src\app\components\navbar\navbar.component.scss" />
+    <None Remove="ClientApp\src\app\components\navbar\navbar.component.spec.ts" />
+    <None Remove="ClientApp\src\app\components\navbar\navbar.component.ts" />
+    <None Remove="ClientApp\src\app\components\panel\button\button.component.html" />
+    <None Remove="ClientApp\src\app\components\panel\button\button.component.scss" />
+    <None Remove="ClientApp\src\app\components\panel\button\button.component.spec.ts" />
+    <None Remove="ClientApp\src\app\components\panel\button\button.component.ts" />
+    <None Remove="ClientApp\src\app\components\panel\panel.component.html" />
+    <None Remove="ClientApp\src\app\components\panel\panel.component.scss" />
+    <None Remove="ClientApp\src\app\components\panel\panel.component.spec.ts" />
+    <None Remove="ClientApp\src\app\components\panel\panel.component.ts" />
+    <None Remove="ClientApp\src\app\components\plugin\plugin.component.html" />
+    <None Remove="ClientApp\src\app\components\plugin\plugin.component.scss" />
+    <None Remove="ClientApp\src\app\components\plugin\plugin.component.spec.ts" />
+    <None Remove="ClientApp\src\app\components\plugin\plugin.component.ts" />
+    <None Remove="ClientApp\src\app\guards\check-local-host-guard.guard.spec.ts" />
+    <None Remove="ClientApp\src\app\guards\check-local-host-guard.guard.ts" />
+    <None Remove="ClientApp\src\app\guards\check-server-token.guard.spec.ts" />
+    <None Remove="ClientApp\src\app\guards\check-server-token.guard.ts" />
+    <None Remove="ClientApp\src\app\Models\Adapter.ts" />
+    <None Remove="ClientApp\src\app\Models\Client.ts" />
+    <None Remove="ClientApp\src\app\Models\ConfigParameter.ts" />
+    <None Remove="ClientApp\src\app\Models\ConfigValue.ts" />
+    <None Remove="ClientApp\src\app\Models\Control.ts" />
+    <None Remove="ClientApp\src\app\Models\Filterable.ts" />
+    <None Remove="ClientApp\src\app\Models\Page.ts" />
+    <None Remove="ClientApp\src\app\Models\Panel.ts" />
+    <None Remove="ClientApp\src\app\Models\Plugin.ts" />
+    <None Remove="ClientApp\src\app\Models\View.ts" />
+    <None Remove="ClientApp\src\app\pages\config\config.component.html" />
+    <None Remove="ClientApp\src\app\pages\config\config.component.scss" />
+    <None Remove="ClientApp\src\app\pages\config\config.component.spec.ts" />
+    <None Remove="ClientApp\src\app\pages\config\config.component.ts" />
+    <None Remove="ClientApp\src\app\pages\home\home.component.html" />
+    <None Remove="ClientApp\src\app\pages\home\home.component.scss" />
+    <None Remove="ClientApp\src\app\pages\home\home.component.spec.ts" />
+    <None Remove="ClientApp\src\app\pages\home\home.component.ts" />
+    <None Remove="ClientApp\src\app\pages\login\login.component.html" />
+    <None Remove="ClientApp\src\app\pages\login\login.component.scss" />
+    <None Remove="ClientApp\src\app\pages\login\login.component.spec.ts" />
+    <None Remove="ClientApp\src\app\pages\login\login.component.ts" />
+    <None Remove="ClientApp\src\app\pages\page\page.component.html" />
+    <None Remove="ClientApp\src\app\pages\page\page.component.scss" />
+    <None Remove="ClientApp\src\app\pages\page\page.component.spec.ts" />
+    <None Remove="ClientApp\src\app\pages\page\page.component.ts" />
+    <None Remove="ClientApp\src\app\pipes\config-value.pipe.spec.ts" />
+    <None Remove="ClientApp\src\app\pipes\config-value.pipe.ts" />
+    <None Remove="ClientApp\src\app\pipes\filter.pipe.spec.ts" />
+    <None Remove="ClientApp\src\app\pipes\filter.pipe.ts" />
+    <None Remove="ClientApp\src\app\pipes\is-local-host.pipe.spec.ts" />
+    <None Remove="ClientApp\src\app\pipes\is-local-host.pipe.ts" />
+    <None Remove="ClientApp\src\app\Services\config.service.spec.ts" />
+    <None Remove="ClientApp\src\app\Services\config.service.ts" />
+    <None Remove="ClientApp\src\app\Services\data.service.spec.ts" />
+    <None Remove="ClientApp\src\app\Services\data.service.ts" />
+    <None Remove="ClientApp\src\assets\.gitkeep" />
+    <None Remove="ClientApp\src\environments\environment.prod.ts" />
+    <None Remove="ClientApp\src\environments\environment.ts" />
+    <None Remove="ClientApp\src\favicon.ico" />
+    <None Remove="ClientApp\src\index.html" />
+    <None Remove="ClientApp\src\main.ts" />
+    <None Remove="ClientApp\src\polyfills.ts" />
+    <None Remove="ClientApp\src\styles\material.scss" />
+    <None Remove="ClientApp\src\styles\styles.scss" />
+    <None Remove="ClientApp\src\test.ts" />
+    <None Remove="ClientApp\tsconfig.app.json" />
+    <None Remove="ClientApp\tsconfig.json" />
+    <None Remove="ClientApp\tsconfig.spec.json" />
+    <None Remove="ClientApp\tslint.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MakroBoard.Data\MakroBoard.Data.csproj" />
+    <ProjectReference Include="..\MakroBoard.PluginContract\MakroBoard.PluginContract.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="nlog.config" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+
+  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+
+    <ItemGroup>
+      <DistFiles Include="$(SpaRoot)\**" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
+</Project>
