@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:web_macro_soft_keyboard_client/models/Control.dart';
 import 'package:web_macro_soft_keyboard_client/models/ViewConfigParameter.dart';
 import 'package:web_macro_soft_keyboard_client/models/Plugin.dart';
+import 'package:web_macro_soft_keyboard_client/models/ViewConfigValue.dart';
 import 'package:web_macro_soft_keyboard_client/provider/api_provider.dart';
 
 class AvailableControls extends StatelessWidget {
@@ -51,6 +53,9 @@ class AvailableControls extends StatelessWidget {
             itemCount: plugin.controls.length,
             itemBuilder: (context, index) {
               var control = plugin.controls[index];
+              var configValues = control.configParameters.map((cp) => ViewConfigValue(symbolicName: cp.symbolicName)).toList();
+              var viewConfigValues = control.view.configParameters.map((cp) => ViewConfigValue(symbolicName: cp.symbolicName, value: cp.defaultValue)).toList();
+
               return Card(
                 child: Row(
                   children: [
@@ -65,8 +70,13 @@ class AvailableControls extends StatelessWidget {
                             ),
                             ListView.builder(
                               shrinkWrap: true,
+                              itemCount: control.view.configParameters.length,
+                              itemBuilder: (context, index) => _creteConfigParameter(control.view.configParameters[index], viewConfigValues[index]),
+                            ),
+                            ListView.builder(
+                              shrinkWrap: true,
                               itemCount: control.configParameters.length,
-                              itemBuilder: (context, index) => _creteConfigParameter(control.configParameters[index]),
+                              itemBuilder: (context, index) => _creteConfigParameter(control.configParameters[index], configValues[index]),
                             )
                           ],
                         ),
@@ -75,7 +85,7 @@ class AvailableControls extends StatelessWidget {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text("PlaceHolder"),
+                        child: _createControl(control, configValues, viewConfigValues),
                       ),
                     )
                   ],
@@ -86,16 +96,16 @@ class AvailableControls extends StatelessWidget {
         ],
       );
 
-  Widget _creteConfigParameter(ViewConfigParameter configParameter) {
+  Widget _creteConfigParameter(ViewConfigParameter configParameter, ViewConfigValue configValue) {
     return Row(
       children: [
         // Text(configParameter.symbolicName),
-        Flexible(child: _createConfigParameterInput(configParameter)),
+        Flexible(child: _createConfigParameterInput(configParameter, configValue)),
       ],
     );
   }
 
-  Widget _createConfigParameterInput(ViewConfigParameter configParameter) {
+  Widget _createConfigParameterInput(ViewConfigParameter configParameter, ViewConfigValue configValue) {
     switch (configParameter.configParameterType) {
       case ConfigParameterType.string:
         return TextField(
@@ -103,16 +113,33 @@ class AvailableControls extends StatelessWidget {
             // border: OutlineInputBorder(),
             labelText: configParameter.symbolicName,
           ),
+          onChanged: (value) => configValue.value = value,
         );
       case ConfigParameterType.bool:
         return CheckboxListTile(
           title: Text(configParameter.symbolicName),
           controlAffinity: ListTileControlAffinity.leading,
           value: configParameter.defaultValue as bool,
-          onChanged: (value) {},
+          onChanged: (value) => configValue.value = value,
         );
       default:
         return Text("No Input definded for " + configParameter.configParameterType.toString());
+    }
+  }
+
+  Widget _createControl(Control control, List<ViewConfigValue> configValues, List<ViewConfigValue> viewConfigValues) {
+    switch (control.view.viewType) {
+      case "Button":
+        return TextButton(
+          onPressed: () => {},
+          child: Text(viewConfigValues.firstWhere((element) => element.symbolicName == "label").value.toString()),
+        );
+      case "Image":
+        return Text(control.view.viewType);
+      case "Slider":
+        return Text(control.view.viewType);
+      default:
+        return Text(control.view.viewType);
     }
   }
 }
