@@ -33,8 +33,6 @@ jobs:
         cmake-version: '3.16'
     - name: Install apt dependencies
       run: sudo apt-get update && sudo apt-get install libidn11 jq curl wget ninja-build clang pkg-config cmake-data libblkid-dev libgtk-3-dev liblzma-dev flatpak -y
-    - name: install flatpak SDK
-      run:  flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo && flatpak install flathub org.freedesktop.Platform//19.08 org.freedesktop.Sdk//19.08
     - name: install appimagekit
       run: wget $(curl -sL https://api.github.com/repos/AppImage/AppImageKit/releases/latest | jq -r '.assets[].browser_download_url' | grep "appimagetool-x86_64.AppImage$") && chmod +x appimagetool-x86_64.AppImage
     - name: flutter get dependencies
@@ -68,7 +66,7 @@ jobs:
       run: mkdir upload && mkdir upload/linuxhost_x64 && mkdir upload/linuxclient_x64 && mkdir upload/linuxclient_appimage_x64 && mkdir upload/web && mkdir upload/android 
     - name: copy linux client x64
       run: cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/linux/release/bundle/* upload/linuxclient_x64/ 
-    - name: copy linux client appimage x64
+    - name: copy linux client appimage x64  
       run: cp -rf web_macro_soft_keyboard_client_x64.AppImage upload/linuxclient_appimage_x64/
     - name: copy linux Host x64
       run: cp -rf ./WebMacroSoftKeyboard/bin/Release/net5.0/linux-x64/publish/* upload/linuxhost_x64/
@@ -162,3 +160,5 @@ jobs:
     #   run: mkdir -p ./flatpakbuild/linuxclient && cp  ./packaging/flatpak/org.wmsk.client.yml ./flatpakbuild/linuxclient/ && cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/linux/release/bundle/* ./flatpakbuild/linuxclient/
     # - name: build flatpak linuxclient 
     #   run: cd ./flatpakbuild/linuxclien && flatpak-builder build-dir org.wmsk.client.yml
+      # - name: install flatpak SDK
+      # run:  flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo && flatpak install flathub org.freedesktop.Platform//19.08 org.freedesktop.Sdk//19.08
