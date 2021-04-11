@@ -30,7 +30,7 @@ jobs:
   publish:
     name: Release
     runs-on: ubuntu-latest
-    if: (startsWith(github.ref, 'refs/tags/v') && ${{ github.event_name == 'push' }}) || contains(github.event.head_commit.message, 'forcepublish')
+    if: ((startsWith(github.ref, 'refs/tags/v') && ${{ github.event_name == 'push' }}) || contains(github.event.head_commit.message, 'forcepublish'))
     steps:
     - uses: actions/checkout@v2
     - uses: nikeee/docfx-action@v1.0.0
