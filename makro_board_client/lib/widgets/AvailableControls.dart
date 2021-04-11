@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/models/Control.dart';
@@ -109,11 +110,20 @@ class AvailableControls extends StatelessWidget {
   Widget _createConfigParameterInput(BuildContext context, ViewConfigParameter configParameter, ViewConfigValue configValue) {
     switch (configParameter.configParameterType) {
       case ConfigParameterType.string:
-        return TextField(
+        return TextFormField(
           decoration: InputDecoration(
             // border: OutlineInputBorder(),
             labelText: configParameter.symbolicName,
           ),
+          // TODO
+          validator: (value) {
+            if (configParameter.validationRegEx != null && configParameter.validationRegEx!.isNotEmpty) {
+              if (!RegExp(configParameter.validationRegEx!).hasMatch(value!)) {
+                return "Value doesn´t match \"" + configParameter.validationRegEx! + "\"";
+              }
+            }
+            return null;
+          },
           onChanged: (value) => configValue.value = value,
         );
       case ConfigParameterType.bool:

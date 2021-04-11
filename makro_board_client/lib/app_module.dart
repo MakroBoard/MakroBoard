@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/guards/auth_guard.dart';
 import 'package:makro_board_client/pages/config_page.dart';
+import 'package:makro_board_client/pages/select_server_page.dart';
 import 'package:makro_board_client/pages/login_page.dart';
 import 'package:makro_board_client/pages/splash_screen.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
@@ -25,6 +26,7 @@ class AppModule extends Module {
   @override
   final List<ModularRoute> routes = [
     ChildRoute('/', child: (_, __) => SplashScreen()),
+    ChildRoute('/selectserver', child: (_, __) => SelectServerPage(key: UniqueKey())),
     ChildRoute('/home', child: (_, __) => HomePage(key: UniqueKey()), guards: [AuthGuard()]),
     ChildRoute('/config', child: (_, __) => ConfigPage(key: UniqueKey())),
     ChildRoute('/login', child: (_, __) => LoginPage(key: UniqueKey())),
