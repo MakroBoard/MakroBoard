@@ -1,4 +1,4 @@
-name: WMSK_test_build
+name: MakroBoard_test_build
 
 on:
   push:
@@ -36,35 +36,35 @@ jobs:
     - name: install appimagekit
       run: wget $(curl -sL https://api.github.com/repos/AppImage/AppImageKit/releases/latest | jq -r '.assets[].browser_download_url' | grep "appimagetool-x86_64.AppImage$") && chmod +x appimagetool-x86_64.AppImage
     - name: flutter get dependencies
-      working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
+      working-directory: ./makro_board_client    
       run: flutter pub get
     - name: flutter build apk 
-      working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
+      working-directory: ./makro_board_client    
       run: flutter build apk --release 
     - name: flutter build web
-      working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
+      working-directory: ./makro_board_client    
       run: flutter build web
     - name: flutter config linux
-      working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
+      working-directory: ./makro_board_client    
       run: flutter config --enable-linux-desktop 
     - name: flutter build linux
-      working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
+      working-directory: ./makro_board_client    
       run: flutter build linux --release   
     - name: Restore dependencies
       run: dotnet restore
     - name: copy web to dotnet
-      run: cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/web/* ./WebMacroSoftKeyboard/wwwroot/
+      run: cp -rf ./makro_board_client/build/web/* ./MakroBoard/wwwroot/
     - name: Build linux dotnet
       run: dotnet publish -r linux-x64 -c release
 
     - name: prepare appimage linxuclient x64 dir
-      run: mkdir -p ./appimage/MakroBoard_client_x64.AppDir &&  cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/linux/release/bundle/* ./appimage/MakroBoard_client_x64.AppDir/ && cp ./packaging/AppImage/linuxclient_Apprun ./appimage/MakroBoard_client_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_client_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_client_x64.AppDir/MakroBoardClient.png && cp ./packaging/AppImage/linuxclient_desktop ./appimage/MakroBoard_client_x64.AppDir/MakroBoard_client_x64.desktop && sed -i "s|%%%VERSION%%%|1.0.0|g" ./appimage/MakroBoard_client_x64.AppDir/MakroBoard_client_x64.desktop
+      run: mkdir -p ./appimage/MakroBoard_client_x64.AppDir &&  cp -rf ./makro_board_client/build/linux/release/bundle/* ./appimage/MakroBoard_client_x64.AppDir/ && cp ./packaging/AppImage/linuxclient_Apprun ./appimage/MakroBoard_client_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_client_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_client_x64.AppDir/MakroBoardClient.png && cp ./packaging/AppImage/linuxclient_desktop ./appimage/MakroBoard_client_x64.AppDir/MakroBoard_client_x64.desktop && sed -i "s|%%%VERSION%%%|1.0.0|g" ./appimage/MakroBoard_client_x64.AppDir/MakroBoard_client_x64.desktop
     - name: build appimage linuxclient x64
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_client_x64.AppDir/ MakroBoard_client_x64.AppImage
 
 
     - name: prepare appimage linxhost x64 dir
-      run: mkdir -p ./appimage/MakroBoard_host_x64.AppDir &&  cp -rf ./WebMacroSoftKeyboard/bin/Release/net5.0/linux-x64/publish/* ./appimage/MakroBoard_host_x64.AppDir/ && cp ./packaging/AppImage/linuxhost_Apprun ./appimage/MakroBoard_host_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_host_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_host_x64.AppDir/MakroBoardHost.png && cp ./packaging/AppImage/linuxhost_desktop ./appimage/MakroBoard_host_x64.AppDir/MakroBoard_host_x64.desktop && sed -i "s|%%%VERSION%%%|1.0.0|g" ./appimage/MakroBoard_host_x64.AppDir/MakroBoarMakroBoard_host_x64.desktop
+      run: mkdir -p ./appimage/MakroBoard_host_x64.AppDir &&  cp -rf ./MakroBoard/bin/Release/net5.0/linux-x64/publish/* ./appimage/MakroBoard_host_x64.AppDir/ && cp ./packaging/AppImage/linuxhost_Apprun ./appimage/MakroBoard_host_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_host_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_host_x64.AppDir/MakroBoardHost.png && cp ./packaging/AppImage/linuxhost_desktop ./appimage/MakroBoard_host_x64.AppDir/MakroBoard_host_x64.desktop && sed -i "s|%%%VERSION%%%|1.0.0|g" ./appimage/MakroBoard_host_x64.AppDir/MakroBoarMakroBoard_host_x64.desktop
     - name: build appimage linuxhost x64
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_host_x64.AppDir/ MakroBoard_host_x64.AppImage
 
@@ -72,17 +72,17 @@ jobs:
     - name: make upload folders
       run: mkdir upload && mkdir upload/linuxhost_x64 && mkdir upload/linuxclient_x64 && mkdir upload/linuxclient_appimage_x64 && mkdir upload/linuxhost_appimage_x64 && mkdir upload/web && mkdir upload/android 
     - name: copy linux client x64
-      run: cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/linux/release/bundle/* upload/linuxclient_x64/ 
+      run: cp -rf ./makro_board_client/build/linux/release/bundle/* upload/linuxclient_x64/ 
     - name: copy linux client appimage x64  
       run: cp -rf MakroBoard_client_x64.AppImage upload/linuxclient_appimage_x64/ 
     - name: copy linux host appimage x64  
       run: cp -rf MakroBoard_host_x64.AppImage upload/linuxhost_appimage_x64/
     - name: copy linux Host x64
-      run: cp -rf ./WebMacroSoftKeyboard/bin/Release/net5.0/linux-x64/publish/* upload/linuxhost_x64/
+      run: cp -rf ./MakroBoard/bin/Release/net5.0/linux-x64/publish/* upload/linuxhost_x64/
     - name: copy webapp
-      run: cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/web/* upload/web/
+      run: cp -rf ./makro_board_client/build/web/* upload/web/
     - name: copy android
-      run: cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/app/outputs/flutter-apk/* upload/android/
+      run: cp -rf ./makro_board_client/build/app/outputs/flutter-apk/* upload/android/
     - name: find uploads
       run: find upload/
     - name: ul temp
@@ -114,10 +114,10 @@ jobs:
   #   - name: flutter config windows
   #     run: flutter config --enable-windows-desktop
   #   - name: flutter get dependencies
-  #     working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
+  #     working-directory: ./makro_board_client    
   #     run: flutter pub get
   #   - name: flutter build windows
-  #     working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
+  #     working-directory: ./makro_board_client    
   #     run: flutter build windows --release
   #   - name: Restore dependencies
   #     run: dotnet restore
@@ -138,17 +138,17 @@ jobs:
   #   - name: flutter doctor
   #     run: flutter doctor -v
   #   - name: flutter get dependencies
-  #     working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
+  #     working-directory: ./makro_board_client    
   #     run: flutter pub get
   #   - name: flutter build ios
-  #     working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
+  #     working-directory: ./makro_board_client    
   #     run: flutter build ios --release --no-codesign      
 
   #   - name: flutter config macos
-  #     working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
+  #     working-directory: ./makro_board_client    
   #     run: flutter config --enable-macos-desktop
   #   - name: flutter build macos
-  #     working-directory: ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client    
+  #     working-directory: ./makro_board_client    
   #     run: flutter build macos --release
   #   - name: Restore dependencies
   #     run: dotnet restore
@@ -173,7 +173,7 @@ jobs:
 #
 
     # - name: prepare flatpak linuxclient
-    #   run: mkdir -p ./flatpakbuild/linuxclient && cp  ./packaging/flatpak/org.wmsk.client.yml ./flatpakbuild/linuxclient/ && cp -rf ./WebMacroSoftKeyboard/ClientAppFlutter/web_macro_soft_keyboard_client/build/linux/release/bundle/* ./flatpakbuild/linuxclient/
+    #   run: mkdir -p ./flatpakbuild/linuxclient && cp  ./packaging/flatpak/org.wmsk.client.yml ./flatpakbuild/linuxclient/ && cp -rf ./makro_board_client/build/linux/release/bundle/* ./flatpakbuild/linuxclient/
     # - name: build flatpak linuxclient 
     #   run: cd ./flatpakbuild/linuxclien && flatpak-builder build-dir org.wmsk.client.yml
       # - name: install flatpak SDK

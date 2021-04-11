@@ -3,6 +3,6 @@ Version=%%%VERSION%%%
 Type=Application
 Terminal=false
 Name=MakroBoardHost
-Exec=WebMacroSoftKeyboard %u
+Exec=MakroBoard %u
 Icon=MakroBoardHost
 Categories=Utility;
