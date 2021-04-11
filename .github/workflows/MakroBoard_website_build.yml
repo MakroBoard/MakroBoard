@@ -51,6 +51,8 @@ jobs:
       run: git clone git@github.com:MakroBoard/makroboard.app.git
     - name: remove old things and add new
       run: rm -rf ./makroboard.app/docs/* && cp -rf ./Docs/_site/* ./makroboard.app/docs/
+    - name: readd cname
+      run: echo "www.makroboard.app" >> ./makroboard.app/docs/CNAME
     - name: push pages repo
       run: cd ./makroboard.app && git add . && git commit -m "CI Build" && git push
     
