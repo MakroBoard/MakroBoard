@@ -8,7 +8,7 @@ on:
     - '**'
     - '!Docs/**'
     - '!README.md'
-    - '!.github/MakroBoard_website_build.yml'
+    - '!.github/workflows/MakroBoard_website_build.yml'
   pull_request:
     branches: [ main ]
     tags: [ v**]
@@ -16,7 +16,7 @@ on:
     - '**'
     - '!Docs/**'
     - '!README.md'
-    - '!.github/MakroBoard_website_build.yml'
+    - '!.github/workflows/MakroBoard_website_build.yml'
 
 jobs:
 
