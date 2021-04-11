@@ -16,6 +16,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
+    if: ${{ (!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) }}
     steps:
     - uses: actions/checkout@v2
     - uses: nikeee/docfx-action@v1.0.0
@@ -29,7 +30,7 @@ jobs:
   publish:
     name: Release
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v') || contains(github.event.head_commit.message, 'forcepublish')
+    if: ${{ startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' || contains(github.event.head_commit.message, 'forcepublish') }}
     steps:
     - uses: actions/checkout@v2
     - uses: nikeee/docfx-action@v1.0.0
@@ -42,13 +43,18 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         name: id_rsa
         config: ${{ secrets.SSH_CONFIG }} 
+        known_hosts: unnecessary
         if_key_exists: fail 
+    - name: git config
+      run: git config --global user.email "ci@makroboard.app" && git config --global user.name "MakroBoard CI"
     - name: clone pages repo
       run: git clone git@github.com:MakroBoard/makroboard.app.git
     - name: remove old things and add new
       run: rm -rf ./makroboard.app/docs/* && cp -rf ./Docs/_site/* ./makroboard.app/docs/
+    - name: readd cname
+      run: echo "www.makroboard.app" >> ./makroboard.app/docs/CNAME
     - name: push pages repo
-      run: git clone git@github.com:MakroBoard/makroboard.app.git
+      run: cd ./makroboard.app && git add . && git commit -m "CI Build" && git push
     
 
 
