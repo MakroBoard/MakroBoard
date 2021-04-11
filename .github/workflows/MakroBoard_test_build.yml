@@ -5,12 +5,14 @@ on:
     branches: [ main ]
     tags: [ v**]
     paths:
+    - '**'
     - '!Docs/**'
     - '!README.md'
   pull_request:
     branches: [ main ]
     tags: [ v**]
     paths:
+    - '**'
     - '!Docs/**'
     - '!README.md'
 
