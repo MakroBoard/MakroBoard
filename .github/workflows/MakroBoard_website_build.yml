@@ -45,6 +45,8 @@ jobs:
         config: ${{ secrets.SSH_CONFIG }} 
         known_hosts: unnecessary
         if_key_exists: fail 
+    - name: git config
+      run: git config --global user.email "ci@makroboard.app" && git config --global user.name "MakroBoard CI"
     - name: clone pages repo
       run: git clone git@github.com:MakroBoard/makroboard.app.git
     - name: remove old things and add new
