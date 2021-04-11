@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/models/Control.dart';
 import 'package:makro_board_client/models/ViewConfigParameter.dart';
@@ -54,7 +55,7 @@ class AvailableControls extends StatelessWidget {
             itemBuilder: (context, index) {
               var control = plugin.controls[index];
               var configValues = control.configParameters.map((cp) => ViewConfigValue(symbolicName: cp.symbolicName)).toList();
-              var viewConfigValues = control.view.configParameters.map((cp) => ViewConfigValue(symbolicName: cp.symbolicName, value: cp.defaultValue)).toList();
+              var viewConfigValues = control.view.configParameters.map((cp) => ViewConfigValue(symbolicName: cp.symbolicName, defaultValue: cp.defaultValue)).toList();
 
               return Card(
                 child: Row(
@@ -71,12 +72,12 @@ class AvailableControls extends StatelessWidget {
                             ListView.builder(
                               shrinkWrap: true,
                               itemCount: control.view.configParameters.length,
-                              itemBuilder: (context, index) => _creteConfigParameter(control.view.configParameters[index], viewConfigValues[index]),
+                              itemBuilder: (context, index) => _creteConfigParameter(context, control.view.configParameters[index], viewConfigValues[index]),
                             ),
                             ListView.builder(
                               shrinkWrap: true,
                               itemCount: control.configParameters.length,
-                              itemBuilder: (context, index) => _creteConfigParameter(control.configParameters[index], configValues[index]),
+                              itemBuilder: (context, index) => _creteConfigParameter(context, control.configParameters[index], configValues[index]),
                             )
                           ],
                         ),
@@ -85,7 +86,7 @@ class AvailableControls extends StatelessWidget {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: _createControl(control, configValues, viewConfigValues),
+                        child: _createControl(context, control, configValues, viewConfigValues),
                       ),
                     )
                   ],
@@ -96,16 +97,16 @@ class AvailableControls extends StatelessWidget {
         ],
       );
 
-  Widget _creteConfigParameter(ViewConfigParameter configParameter, ViewConfigValue configValue) {
+  Widget _creteConfigParameter(BuildContext context, ViewConfigParameter configParameter, ViewConfigValue configValue) {
     return Row(
       children: [
         // Text(configParameter.symbolicName),
-        Flexible(child: _createConfigParameterInput(configParameter, configValue)),
+        Flexible(child: _createConfigParameterInput(context, configParameter, configValue)),
       ],
     );
   }
 
-  Widget _createConfigParameterInput(ViewConfigParameter configParameter, ViewConfigValue configValue) {
+  Widget _createConfigParameterInput(BuildContext context, ViewConfigParameter configParameter, ViewConfigValue configValue) {
     switch (configParameter.configParameterType) {
       case ConfigParameterType.string:
         return TextField(
@@ -127,12 +128,15 @@ class AvailableControls extends StatelessWidget {
     }
   }
 
-  Widget _createControl(Control control, List<ViewConfigValue> configValues, List<ViewConfigValue> viewConfigValues) {
+  Widget _createControl(BuildContext context, Control control, List<ViewConfigValue> configValues, List<ViewConfigValue> viewConfigValues) {
     switch (control.view.viewType) {
       case "Button":
         return TextButton(
           onPressed: () => Modular.get<ApiProvider>().executeControl(control, configValues),
-          child: Text(viewConfigValues.firstWhere((element) => element.symbolicName == "label").value.toString()),
+          child: ChangeNotifierProvider.value(
+            value: viewConfigValues.firstWhere((element) => element.symbolicName == "label"),
+            builder: (context, _) => Text(context.watch<ViewConfigValue>().value.toString()),
+          ),
         );
       case "Image":
         return Text(control.view.viewType);

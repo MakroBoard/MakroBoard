@@ -1,12 +1,23 @@
-class ViewConfigValue {
-  final String symbolicName;
-  Object? value;
+import 'package:flutter/material.dart';
 
-  ViewConfigValue({required this.symbolicName, this.value});
+class ViewConfigValue with ChangeNotifier {
+  final String symbolicName;
+  Object? _value;
+
+  Object? get value => _value;
+
+  set value(Object? value) {
+    _value = value;
+    notifyListeners();
+  }
+
+  ViewConfigValue({required this.symbolicName, Object? defaultValue}) {
+    value = defaultValue;
+  }
 
   ViewConfigValue.fromJson(Map<String, dynamic> json)
       : symbolicName = json["symbolicName"],
-        value = json["value"];
+        _value = json["value"];
 
   Map<String, dynamic> toJson() {
     return {
