@@ -16,7 +16,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v') == 'false' && contains(github.event.head_commit.message, 'forcepublish') == false
+    if: (startsWith(github.ref, 'refs/tags/v') == 'false') && (contains(github.event.head_commit.message, 'forcepublish') == 'false')
     steps:
     - uses: actions/checkout@v2
     - uses: nikeee/docfx-action@v1.0.0
