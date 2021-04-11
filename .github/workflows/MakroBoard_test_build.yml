@@ -20,6 +20,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    # - name: Import GPG key
+    #   id: import_gpg
+    #   uses: crazy-max/ghaction-import-gpg@v3
+    #   with:
+    #     gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+    # - name: GPG user IDs
+    #   run: |
+    #     echo "fingerprint: ${{ steps.import_gpg.outputs.fingerprint }}"
+    #     echo "keyid:       ${{ steps.import_gpg.outputs.keyid }}"
+    #     echo "name:        ${{ steps.import_gpg.outputs.name }}"
+    #     echo "email:       ${{ steps.import_gpg.outputs.email }}"
     - uses: actions/setup-java@v1
       with:
         java-version: '12.x'
@@ -67,12 +78,14 @@ jobs:
       run: mkdir -p ./appimage/MakroBoard_client_x64.AppDir &&  cp -rf ./makro_board_client/build/linux/release/bundle/* ./appimage/MakroBoard_client_x64.AppDir/ && cp ./packaging/AppImage/linuxclient_Apprun ./appimage/MakroBoard_client_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_client_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_client_x64.AppDir/MakroBoardClient.png && cp ./packaging/AppImage/linuxclient_desktop ./appimage/MakroBoard_client_x64.AppDir/MakroBoard_client_x64.desktop 
     - name: build appimage linuxclient x64
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_client_x64.AppDir/ MakroBoard_client_x64.AppImage
+      # run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_client_x64.AppDir/ MakroBoard_client_x64.AppImage --sign
 
 
     - name: prepare appimage linxhost x64 dir
       run: mkdir -p ./appimage/MakroBoard_host_x64.AppDir &&  cp -rf ./MakroBoard/bin/Release/net5.0/linux-x64/publish/* ./appimage/MakroBoard_host_x64.AppDir/ && cp ./packaging/AppImage/linuxhost_Apprun ./appimage/MakroBoard_host_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_host_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_host_x64.AppDir/MakroBoardHost.png && cp ./packaging/AppImage/linuxhost_desktop ./appimage/MakroBoard_host_x64.AppDir/MakroBoard_host_x64.desktop
     - name: build appimage linuxhost x64
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_host_x64.AppDir/ MakroBoard_host_x64.AppImage
+      # run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_host_x64.AppDir/ MakroBoard_host_x64.AppImage --sign
 
 
     - name: make upload folders
