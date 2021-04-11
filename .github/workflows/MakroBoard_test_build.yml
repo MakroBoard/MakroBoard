@@ -8,6 +8,7 @@ on:
     - '**'
     - '!Docs/**'
     - '!README.md'
+    - '!.github/MakroBoard_website_build.yml'
   pull_request:
     branches: [ main ]
     tags: [ v**]
@@ -15,6 +16,7 @@ on:
     - '**'
     - '!Docs/**'
     - '!README.md'
+    - '!.github/MakroBoard_website_build.yml'
 
 jobs:
 
@@ -95,9 +97,9 @@ jobs:
     - name: copy linux client x64
       run: cp -rf ./makro_board_client/build/linux/release/bundle/* upload/linuxclient_x64/ 
     - name: copy linux client appimage x64  
-      run: cp -rf MakroBoard_client_x64.AppImage upload/linuxclient_appimage_x64/ 
+      run: cp -rf MakroBoard_client_x64.AppImage* upload/linuxclient_appimage_x64/ 
     - name: copy linux host appimage x64  
-      run: cp -rf MakroBoard_host_x64.AppImage upload/linuxhost_appimage_x64/
+      run: cp -rf MakroBoard_host_x64.AppImage* upload/linuxhost_appimage_x64/
     - name: copy linux Host x64
       run: cp -rf ./MakroBoard/bin/Release/net5.0/linux-x64/publish/* upload/linuxhost_x64/
     - name: copy webapp
