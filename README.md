@@ -19,12 +19,33 @@ There is no released version so far, you have to follow the development steps be
 - [Dotnet 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/5.0) for your OS
 - [flutter](https://flutter.dev/docs/get-started/install) for your OS
 
+### Optioal: Vscode Plugins
+
+- dart-code.dart-code
+- luanpotter.dart-import
+- dart-code.flutter
+- nash.awesome-flutter-snippets
+- ms-dotnettools.csharp
+
+You can install them with:
+
+    code --install-extension dart-code.dart-code && \
+    code --install-extension luanpotter.dart-import && \
+    code --install-extension dart-code.flutter && \
+    code --install-extension nash.awesome-flutter-snippets && \
+    code --install-extension ms-dotnettools.csharp
+
 ### Building and starting the application
 
-- go to the makro_board_client folder and run `flutter pub get`
-- go to the makro_board_client folder and run `flutter run` to start the frontend
-- in vscode / visual studio you can now just hit F5 or use the build tasks to start the backend
-- you can also use the shell `dotnet build` or `dotnet publish` in the root of the repo to start the backend
+We recommend to open 2 instances of vscode, one in the root directory of the project and one in the makro_board_client directory.
+
+- to install the flutter dependencies go to the makro_board_client folder and run `flutter pub get`
+- to install the dotnet dependencies go to the projects root folder and run `dotnet restore`
+
+- to run the client, go to the makro_board_client folder and run `flutter run` or if you have the vscode plugins open the instance where the makro_board_client directory is opened, open the `lib/main.dart' and press F5
+
+- to run the host you can now just hit F5 or use the build tasks in the vscode / visual studio instance where your root project directory is opened to start the backend 
+- you can also use the shell `dotnet build` or `dotnet publish` in the root of the project to start the backend
 
 ### Building the documentation
 
