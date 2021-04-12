@@ -51,7 +51,7 @@ jobs:
     - name: remove old things and add new
       run: rm -rf ./dev.makroboard.app/docs/* && cp -rf ./Docs/_site/* ./dev.makroboard.app/docs/
     - name: readd cname
-      run: echo "dev.makroboard.app" >> ./makroboard.app/docs/CNAME
+      run: echo "dev.makroboard.app" >> ./dev.makroboard.app/docs/CNAME
     - name: push pages repo
       run: cd ./dev.makroboard.app && git add . && git commit -m "CI Build" && git push
 
