@@ -23,7 +23,7 @@ class ConfigPage extends StatelessWidget {
               ),
             ],
           ),
-          title: Text('Tabs Demo'),
+          title: Text('Administration'),
         ),
         body: TabBarView(
           children: [
