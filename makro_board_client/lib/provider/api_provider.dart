@@ -31,6 +31,7 @@ class ApiProvider {
   Stream<List<Client>> get clients => streamClientController.stream;
   Stream<String> get token => streamTokenController.stream;
   HubConnection? _connection;
+  Uri? _serverUri;
 
   final EnvProvider envProvider;
   ApiProvider({
@@ -46,9 +47,10 @@ class ApiProvider {
     // }
   }
 
-  Future initialize() async {
+  Future<bool> initialize(Uri serverUri) async {
     try {
-      var url = Uri.https(envProvider.getBaseUrl(), requestTokenUrl).toString();
+      _serverUri = serverUri;
+      var url = serverUri.replace(path: requestTokenUrl).toString();
       _connection = HubConnectionBuilder()
           .withUrl(
               url,
@@ -62,9 +64,13 @@ class ApiProvider {
       _connection!.on('AddOrUpdateToken', _onAddOrUpdateToken);
       _connection!.on('RemoveClient', _onRemoveClient);
       _connection!.on('AddOrUpdatePage', _onAddOrUpdatePage);
+
+      return true;
     } on Exception catch (e) {
       print(e.toString());
     }
+
+    return false;
   }
 
   void _onRemoveClient(clients) {
@@ -134,7 +140,7 @@ class ApiProvider {
         return false;
       }
       var response = await http.get(
-        Uri.https(envProvider.getBaseUrl(), checkTokenUrl),
+        _serverUri!.replace(path: checkTokenUrl),
         headers: <String, String>{
           HttpHeaders.authorizationHeader: authToken,
           'Content-Type': 'application/json; charset=UTF-8',
@@ -149,7 +155,7 @@ class ApiProvider {
 
   Future<DateTime> submitCode(int code) async {
     var response = await http.post(
-      Uri.https(envProvider.getBaseUrl(), submitCodeUrl),
+      _serverUri!.replace(path: submitCodeUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -163,7 +169,7 @@ class ApiProvider {
   Future confirmClient(Client client) async {
     try {
       var response = await http.post(
-        Uri.https(envProvider.getBaseUrl(), confirmClientUrl),
+        _serverUri!.replace(path: confirmClientUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -181,7 +187,7 @@ class ApiProvider {
     try {
       var jsonBody = json.encode(client);
       var response = await http.post(
-        Uri.https(envProvider.getBaseUrl(), removeClientUrl),
+        _serverUri!.replace(path: removeClientUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -198,7 +204,7 @@ class ApiProvider {
   Future<List<Plugin>> getAvailableControls() async {
     try {
       var response = await http.get(
-        Uri.https(envProvider.getBaseUrl(), getControlsUrl),
+        _serverUri!.replace(path: getControlsUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -221,7 +227,7 @@ class ApiProvider {
     try {
       var jsonBody = json.encode({"symbolicName": control.symbolicName, "configValues": configValues});
       var response = await http.post(
-        Uri.https(envProvider.getBaseUrl(), executeControlUrl),
+        _serverUri!.replace(path: executeControlUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
