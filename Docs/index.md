@@ -1,7 +1,3 @@
->[!WARNING]
-> This is a dev version of our homepage! Please use [makroboard.app](https://makroboard.app) insted 
-
-
 # This is the **HOMEPAGE**.
 Refer to [Markdown](http://daringfireball.net/projects/markdown/) for how to write markdown files.
 ## Quick Start Notes:
