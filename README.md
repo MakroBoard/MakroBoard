@@ -37,7 +37,7 @@ You can install them with:
 
 ### Building and starting the application
 
-We recommend to open 2 instances of vscode, one in the root directory of the project and one in the makro_board_client directory.
+We recommend to open 2 instances of vscode (or one vscode and one vs imstande), one in the root directory of the project and one in the makro_board_client directory.
 
 - to install the flutter dependencies go to the makro_board_client folder and run `flutter pub get`
 - to install the dotnet dependencies go to the projects root folder and run `dotnet restore`

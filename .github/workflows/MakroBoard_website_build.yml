@@ -6,25 +6,54 @@ on:
     tags: [ v**]
     paths:
     - 'Docs/**'
+    - '.github/workflows/MakroBoard_website_build.yml'
   pull_request:
     branches: [ main ]
     tags: [ v**]
     paths:
     - 'Docs/**'
+    - '.github/workflows/MakroBoard_website_build.yml'
 
 jobs:
 
   build:
     runs-on: ubuntu-latest
-    if: ${{ (!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) }}
+    if: ${{ (!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) && github.event_name == 'pull_request'}}
     steps:
     - uses: actions/checkout@v2
     - uses: nikeee/docfx-action@v1.0.0
       name: Build Documentation
       with:
         args: ./Docs/docfx.json
-    - name: list build ouput
-      run: find ./Docs/_site/
+
+
+  publish_dev:
+    runs-on: ubuntu-latest
+    if: ${{ (!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) && github.event_name == 'push' }}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: nikeee/docfx-action@v1.0.0
+      name: Build Documentation
+      with:
+        args: ./Docs/docfx.json
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_KEY2 }}
+        name: id_rsa
+        config: ${{ secrets.SSH_CONFIG }} 
+        known_hosts: unnecessary
+        if_key_exists: fail 
+    - name: git config
+      run: git config --global user.email "ci@makroboard.app" && git config --global user.name "MakroBoard CI"
+    - name: clone pages repo
+      run: git clone git@github.com:MakroBoard/dev.makroboard.app.git
+    - name: remove old things and add new
+      run: rm -rf ./dev.makroboard.app/docs/* && cp -rf ./Docs/_site/* ./dev.makroboard.app/docs/
+    - name: readd cname
+      run: echo "dev.makroboard.app" >> ./dev.makroboard.app/docs/CNAME
+    - name: push pages repo
+      run: cd ./dev.makroboard.app && git add . && git commit -m "CI Build" && git push
 
 
   publish:
