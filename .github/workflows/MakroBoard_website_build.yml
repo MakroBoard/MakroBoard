@@ -33,7 +33,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: add dev warning to index
-      run: for file in $(find . -name *.md -type f); do echo -e "\n$file: ";  sed -i '1i\\' $file && sed -i '1i\\' $file && sed -i '1i>This is a dev version of our homepage! Please use [makroboard.app](https://makroboard.app) insted.\' $file && sed -i '1i>[!WARNING]\' $file ; done
+      run: chmod +x ./packaging/Docs/adddevwarning.sh && ./packaging/Docs/adddevwarning.sh
     - uses: nikeee/docfx-action@v1.0.0
       name: Build Documentation
       with:
