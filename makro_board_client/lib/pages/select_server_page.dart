@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
@@ -12,7 +13,6 @@ class SelectServerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _loginFormKey = GlobalKey<FormState>();
-
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       // appBar: WmskAppBar(title: "MakroBoard", showSettings: false).getAppBar(context),
@@ -94,6 +94,7 @@ class SelectServerPage extends StatelessWidget {
                             TextButton(
                               // onPressed: () => Modular.to.navigate('/login'),
                               onPressed: () async {
+                                EasyLoading.show(status: 'verbinden ...');
                                 if (_loginFormKey.currentState!.validate()) {
                                   var port = int.parse(Settings.getValue("server_port", "5001"));
                                   var serverUriString = Settings.getValue("server_host", "");
@@ -106,12 +107,14 @@ class SelectServerPage extends StatelessWidget {
                                     } else {
                                       Modular.to.navigate('/login');
                                     }
-
                                     // If the form is valid, display a snackbar. In the real world,
                                     // you'd often call a server or save the information in a database.
                                     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Processing Data')));
+                                  } else {
+                                    EasyLoading.showError("Es konnte keine Verbindung hergestellt werden.", dismissOnTap: true);
                                   }
                                 }
+                                EasyLoading.dismiss();
                               },
                               child: Text("Connect"),
                             ),

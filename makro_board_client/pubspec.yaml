@@ -33,6 +33,7 @@ dependencies:
   provider: ^5.0.0
   url_launcher: ^6.0.3
   flutter_settings_screens: ^0.2.2+1
+  flutter_easyloading: ^3.0.0
 
 dev_dependencies:
   flutter_test:

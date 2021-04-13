@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
@@ -19,6 +20,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void initialize() async {
     await Settings.init();
+
+    _initializeEasyLoading();
 
     Uri? serverUri;
 
@@ -45,6 +48,23 @@ class _SplashScreenState extends State<SplashScreen> {
         Modular.to.navigate('/login');
       }
     }
+  }
+
+  void _initializeEasyLoading() {
+    EasyLoading.instance
+      ..displayDuration = const Duration(milliseconds: 2000)
+      ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+      ..loadingStyle = EasyLoadingStyle.dark
+      ..indicatorSize = 45.0
+      ..radius = 10.0
+      ..progressColor = Colors.yellow
+      ..backgroundColor = Colors.green
+      ..indicatorColor = Colors.yellow
+      ..textColor = Colors.yellow
+      ..maskColor = Colors.blue.withOpacity(0.5)
+      ..userInteractions = true
+      ..dismissOnTap = false
+      ..maskType = EasyLoadingMaskType.black;
   }
 
   @override
