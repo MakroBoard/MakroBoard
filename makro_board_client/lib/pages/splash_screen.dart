@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/provider/auth_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -18,14 +18,16 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void initialize() async {
+    await Settings.init();
+
     Uri? serverUri;
+
     if (kIsWeb) {
       serverUri = Uri.base;
     } else {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var serverUriString = prefs.getString('uribase');
-      if (serverUriString != null) {
-        var port = prefs.getInt('port') ?? 5001;
+      var serverUriString = Settings.getValue<String>("server_host", "");
+      if (serverUriString.isNotEmpty) {
+        var port = int.parse(Settings.getValue("server_port", "5001"));
         serverUri = Uri.tryParse(serverUriString);
         if (serverUri != null) {
           serverUri = serverUri.replace(port: port);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/provider/auth_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SelectServerPage extends StatelessWidget {
@@ -38,34 +38,36 @@ class SelectServerPage extends StatelessWidget {
                           decoration: InputDecoration(
                             // border: OutlineInputBorder(),
                             labelText: "Host",
-                            prefix: Text("https://"),
                             prefixIcon: Icon(Icons.dns_outlined),
                           ),
+                          initialValue: Settings.getValue("server_host", "https://"),
                           validator: (value) {
                             if (value == null) {
                               return "Um fortzufahren wird ein Host benötigt.";
                             }
 
-                            if (Uri.tryParse(value) == null) {
+                            var uri = Uri.tryParse(value);
+                            if (uri == null) {
                               return "Der Host \"value\" ist keine gültige URI";
+                            }
+                            if (!uri.isScheme("https")) {
+                              return "Der Host ist kein https-Host";
                             }
                             return null;
                           },
                           onChanged: (value) async {
-                            var prefs = await SharedPreferences.getInstance();
-                            prefs.setString('uribase', "https://" + value);
+                            await Settings.setValue("server_host", "https://" + value);
                           },
                         ),
                         TextFormField(
                           decoration: InputDecoration(
                             // border: OutlineInputBorder(),
                             labelText: "Port",
-                            prefix: Text("https://"),
-                            prefixIcon: Icon(Icons.dns_outlined),
+                            prefixIcon: Icon(Icons.tag),
                           ),
                           keyboardType: TextInputType.number,
+                          initialValue: Settings.getValue("server_port", "5001"),
                           inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly], // Only number
-                          initialValue: "5001",
                           validator: (value) {
                             if (value == null) {
                               return "Um fortzufahren wird ein Port benötigt.";
@@ -83,8 +85,7 @@ class SelectServerPage extends StatelessWidget {
                             return null;
                           },
                           onChanged: (value) async {
-                            var prefs = await SharedPreferences.getInstance();
-                            prefs.setInt('port', int.parse(value));
+                            await Settings.setValue("server_port", value);
                           },
                         ),
                         ButtonBar(
@@ -94,22 +95,22 @@ class SelectServerPage extends StatelessWidget {
                               // onPressed: () => Modular.to.navigate('/login'),
                               onPressed: () async {
                                 if (_loginFormKey.currentState!.validate()) {
-                                  var prefs = await SharedPreferences.getInstance();
-                                  var serverUriString = prefs.getString('uribase');
-                                  var port = prefs.getInt('port') ?? 5001;
-                                  var serverUri = Uri.parse(serverUriString!);
+                                  var port = int.parse(Settings.getValue("server_port", "5001"));
+                                  var serverUriString = Settings.getValue("server_host", "");
+                                  var serverUri = Uri.parse(serverUriString);
                                   serverUri = serverUri.replace(port: port);
-                                  await Modular.get<ApiProvider>().initialize(serverUri);
-                                  var isAuthenticated = await Modular.get<AuthProvider>().isAuthenticated();
-                                  if (isAuthenticated) {
-                                    Modular.to.navigate('/home');
-                                  } else {
-                                    Modular.to.navigate('/login');
-                                  }
+                                  if (await Modular.get<ApiProvider>().initialize(serverUri)) {
+                                    var isAuthenticated = await Modular.get<AuthProvider>().isAuthenticated();
+                                    if (isAuthenticated) {
+                                      Modular.to.navigate('/home');
+                                    } else {
+                                      Modular.to.navigate('/login');
+                                    }
 
-                                  // If the form is valid, display a snackbar. In the real world,
-                                  // you'd often call a server or save the information in a database.
-                                  // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Processing Data')));
+                                    // If the form is valid, display a snackbar. In the real world,
+                                    // you'd often call a server or save the information in a database.
+                                    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Processing Data')));
+                                  }
                                 }
                               },
                               child: Text("Connect"),

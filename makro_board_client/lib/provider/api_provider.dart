@@ -4,8 +4,9 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:signalr_core/signalr_core.dart';
 import 'package:makro_board_client/models/Control.dart';
 import 'package:makro_board_client/models/Plugin.dart';
@@ -84,12 +85,9 @@ class ApiProvider {
 
   void _onAddOrUpdateToken(tokens) async {
     for (var newToken in tokens!) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       var newTokenString = newToken.toString();
-      var setToken = await prefs.setString('token', newTokenString);
-      if (setToken) {
-        streamTokenController.add(newTokenString);
-      }
+      await Settings.setValue("server_token", newTokenString);
+      streamTokenController.add(newTokenString);
     }
   }
 
@@ -134,11 +132,11 @@ class ApiProvider {
   Future<bool> isAuthenticated() async {
     // return false;
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? authToken = prefs.getString('token');
-      if (authToken == null) {
+      var authToken = Settings.getValue("server_token", "");
+      if (authToken.isEmpty) {
         return false;
       }
+
       var response = await http.get(
         _serverUri!.replace(path: checkTokenUrl),
         headers: <String, String>{

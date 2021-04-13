@@ -1,3 +1,5 @@
+// @dart=2.9
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -13,7 +15,7 @@ void main() {
 
 class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext? context) {
+  HttpClient createHttpClient(SecurityContext context) {
     final HttpClient client = super.createHttpClient(context)
       ..maxConnectionsPerHost = 5
       ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
