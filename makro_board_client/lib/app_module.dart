@@ -31,7 +31,7 @@ class AppModule extends Module {
     ChildRoute('/home', child: (_, __) => HomePage(key: UniqueKey()), guards: [AuthGuard()]),
     ChildRoute('/config', child: (_, __) => ConfigPage(key: UniqueKey())),
     ChildRoute('/login', child: (_, __) => LoginPage(key: UniqueKey())),
-    ChildRoute('/settings', child: (_, __) => SettingsPage(key: UniqueKey())),
+    ChildRoute('/settings', child: (_, __) => SettingsPage(key: UniqueKey()), transition: TransitionType.rightToLeft),
   ];
 
   // add your main widget here

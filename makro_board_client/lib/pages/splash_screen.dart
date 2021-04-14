@@ -78,25 +78,40 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: Center(
-        // child: Image.asset('assets/splash.png'),
-        child: SizedBox(
-          width: 250.0,
-          child: DefaultTextStyle(
-            style: const TextStyle(
-              fontSize: 30.0,
-              fontFamily: 'Hack',
-            ),
-            child: AnimatedTextKit(
-              animatedTexts: [
-                TypewriterAnimatedText(
-                  'MakroBoard',
-                  speed: Duration(milliseconds: 200),
+        child: Container(
+          constraints: BoxConstraints(maxWidth: 500),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              DefaultTextStyle(
+                style: const TextStyle(
+                  fontSize: 64.0,
+                  fontFamily: 'Hack',
                 ),
-              ],
-              onTap: () {
-                print("Tap Event");
-              },
-            ),
+                child: AnimatedTextKit(
+                  animatedTexts: [
+                    TypewriterAnimatedText(
+                      'MakroBoard',
+                      speed: Duration(milliseconds: 200),
+                    ),
+                  ],
+                ),
+              ),
+              DefaultTextStyle(
+                style: const TextStyle(
+                  fontSize: 30.0,
+                  fontFamily: 'Hack',
+                ),
+                child: AnimatedTextKit(
+                  animatedTexts: [
+                    TypewriterAnimatedText(
+                      'Console.WriteLine("Hallo Alex")',
+                      speed: Duration(milliseconds: 65),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
