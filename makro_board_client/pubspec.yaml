@@ -34,6 +34,7 @@ dependencies:
   url_launcher: ^6.0.3
   flutter_settings_screens: ^0.2.2+1
   flutter_easyloading: ^3.0.0
+  animated_text_kit: ^4.2.0
 
 dev_dependencies:
   flutter_test:
@@ -79,3 +80,14 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: Hack
+      fonts:
+        - asset: fonts/Hack-Regular.ttf
+        - asset: fonts/Hack-Italic.ttf
+          style: italic
+    - family: RobotoMono
+      fonts:
+        - asset: fonts/Hack-Regular.ttf
+        - asset: fonts/Hack-Bold.ttf
+          weight: 700

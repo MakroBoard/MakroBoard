@@ -5,6 +5,7 @@ import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/provider/auth_provider.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -19,6 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void initialize() async {
+    var minFuture = new Future.delayed(const Duration(seconds: 3));
     await Settings.init();
 
     _initializeEasyLoading();
@@ -38,16 +40,20 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     }
 
+    String navigationTarget;
     if (serverUri == null || !(await Modular.get<ApiProvider>().initialize(serverUri))) {
-      Modular.to.navigate('/selectserver');
+      navigationTarget = '/selectserver';
     } else {
       var isAuthenticated = await Modular.get<AuthProvider>().isAuthenticated();
       if (isAuthenticated) {
-        Modular.to.navigate('/home');
+        navigationTarget = '/home';
       } else {
-        Modular.to.navigate('/login');
+        navigationTarget = '/login';
       }
     }
+
+    await minFuture;
+    Modular.to.navigate(navigationTarget);
   }
 
   void _initializeEasyLoading() {
@@ -73,7 +79,26 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Theme.of(context).primaryColor,
       body: Center(
         // child: Image.asset('assets/splash.png'),
-        child: Text("SplashScreen"),
+        child: SizedBox(
+          width: 250.0,
+          child: DefaultTextStyle(
+            style: const TextStyle(
+              fontSize: 30.0,
+              fontFamily: 'Hack',
+            ),
+            child: AnimatedTextKit(
+              animatedTexts: [
+                TypewriterAnimatedText(
+                  'MakroBoard',
+                  speed: Duration(milliseconds: 200),
+                ),
+              ],
+              onTap: () {
+                print("Tap Event");
+              },
+            ),
+          ),
+        ),
       ),
     );
   }
