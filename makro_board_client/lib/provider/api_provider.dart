@@ -26,11 +26,14 @@ class ApiProvider {
   static const String getControlsUrl = "/api/controls/availablecontrols";
   static const String executeControlUrl = "/api/controls/execute";
 
+  StreamController<List<Page>> streamPageController = StreamController<List<Page>>.broadcast();
   StreamController<List<Client>> streamClientController = StreamController<List<Client>>.broadcast();
   StreamController<String> streamTokenController = StreamController<String>.broadcast();
   List<Client> currentClients = [];
+  List<Page> currentPages = [];
   Stream<List<Client>> get clients => streamClientController.stream;
   Stream<String> get token => streamTokenController.stream;
+  Stream<List<Page>> get pages => streamPageController.stream;
   HubConnection? _connection;
   Uri? _serverUri;
 
@@ -112,20 +115,20 @@ class ApiProvider {
 
   void _onAddOrUpdatePage(pages) async {
     for (var page in pages!) {
-      // var existingClient = currentClients.firstWhere(
-      //   (element) => element.id == client["id"],
-      //   orElse: () => Client.empty(),
-      // );
+      var existingPage = currentPages.firstWhere(
+        (element) => element.id == page["id"],
+        orElse: () => Page.empty(),
+      );
 
-      var newClient = Page.fromJson(page);
-      // if (existingClient.isEmpty) {
-      //   currentClients.add(newClient);
-      // } else {
-      //   var index = currentClients.indexOf(existingClient);
-      //   currentClients[index] = newClient;
-      // }
+      var newPage = Page.fromJson(page);
+      if (existingPage.isEmpty) {
+        currentPages.add(newPage);
+      } else {
+        var index = currentPages.indexOf(existingPage);
+        currentPages[index] = newPage;
+      }
 
-      // streamClientController.add(currentClients);
+      streamClientController.add(currentClients);
     }
   }
 

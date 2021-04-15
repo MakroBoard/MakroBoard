@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:makro_board_client/dialogs/create_page_dialog.dart';
+import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/provider/auth_provider.dart';
 import 'package:makro_board_client/widgets/WmskAppBar.dart';
+import 'package:responsive_grid/responsive_grid.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({required Key key}) : super(key: key);
@@ -11,37 +16,51 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: WmskAppBar(title: "Home").getAppBar(context),
       body: Container(
-        child: TokenTest(key: UniqueKey()),
+        child: StreamBuilder(
+          stream: Modular.get<ApiProvider>().pages,
+          builder: (context, snapshot) => ResponsiveGridList(
+            desiredItemWidth: 200,
+            minSpacing: 10,
+            children: _getPageWidgets(context, snapshot.data as List<Page>),
+          ),
+        ),
       ),
     );
   }
-}
 
-class TokenTest extends StatefulWidget {
-  TokenTest({required Key key}) : super(key: key);
-
-  @override
-  TokenTestState createState() => TokenTestState();
-}
-
-class TokenTestState extends State<TokenTest> {
-  bool auth = false;
-
-  // async TokenTestState() {
-  //   final authProvider = Modular.get<AuthProvider>();
-  //   final isAuthenticated = await authProvider.isAuthenticated();
-  //   setState(() {
-  //     auth = isAuthenticated;
-  //   });
-  // }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: FutureBuilder<bool>(
-        future: Modular.get<AuthProvider>().isAuthenticated(),
-        builder: (context, snapshot) => Text(snapshot.data == true ? "Authenticated" : "Not Authenticated"),
+  List<Widget> _getPageWidgets(BuildContext context, List<Page>? pages) {
+    var result = <Widget>[
+      Card(
+        child: InkWell(
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return CreatePageDialog();
+                });
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+              title: Text("Add New Page"),
+              leading: Icon(Icons.add),
+            ),
+          ),
+        ),
       ),
-    );
+    ];
+
+    if (pages == null) {
+      return result;
+    }
+
+    return pages
+            .map<Widget>(
+              (page) => Card(
+                child: Text(page.name!),
+              ),
+            )
+            .toList() +
+        result;
   }
 }
