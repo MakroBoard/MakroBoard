@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/guards/auth_guard.dart';
 import 'package:makro_board_client/pages/config_page.dart';
+import 'package:makro_board_client/pages/pagePage.dart';
 import 'package:makro_board_client/pages/settings_page.dart';
 import 'package:makro_board_client/pages/select_server_page.dart';
 import 'package:makro_board_client/pages/login_page.dart';
@@ -13,6 +14,7 @@ import 'package:makro_board_client/provider/env_provider.dart';
 import 'pages/homePage.dart';
 import 'app_widget.dart';
 import 'provider/auth_provider.dart';
+import 'package:page_transition/page_transition.dart';
 
 class AppModule extends Module {
   // Provide a list of dependencies to inject into your project
@@ -29,6 +31,7 @@ class AppModule extends Module {
     ChildRoute('/', child: (_, __) => SplashScreen()),
     ChildRoute('/selectserver', child: (_, __) => SelectServerPage(key: UniqueKey())),
     ChildRoute('/home', child: (_, __) => HomePage(key: UniqueKey()), guards: [AuthGuard()]),
+    ChildRoute('/page', child: (_, args) => PagePage(key: UniqueKey(), initialPage: args.data), guards: [AuthGuard()], transition: TransitionType.scale),
     ChildRoute('/config', child: (_, __) => ConfigPage(key: UniqueKey())),
     ChildRoute('/login', child: (_, __) => LoginPage(key: UniqueKey())),
     ChildRoute('/settings', child: (_, __) => SettingsPage(key: UniqueKey()), transition: TransitionType.rightToLeft),

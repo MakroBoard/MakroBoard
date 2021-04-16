@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/dialogs/create_page_dialog.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
-import 'package:makro_board_client/provider/auth_provider.dart';
 import 'package:makro_board_client/widgets/WmskAppBar.dart';
 import 'package:responsive_grid/responsive_grid.dart';
+import 'package:makro_board_client/models/page.dart' as models;
 
 class HomePage extends StatelessWidget {
   const HomePage({required Key key}) : super(key: key);
@@ -18,17 +18,18 @@ class HomePage extends StatelessWidget {
       body: Container(
         child: StreamBuilder(
           stream: Modular.get<ApiProvider>().pages,
+          initialData: Modular.get<ApiProvider>().currentPages,
           builder: (context, snapshot) => ResponsiveGridList(
             desiredItemWidth: 200,
             minSpacing: 10,
-            children: _getPageWidgets(context, snapshot.data as List<Page>),
+            children: _getPageWidgets(context, snapshot.data as List<models.Page>),
           ),
         ),
       ),
     );
   }
 
-  List<Widget> _getPageWidgets(BuildContext context, List<Page>? pages) {
+  List<Widget> _getPageWidgets(BuildContext context, List<models.Page>? pages) {
     var result = <Widget>[
       Card(
         child: InkWell(
@@ -57,7 +58,18 @@ class HomePage extends StatelessWidget {
     return pages
             .map<Widget>(
               (page) => Card(
-                child: Text(page.name!),
+                child: InkWell(
+                  onTap: () {
+                    Modular.to.pushNamed('/page', arguments: page);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      title: Text(page.label),
+                      leading: Icon(Icons.done),
+                    ),
+                  ),
+                ),
               ),
             )
             .toList() +

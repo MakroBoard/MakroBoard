@@ -56,6 +56,9 @@ namespace MakroBoard.Controllers
             _Context.Pages.Add(newPage);
 
             await _Context.SaveChangesAsync();
+
+            _logger.LogDebug($"Added new Page {newPage.Label}");
+
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, newPage);
             return Ok();
         }

@@ -25,6 +25,7 @@ class ApiProvider {
   static const String submitCodeUrl = "/api/client/submitcode";
   static const String getControlsUrl = "/api/controls/availablecontrols";
   static const String executeControlUrl = "/api/controls/execute";
+  static const String addPageUrl = "/api/layout/addpage";
 
   StreamController<List<Page>> streamPageController = StreamController<List<Page>>.broadcast();
   StreamController<List<Client>> streamClientController = StreamController<List<Client>>.broadcast();
@@ -128,7 +129,7 @@ class ApiProvider {
         currentPages[index] = newPage;
       }
 
-      streamClientController.add(currentClients);
+      streamPageController.add(currentPages);
     }
   }
 
@@ -169,7 +170,7 @@ class ApiProvider {
 
   Future confirmClient(Client client) async {
     try {
-      var response = await http.post(
+      await http.post(
         _serverUri!.replace(path: confirmClientUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -186,13 +187,12 @@ class ApiProvider {
 
   Future removeClient(Client client) async {
     try {
-      var jsonBody = json.encode(client);
-      var response = await http.post(
+      await http.post(
         _serverUri!.replace(path: removeClientUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonBody,
+        body: json.encode(client),
       );
 
       // var dateTime = DateTime.parse(json.decode(response.body));
@@ -227,7 +227,7 @@ class ApiProvider {
   Future executeControl(Control control, List<ViewConfigValue> configValues) async {
     try {
       var jsonBody = json.encode({"symbolicName": control.symbolicName, "configValues": configValues});
-      var response = await http.post(
+      await http.post(
         _serverUri!.replace(path: executeControlUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -240,5 +240,15 @@ class ApiProvider {
     } on Exception catch (e) {
       print('never reached' + e.toString());
     }
+  }
+
+  Future addPage(Page page) async {
+    await http.post(
+      _serverUri!.replace(path: addPageUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode(page),
+    );
   }
 }
