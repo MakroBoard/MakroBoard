@@ -55,7 +55,7 @@ jobs:
       with:
         cmake-version: '3.16'
     - name: Install apt dependencies
-      run: sudo apt-get update && sudo apt-get install libidn11 jq curl wget ninja-build clang pkg-config cmake-data libblkid-dev libgtk-3-dev liblzma-dev flatpak -y
+      run: sudo apt-get update && sudo apt-get install libidn11 jq curl wget ninja-build clang tar pkg-config cmake-data libblkid-dev libgtk-3-dev liblzma-dev flatpak -y
     - name: install appimagekit
       run: wget $(curl -sL https://api.github.com/repos/AppImage/AppImageKit/releases/latest | jq -r '.assets[].browser_download_url' | grep "appimagetool-x86_64.AppImage$") && chmod +x appimagetool-x86_64.AppImage
     - name: flutter get dependencies
@@ -98,15 +98,15 @@ jobs:
     - name: make upload folders
       run: mkdir upload && mkdir upload/linuxhost_x64 && mkdir upload/linuxclient_x64 && mkdir upload/linuxclient_appimage_x64 && mkdir upload/linuxhost_appimage_x64 && mkdir upload/web && mkdir upload/android 
     - name: copy linux client x64
-      run: cp -rf ./makro_board_client/build/linux/release/bundle/* upload/linuxclient_x64/ 
+      run: cp -rf ./makro_board_client/build/linux/release/bundle/* upload/linuxclient_x64/ && tar cfvz upload/linuxclient_x64.tar.gz upload/linuxclient_x64/*
     - name: copy linux client appimage x64  
       run: cp -rf MakroBoard_client_x64.AppImage* upload/linuxclient_appimage_x64/ 
     - name: copy linux host appimage x64  
       run: cp -rf MakroBoard_host_x64.AppImage* upload/linuxhost_appimage_x64/
     - name: copy linux Host x64
-      run: cp -rf ./MakroBoard/bin/Release/net5.0/linux-x64/publish/* upload/linuxhost_x64/
-    - name: copy webapp
-      run: cp -rf ./makro_board_client/build/web/* upload/web/
+      run: cp -rf ./MakroBoard/bin/Release/net5.0/linux-x64/publish/* upload/linuxhost_x64/ && tar cfvz upload/linuxhost_x64.tar.gz upload/linuxhost_x64/*
+    # - name: copy webapp
+    #   run: cp -rf ./makro_board_client/build/web/* upload/web/
     - name: copy android
       run: cp -rf ./makro_board_client/build/app/outputs/flutter-apk/* upload/android/
     - name: find uploads
