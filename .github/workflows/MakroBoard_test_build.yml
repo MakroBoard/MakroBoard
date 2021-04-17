@@ -64,6 +64,9 @@ jobs:
     - name: flutter build apk 
       working-directory: ./makro_board_client    
       run: flutter build apk --release 
+    - name: flutter disable analytics
+      working-directory: ./makro_board_client    
+      run: flutter config --no-analytics
     - name: flutter build web
       working-directory: ./makro_board_client    
       run: flutter build web
@@ -119,6 +122,8 @@ jobs:
       with:
         name: latest
         path: upload/
+        retention-days: 10
+
 
 
   # build_windows:
@@ -139,6 +144,9 @@ jobs:
   #   - name: flutter get dependencies
   #     working-directory: ./makro_board_client    
   #     run: flutter pub get
+      # - name: flutter disable analytics
+      # working-directory: ./makro_board_client    
+      # run: flutter config --no-analytics
   #   - name: flutter build windows
   #     working-directory: ./makro_board_client    
   #     run: flutter build windows --release
@@ -164,6 +172,9 @@ jobs:
   #     working-directory: ./makro_board_client    
   #     run: flutter pub get
   #   - name: flutter build ios
+      # - name: flutter disable analytics
+      # working-directory: ./makro_board_client    
+      # run: flutter config --no-analytics
   #     working-directory: ./makro_board_client    
   #     run: flutter build ios --release --no-codesign      
 
