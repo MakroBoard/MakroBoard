@@ -26,29 +26,28 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.note_add),
+        onPressed: () => showCreatePageDialog(context),
+        tooltip: "Neue Seite Anlegen",
+      ),
     );
   }
 
   List<Widget> _getPageWidgets(BuildContext context, List<models.Page>? pages) {
     var result = <Widget>[
-      Card(
-        child: InkWell(
-          onTap: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return CreatePageDialog();
-                });
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListTile(
-              title: Text("Add New Page"),
-              leading: Icon(Icons.add),
-            ),
-          ),
-        ),
-      ),
+      // Card(
+      //   child: InkWell(
+      //     onTap: () => showCreatePageDialog(context),
+      //     child: Padding(
+      //       padding: const EdgeInsets.all(8.0),
+      //       child: ListTile(
+      //         title: Text("Add New Page"),
+      //         leading: Icon(Icons.add),
+      //       ),
+      //     ),
+      //   ),
+      // ),
     ];
 
     if (pages == null) {
@@ -74,5 +73,13 @@ class HomePage extends StatelessWidget {
             )
             .toList() +
         result;
+  }
+
+  Future showCreatePageDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return CreatePageDialog();
+        });
   }
 }

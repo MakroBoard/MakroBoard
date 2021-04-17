@@ -67,7 +67,7 @@ namespace MakroBoard.HubConfig
                 Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token);
             }
 
-            var pages = await _DatabaseContext.Pages.ToListAsync();
+            var pages = await _DatabaseContext.Pages.Include(p=>p.Groups).ToListAsync();
             foreach (var page in pages)
             {
                 _ = Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, page);

@@ -45,13 +45,13 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("addpage")]
         [LocalHost]
-        public async Task<ActionResult> PostAddPAge([FromBody] ApiModels.Page client)
+        public async Task<ActionResult> PostAddPAge([FromBody] ApiModels.Page page)
         {
             var newPage = new Data.Page
             {
-                SymbolicName = Regex.Replace(client.Label, @"\s+", "-").ToLower(),
-                Label = client.Label,
-                Icon = client.Icon
+                SymbolicName = ConvertToSymbolicName(page.Label),
+                Label = page.Label,
+                Icon = page.Icon
             };
             _Context.Pages.Add(newPage);
 
@@ -61,6 +61,34 @@ namespace MakroBoard.Controllers
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, newPage);
             return Ok();
+        }
+
+        /// <summary>
+        /// POST: api/layout/addpage
+        /// </summary>
+        [HttpPost("addgroup")]
+        [LocalHost]
+        public async Task<ActionResult> PostAddGroup([FromBody] ApiModels.Group group)
+        {
+            var newGroup = new Data.Group
+            {
+                SymbolicName = ConvertToSymbolicName(group.Label),
+                Label = group.Label,
+                PageID = group.PageID
+            };
+            _Context.Groups.Add(newGroup);
+
+            await _Context.SaveChangesAsync();
+
+            _logger.LogDebug($"Added new Group {newGroup.Label}");
+
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdateGroup, newGroup);
+            return Ok();
+        }
+
+        private static string ConvertToSymbolicName(string name)
+        {
+            return Regex.Replace(name, @"\s+", "-").ToLower();
         }
     }
 }

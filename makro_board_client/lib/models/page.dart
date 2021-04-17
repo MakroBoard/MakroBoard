@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'group.dart';
 
 class Page {
@@ -6,6 +8,9 @@ class Page {
   final String label;
   final String icon;
   final List<Group> groups;
+
+  StreamController<List<Group>> streamGroupController = StreamController<List<Group>>.broadcast();
+  Stream<List<Group>> get groupsStream => streamGroupController.stream;
 
   Page({
     required this.id,
@@ -45,4 +50,8 @@ class Page {
   }
 
   bool get isEmpty => id < 0;
+
+  void notifyGroupsUpdated() {
+    streamGroupController.add(groups);
+  }
 }

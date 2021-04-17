@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:http/http.dart' as http;
+import 'package:makro_board_client/models/group.dart';
 
 import 'package:signalr_core/signalr_core.dart';
 import 'package:makro_board_client/models/Control.dart';
@@ -26,15 +27,19 @@ class ApiProvider {
   static const String getControlsUrl = "/api/controls/availablecontrols";
   static const String executeControlUrl = "/api/controls/execute";
   static const String addPageUrl = "/api/layout/addpage";
+  static const String addGroupUrl = "/api/layout/addgroup";
 
   StreamController<List<Page>> streamPageController = StreamController<List<Page>>.broadcast();
-  StreamController<List<Client>> streamClientController = StreamController<List<Client>>.broadcast();
-  StreamController<String> streamTokenController = StreamController<String>.broadcast();
-  List<Client> currentClients = [];
-  List<Page> currentPages = [];
-  Stream<List<Client>> get clients => streamClientController.stream;
-  Stream<String> get token => streamTokenController.stream;
   Stream<List<Page>> get pages => streamPageController.stream;
+  List<Page> currentPages = [];
+
+  StreamController<List<Client>> streamClientController = StreamController<List<Client>>.broadcast();
+  Stream<List<Client>> get clients => streamClientController.stream;
+  List<Client> currentClients = [];
+
+  StreamController<String> streamTokenController = StreamController<String>.broadcast();
+  Stream<String> get token => streamTokenController.stream;
+
   HubConnection? _connection;
   Uri? _serverUri;
 
@@ -69,6 +74,7 @@ class ApiProvider {
       _connection!.on('AddOrUpdateToken', _onAddOrUpdateToken);
       _connection!.on('RemoveClient', _onRemoveClient);
       _connection!.on('AddOrUpdatePage', _onAddOrUpdatePage);
+      _connection!.on('AddOrUpdateGroup', _onAddOrUpdateGroup);
 
       return true;
     } on Exception catch (e) {
@@ -130,6 +136,33 @@ class ApiProvider {
       }
 
       streamPageController.add(currentPages);
+    }
+  }
+
+  void _onAddOrUpdateGroup(groups) async {
+    for (var group in groups!) {
+      var existingPage = currentPages.firstWhere(
+        (element) => element.id == group["pageID"],
+        orElse: () => Page.empty(),
+      );
+
+      if (existingPage.isEmpty) {
+        continue;
+      }
+
+      var existingGroup = existingPage.groups.firstWhere(
+        (element) => element.id == group["id"],
+        orElse: () => Group.empty(),
+      );
+
+      var newGroup = Group.fromJson(group);
+      if (existingGroup.isEmpty) {
+        existingPage.groups.add(newGroup);
+      } else {
+        var index = existingPage.groups.indexOf(existingGroup);
+        existingPage.groups[index] = newGroup;
+      }
+      existingPage.notifyGroupsUpdated();
     }
   }
 
@@ -249,6 +282,16 @@ class ApiProvider {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: json.encode(page),
+    );
+  }
+
+  Future addGroup(Group group) async {
+    await http.post(
+      _serverUri!.replace(path: addGroupUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode(group),
     );
   }
 }
