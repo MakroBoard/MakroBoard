@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using System.IO;
 using MakroBoard.Data;
 using MakroBoard.HubConfig;
+using System;
 
 namespace MakroBoard
 {
@@ -67,8 +68,9 @@ namespace MakroBoard
             else
             {
                 app.UseExceptionHandler("/Error");
+
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                //app.UseHsts();
             }
 
             app.UseHttpsRedirection();
