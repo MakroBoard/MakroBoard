@@ -123,7 +123,9 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Add Flutter to path
-      run: echo "$GITHUB_WORKSPACE/flutter/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      run: echo "$env:GITHUB_WORKSPACE/flutter/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append 
+    - name: echo path
+      run: echo "$PATH"
     - name: flutter config windows
       run: flutter config --enable-windows-desktop
     - name: flutter get dependencies
