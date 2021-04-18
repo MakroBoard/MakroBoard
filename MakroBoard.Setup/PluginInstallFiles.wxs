@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="PLUGINSFOLDER">
+            <Directory Id="dir7BF5A52C17AFFFDE20DA18621C07D51F" Name="MakroBoard.Plugin.Keyboard" />
+            <Directory Id="dir951D490318B5C98AC598592C96F68044" Name="MakroBoard.Plugin.ShellExecute" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="MakroBoardPluginsComponentGroup">
+            <Component Id="cmpEFB0B0618763DCF741F987452E12D8BB" Directory="dir7BF5A52C17AFFFDE20DA18621C07D51F" Guid="*">
+                <File Id="fil38361D66DC8DD883BF1AA7AD0CC17CBA" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.Keyboard\MakroBoard.Plugin.Keyboard.deps.json" />
+            </Component>
+            <Component Id="cmpAC3A5CF932CCDFA957AF7458EA5E9745" Directory="dir7BF5A52C17AFFFDE20DA18621C07D51F" Guid="*">
+                <File Id="filDFD9C5738397E61F98B27A0E03F13FBE" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.Keyboard\MakroBoard.Plugin.Keyboard.dll" />
+            </Component>
+            <Component Id="cmp64788A30A18CD42C3A7DC975084F3D60" Directory="dir7BF5A52C17AFFFDE20DA18621C07D51F" Guid="*">
+                <File Id="filC0D44F2AAAF894A5F360F10A29E04CDC" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.Keyboard\MakroBoard.PluginContract.dll" />
+            </Component>
+            <Component Id="cmp7B11DAE7FAF6DA2502B850AAF3CCF0B1" Directory="dir32AA7DF12C469C03A933CE3028A5EF7A" Guid="*">
+                <File Id="filC4628D794E7AF6692F360D7C0DF881B0" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.Keyboard\win-x64\MakroBoard.Plugin.Keyboard.deps.json" />
+            </Component>
+            <Component Id="cmpDD7E5A6FB57B876D3F15EB78E2D1947B" Directory="dir32AA7DF12C469C03A933CE3028A5EF7A" Guid="*">
+                <File Id="filE0020B2F4FEFAC98D18F011F43E8AD63" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.Keyboard\win-x64\MakroBoard.Plugin.Keyboard.dll" />
+            </Component>
+            <Component Id="cmp5924FEB11C04A46CC18553037199AE03" Directory="dir32AA7DF12C469C03A933CE3028A5EF7A" Guid="*">
+                <File Id="fil9A15B8901CD5074BCDDB75A95E48E04B" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.Keyboard\win-x64\MakroBoard.PluginContract.dll" />
+            </Component>
+            <Component Id="cmp531F2F31CDB001E76F4B57A5C426C2C9" Directory="dir66D4C1B3E097F77738D45466073724CE" Guid="*">
+                <File Id="fil119A54454DE45C61C13C4E1291395AF5" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.Keyboard\win-x64\publish\Desktop.Robot.dll" />
+            </Component>
+            <Component Id="cmp1F858C86801A3D91F5A7838D07DE2E2D" Directory="dir66D4C1B3E097F77738D45466073724CE" Guid="*">
+                <File Id="fil12ECEF27636994CFECD71E02F1D54065" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.Keyboard\win-x64\publish\MakroBoard.Plugin.Keyboard.deps.json" />
+            </Component>
+            <Component Id="cmp2C78A04D575FB461F8A1647EBB2823EA" Directory="dir66D4C1B3E097F77738D45466073724CE" Guid="*">
+                <File Id="fil49536ED4DE202655E7B935097A31F052" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.Keyboard\win-x64\publish\MakroBoard.Plugin.Keyboard.dll" />
+            </Component>
+            <Component Id="cmp5D330A23F7DC85CD6D20E867D716D423" Directory="dir66D4C1B3E097F77738D45466073724CE" Guid="*">
+                <File Id="fil046AA2B7AF7B5E1AD0623901488794F0" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.Keyboard\win-x64\publish\MakroBoard.PluginContract.dll" />
+            </Component>
+            <Component Id="cmpBFB7825B2CD3044B2788A4662825E514" Directory="dir66D4C1B3E097F77738D45466073724CE" Guid="*">
+                <File Id="filCA12BF56D0D978768F6D403895502A9B" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.Keyboard\win-x64\publish\NLog.dll" />
+            </Component>
+            <Component Id="cmpEF3A3B948C5DD59668C6574F0ACF321C" Directory="dir66D4C1B3E097F77738D45466073724CE" Guid="*">
+                <File Id="filE01868A6CE214543262D8A8CCFA4DFC3" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.Keyboard\win-x64\publish\NLog.Extensions.Logging.dll" />
+            </Component>
+            <Component Id="cmpE3936815CF6BF62DC51CD76FF07E48D5" Directory="dir66D4C1B3E097F77738D45466073724CE" Guid="*">
+                <File Id="fil78385E5CB4DDFED71FE0E4A9FCD09102" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.Keyboard\win-x64\publish\NLog.Web.AspNetCore.dll" />
+            </Component>
+            <Component Id="cmpC45339446A531096EBCE488FF7E47397" Directory="dir66D4C1B3E097F77738D45466073724CE" Guid="*">
+                <File Id="fil21D29FBAE15293C45D1B3FFC0B032020" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.Keyboard\win-x64\publish\System.Drawing.Common.dll" />
+            </Component>
+            <Component Id="cmpDBE243C48A684B44938D8BFF3555AB02" Directory="dir951D490318B5C98AC598592C96F68044" Guid="*">
+                <File Id="fil12366D0151A3D58EF61850D35283FE03" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.ShellExecute\MakroBoard.Plugin.ShellExecute.deps.json" />
+            </Component>
+            <Component Id="cmpEC2E6DD53B08A52015D880895ACA8A61" Directory="dir951D490318B5C98AC598592C96F68044" Guid="*">
+                <File Id="fil040C6D29EBB2487693B50D1A464DF66D" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.ShellExecute\MakroBoard.Plugin.ShellExecute.dll" />
+            </Component>
+            <Component Id="cmp867B140DFB0997FAF231187B32942C45" Directory="dir951D490318B5C98AC598592C96F68044" Guid="*">
+                <File Id="fil3DD088A5B24A0AD3B4BB5B9470E1166F" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.ShellExecute\MakroBoard.PluginContract.dll" />
+            </Component>
+            <Component Id="cmp0BCB010013A2B4D2E2BFFEABCF22453F" Directory="dirEEC86F3FD5A6E81215D24F2BF3184CD1" Guid="*">
+                <File Id="fil17971A065C9866D53137B3D6B7C7DD89" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.ShellExecute\win-x64\MakroBoard.Plugin.ShellExecute.deps.json" />
+            </Component>
+            <Component Id="cmpCEC375406093CCE4419FEC21B4E2AEB0" Directory="dirEEC86F3FD5A6E81215D24F2BF3184CD1" Guid="*">
+                <File Id="fil31CC6D3FF61264FA2AAB2607DB077C1D" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.ShellExecute\win-x64\MakroBoard.Plugin.ShellExecute.dll" />
+            </Component>
+            <Component Id="cmpFDE7C73784AE3D4E22893EE742466665" Directory="dirEEC86F3FD5A6E81215D24F2BF3184CD1" Guid="*">
+                <File Id="fil947EA6C0F7D894CE21AD1E8B5F867C6B" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.ShellExecute\win-x64\MakroBoard.PluginContract.dll" />
+            </Component>
+            <Component Id="cmpC95A1D291E2400A0D4965F44433C7040" Directory="dirEA4868254447BD35273896681E3430EB" Guid="*">
+                <File Id="fil029832C21740F2FF3773A555B6393FB5" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.ShellExecute\win-x64\publish\MakroBoard.Plugin.ShellExecute.deps.json" />
+            </Component>
+            <Component Id="cmp353EB07C925841F7B4F7396F8F22DF4F" Directory="dirEA4868254447BD35273896681E3430EB" Guid="*">
+                <File Id="fil224A7A28FD01AA7C408D6878C283804A" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.ShellExecute\win-x64\publish\MakroBoard.Plugin.ShellExecute.dll" />
+            </Component>
+            <Component Id="cmp2A6A701B4886C6BAB489A96B54BE3190" Directory="dirEA4868254447BD35273896681E3430EB" Guid="*">
+                <File Id="fil378CBB6DC00A5C49718B884A4088DA03" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.ShellExecute\win-x64\publish\MakroBoard.PluginContract.dll" />
+            </Component>
+            <Component Id="cmp3911A16C6473D44101B9AB549F10771C" Directory="dirEA4868254447BD35273896681E3430EB" Guid="*">
+                <File Id="fil2C731438C263D9F2744222B8D234AE69" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.ShellExecute\win-x64\publish\NLog.dll" />
+            </Component>
+            <Component Id="cmpEE3A982AF982F8F4C9E569AAA9834142" Directory="dirEA4868254447BD35273896681E3430EB" Guid="*">
+                <File Id="filF661906E0A54000B984DEC983851B478" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.ShellExecute\win-x64\publish\NLog.Extensions.Logging.dll" />
+            </Component>
+            <Component Id="cmp744E74BF72C6981B84DF7AB064412B25" Directory="dirEA4868254447BD35273896681E3430EB" Guid="*">
+                <File Id="filDA7676FFB5FBEBE55F4657F22B33215C" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.ShellExecute\win-x64\publish\NLog.Web.AspNetCore.dll" />
+            </Component>
+            <Component Id="cmp759F4B78FC5B5CCC2EF8510778E93E65" Directory="dirEA4868254447BD35273896681E3430EB" Guid="*">
+                <File Id="fil2E40FD2A1CCFAFB6B9AC108CB1E546BE" KeyPath="yes" Source="$(var.HarvestPathPlugins)\MakroBoard.Plugin.ShellExecute\win-x64\publish\System.Drawing.Common.dll" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir7BF5A52C17AFFFDE20DA18621C07D51F">
+            <Directory Id="dir32AA7DF12C469C03A933CE3028A5EF7A" Name="win-x64" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir32AA7DF12C469C03A933CE3028A5EF7A">
+            <Directory Id="dir66D4C1B3E097F77738D45466073724CE" Name="publish" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dirEEC86F3FD5A6E81215D24F2BF3184CD1">
+            <Directory Id="dirEA4868254447BD35273896681E3430EB" Name="publish" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir951D490318B5C98AC598592C96F68044">
+            <Directory Id="dirEEC86F3FD5A6E81215D24F2BF3184CD1" Name="win-x64" />
+        </DirectoryRef>
+    </Fragment>
+</Wix>

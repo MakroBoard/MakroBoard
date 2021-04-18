@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" InitialTargets="EnsureWixToolsetInstalled" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.10</ProductVersion>
+    <ProjectGuid>3ce0a329-0e7f-4ff8-b3d5-c3621ed861f1</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>MakroBoard.Setup</OutputName>
+    <OutputType>Package</OutputType>
+    <DefineConstants>HarvestPath=..\Release\net5.0\win-x64\publish;PluginHarvestPath=..\PluginOutput</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <SuppressAllWarnings>False</SuppressAllWarnings>
+    <Pedantic>True</Pedantic>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="MakroBoardInstallFiles.wxs" />
+    <Compile Include="PluginInstallFiles.wxs" />
+    <Compile Include="Product.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Binaries.xslt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MakroBoard.Plugin.Keyboard\MakroBoard.Plugin.Keyboard.csproj">
+      <Name>MakroBoard.Plugin.Keyboard</Name>
+      <Project>{6e9b8298-332c-4a0a-b2fe-4d56d0f2bd72}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\MakroBoard.Plugin.ShellExecute\MakroBoard.Plugin.ShellExecute.csproj">
+      <Name>MakroBoard.Plugin.ShellExecute</Name>
+      <Project>{a23eeeaf-9920-45c0-bc54-dfc65b64ede9}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\MakroBoard\MakroBoard.csproj">
+      <Name>MakroBoard</Name>
+      <Project>{19d0305e-163e-4b81-b6dc-5a62e1d84775}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
+  <Target Name="EnsureWixToolsetInstalled" Condition=" '$(WixTargetsImported)' != 'true' ">
+    <Error Text="The WiX Toolset v3.11 (or newer) build tools must be installed to build this project. To download the WiX Toolset, see http://wixtoolset.org/releases/" />
+  </Target>
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+  <Target Name="Harvest">
+    <Message Text="Start Harvest MakroBoard" Importance="high" />
+    <HeatDirectory OutputFile="$(ProjectDir)\MakroBoardInstallFiles.wxs" VerboseOutput="true" Directory="..\Release\net5.0\win-x64\publish" ComponentGroupName="MakroBoardComponentGroup" PreprocessorVariable="var.HarvestPath" DirectoryRefId="INSTALLFOLDER" AutogenerateGuids="true" SuppressRegistry="true" SuppressCom="true" SuppressRootDirectory="true" ToolPath="$(WixToolPath)" NoLogo="true" Transforms="$(Projectdir)Binaries.xslt" />
+    <Message Text="Start Harvest MakroBoard" Importance="high" />
+    <HeatDirectory OutputFile="$(ProjectDir)\PluginInstallFiles.wxs" VerboseOutput="true" Directory="..\Release\Plugins\net5.0\win-x64\publish" ComponentGroupName="MakroBoardPluginComponentGroup" PreprocessorVariable="var.PluginHarvestPath" DirectoryRefId="INSTALLFOLDER" AutogenerateGuids="true" SuppressRegistry="true" SuppressCom="true" SuppressRootDirectory="true" ToolPath="$(WixToolPath)" NoLogo="true" Transforms="$(Projectdir)Binaries.xslt" />
+  </Target>
+</Project>
