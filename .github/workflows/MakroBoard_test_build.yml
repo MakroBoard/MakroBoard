@@ -123,8 +123,9 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Add Flutter to path
-      run: Write-Host "$env:GITHUB_WORKSPACE/flutter/bin" 
-      # | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append 
+      run: Write-Host "$env:GITHUB_WORKSPACE\flutter\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append 
+    - name: list ghwksps
+      run: Get-ChildItem $env:GITHUB_WORKSPACE
     - name: echo path
       run: Write-Host $env:PATH
     - name: flutter config windows
