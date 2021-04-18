@@ -124,26 +124,26 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
-    - name: Add Flutter to path
-      run: Write-Host "$env:GITHUB_WORKSPACE\flutter\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append 
-    - name: list ghwksps
-      run: Get-ChildItem $env:GITHUB_WORKSPACE
-    - name: echo path
-      run: Write-Host $env:PATH
+    # - name: Add Flutter to path
+    #   run: Write-Host "$env:GITHUB_WORKSPACE\flutter\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append 
+    # - name: list ghwksps
+    #   run: Get-ChildItem $env:GITHUB_WORKSPACE
+    # - name: echo path
+    #   run: Write-Host $env:PATH
     - name: flutter config windows
       run: flutter config --enable-windows-desktop
     - name: flutter get dependencies
       working-directory: ./makro_board_client    
-      run: flutter pub get
+      run: ..\flutter\bin\flutter pub get
     - name: flutter disable analytics
       working-directory: ./makro_board_client    
-      run: flutter config --no-analytics
+      run: ..\flutter\bin\flutter config --no-analytics
     - name: flutter build web
       working-directory: ./makro_board_client    
-      run: flutter build web
+      run: ..\flutter\bin\flutter build web
     - name: flutter build windows
       working-directory: ./makro_board_client    
-      run: flutter build windows --release
+      run: ..\flutter\bin\flutter build windows --release
     - name: copy web to dotnet
       run: cp -rf ./makro_board_client/build/web/* ./MakroBoard/wwwroot/
     - name: Restore dependencies
