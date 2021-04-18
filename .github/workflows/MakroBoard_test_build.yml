@@ -91,7 +91,7 @@ jobs:
   #   - name: build appimage linuxhost x64
   #     run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_host_x64.AppDir/ MakroBoard_host_x64.AppImage --sign -u 'gh-releases-zsync|MakroBoard|MakroBoard|latest|MakroBoard_host_x64.AppImage.zsync'
   #   - name: make upload folders
-  #     run: mkdir upload && mkdir upload/linuxhost_x64 && mkdir upload/linuxclient_x64 && mkdir upload/linuxclient_appimage_x64 && mkdir upload/linuxhost_appimage_x64 && mkdir upload/web && mkdir upload/android
+  #     run: mkdir upload && mkdir upload/linuxhost_x64 && mkdir upload/linuxclient_x64 && mkdir upload/linuxclient_appimage_x64 && mkdir upload/linuxhost_appimage_x64 && mkdir upload/android
   #   - name: copy linux client x64
   #     run: cp -rf ./makro_board_client/build/linux/release/bundle/* upload/linuxclient_x64/ && cd upload/linuxclient_x64/ && tar cfvz ../linuxclient_x64.tar.gz *
   #   - name: copy linux client appimage x64
@@ -154,9 +154,9 @@ jobs:
     - name: Build Windows dotnet MakroBoard
       run: dotnet publish MakroBoard\MakroBoard.csproj -r win-x64 -c release --output Release
     - name: Build Windows dotnet MakroBoard.Plugin.Keyboard
-      run: publish MakroBoard.Plugin.Keyboard\MakroBoard.Plugin.Keyboard.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.Keyboard
+      run: dotnet publish MakroBoard.Plugin.Keyboard\MakroBoard.Plugin.Keyboard.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.Keyboard
     - name: Build Windows dotnet MakroBoard.Plugin.ShellExecute
-      run: publish MakroBoard.Plugin.ShellExecute\MakroBoard.Plugin.ShellExecute.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.ShellExecute
+      run: dotnet publish MakroBoard.Plugin.ShellExecute\MakroBoard.Plugin.ShellExecute.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.ShellExecute
     - name: make upload folders
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64") 
     - name: copy msis
