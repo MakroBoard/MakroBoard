@@ -86,6 +86,37 @@ namespace MakroBoard.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// POST: api/layout/addpage
+        /// </summary>
+        [HttpPost("addpanel")]
+        [LocalHost]
+        public async Task<ActionResult> PostAddGroup([FromBody] ApiModels.Panel panel)
+        {
+            var newPanel = new Data.Panel
+            {
+                SymbolicName = panel.SymbolicName,
+                PluginName = panel.PluginName,
+                GroupID = panel.GroupId,
+            };
+
+            newPanel.ConfigParameters = panel.ConfigParameterValues.Select(x => new Data.ConfigParameterValue
+            {
+                SymbolicName = x.SymbolicName,
+                Value = x.Value,
+                Panel = newPanel,
+            }).ToList();
+
+            _Context.Panels.Add(newPanel);
+
+            await _Context.SaveChangesAsync();
+
+            _logger.LogDebug($"Added new Panel {newPanel.SymbolicName}({newPanel.PluginName})");
+
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePanel, newPanel);
+            return Ok();
+        }
+
         private static string ConvertToSymbolicName(string name)
         {
             return Regex.Replace(name, @"\s+", "-").ToLower();

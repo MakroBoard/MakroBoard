@@ -23,7 +23,7 @@ class Page {
   Page.createNew({required this.label, required this.icon})
       : id = 0,
         symbolicName = "",
-        groups = List.empty();
+        groups = List.empty(growable: true);
 
   Page.empty()
       : id = -1,
@@ -37,7 +37,7 @@ class Page {
         symbolicName = json["symbolicName"],
         label = json["label"],
         icon = json["icon"],
-        groups = json["groups"] != null ? List.castFrom(json["groups"]).map<Group>((jsonGroup) => Group.fromJson(jsonGroup)).toList() : List.empty();
+        groups = json["groups"] != null ? List.castFrom(json["groups"]).map<Group>((jsonGroup) => Group.fromJson(jsonGroup)).toList() : List.empty(growable: true);
 
   Map<String, dynamic> toJson() {
     return {

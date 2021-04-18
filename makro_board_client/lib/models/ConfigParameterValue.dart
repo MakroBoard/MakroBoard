@@ -1,17 +1,17 @@
-class ConfigParameter {
+class ConfigParameterValue {
   final int id;
   final ConfigParameterType configParameterType;
   final String symbolicName;
   final String value;
 
-  ConfigParameter({
+  ConfigParameterValue({
     required this.id,
     required this.configParameterType,
     required this.symbolicName,
     required this.value,
   });
 
-  ConfigParameter.fromJson(Map<String, dynamic> json)
+  ConfigParameterValue.fromJson(Map<String, dynamic> json)
       : id = json["id"],
         configParameterType = json["configParameterType"],
         symbolicName = json["symbolicName"],

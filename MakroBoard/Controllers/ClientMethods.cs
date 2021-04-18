@@ -11,7 +11,8 @@ namespace MakroBoard.Controllers
         public const string AddOrUpdateToken = "AddOrUpdateToken";
         public const string RemoveClient = "RemoveClient";
         public const string AddOrUpdatePage = "AddOrUpdatePage";
-        public const string AddOrUpdateGroup = "AddOrUpdateGroup";
-        
+        public const string AddOrUpdateGroup = "AddOrUpdateGroup"; 
+        public const string AddOrUpdatePanel = "AddOrUpdatePanel"; 
+
     }
 }

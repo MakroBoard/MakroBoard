@@ -2,13 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:makro_board_client/dialogs/create_group_dialog.dart';
 import 'package:makro_board_client/dialogs/create_page_dialog.dart';
+import 'package:makro_board_client/dialogs/create_panel_dialog.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/widgets/WmskAppBar.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:makro_board_client/models/page.dart' as models;
 import 'package:makro_board_client/models/group.dart' as models;
+import 'package:makro_board_client/models/panel.dart' as models;
 
 class PagePage extends StatelessWidget {
   final models.Page initialPage;
@@ -47,14 +50,62 @@ class PagePage extends StatelessWidget {
           (group) => Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                title: Text(group.label),
-                leading: Icon(Icons.done),
+              child: Column(
+                children: [
+                  ListTile(
+                    title: Text(group.label),
+                    leading: Icon(Icons.done),
+                    trailing: PopupMenuButton<GroupContextMenu>(
+                      onSelected: (selectedValue) {
+                        switch (selectedValue) {
+                          case GroupContextMenu.delete:
+                            // TODO: Handle this case.
+                            break;
+                          case GroupContextMenu.addPanel:
+                            _showAddPanelDialog(context, group);
+                            break;
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        const PopupMenuItem<GroupContextMenu>(
+                          value: GroupContextMenu.delete,
+                          child: Icon(Icons.delete),
+                        ),
+                        const PopupMenuItem<GroupContextMenu>(
+                          value: GroupContextMenu.addPanel,
+                          child: Icon(Icons.add),
+                        ),
+                      ],
+                      icon: Icon(Icons.more_vert),
+                    ),
+                  ),
+                  StreamBuilder(
+                    stream: group.panelsStream,
+                    initialData: group.panels,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      return Container(
+                        child: _getGroupPanelWidgets(context, snapshot.data),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
           ),
         )
         .toList();
+  }
+
+  Widget _getGroupPanelWidgets(BuildContext context, List<models.Panel>? panels) {
+    if (panels == null || panels.isEmpty) {
+      return Center(
+        child: Text("Keine Panels konfiguriert"),
+      );
+    }
+    return ListView.builder(
+      itemCount: panels.length,
+      itemBuilder: (context, index) => Text(panels[index].symbolicName),
+    );
   }
 
   Future showCreateGroupDialog(BuildContext context, models.Page page) {
@@ -64,4 +115,15 @@ class PagePage extends StatelessWidget {
           return CreateGroupDialog(page: page);
         });
   }
+
+  Future _showAddPanelDialog(BuildContext context, models.Group group) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return CreatePanelDialog(group: group);
+      },
+    );
+  }
 }
+
+enum GroupContextMenu { delete, addPanel }
