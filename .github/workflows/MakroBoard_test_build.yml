@@ -131,7 +131,7 @@ jobs:
     # - name: echo path
     #   run: Write-Host $env:PATH
     - name: flutter config windows
-      run: "& $env:GITHUB_WORKSPACE\flutter\bin\flutter config --enable-windows-desktop"
+      run: '& $($env:GITHUB_WORKSPACE + "\flutter\bin\flutter") config --enable-windows-desktop'
     - name: flutter get dependencies
       working-directory: ./makro_board_client    
       run: "& $env:GITHUB_WORKSPACE\flutter\bin\flutter pub get"
