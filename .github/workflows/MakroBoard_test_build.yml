@@ -153,6 +153,8 @@ jobs:
       run: dotnet publish -r win-x64 -c release   
     - name: make upload folders
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64") 
+    - name: gci
+      run: Get-ChildItem -Recurse $($env:GITHUB_WORKSPACE + "\makro_board_client\build")
     - name: copy windows client x64
       run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\makro_board_client\build\windows\release\bundle\*") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64\")
     - name: copy windows Host x64
