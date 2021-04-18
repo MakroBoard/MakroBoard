@@ -9,11 +9,14 @@ using System.Security.Cryptography;
 using System.Text.Unicode;
 using System.Text;
 using NLog.Web;
+using System.Security.Cryptography.X509Certificates;
+using System.Net;
 
 namespace MakroBoard
 {
     public class Program
     {
+        private static X509Certificate2 _Certificate;
         public static void Main(string[] args)
         {
             // NLog: setup the logger first to catch all errors :)
@@ -24,6 +27,7 @@ namespace MakroBoard
                 logger.Debug($"Using Data Directory: { Constants.DataDirectory}");
                 InitializeDataDir();
                 InitializeInstanceSeed();
+                InitializeCertificate();
 
                 var host = CreateHostBuilder(args).Build();
                 using var scope = host.Services.CreateScope();
@@ -63,12 +67,29 @@ namespace MakroBoard
             }
         }
 
+
         private static void InitializeDataDir()
         {
             if (!Directory.Exists(Constants.DataDirectory))
             {
                 Directory.CreateDirectory(Constants.DataDirectory);
             }
+        }
+
+
+
+        private static void InitializeCertificate()
+        {
+            Certificates _Certificates = new Certificates();
+            X509Certificate2 cert = _Certificates.LoadCertificate("MakroBoard");
+            if (cert == null)
+            {
+                cert = _Certificates.GenerateCertificate("MakroBoard");
+                _Certificates.SaveCertificate(cert);
+            }
+
+            _Certificate = cert;
+            // Console.WriteLine(_Certificate.Issuer.ToString());
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -81,6 +102,22 @@ namespace MakroBoard
                         logging.ClearProviders();
                         logging.SetMinimumLevel(LogLevel.Trace);
                     }).UseNLog();
+                    webBuilder.ConfigureKestrel(serverOptions =>
+                    {
+
+                        serverOptions.ListenAnyIP(5001, listenOptions =>
+                         {
+                              // certificate is an X509Certificate2
+
+                            listenOptions.UseHttps(_Certificate);
+
+                         }
+
+
+                        );
+
+
+                    });
                 });
 
         private static void CreateDbIfNotExists(IServiceProvider services)
