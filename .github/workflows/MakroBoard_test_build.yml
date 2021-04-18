@@ -138,24 +138,25 @@ jobs:
     - name: flutter build windows
       working-directory: ./makro_board_client    
       run: '& $($env:GITHUB_WORKSPACE + "\flutter\bin\flutter") build windows --release'
-    # - name: copy web to dotnet
-    #   run: cp -rf ./makro_board_client/build/web/* ./MakroBoard/wwwroot/
-    # - name: Restore dependencies
-    #   run: dotnet restore
-    # - name: Build Windows dotnet
-    #   run: dotnet publish -r win-x64 -c release   
-    # - name: make upload folders
-    #   run: mkdir upload && mkdir upload/windowshost_x64 && mkdir upload/windowsclient_x64 
-    # - name: copy windows client x64
-    #   run: cp -rf ./makro_board_client/build/windows/release/bundle/* upload/windowsclient_x64/
-    # - name: copy windows Host x64
-    #   run: cp -rf ./MakroBoard/bin/Release/net5.0/win-x64/publish/* upload/windowshost_x64/ 
-    # - uses: actions/upload-artifact@v2
-    #   if: ${{ !env.ACT }}
-    #   with:
-    #     name: latest_windows
-    #     path: upload/
-    #     retention-days: 10
+    
+    - name: copy web to dotnet
+      run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "/makro_board_client/build/web/*") -Destination $($env:GITHUB_WORKSPACE + "/MakroBoard/wwwroot/")
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build Windows dotnet
+      run: dotnet publish -r win-x64 -c release   
+    - name: make upload folders
+      run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "/upload") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "/upload/windowshost_x64") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "/upload/windowsclient_x64") 
+    - name: copy windows client x64
+      run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "/makro_board_client/build/windows/release/bundle/*") -Destination $($env:GITHUB_WORKSPACE + "/upload/windowsclient_x64/")
+    - name: copy windows Host x64
+      run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "/MakroBoard/bin/Release/net5.0/win-x64/publish/*") -Destination $($env:GITHUB_WORKSPACE + "upload/windowshost_x64/")
+    - uses: actions/upload-artifact@v2
+      if: ${{ !env.ACT }}
+      with:
+        name: latest_windows
+        path: upload/
+        retention-days: 10
 
 
 
