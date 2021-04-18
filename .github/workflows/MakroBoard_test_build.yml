@@ -98,13 +98,13 @@ jobs:
     - name: make upload folders
       run: mkdir upload && mkdir upload/linuxhost_x64 && mkdir upload/linuxclient_x64 && mkdir upload/linuxclient_appimage_x64 && mkdir upload/linuxhost_appimage_x64 && mkdir upload/web && mkdir upload/android 
     - name: copy linux client x64
-      run: cp -rf ./makro_board_client/build/linux/release/bundle/* upload/linuxclient_x64/ && tar cfvz upload/linuxclient_x64.tar.gz -C upload/linuxclient_x64/*
+      run: cp -rf ./makro_board_client/build/linux/release/bundle/* upload/linuxclient_x64/ && cd upload/linuxclient_x64/ && tar cfvz ../linuxclient_x64.tar.gz *
     - name: copy linux client appimage x64  
       run: cp -rf MakroBoard_client_x64.AppImage* upload/linuxclient_appimage_x64/ 
     - name: copy linux host appimage x64  
       run: cp -rf MakroBoard_host_x64.AppImage* upload/linuxhost_appimage_x64/
     - name: copy linux Host x64
-      run: cp -rf ./MakroBoard/bin/Release/net5.0/linux-x64/publish/* upload/linuxhost_x64/ && tar cfvz upload/linuxhost_x64.tar.gz -C upload/linuxhost_x64/*
+      run: cp -rf ./MakroBoard/bin/Release/net5.0/linux-x64/publish/* upload/linuxhost_x64/ && cd upload/linuxhost_x64/ && tar cfvz ../linuxhost_x64.tar.gz *
     # - name: copy webapp
     #   run: cp -rf ./makro_board_client/build/web/* upload/web/
     - name: copy android
