@@ -131,7 +131,7 @@ jobs:
     # - name: echo path
     #   run: Write-Host $env:PATH
     - name: flutter config windows
-      run: flutter config --enable-windows-desktop
+      run: ..\flutter\bin\flutter config --enable-windows-desktop
     - name: flutter get dependencies
       working-directory: ./makro_board_client    
       run: ..\flutter\bin\flutter pub get
