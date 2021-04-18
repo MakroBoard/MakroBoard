@@ -14,7 +14,7 @@ namespace MakroBoard.Data
         public DbSet<Panel> Panels { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Page> Pages { get; set; }
-        public DbSet<ConfigParameter> ConfigParameters { get; set;}
+        public DbSet<ConfigParameterValue> ConfigParameters { get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,7 +22,7 @@ namespace MakroBoard.Data
             modelBuilder.Entity<Panel>().ToTable("Panels");
             modelBuilder.Entity<Group>().ToTable("Groups");
             modelBuilder.Entity<Page>().ToTable("Pages");
-            modelBuilder.Entity<ConfigParameter>().ToTable("ConfigParameters");
+            modelBuilder.Entity<ConfigParameterValue>().ToTable("ConfigParameters");
         }
     }
 }

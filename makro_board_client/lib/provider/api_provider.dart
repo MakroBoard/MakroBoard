@@ -7,6 +7,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:http/http.dart' as http;
 import 'package:makro_board_client/models/group.dart';
+import 'package:makro_board_client/models/panel.dart';
 
 import 'package:signalr_core/signalr_core.dart';
 import 'package:makro_board_client/models/Control.dart';
@@ -28,10 +29,13 @@ class ApiProvider {
   static const String executeControlUrl = "/api/controls/execute";
   static const String addPageUrl = "/api/layout/addpage";
   static const String addGroupUrl = "/api/layout/addgroup";
+  static const String addPanelUrl = "/api/layout/addpanel";
 
   StreamController<List<Page>> streamPageController = StreamController<List<Page>>.broadcast();
   Stream<List<Page>> get pages => streamPageController.stream;
   List<Page> currentPages = [];
+  List<Group> currentGroups = [];
+  List<Panel> currentPanels = [];
 
   StreamController<List<Client>> streamClientController = StreamController<List<Client>>.broadcast();
   Stream<List<Client>> get clients => streamClientController.stream;
@@ -75,6 +79,7 @@ class ApiProvider {
       _connection!.on('RemoveClient', _onRemoveClient);
       _connection!.on('AddOrUpdatePage', _onAddOrUpdatePage);
       _connection!.on('AddOrUpdateGroup', _onAddOrUpdateGroup);
+      _connection!.on('AddOrUpdatePanel', _onAddOrUpdatePanel);
 
       return true;
     } on Exception catch (e) {
@@ -157,12 +162,47 @@ class ApiProvider {
 
       var newGroup = Group.fromJson(group);
       if (existingGroup.isEmpty) {
+        currentGroups.add(newGroup);
         existingPage.groups.add(newGroup);
       } else {
+        var indexCurrentGroup = currentGroups.indexOf(existingGroup);
+        currentGroups[indexCurrentGroup] = newGroup;
+
         var index = existingPage.groups.indexOf(existingGroup);
         existingPage.groups[index] = newGroup;
       }
       existingPage.notifyGroupsUpdated();
+    }
+  }
+
+  void _onAddOrUpdatePanel(panels) async {
+    for (var panel in panels!) {
+      var existingPanel = currentPanels.firstWhere(
+        (element) => element.id == panel["id"],
+        orElse: () => Panel.empty(),
+      );
+
+      if (existingPanel.isEmpty) {
+        continue;
+      }
+
+      var existingGroup = currentGroups.firstWhere(
+        (element) => element.id == panel["groupId"],
+        orElse: () => Group.empty(),
+      );
+
+      var newPanel = Panel.fromJson(panel);
+      if (existingPanel.isEmpty) {
+        currentPanels.add(newPanel);
+        existingGroup.panels.add(newPanel);
+      } else {
+        var indexCurrentPanel = currentPanels.indexOf(existingPanel);
+        currentPanels[indexCurrentPanel] = newPanel;
+
+        var index = existingGroup.panels.indexOf(existingPanel);
+        existingGroup.panels[index] = newPanel;
+      }
+      existingGroup.notifyPanelsUpdated();
     }
   }
 
@@ -254,7 +294,7 @@ class ApiProvider {
       print('never reached' + e.toString());
     }
 
-    return List.empty();
+    return List.empty(growable: true);
   }
 
   Future executeControl(Control control, List<ViewConfigValue> configValues) async {

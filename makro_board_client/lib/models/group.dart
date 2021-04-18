@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'panel.dart';
 
 class Group {
@@ -9,6 +11,9 @@ class Group {
   final int order;
   final int pageId;
   final List<Panel> panels;
+
+  StreamController<List<Panel>> streamPanelController = StreamController<List<Panel>>.broadcast();
+  Stream<List<Panel>> get panelsStream => streamPanelController.stream;
 
   Group({
     required this.id,
@@ -27,7 +32,7 @@ class Group {
         height = -1,
         symbolicName = "",
         order = -1,
-        panels = List.empty();
+        panels = List.empty(growable: true);
 
   Group.fromJson(Map<String, dynamic> json)
       : id = json["id"],
@@ -37,7 +42,7 @@ class Group {
         symbolicName = json["symbolicName"],
         order = json["order"],
         pageId = json["pageId"],
-        panels = json["panels"] != null ? List.castFrom(json["panels"]).map<Panel>((jsonPanel) => Panel.fromJson(jsonPanel)).toList() : List.empty();
+        panels = json["panels"] != null ? List.castFrom(json["panels"]).map<Panel>((jsonPanel) => Panel.fromJson(jsonPanel)).toList() : List.empty(growable: true);
 
   Group.empty()
       : id = -1,
@@ -59,4 +64,8 @@ class Group {
   }
 
   bool get isEmpty => id < 0;
+
+  void notifyPanelsUpdated() {
+    streamPanelController.add(panels);
+  }
 }

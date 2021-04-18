@@ -5,23 +5,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MakroBoard.Data
 {
-    public class ConfigParameter
+    public class ConfigParameterValue
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
-        public ConfigParameterType ConfigParameterType { get; set; }
         public string SymbolicName { get; set; }
         public string Value { get; set; }
+        [ForeignKey("Panel")]
         public int PanelID  {get; set;}
-        [ForeignKey("PanelID")]
         public Panel Panel {get; set;}
     }
-
-    public enum ConfigParameterType
-    {
-        Control,
-        View
-    }
-
 }

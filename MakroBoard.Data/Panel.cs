@@ -14,11 +14,12 @@ namespace MakroBoard.Data
         public int Height { get; set; }
         public string PluginName { get; set; }
         public string SymbolicName { get; set; }
-        public int Order {get; set;}
+        public int Order {get; set; }
+        [ForeignKey("Group")]
         public int GroupID  { get; set; }
-        [ForeignKey("GroupID")]
-        public Group Group {get; set;}
-        public List<ConfigParameter> ConfigParameters {get; set;}
+        public Group Group {get; set; }
+        [InverseProperty("Panel")]
+        public List<ConfigParameterValue> ConfigParameters {get; set;}
 
     }
 
