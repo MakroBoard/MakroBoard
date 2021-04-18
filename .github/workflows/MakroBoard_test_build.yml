@@ -138,7 +138,14 @@ jobs:
     - name: flutter build windows
       working-directory: ./makro_board_client    
       run: '& $($env:GITHUB_WORKSPACE + "\flutter\bin\flutter") build windows --release'
-    
+    - name: list 
+      run: Get-ChildItem $($env:GITHUB_WORKSPACE )
+    - name: list 
+      run: Get-ChildItem $($env:GITHUB_WORKSPACE + "/makro_board_client")
+    - name: list 
+      run: Get-ChildItem $($env:GITHUB_WORKSPACE + "/makro_board_client/build")
+    - name: list 
+      run: Get-ChildItem $($env:GITHUB_WORKSPACE + "/makro_board_client/build/web")
     - name: copy web to dotnet
       run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "/makro_board_client/build/web/*") -Destination $($env:GITHUB_WORKSPACE + "/MakroBoard/wwwroot/")
     - name: Restore dependencies
