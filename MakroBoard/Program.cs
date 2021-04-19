@@ -101,23 +101,32 @@ namespace MakroBoard
                     {
                         logging.ClearProviders();
                         logging.SetMinimumLevel(LogLevel.Trace);
-                    }).UseNLog();
-                    webBuilder.ConfigureKestrel(serverOptions =>
+                    })
+                    .UseNLog()
+                    .UseKestrel(serverOptions =>
                     {
-
-                        serverOptions.ListenAnyIP(5001, listenOptions =>
+                        serverOptions.ListenAnyIP(5001, listenoptions =>
                          {
-                              // certificate is an X509Certificate2
-
-                            listenOptions.UseHttps(_Certificate);
-
-                         }
-
-
-                        );
-
-
+                             // certificate is an x509certificate2
+                             listenoptions.UseHttps(_Certificate);
+                         });
                     });
+                    //webBuilder.ConfigureKestrel(serverOptions =>
+                    //{
+
+                    //    serverOptions.ListenAnyIP(5001, listenOptions =>
+                    //     {
+                    //          // certificate is an X509Certificate2
+
+                    //        listenOptions.UseHttps(_Certificate);
+
+                    //     }
+
+
+                    //    );
+
+
+                    //});
                 });
 
         private static void CreateDbIfNotExists(IServiceProvider services)
