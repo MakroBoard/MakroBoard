@@ -128,7 +128,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 5.0.xdotn
     - name: Setup Wix
       run: Invoke-WebRequest -Uri $($($(Invoke-WebRequest -Uri https://api.github.com/repos/wixtoolset/wix3/releases/latest).Content | ConvertFrom-Json).assets | Where-Object {$_.browser_download_url -Like "*wix*-binaries.zip"}).browser_download_url -OutFile "wix.zip" && Expand-Archive ./wix.zip && Remove-Item ./wix.zip
     - name: Add Flutter and wix to path 
@@ -158,9 +158,9 @@ jobs:
     - name: Build Windows dotnet MakroBoard
       run: dotnet publish MakroBoard\MakroBoard.csproj -r win-x64 -c release --output Release
     - name: Build global Windows dotnet MakroBoard Plugins
-      run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\global) | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_" } 
+      run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\global") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_" } 
     - name: Build windows Windows dotnet MakroBoard Plugins
-      run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\windows) | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_" }
+      run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\windows") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_" }
     - name: make upload folders
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64") 
     # - name: copy msis
