@@ -128,7 +128,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.xdotn
+        dotnet-version: 5.0.x
     - name: Setup Wix
       run: Invoke-WebRequest -Uri $($($(Invoke-WebRequest -Uri https://api.github.com/repos/wixtoolset/wix3/releases/latest).Content | ConvertFrom-Json).assets | Where-Object {$_.browser_download_url -Like "*wix*-binaries.zip"}).browser_download_url -OutFile "wix.zip" && Expand-Archive ./wix.zip && Remove-Item ./wix.zip
     - name: Add Flutter and wix to path 
