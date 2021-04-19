@@ -158,9 +158,9 @@ jobs:
     - name: Build Windows dotnet MakroBoard
       run: dotnet publish MakroBoard\MakroBoard.csproj -r win-x64 -c release --output Release
     - name: Build global Windows dotnet MakroBoard Plugins
-      run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\global) | ForEach-Object {Start-Process dotnet "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_" } 
+      run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\global) | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_" } 
     - name: Build windows Windows dotnet MakroBoard Plugins
-      run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\windows) | ForEach-Object {Start-Process dotnet "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_" }
+      run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\windows) | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_" }
     - name: make upload folders
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64") 
     # - name: copy msis
