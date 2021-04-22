@@ -125,6 +125,8 @@ jobs:
         ref: master
         path: flutter
         fetch-depth: 0
+    - name: Add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -164,7 +166,7 @@ jobs:
     - name: Build windows Windows dotnet MakroBoard Plugins
       run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\windows") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_" }
     - name: Build MSIs dotnet
-      run: dotnet publish MakroBoard.Setup\MakroBoard.Setup.wixproj -r win-x64 -c release
+      run: msbuild MakroBoard.Setup
       env:
           WIX: ${{ github.workspace }}\wix
     - name: make upload folders
