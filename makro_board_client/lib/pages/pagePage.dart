@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:makro_board_client/dialogs/create_group_dialog.dart';
-import 'package:makro_board_client/dialogs/create_page_dialog.dart';
 import 'package:makro_board_client/dialogs/create_panel_dialog.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/widgets/ControlPanel.dart';

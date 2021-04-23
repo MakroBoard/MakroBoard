@@ -8,6 +8,7 @@ import 'package:makro_board_client/models/plugin.dart';
 import 'package:makro_board_client/models/ViewConfigValue.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 
+import 'ConfigParameterInput.dart';
 import 'ControlPanel.dart';
 
 class AvailableControls extends StatelessWidget {
@@ -75,12 +76,18 @@ class AvailableControls extends StatelessWidget {
                             ListView.builder(
                               shrinkWrap: true,
                               itemCount: control.view.configParameters.length,
-                              itemBuilder: (context, index) => _creteConfigParameter(context, control.view.configParameters[index], viewConfigValues[index]),
+                              itemBuilder: (context, index) => ConfigParameterInput(
+                                configParameter: control.view.configParameters[index],
+                                configParameterValue: viewConfigValues[index],
+                              ),
                             ),
                             ListView.builder(
                               shrinkWrap: true,
                               itemCount: control.configParameters.length,
-                              itemBuilder: (context, index) => _creteConfigParameter(context, control.configParameters[index], configValues[index]),
+                              itemBuilder: (context, index) => ConfigParameterInput(
+                                configParameter: control.configParameters[index],
+                                configParameterValue: configValues[index],
+                              ),
                             )
                           ],
                         ),
@@ -102,44 +109,4 @@ class AvailableControls extends StatelessWidget {
           ),
         ],
       );
-
-  Widget _creteConfigParameter(BuildContext context, ViewConfigParameter configParameter, ViewConfigValue configValue) {
-    return Row(
-      children: [
-        // Text(configParameter.symbolicName),
-        Flexible(child: _createConfigParameterInput(context, configParameter, configValue)),
-      ],
-    );
-  }
-
-  Widget _createConfigParameterInput(BuildContext context, ViewConfigParameter configParameter, ViewConfigValue configValue) {
-    switch (configParameter.configParameterType) {
-      case ConfigParameterType.string:
-        return TextFormField(
-          decoration: InputDecoration(
-            // border: OutlineInputBorder(),
-            labelText: configParameter.symbolicName,
-          ),
-          // TODO
-          validator: (value) {
-            if (configParameter.validationRegEx != null && configParameter.validationRegEx!.isNotEmpty) {
-              if (!RegExp(configParameter.validationRegEx!).hasMatch(value!)) {
-                return "Value doesn´t match \"" + configParameter.validationRegEx! + "\"";
-              }
-            }
-            return null;
-          },
-          onChanged: (value) => configValue.value = value,
-        );
-      case ConfigParameterType.bool:
-        return CheckboxListTile(
-          title: Text(configParameter.symbolicName),
-          controlAffinity: ListTileControlAffinity.leading,
-          value: configParameter.defaultValue as bool,
-          onChanged: (value) => configValue.value = value,
-        );
-      default:
-        return Text("No Input definded for " + configParameter.configParameterType.toString());
-    }
-  }
 }

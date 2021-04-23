@@ -1,14 +1,13 @@
-import 'package:enhanced_future_builder/enhanced_future_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/models/Control.dart';
-import 'package:makro_board_client/models/plugin.dart';
-import 'package:makro_board_client/models/ViewConfigParameter.dart';
 import 'package:makro_board_client/models/ViewConfigValue.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
+import 'package:makro_board_client/models/plugin.dart' as models;
 import 'package:makro_board_client/models/group.dart' as models;
 import 'package:makro_board_client/models/panel.dart' as models;
+import 'package:makro_board_client/widgets/ConfigParameterInput.dart';
 
 class CreatePanelDialog extends StatefulWidget {
   final models.Group group;
@@ -19,13 +18,13 @@ class CreatePanelDialog extends StatefulWidget {
 }
 
 class _CreatePanelDialogState extends State<CreatePanelDialog> {
-  Plugin? selectedPlugin;
+  models.Plugin? selectedPlugin;
   Control? selectedControl;
   List<ViewConfigValue>? configValues;
   List<ViewConfigValue>? viewConfigValues;
 
-  late Future<List<Plugin>> _futurePlugins;
-  List<Plugin> _currentPlugins = <Plugin>[];
+  late Future<List<models.Plugin>> _futurePlugins;
+  List<models.Plugin> _currentPlugins = <models.Plugin>[];
 
   @override
   void initState() {
@@ -81,7 +80,7 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
                                   ListView.builder(
                                     shrinkWrap: true,
                                     itemCount: selectedControl!.view.configParameters.length,
-                                    itemBuilder: (context, index) => ConfigParameterWidget(
+                                    itemBuilder: (context, index) => ConfigParameterInput(
                                       configParameter: selectedControl!.view.configParameters[index],
                                       configParameterValue: viewConfigValues![index],
                                       formKey: _createPanelFormKey,
@@ -90,7 +89,7 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
                                   ListView.builder(
                                     shrinkWrap: true,
                                     itemCount: selectedControl!.configParameters.length,
-                                    itemBuilder: (context, index) => ConfigParameterWidget(
+                                    itemBuilder: (context, index) => ConfigParameterInput(
                                       configParameter: selectedControl!.configParameters[index],
                                       configParameterValue: configValues![index],
                                       formKey: _createPanelFormKey,
@@ -143,8 +142,8 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
 }
 
 class PanelSelector extends StatelessWidget {
-  final List<Plugin> plugins;
-  final Function(Plugin, Control) onPanelSelected;
+  final List<models.Plugin> plugins;
+  final Function(models.Plugin, Control) onPanelSelected;
   final Control? selectedControl;
 
   PanelSelector({required this.plugins, required this.onPanelSelected, required this.selectedControl});
@@ -182,111 +181,5 @@ class PanelSelector extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-// class _PanelSelectorState extends State<PanelSelector> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       height: 300,
-//       width: 300,
-//       child: Padding(
-//         padding: const EdgeInsets.all(8.0),
-//         child: ListView.builder(
-//           itemCount: widget.plugins.length,
-//           itemBuilder: (context, pluginIndex) {
-//             var plugin = widget.plugins[pluginIndex];
-//             return ListView.builder(
-//               shrinkWrap: true,
-//               itemCount: plugin.controls.length,
-//               itemBuilder: (context, index) {
-//                 var control = plugin.controls[index];
-//                 return Container(
-//                   color: (widget.selectedControl == control) ? Theme.of(context).primaryColor.withAlpha(128) : Colors.transparent,
-//                   child: ListTile(
-//                     title: Text(control.symbolicName),
-//                     subtitle: Text(plugin.pluginName),
-//                     onTap: () {
-//                       if (widget.selectedControl != control) {
-//                         widget.onPanelSelected(plugin, control);
-//                       }
-//                     },
-//                   ),
-//                 );
-//               },
-//             );
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-class ConfigParameterWidget extends StatefulWidget {
-  final ViewConfigParameter configParameter;
-  final ViewConfigValue configParameterValue;
-
-  final GlobalKey<FormState> formKey;
-
-  const ConfigParameterWidget({Key? key, required this.configParameter, required this.configParameterValue, required this.formKey}) : super(key: key);
-
-  @override
-  _ConfigParameterWidgetState createState() => _ConfigParameterWidgetState();
-}
-
-class _ConfigParameterWidgetState extends State<ConfigParameterWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        children: [
-          // Text(configParameter.symbolicName),
-          Flexible(child: _createConfigParameterInput(context, widget.configParameter, widget.configParameterValue)),
-        ],
-      ),
-    );
-  }
-
-  Widget _createConfigParameterInput(BuildContext context, ViewConfigParameter configParameter, ViewConfigValue configValue) {
-    switch (configParameter.configParameterType) {
-      case ConfigParameterType.string:
-        return TextFormField(
-          decoration: InputDecoration(
-            // border: OutlineInputBorder(),
-            labelText: configParameter.symbolicName,
-          ),
-          // TODO
-          validator: (value) {
-            if (configParameter.validationRegEx != null && configParameter.validationRegEx!.isNotEmpty) {
-              var foundValue = RegExp(configParameter.validationRegEx!).stringMatch(value!);
-              if (foundValue == null || foundValue != value) {
-                return "Value doesn´t match \"" + configParameter.validationRegEx! + "\"";
-              }
-            }
-            return null;
-          },
-          onChanged: (value) {
-            configValue.value = value;
-            widget.formKey.currentState!.validate();
-          },
-        );
-      case ConfigParameterType.bool:
-        var value = configParameter.defaultValue as bool;
-        if (configValue.value != null && configValue.value is bool) {
-          value = configValue.value as bool;
-        }
-        return CheckboxListTile(
-          title: Text(configParameter.symbolicName),
-          controlAffinity: ListTileControlAffinity.leading,
-          value: value,
-          onChanged: (value) {
-            setState(() => configValue.value = value);
-            widget.formKey.currentState!.validate();
-          },
-        );
-      default:
-        return Text("No Input definded for " + configParameter.configParameterType.toString());
-    }
   }
 }

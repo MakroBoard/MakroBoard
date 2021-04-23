@@ -23,9 +23,12 @@ class ControlPanel extends StatelessWidget {
       case "Button":
         return TextButton(
           onPressed: () => Modular.get<ApiProvider>().executeControl(control, configValues),
-          child: ChangeNotifierProvider.value(
-            value: configValues.firstWhere((element) => element.symbolicName == "label"),
-            builder: (context, _) => Text(context.watch<ViewConfigValue>().value.toString()),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ChangeNotifierProvider.value(
+              value: configValues.firstWhere((element) => element.symbolicName == "label"),
+              builder: (context, _) => Text(context.watch<ViewConfigValue>().value.toString()),
+            ),
           ),
         );
       case "Image":

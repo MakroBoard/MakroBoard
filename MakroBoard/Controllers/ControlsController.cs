@@ -142,7 +142,29 @@ namespace MakroBoard.Controllers
                                                 cv.Add(new PluginContract.ConfigValue(c.SymbolicName, jsonElement.GetString()));
                                                 break;
                                             case BoolConfigParameter bcp:
-                                                cv.Add(new PluginContract.ConfigValue(c.SymbolicName, jsonElement.GetBoolean()));
+                                                switch (jsonElement.ValueKind)
+                                                {
+                                                    case JsonValueKind.Undefined:
+                                                        break;
+                                                    case JsonValueKind.Object:
+                                                        break;
+                                                    case JsonValueKind.Array:
+                                                        break;
+                                                    case JsonValueKind.String:
+                                                        cv.Add(new PluginContract.ConfigValue(c.SymbolicName, bool.Parse(jsonElement.GetString())));
+                                                        break;
+                                                    case JsonValueKind.Number:
+                                                        cv.Add(new PluginContract.ConfigValue(c.SymbolicName, jsonElement.GetInt32()>0));
+                                                        break;
+                                                    case JsonValueKind.True:
+                                                        cv.Add(new PluginContract.ConfigValue(c.SymbolicName, true));
+                                                        break;
+                                                    case JsonValueKind.False:
+                                                        cv.Add(new PluginContract.ConfigValue(c.SymbolicName, false));
+                                                        break;
+                                                    case JsonValueKind.Null:
+                                                        break;
+                                                }
                                                 break;
                                             case null:
                                                 // ignore Parameter
