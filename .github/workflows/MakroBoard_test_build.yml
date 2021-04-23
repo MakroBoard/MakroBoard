@@ -166,7 +166,7 @@ jobs:
     - name: Build windows Windows dotnet MakroBoard Plugins
       run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\windows") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_" }
     - name: Build MSIs dotnet
-      run: msbuild MakroBoard.Setup
+      run: msbuild
       working-directory: ${{ github.workspace }}\MakroBoard.Setup
       env:
           WIX: ${{ github.workspace }}\wix
