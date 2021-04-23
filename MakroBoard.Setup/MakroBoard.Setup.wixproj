@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<?define HarvestPath  = "..\Release"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" InitialTargets="EnsureWixToolsetInstalled" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +10,6 @@
     <OutputName>MakroBoard.Setup</OutputName>
     <OutputType>Package</OutputType>
     <DefineConstants>HarvestPath=..\Release</DefineConstants>
-    <?define HarvestPath  = "..\Release"?>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
