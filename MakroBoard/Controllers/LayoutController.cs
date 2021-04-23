@@ -1,23 +1,13 @@
-﻿using McMaster.NETCore.Plugins;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using MakroBoard.ActionFilters;
-using MakroBoard.Controllers.ApiModels;
 using MakroBoard.Data;
 using MakroBoard.HubConfig;
-using MakroBoard.PluginContract;
-using MakroBoard.PluginContract.Parameters;
-using MakroBoard.PluginContract.Views;
 
 // QR Code auf Localhost
 // auf Handy -> Code anzeigen
@@ -92,19 +82,19 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("addpanel")]
         [LocalHost]
-        public async Task<ActionResult> PostAddGroup([FromBody] ApiModels.Panel panel)
+        public async Task<ActionResult> PostAddPanel([FromBody] ApiModels.Panel panel)
         {
             var newPanel = new Data.Panel
             {
                 SymbolicName = panel.SymbolicName,
                 PluginName = panel.PluginName,
-                GroupID = panel.GroupId,
+                GroupID = panel.GroupId                
             };
 
             newPanel.ConfigParameters = panel.ConfigValues.Select(x => new Data.ConfigParameterValue
             {
                 SymbolicName = x.SymbolicName,
-                Value = x.Value.ToString(),
+                Value = x.Value?.ToString(),
                 Panel = newPanel,
             }).ToList();
 

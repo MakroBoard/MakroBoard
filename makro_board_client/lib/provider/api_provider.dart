@@ -11,7 +11,7 @@ import 'package:makro_board_client/models/panel.dart';
 
 import 'package:signalr_core/signalr_core.dart';
 import 'package:makro_board_client/models/Control.dart';
-import 'package:makro_board_client/models/Plugin.dart';
+import 'package:makro_board_client/models/plugin.dart';
 import 'package:makro_board_client/models/ViewConfigValue.dart';
 import 'package:makro_board_client/models/client.dart';
 import 'package:makro_board_client/models/page.dart';
@@ -31,11 +31,11 @@ class ApiProvider {
   static const String addGroupUrl = "/api/layout/addgroup";
   static const String addPanelUrl = "/api/layout/addpanel";
 
+  List<Plugin> currentPlugins = [];
+
   StreamController<List<Page>> streamPageController = StreamController<List<Page>>.broadcast();
   Stream<List<Page>> get pages => streamPageController.stream;
   List<Page> currentPages = [];
-  List<Group> currentGroups = [];
-  List<Panel> currentPanels = [];
 
   StreamController<List<Client>> streamClientController = StreamController<List<Client>>.broadcast();
   Stream<List<Client>> get clients => streamClientController.stream;
@@ -162,12 +162,8 @@ class ApiProvider {
 
       var newGroup = Group.fromJson(group);
       if (existingGroup.isEmpty) {
-        currentGroups.add(newGroup);
         existingPage.groups.add(newGroup);
       } else {
-        var indexCurrentGroup = currentGroups.indexOf(existingGroup);
-        currentGroups[indexCurrentGroup] = newGroup;
-
         var index = existingPage.groups.indexOf(existingGroup);
         existingPage.groups[index] = newGroup;
       }
@@ -177,28 +173,30 @@ class ApiProvider {
 
   void _onAddOrUpdatePanel(panels) async {
     for (var panel in panels!) {
-      var existingPanel = currentPanels.firstWhere(
+      Group existingGroup = Group.empty();
+      for (var page in currentPages) {
+        existingGroup = page.groups.firstWhere(
+          (element) => element.id == panel["groupID"],
+          orElse: () => Group.empty(),
+        );
+        if (!existingGroup.isEmpty) {
+          break;
+        }
+      }
+
+      if (existingGroup.isEmpty) {
+        continue;
+      }
+
+      var existingPanel = existingGroup.panels.firstWhere(
         (element) => element.id == panel["id"],
         orElse: () => Panel.empty(),
       );
 
-      if (existingPanel.isEmpty) {
-        continue;
-      }
-
-      var existingGroup = currentGroups.firstWhere(
-        (element) => element.id == panel["groupId"],
-        orElse: () => Group.empty(),
-      );
-
       var newPanel = Panel.fromJson(panel);
       if (existingPanel.isEmpty) {
-        currentPanels.add(newPanel);
         existingGroup.panels.add(newPanel);
       } else {
-        var indexCurrentPanel = currentPanels.indexOf(existingPanel);
-        currentPanels[indexCurrentPanel] = newPanel;
-
         var index = existingGroup.panels.indexOf(existingPanel);
         existingGroup.panels[index] = newPanel;
       }
@@ -277,17 +275,18 @@ class ApiProvider {
 
   Future<List<Plugin>> getAvailableControls() async {
     try {
-      var response = await http.get(
-        _serverUri!.replace(path: getControlsUrl),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
+      if (currentPlugins.isEmpty) {
+        var response = await http.get(
+          _serverUri!.replace(path: getControlsUrl),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        );
 
-      var jsonData = json.decode(response.body);
-      var result = List.castFrom(jsonData).map((jsonPlugin) => Plugin.fromJson(jsonPlugin)).toList();
-
-      return result;
+        var jsonData = json.decode(response.body);
+        currentPlugins = List.castFrom(jsonData).map((jsonPlugin) => Plugin.fromJson(jsonPlugin)).toList();
+      }
+      return currentPlugins;
       // var dateTime = DateTime.parse(json.decode(response.body));
       // return LoginCode(code: randomNumber, validUntil: dateTime);
     } on Exception catch (e) {

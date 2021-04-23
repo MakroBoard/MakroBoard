@@ -4,9 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/models/Control.dart';
 import 'package:makro_board_client/models/ViewConfigParameter.dart';
-import 'package:makro_board_client/models/Plugin.dart';
+import 'package:makro_board_client/models/plugin.dart';
 import 'package:makro_board_client/models/ViewConfigValue.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
+
+import 'ControlPanel.dart';
 
 class AvailableControls extends StatelessWidget {
   const AvailableControls({
@@ -87,7 +89,10 @@ class AvailableControls extends StatelessWidget {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: _createControl(context, control, configValues, viewConfigValues),
+                        child: ControlPanel(
+                          control: control,
+                          configValues: configValues + viewConfigValues,
+                        ),
                       ),
                     )
                   ],
@@ -135,25 +140,6 @@ class AvailableControls extends StatelessWidget {
         );
       default:
         return Text("No Input definded for " + configParameter.configParameterType.toString());
-    }
-  }
-
-  Widget _createControl(BuildContext context, Control control, List<ViewConfigValue> configValues, List<ViewConfigValue> viewConfigValues) {
-    switch (control.view.viewType) {
-      case "Button":
-        return TextButton(
-          onPressed: () => Modular.get<ApiProvider>().executeControl(control, configValues),
-          child: ChangeNotifierProvider.value(
-            value: viewConfigValues.firstWhere((element) => element.symbolicName == "label"),
-            builder: (context, _) => Text(context.watch<ViewConfigValue>().value.toString()),
-          ),
-        );
-      case "Image":
-        return Text(control.view.viewType);
-      case "Slider":
-        return Text(control.view.viewType);
-      default:
-        return Text(control.view.viewType);
     }
   }
 }

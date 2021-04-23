@@ -7,8 +7,10 @@ import 'package:makro_board_client/dialogs/create_group_dialog.dart';
 import 'package:makro_board_client/dialogs/create_page_dialog.dart';
 import 'package:makro_board_client/dialogs/create_panel_dialog.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
+import 'package:makro_board_client/widgets/ControlPanel.dart';
 import 'package:makro_board_client/widgets/WmskAppBar.dart';
 import 'package:responsive_grid/responsive_grid.dart';
+import 'package:makro_board_client/models/plugin.dart' as models;
 import 'package:makro_board_client/models/page.dart' as models;
 import 'package:makro_board_client/models/group.dart' as models;
 import 'package:makro_board_client/models/panel.dart' as models;
@@ -79,14 +81,15 @@ class PagePage extends StatelessWidget {
                       icon: Icon(Icons.more_vert),
                     ),
                   ),
-                  StreamBuilder(
-                    stream: group.panelsStream,
-                    initialData: group.panels,
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      return Container(
-                        child: _getGroupPanelWidgets(context, snapshot.data),
-                      );
-                    },
+                  FutureBuilder(
+                    future: Modular.get<ApiProvider>().getAvailableControls(),
+                    builder: (context, availableControlsSnapShot) => StreamBuilder(
+                      stream: group.panelsStream,
+                      initialData: group.panels,
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        return _getGroupPanelWidgets(context, availableControlsSnapShot.data as List<models.Plugin>, snapshot.data);
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -96,15 +99,25 @@ class PagePage extends StatelessWidget {
         .toList();
   }
 
-  Widget _getGroupPanelWidgets(BuildContext context, List<models.Panel>? panels) {
-    if (panels == null || panels.isEmpty) {
+  Widget _getGroupPanelWidgets(BuildContext context, List<models.Plugin>? plugins, List<models.Panel>? panels) {
+    if (plugins == null || plugins.isEmpty || panels == null || panels.isEmpty) {
       return Center(
         child: Text("Keine Panels konfiguriert"),
       );
     }
+
     return ListView.builder(
+      shrinkWrap: true,
       itemCount: panels.length,
-      itemBuilder: (context, index) => Text(panels[index].symbolicName),
+      itemBuilder: (context, index) {
+        var panel = panels[index];
+        var plugin = plugins.firstWhere((p) => p.pluginName == panel.pluginName);
+        var control = plugin.controls.firstWhere((c) => c.symbolicName == panel.symbolicName);
+        return ControlPanel(
+          control: control,
+          configValues: panel.configValues,
+        );
+      },
     );
   }
 

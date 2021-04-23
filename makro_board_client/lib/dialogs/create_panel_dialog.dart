@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/models/Control.dart';
-import 'package:makro_board_client/models/Plugin.dart';
+import 'package:makro_board_client/models/plugin.dart';
 import 'package:makro_board_client/models/ViewConfigParameter.dart';
 import 'package:makro_board_client/models/ViewConfigValue.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
@@ -120,7 +120,7 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
                               pluginName: selectedPlugin!.pluginName,
                               groupId: widget.group.id,
                               symbolicName: selectedControl!.symbolicName,
-                              configValues: configValues!,
+                              configValues: configValues! + viewConfigValues!,
                             ),
                           );
 
