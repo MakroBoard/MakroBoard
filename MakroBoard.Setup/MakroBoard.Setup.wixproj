@@ -8,7 +8,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>MakroBoard.Setup</OutputName>
     <OutputType>Package</OutputType>
-    <DefineConstants>HarvestPath=Release\net5.0\win-x64\publish;PluginHarvestPath=..\PluginOutput</DefineConstants>
+    <DefineConstants>HarvestPath=..\MakroBoard\Release\net5.0\win-x64\publish;PluginHarvestPath=..\PluginOutput</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
@@ -44,8 +44,8 @@
 	-->
   <Target Name="Harvest">
     <Message Text="Start Harvest MakroBoard" Importance="high" />
-    <HeatDirectory OutputFile="$(ProjectDir)\MakroBoardInstallFiles.wxs" VerboseOutput="true" Directory="Release\net5.0\win-x64\publish" ComponentGroupName="MakroBoardComponentGroup" PreprocessorVariable="var.HarvestPath" DirectoryRefId="INSTALLFOLDER" AutogenerateGuids="true" SuppressRegistry="true" SuppressCom="true" SuppressRootDirectory="true" ToolPath="$(WixToolPath)" NoLogo="true" Transforms="$(Projectdir)Binaries.xslt" />
+    <HeatDirectory OutputFile="$(ProjectDir)\MakroBoardInstallFiles.wxs" VerboseOutput="true" Directory="..\MakroBoard\Release\net5.0\win-x64\publish" ComponentGroupName="MakroBoardComponentGroup" PreprocessorVariable="var.HarvestPath" DirectoryRefId="INSTALLFOLDER" AutogenerateGuids="true" SuppressRegistry="true" SuppressCom="true" SuppressRootDirectory="true" ToolPath="$(WixToolPath)" NoLogo="true" Transforms="$(Projectdir)Binaries.xslt" />
     <Message Text="Start Harvest MakroBoard" Importance="high" />
-    <HeatDirectory OutputFile="$(ProjectDir)\PluginInstallFiles.wxs" VerboseOutput="true" Directory="Release\Plugins\net5.0\win-x64\publish" ComponentGroupName="MakroBoardPluginComponentGroup" PreprocessorVariable="var.PluginHarvestPath" DirectoryRefId="INSTALLFOLDER" AutogenerateGuids="true" SuppressRegistry="true" SuppressCom="true" SuppressRootDirectory="true" ToolPath="$(WixToolPath)" NoLogo="true" Transforms="$(Projectdir)Binaries.xslt" />
+    <HeatDirectory OutputFile="$(ProjectDir)\PluginInstallFiles.wxs" VerboseOutput="true" Directory="..\MakroBoard\Release\Plugins\net5.0\win-x64\publish" ComponentGroupName="MakroBoardPluginComponentGroup" PreprocessorVariable="var.PluginHarvestPath" DirectoryRefId="INSTALLFOLDER" AutogenerateGuids="true" SuppressRegistry="true" SuppressCom="true" SuppressRootDirectory="true" ToolPath="$(WixToolPath)" NoLogo="true" Transforms="$(Projectdir)Binaries.xslt" />
   </Target>
 </Project>
