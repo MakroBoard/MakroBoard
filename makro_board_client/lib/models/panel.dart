@@ -1,4 +1,4 @@
-import 'ConfigParameterValue.dart';
+import 'ViewConfigValue.dart';
 
 class Panel {
   final int id;
@@ -6,7 +6,7 @@ class Panel {
   final String symbolicName;
   final int order;
   final int groupId;
-  final List<ConfigParameterValue> configParameters;
+  final List<ViewConfigValue> configValues;
 
   Panel({
     required this.id,
@@ -14,13 +14,12 @@ class Panel {
     required this.symbolicName,
     required this.order,
     required this.groupId,
-    required this.configParameters,
+    required this.configValues,
   });
 
-  Panel.createNew({required this.symbolicName, required this.pluginName, required this.groupId})
+  Panel.createNew({required this.symbolicName, required this.pluginName, required this.groupId, required this.configValues})
       : id = -1,
-        order = -1,
-        configParameters = [];
+        order = -1;
 
   Panel.empty()
       : id = -1,
@@ -28,7 +27,7 @@ class Panel {
         symbolicName = "",
         order = -1,
         groupId = -1,
-        configParameters = [];
+        configValues = [];
 
   Panel.fromJson(Map<String, dynamic> json)
       : id = json["id"],
@@ -36,7 +35,7 @@ class Panel {
         symbolicName = json["symbolicName"],
         order = json["order"],
         groupId = json["groupId"],
-        configParameters = List.castFrom(json["configParameters"]).map<ConfigParameterValue>((jsonConfigParameter) => ConfigParameterValue.fromJson(jsonConfigParameter)).toList();
+        configValues = List.castFrom(json["configValues"]).map<ViewConfigValue>((jsonConfigParameter) => ViewConfigValue.fromJson(jsonConfigParameter)).toList();
 
   Map<String, dynamic> toJson() {
     return {
@@ -44,6 +43,7 @@ class Panel {
       'symbolicName': symbolicName,
       'pluginName': pluginName,
       'groupId': groupId,
+      'configValues': configValues,
     };
   }
 

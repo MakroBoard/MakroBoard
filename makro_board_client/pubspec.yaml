@@ -37,6 +37,7 @@ dependencies:
   animated_text_kit: ^4.2.0
   responsive_grid: ^2.0.0
   page_transition: ^1.1.7+6
+  enhanced_future_builder: ^1.0.3
 
 dev_dependencies:
   flutter_test:

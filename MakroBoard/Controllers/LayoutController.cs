@@ -51,7 +51,8 @@ namespace MakroBoard.Controllers
             {
                 SymbolicName = ConvertToSymbolicName(page.Label),
                 Label = page.Label,
-                Icon = page.Icon
+                Icon = page.Icon,
+                Groups = new List<Data.Group>()
             };
             _Context.Pages.Add(newPage);
 
@@ -100,10 +101,10 @@ namespace MakroBoard.Controllers
                 GroupID = panel.GroupId,
             };
 
-            newPanel.ConfigParameters = panel.ConfigParameterValues.Select(x => new Data.ConfigParameterValue
+            newPanel.ConfigParameters = panel.ConfigValues.Select(x => new Data.ConfigParameterValue
             {
                 SymbolicName = x.SymbolicName,
-                Value = x.Value,
+                Value = x.Value.ToString(),
                 Panel = newPanel,
             }).ToList();
 

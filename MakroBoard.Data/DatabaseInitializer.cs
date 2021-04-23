@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +13,9 @@ namespace MakroBoard.Data
     {
         public static void Initialize(DatabaseContext context)
         {
+            LogManager.GetCurrentClassLogger().Info($"Initialize Database: {context.Database.GetConnectionString()}");
             context.Database.EnsureCreated();
-
+            context.Database.GetConnectionString();
             if (context.Sessions.Any())
             {
                 context.Sessions.RemoveRange(context.Sessions);

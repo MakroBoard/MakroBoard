@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace MakroBoard.Data
 {
@@ -13,7 +14,9 @@ namespace MakroBoard.Data
         public string SymbolicName { get; set; }
         public string Value { get; set; }
         [ForeignKey("Panel")]
-        public int PanelID  {get; set;}
+        public int PanelID  {get; set; }
+
+        [JsonIgnore]
         public Panel Panel {get; set;}
     }
 }

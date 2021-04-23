@@ -10,7 +10,7 @@ namespace MakroBoard.Controllers.ApiModels
         public int Height { get; set; }
         public string PluginName { get; set; }
         public string SymbolicName { get; set; }
-        public List<ConfigParameterValue> ConfigParameterValues { get; set; }
+        public List<ConfigValue> ConfigValues { get; set; }
         public int GroupId { get; set; }
     }
 
