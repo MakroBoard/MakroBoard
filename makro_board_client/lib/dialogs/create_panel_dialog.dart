@@ -8,6 +8,7 @@ import 'package:makro_board_client/models/ViewConfigParameter.dart';
 import 'package:makro_board_client/models/ViewConfigValue.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/models/group.dart' as models;
+import 'package:makro_board_client/models/panel.dart' as models;
 
 class CreatePanelDialog extends StatefulWidget {
   final models.Group group;
@@ -25,6 +26,7 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
 
   late Future<List<Plugin>> _futurePlugins;
   List<Plugin> _currentPlugins = <Plugin>[];
+
   @override
   void initState() {
     _futurePlugins = Modular.get<ApiProvider>().getAvailableControls().then((value) => _currentPlugins = value);
@@ -33,13 +35,13 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final _createGroupFormKey = GlobalKey<FormState>();
+    final _createPanelFormKey = GlobalKey<FormState>();
 
     return SimpleDialog(
       title: Text("Panel zur Gruppe " + widget.group.label + " hinzufügen"),
       children: [
         Form(
-          key: _createGroupFormKey,
+          key: _createPanelFormKey,
           child: Column(
             children: [
               Row(
@@ -82,6 +84,7 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
                                     itemBuilder: (context, index) => ConfigParameterWidget(
                                       configParameter: selectedControl!.view.configParameters[index],
                                       configParameterValue: viewConfigValues![index],
+                                      formKey: _createPanelFormKey,
                                     ),
                                   ),
                                   ListView.builder(
@@ -90,6 +93,7 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
                                     itemBuilder: (context, index) => ConfigParameterWidget(
                                       configParameter: selectedControl!.configParameters[index],
                                       configParameterValue: configValues![index],
+                                      formKey: _createPanelFormKey,
                                     ),
                                   ),
                                 ],
@@ -109,9 +113,16 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
                     child: Text("Anlegen"),
                     onPressed: () async {
                       EasyLoading.show(status: 'Neue Gruppe anlegen ...');
-                      if (_createGroupFormKey.currentState!.validate()) {
+                      if (selectedPlugin != null && selectedControl != null && configValues != null && _createPanelFormKey.currentState!.validate()) {
                         try {
-                          // await Modular.get<ApiProvider>().addPanel(models.Panel.createNew());
+                          await Modular.get<ApiProvider>().addPanel(
+                            models.Panel.createNew(
+                              pluginName: selectedPlugin!.pluginName,
+                              groupId: widget.group.id,
+                              symbolicName: selectedControl!.symbolicName,
+                              configValues: configValues!,
+                            ),
+                          );
 
                           Navigator.of(context, rootNavigator: true).pop();
                         } catch (e) {
@@ -212,19 +223,26 @@ class PanelSelector extends StatelessWidget {
 //   }
 // }
 
-class ConfigParameterWidget extends StatelessWidget {
+class ConfigParameterWidget extends StatefulWidget {
   final ViewConfigParameter configParameter;
   final ViewConfigValue configParameterValue;
 
-  const ConfigParameterWidget({Key? key, required this.configParameter, required this.configParameterValue}) : super(key: key);
+  final GlobalKey<FormState> formKey;
 
+  const ConfigParameterWidget({Key? key, required this.configParameter, required this.configParameterValue, required this.formKey}) : super(key: key);
+
+  @override
+  _ConfigParameterWidgetState createState() => _ConfigParameterWidgetState();
+}
+
+class _ConfigParameterWidgetState extends State<ConfigParameterWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Row(
         children: [
           // Text(configParameter.symbolicName),
-          Flexible(child: _createConfigParameterInput(context, configParameter, configParameterValue)),
+          Flexible(child: _createConfigParameterInput(context, widget.configParameter, widget.configParameterValue)),
         ],
       ),
     );
@@ -248,7 +266,10 @@ class ConfigParameterWidget extends StatelessWidget {
             }
             return null;
           },
-          onChanged: (value) => configValue.value = value,
+          onChanged: (value) {
+            configValue.value = value;
+            widget.formKey.currentState!.validate();
+          },
         );
       case ConfigParameterType.bool:
         var value = configParameter.defaultValue as bool;
@@ -259,7 +280,10 @@ class ConfigParameterWidget extends StatelessWidget {
           title: Text(configParameter.symbolicName),
           controlAffinity: ListTileControlAffinity.leading,
           value: value,
-          onChanged: (value) => configValue.value = value,
+          onChanged: (value) {
+            setState(() => configValue.value = value);
+            widget.formKey.currentState!.validate();
+          },
         );
       default:
         return Text("No Input definded for " + configParameter.configParameterType.toString());

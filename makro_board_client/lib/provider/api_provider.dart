@@ -334,4 +334,14 @@ class ApiProvider {
       body: json.encode(group),
     );
   }
+
+  Future addPanel(Panel panel) async {
+    await http.post(
+      _serverUri!.replace(path: addPanelUrl),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode(panel),
+    );
+  }
 }
