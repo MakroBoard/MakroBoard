@@ -135,7 +135,7 @@ namespace MakroBoard.Controllers
                                 {
                                     if (c.Value is JsonElement jsonElement)
                                     {
-                                        var configParameter = control.ConfigParameters.First(x => x.SymbolicName.Equals(c.SymbolicName, StringComparison.OrdinalIgnoreCase));
+                                        var configParameter = control.ConfigParameters.FirstOrDefault(x => x.SymbolicName.Equals(c.SymbolicName, StringComparison.OrdinalIgnoreCase));
                                         switch (configParameter)
                                         {
                                             case StringConfigParameter scp:
@@ -143,6 +143,9 @@ namespace MakroBoard.Controllers
                                                 break;
                                             case BoolConfigParameter bcp:
                                                 cv.Add(new PluginContract.ConfigValue(c.SymbolicName, jsonElement.GetBoolean()));
+                                                break;
+                                            case null:
+                                                // ignore Parameter
                                                 break;
                                             default:
                                                 throw new NotSupportedException("This is not yet supported!");

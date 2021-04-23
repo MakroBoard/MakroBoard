@@ -35,7 +35,7 @@ class Panel {
         symbolicName = json["symbolicName"],
         order = json["order"],
         groupId = json["groupId"],
-        configValues = List.castFrom(json["configValues"]).map<ViewConfigValue>((jsonConfigParameter) => ViewConfigValue.fromJson(jsonConfigParameter)).toList();
+        configValues = List.castFrom(json["configParameters"]).map<ViewConfigValue>((jsonConfigParameter) => ViewConfigValue.fromJson(jsonConfigParameter)).toList();
 
   Map<String, dynamic> toJson() {
     return {
