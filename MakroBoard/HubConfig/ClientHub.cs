@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MakroBoard.Controllers;
 using MakroBoard.Data;
+using MakroBoard.Plugin;
 
 namespace MakroBoard.HubConfig
 {
@@ -19,7 +18,7 @@ namespace MakroBoard.HubConfig
             return IPAddress.IsLoopback(ipAddress);
         }
 
-        public ClientHub(DatabaseContext databaseContext)
+        public ClientHub(DatabaseContext databaseContext, PluginContext pluginContext)
         {
             _DatabaseContext = databaseContext;
         }

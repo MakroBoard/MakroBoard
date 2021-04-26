@@ -1,21 +1,14 @@
-﻿using McMaster.NETCore.Plugins;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using MakroBoard.ActionFilters;
-using MakroBoard.Controllers.ApiModels;
-using MakroBoard.Data;
-using MakroBoard.HubConfig;
-using MakroBoard.PluginContract;
 using MakroBoard.PluginContract.Parameters;
 using MakroBoard.PluginContract.Views;
+using MakroBoard.Plugin;
 
 // QR Code auf Localhost
 // auf Handy -> Code anzeigen
@@ -28,14 +21,12 @@ namespace MakroBoard.Controllers
     public class ControlsController : ControllerBase
     {
         private readonly ILogger<ControlsController> _logger;
-        private readonly DatabaseContext _Context;
-        private readonly IHubContext<ClientHub> _ClientHub;
+        private readonly PluginContext _PluginContext;
 
-        public ControlsController(ILogger<ControlsController> logger, DatabaseContext context, IHubContext<ClientHub> clientHub)
+        public ControlsController(ILogger<ControlsController> logger, PluginContext pluginContext)
         {
             _logger = logger;
-            _Context = context;
-            _ClientHub = clientHub;
+            _PluginContext = pluginContext;
         }
 
         // GET: api/client/requesttokens
@@ -43,9 +34,9 @@ namespace MakroBoard.Controllers
         [LocalHost]
         public async Task<ActionResult> GetAvailableControls()
         {
-            var plugins = await LoadAllPlugins().ConfigureAwait(false);
+            var plugins = _PluginContext.Plugins;
 
-            var result = new List<Plugin>();
+            var result = new List<ApiModels.Plugin>();
             foreach (var plugin in plugins)
             {
                 var pluginControls = await plugin.GetControls().ConfigureAwait(false);
@@ -55,40 +46,7 @@ namespace MakroBoard.Controllers
             return Ok(result);
         }
 
-        private static async Task<List<IMakroBoardPlugin>> LoadAllPlugins()
-        {
-            var pathToBinDebug = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var pluginDir = Path.GetFullPath(Path.Combine(pathToBinDebug, "../../../../PluginOutput"));
 
-            var loaders = new List<PluginLoader>();
-
-            // create plugin loaders
-            foreach (var dir in Directory.GetDirectories(pluginDir))
-            {
-                var dirName = Path.GetFileName(dir);
-                var pluginDll = Path.Combine(dir, dirName + ".dll");
-                if (System.IO.File.Exists(pluginDll))
-                {
-                    var loader = PluginLoader.CreateFromAssemblyFile(pluginDll, sharedTypes: new[] { typeof(IMakroBoardPlugin) });
-                    loaders.Add(loader);
-                }
-            }
-
-            var plugins = new List<IMakroBoardPlugin>();
-
-
-            // Create an instance of plugin types
-            foreach (var loader in loaders)
-            {
-                foreach (var pluginType in loader.LoadDefaultAssembly().GetTypes().Where(t => typeof(IMakroBoardPlugin).IsAssignableFrom(t) && !t.IsAbstract))
-                {
-                    // This assumes the implementation of IPlugin has a parameterless constructor
-                    plugins.Add((IMakroBoardPlugin)Activator.CreateInstance(pluginType));
-                }
-            }
-
-            return plugins;
-        }
 
         /// <summary>
         /// POST: api/controls/confirmclient
@@ -119,7 +77,7 @@ namespace MakroBoard.Controllers
                 }
             }
 
-            var plugins = await LoadAllPlugins().ConfigureAwait(false);
+            var plugins = _PluginContext.Plugins;
             foreach (var plugin in plugins)
             {
                 try
@@ -154,7 +112,7 @@ namespace MakroBoard.Controllers
                                                         cv.Add(new PluginContract.ConfigValue(c.SymbolicName, bool.Parse(jsonElement.GetString())));
                                                         break;
                                                     case JsonValueKind.Number:
-                                                        cv.Add(new PluginContract.ConfigValue(c.SymbolicName, jsonElement.GetInt32()>0));
+                                                        cv.Add(new PluginContract.ConfigValue(c.SymbolicName, jsonElement.GetInt32() > 0));
                                                         break;
                                                     case JsonValueKind.True:
                                                         cv.Add(new PluginContract.ConfigValue(c.SymbolicName, true));
@@ -201,9 +159,9 @@ namespace MakroBoard.Controllers
         }
 
 
-        private static Plugin CreatePluginModel(string pluginName, IEnumerable<PluginContract.Control> controls)
+        private static ApiModels.Plugin CreatePluginModel(string pluginName, IEnumerable<PluginContract.Control> controls)
         {
-            return new Plugin(pluginName, controls.Select(x => new ApiModels.Control(x.SymbolicName, new ApiModels.View(x.View.Type.ToString(), new ApiModels.ConfigParameters(x.View.ConfigParameters.Select(c => CreateConfigParameter(c)).ToList())), new ApiModels.ConfigParameters(x.ConfigParameters.Select(c => CreateConfigParameter(c)).ToList()))));
+            return new ApiModels.Plugin(pluginName, controls.Select(x => new ApiModels.Control(x.SymbolicName, new ApiModels.View(x.View.Type.ToString(), new ApiModels.ConfigParameters(x.View.ConfigParameters.Select(c => CreateConfigParameter(c)).ToList())), new ApiModels.ConfigParameters(x.ConfigParameters.Select(c => CreateConfigParameter(c)).ToList()))));
         }
 
         private static ApiModels.ConfigParameter CreateConfigParameter(PluginContract.Parameters.ConfigParameter configParameter)

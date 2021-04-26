@@ -6,18 +6,18 @@ using System;
 using MakroBoard.Data;
 using System.IO;
 using System.Security.Cryptography;
-using System.Text.Unicode;
 using System.Text;
 using NLog.Web;
 using System.Security.Cryptography.X509Certificates;
-using System.Net;
+using System.Threading.Tasks;
+using MakroBoard.Plugin;
 
 namespace MakroBoard
 {
     public class Program
     {
         private static X509Certificate2 _Certificate;
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             // NLog: setup the logger first to catch all errors :)
             var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
@@ -26,7 +26,7 @@ namespace MakroBoard
                 logger.Debug("init log");
                 logger.Debug($"Using Data Directory: { Constants.DataDirectory}");
                 InitializeDataDir();
-                InitializeInstanceSeed();
+                await InitializeInstanceSeed();
                 InitializeCertificate();
 
                 var host = CreateHostBuilder(args).Build();
@@ -34,7 +34,8 @@ namespace MakroBoard
 
                 var services = scope.ServiceProvider;
 
-                CreateDbIfNotExists(services);
+                await CreateDbIfNotExists(services);
+                await LoadPlugins(services);
 
                 host.Run();
             }
@@ -53,17 +54,16 @@ namespace MakroBoard
         }
 
 
-        private static void InitializeInstanceSeed()
+        private static async Task InitializeInstanceSeed()
         {
             if (File.Exists(Constants.SeedFileName))
             {
-                Constants.Seed = File.ReadAllText(Constants.SeedFileName);
+                Constants.Seed = await File.ReadAllTextAsync(Constants.SeedFileName);
             }
             else
             {
-
                 Constants.Seed = Encoding.UTF8.GetString(SHA512.Create().ComputeHash(Encoding.UTF8.GetBytes($"WMSK_{DateTime.Now:O}{new Random().Next()}")));
-                File.WriteAllText(Constants.SeedFileName, Constants.Seed);
+                await File.WriteAllTextAsync(Constants.SeedFileName, Constants.Seed);
             }
         }
 
@@ -77,11 +77,10 @@ namespace MakroBoard
         }
 
 
-
         private static void InitializeCertificate()
         {
-            Certificates _Certificates = new Certificates();
-            X509Certificate2 cert = _Certificates.LoadCertificate("MakroBoard");
+            var _Certificates = new Certificates();
+            var cert = _Certificates.LoadCertificate("MakroBoard");
             if (cert == null)
             {
                 cert = _Certificates.GenerateCertificate("MakroBoard");
@@ -89,7 +88,6 @@ namespace MakroBoard
             }
 
             _Certificate = cert;
-            // Console.WriteLine(_Certificate.Issuer.ToString());
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -111,35 +109,33 @@ namespace MakroBoard
                              listenoptions.UseHttps(_Certificate);
                          });
                     });
-                    //webBuilder.ConfigureKestrel(serverOptions =>
-                    //{
-
-                    //    serverOptions.ListenAnyIP(5001, listenOptions =>
-                    //     {
-                    //          // certificate is an X509Certificate2
-
-                    //        listenOptions.UseHttps(_Certificate);
-
-                    //     }
-
-
-                    //    );
-
-
-                    //});
                 });
 
-        private static void CreateDbIfNotExists(IServiceProvider services)
+        private static async Task CreateDbIfNotExists(IServiceProvider services)
         {
             try
             {
                 var context = services.GetRequiredService<DatabaseContext>();
-                DatabaseInitializer.Initialize(context);
+                await DatabaseInitializer.Initialize(context);
             }
             catch (Exception ex)
             {
                 var logger = services.GetRequiredService<ILogger<Program>>();
                 logger.LogError(ex, "An error occurred creating the DB.");
+            }
+        }
+
+        private static async Task LoadPlugins(IServiceProvider services)
+        {
+            try
+            {
+                var context = services.GetRequiredService<PluginContext>();
+                await context.InitializePlugins();
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred initializing plugins.");
             }
         }
     }

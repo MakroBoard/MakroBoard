@@ -77,6 +77,7 @@ class AvailableControls extends StatelessWidget {
                               shrinkWrap: true,
                               itemCount: control.view.configParameters.length,
                               itemBuilder: (context, index) => ConfigParameterInput(
+                                key: Key(control.view.configParameters[index].symbolicName),
                                 configParameter: control.view.configParameters[index],
                                 configParameterValue: viewConfigValues[index],
                               ),
@@ -85,6 +86,7 @@ class AvailableControls extends StatelessWidget {
                               shrinkWrap: true,
                               itemCount: control.configParameters.length,
                               itemBuilder: (context, index) => ConfigParameterInput(
+                                key: Key(control.configParameters[index].symbolicName),
                                 configParameter: control.configParameters[index],
                                 configParameterValue: configValues[index],
                               ),

@@ -9,6 +9,7 @@ using System.IO;
 using MakroBoard.Data;
 using MakroBoard.HubConfig;
 using System;
+using MakroBoard.Plugin;
 
 namespace MakroBoard
 {
@@ -49,6 +50,7 @@ namespace MakroBoard
                 services.AddDatabaseDeveloperPageExceptionFilter();
             }
 
+            services.AddSingleton(new PluginContext());
             services.AddSignalR(o => { o.EnableDetailedErrors = _Env.IsDevelopment(); });
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory

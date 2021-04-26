@@ -24,6 +24,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakroBoard.Plugin.ShellExec
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "MakroBoard.Setup", "MakroBoard.Setup\MakroBoard.Setup.wixproj", "{3CE0A329-0E7F-4FF8-B3D5-C3621ED861F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakroBoard.Plugin", "MakroBoard.Plugin\MakroBoard.Plugin.csproj", "{CFD64CFA-F0D0-49AF-A3EF-2FA50B00AF8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,14 @@ Global
 		{3CE0A329-0E7F-4FF8-B3D5-C3621ED861F1}.Release|Any CPU.Build.0 = Release|x86
 		{3CE0A329-0E7F-4FF8-B3D5-C3621ED861F1}.Release|x86.ActiveCfg = Release|x86
 		{3CE0A329-0E7F-4FF8-B3D5-C3621ED861F1}.Release|x86.Build.0 = Release|x86
+		{CFD64CFA-F0D0-49AF-A3EF-2FA50B00AF8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFD64CFA-F0D0-49AF-A3EF-2FA50B00AF8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFD64CFA-F0D0-49AF-A3EF-2FA50B00AF8A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CFD64CFA-F0D0-49AF-A3EF-2FA50B00AF8A}.Debug|x86.Build.0 = Debug|Any CPU
+		{CFD64CFA-F0D0-49AF-A3EF-2FA50B00AF8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFD64CFA-F0D0-49AF-A3EF-2FA50B00AF8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFD64CFA-F0D0-49AF-A3EF-2FA50B00AF8A}.Release|x86.ActiveCfg = Release|Any CPU
+		{CFD64CFA-F0D0-49AF-A3EF-2FA50B00AF8A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
