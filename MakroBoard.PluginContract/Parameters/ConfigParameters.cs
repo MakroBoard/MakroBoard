@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
+using System.Linq;
 
 namespace MakroBoard.PluginContract.Parameters
 {
@@ -7,6 +10,12 @@ namespace MakroBoard.PluginContract.Parameters
     {
         public ConfigParameters(IList<ConfigParameter> list) : base(list)
         {
+        }
+
+        public ConfigParameter this[string symbolicName]
+        {
+            get => this.First(x => x.SymbolicName.Equals(symbolicName, System.StringComparison.OrdinalIgnoreCase));
+            set => throw new ReadOnlyException();
         }
     }
 }

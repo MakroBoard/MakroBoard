@@ -31,12 +31,24 @@ class ControlPanel extends StatelessWidget {
             ),
           ),
         );
-      case "Image":
-        return Text(control.view.viewType);
-      case "Slider":
-        return Text(control.view.viewType);
+      case "Text":
+        return ChangeNotifierProvider.value(
+          value: configValues.firstWhere(
+            (element) => element.symbolicName == "text",
+            orElse: () {
+              var newConfigValue = ViewConfigValue(symbolicName: "text", defaultValue: null);
+              configValues.add(newConfigValue);
+              return newConfigValue;
+            },
+          ),
+          builder: (context, _) => Text(context.watch<ViewConfigValue>().value.toString()),
+        );
+      // case "Image":
+      //   return Text(control.view.viewType);
+      // case "Slider":
+      //   return Text(control.view.viewType);
       default:
-        return Text(control.view.viewType);
+        return Text("Missing Control: " + control.view.viewType);
     }
   }
 }

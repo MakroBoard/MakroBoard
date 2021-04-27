@@ -30,7 +30,6 @@ namespace MakroBoard.Plugin
                 var pluginDll = Path.Combine(dir, dirName + ".dll");
                 if (File.Exists(pluginDll))
                 {
-                    _Logger.Info($"Loading Plugin {dirName}");
                     var loader = PluginLoader.CreateFromAssemblyFile(pluginDll, sharedTypes: new[] { typeof(IMakroBoardPlugin) });
                     loaders.Add(loader);
                 }
@@ -44,6 +43,7 @@ namespace MakroBoard.Plugin
             {
                 foreach (var pluginType in loader.LoadDefaultAssembly().GetTypes().Where(t => typeof(IMakroBoardPlugin).IsAssignableFrom(t) && !t.IsAbstract))
                 {
+                    _Logger.Info($"Loading Plugin {pluginType.Name}");
                     // This assumes the implementation of IPlugin has a parameterless constructor
                     plugins.Add((IMakroBoardPlugin)Activator.CreateInstance(pluginType));
                 }

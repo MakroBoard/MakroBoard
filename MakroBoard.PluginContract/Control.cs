@@ -10,6 +10,8 @@ namespace MakroBoard.PluginContract
     {
         private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
         private IList<ConfigParameter> _ConfigParameters = new List<ConfigParameter>();
+        private List<Tuple<int, Action<PanelChangedEventArgs>>> _Subscriptions = new List<Tuple<int, Action<PanelChangedEventArgs>>>();
+
         protected Control()
         {
 
@@ -23,6 +25,7 @@ namespace MakroBoard.PluginContract
 
         public abstract View View { get; }
 
+
         /// <summary>
         /// Config Parameters that are used for execution
         /// </summary>
@@ -33,8 +36,30 @@ namespace MakroBoard.PluginContract
             _ConfigParameters.Add(configParameter);
         }
 
-        public virtual void Subscribe(ParameterValues configParameters, int panelId, Action<PanelChangedEventArgs> onControlChanged)
+        public void Subscribe(ParameterValues configParameters, int panelId, Action<PanelChangedEventArgs> onControlChanged)
         {
+            _Subscriptions.Add(new Tuple<int, Action<PanelChangedEventArgs>>(panelId, onControlChanged));
+            Subscribe(configParameters);
+        }
+
+        protected virtual void Subscribe(ParameterValues configParameters)
+        {
+
+        }
+
+        protected void OnControlChanged(ParameterValues parameterValues)
+        {
+            foreach (var subscription in _Subscriptions)
+            {
+                try
+                {
+                    subscription.Item2(new PanelChangedEventArgs(this, subscription.Item1, parameterValues));
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e, "Can not send PanelChanged for Subscription");
+                }
+            }
         }
     }
 }

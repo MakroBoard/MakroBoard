@@ -80,6 +80,7 @@ class ApiProvider {
       _connection!.on('AddOrUpdatePage', _onAddOrUpdatePage);
       _connection!.on('AddOrUpdateGroup', _onAddOrUpdateGroup);
       _connection!.on('AddOrUpdatePanel', _onAddOrUpdatePanel);
+      _connection!.on('UpdatePanelData', _onUpdatePanelData);
 
       return true;
     } on Exception catch (e) {
@@ -201,6 +202,41 @@ class ApiProvider {
         existingGroup.panels[index] = newPanel;
       }
       existingGroup.notifyPanelsUpdated();
+    }
+  }
+
+  void _onUpdatePanelData(panelDatas) async {
+    var existingPanel = Panel.empty();
+    for (var panelData in panelDatas!) {
+      for (var page in currentPages) {
+        for (var group in page.groups) {
+          var existingPanel = group.panels.firstWhere(
+            (element) => element.id == panelData["panelId"],
+            orElse: () => Panel.empty(),
+          );
+          if (!existingPanel.isEmpty) {
+            var values = panelData["values"] as List;
+            for (var value in values) {
+              var symbolicName = value["symbolicName"];
+              var parameterValue = value["value"];
+              // value.
+              var configValue = existingPanel.configValues.firstWhere(
+                (element) => element.symbolicName == symbolicName,
+                orElse: () => ViewConfigValue(symbolicName: symbolicName, defaultValue: parameterValue),
+              );
+
+              configValue.value = parameterValue;
+            }
+            break;
+          }
+        }
+        if (!existingPanel.isEmpty) {
+          break;
+        }
+      }
+      if (!existingPanel.isEmpty) {
+        break;
+      }
     }
   }
 

@@ -18,19 +18,22 @@ namespace MakroBoard.HubConfig
     {
         private readonly DatabaseContext _DatabaseContext;
         private readonly PluginContext _PluginContext;
+        IHubContext<ClientHub> _hubContext = null;
+
+        public ClientHub(DatabaseContext databaseContext, PluginContext pluginContext, IHubContext<ClientHub> hubContext)
+        {
+            _DatabaseContext = databaseContext;
+            _PluginContext = pluginContext;
+            _hubContext = hubContext;
+
+            SubscribePanels().Wait();
+        }
 
         private bool IsLocalHost(IPAddress ipAddress)
         {
             return IPAddress.IsLoopback(ipAddress);
         }
 
-        public ClientHub(DatabaseContext databaseContext, PluginContext pluginContext)
-        {
-            _DatabaseContext = databaseContext;
-            _PluginContext = pluginContext;
-
-            SubscribePanels().Wait();
-        }
 
         private async Task SubscribePanels()
         {
@@ -77,13 +80,31 @@ namespace MakroBoard.HubConfig
                 }
             }
 
+            foreach(var pluginParameter in control.View.PluginParameters)
+            {
+                switch (pluginParameter)
+                {
+                    case IntConfigParameter icp:
+                        parameterValues.Add(new IntParameterValue(icp, 0));
+                        break;
+                    case StringConfigParameter scp:
+                        parameterValues.Add(new StringParameterValue(scp, scp.DefaultValue));
+                        break;
+                    case BoolConfigParameter bcp:
+                        parameterValues.Add(new BoolParameterValue(bcp, bcp.DefaultValue));
+                        break;
+                    default:
+                        throw new NotImplementedException($"{pluginParameter.GetType().Name} is not yet implemented!");
+                }
+            }
+
             return parameterValues;
         }
 
         private void OnControlChanged(PanelChangedEventArgs panelChangedEventArgs)
         {
             //panelChangedEventArgs.
-            _ = Clients.All.SendAsync(ClientMethods.UpdatePanelData, new PanelData(panelChangedEventArgs.PanelId, panelChangedEventArgs.ParameterValues.Select(x => new ConfigValue(x.ConfigParameter.SymbolicName, x.UntypedValue)).ToList()));
+            _ = _hubContext.Clients.All.SendAsync(ClientMethods.UpdatePanelData, new PanelData(panelChangedEventArgs.PanelId, panelChangedEventArgs.ParameterValues.Select(x => new ConfigValue(x.ConfigParameter.SymbolicName, x.UntypedValue)).ToList()));
         }
 
         public async override Task OnConnectedAsync()

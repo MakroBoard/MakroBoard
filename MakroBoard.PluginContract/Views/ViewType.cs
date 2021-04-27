@@ -11,6 +11,7 @@ namespace MakroBoard.PluginContract.Views
         None,
         Button,
         Image,
-        Slider
+        Slider,
+        Text
     }
 }
