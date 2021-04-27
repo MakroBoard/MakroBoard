@@ -19,6 +19,9 @@
         </Directory>
       </Directory>
     </Directory>
+    <Directory Id="ProgramMenuFolder">
+      <Directory Id="ApplicationProgramsFolder" Name="MakroBoard"/>
+    </Directory>
   </Fragment>
   
   <Fragment>
