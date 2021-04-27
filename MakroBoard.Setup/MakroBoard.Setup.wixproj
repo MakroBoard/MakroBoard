@@ -6,7 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>3ce0a329-0e7f-4ff8-b3d5-c3621ed861f1</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>MakroBoard.Setup</OutputName>
+    <OutputName>MakroBoard_Host</OutputName>
     <OutputType>Package</OutputType>
     <DefineConstants>HarvestPath=..\Release</DefineConstants>
     <SuppressFileDefaultVital>True</SuppressFileDefaultVital>
@@ -24,32 +24,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Binaries.xslt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MakroBoard.Plugin.Keyboard\MakroBoard.Plugin.Keyboard.csproj">
-      <Name>MakroBoard.Plugin.Keyboard</Name>
-      <Project>{6e9b8298-332c-4a0a-b2fe-4d56d0f2bd72}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\MakroBoard.Plugin.ShellExecute\MakroBoard.Plugin.ShellExecute.csproj">
-      <Name>MakroBoard.Plugin.ShellExecute</Name>
-      <Project>{a23eeeaf-9920-45c0-bc54-dfc65b64ede9}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\MakroBoard\MakroBoard.csproj">
-      <Name>MakroBoard</Name>
-      <Project>{19d0305e-163e-4b81-b6dc-5a62e1d84775}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
