@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using MakroBoard.PluginContract.Parameters;
 
@@ -8,10 +7,13 @@ namespace MakroBoard.PluginContract.Views
     public abstract class View : PropertyChangedBase
     {
         private IList<ConfigParameter> _ConfigParameters = new List<ConfigParameter>();
+        private IList<ConfigParameter> _PluginParameters = new List<ConfigParameter>();
+
         internal View(string label)
         {
             _ConfigParameters.Add(new StringConfigParameter("label", label, ".*"));
             ConfigParameters = new ConfigParameters(_ConfigParameters);
+            PluginParameters = new ConfigParameters(_PluginParameters);
         }
 
         public abstract ViewType Type { get; }
@@ -21,11 +23,21 @@ namespace MakroBoard.PluginContract.Views
         /// </summary>
         public ConfigParameters ConfigParameters { get; }
 
+        /// <summary>
+        /// Config Parameters that are set by the Plugin
+        /// </summary>
+        public ConfigParameters PluginParameters { get; }
+
         public virtual Bitmap BackgroundImage { get; }
 
         protected void AddConfigParameter(ConfigParameter configParameter)
         {
             _ConfigParameters.Add(configParameter);
+        }
+
+        protected void AddPluginParameter(ConfigParameter pluginParameter)
+        {
+            _PluginParameters.Add(pluginParameter);
         }
     }
 }

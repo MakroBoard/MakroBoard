@@ -40,7 +40,7 @@ namespace MakroBoard.Controllers
             foreach (var plugin in plugins)
             {
                 var pluginControls = await plugin.GetControls().ConfigureAwait(false);
-                result.Add(CreatePluginModel(plugin.GetType().Name, pluginControls));
+                result.Add(CreatePluginModel(plugin.SymbolicName, pluginControls));
             }
 
             return Ok(result);
@@ -88,7 +88,7 @@ namespace MakroBoard.Controllers
                         switch (control.View)
                         {
                             case ButtonView bv:
-                                var cv = new PluginContract.ConfigValues();
+                                var cv = new ParameterValues();
                                 foreach (var c in configValues)
                                 {
                                     if (c.Value is JsonElement jsonElement)
@@ -97,7 +97,7 @@ namespace MakroBoard.Controllers
                                         switch (configParameter)
                                         {
                                             case StringConfigParameter scp:
-                                                cv.Add(new PluginContract.ConfigValue(c.SymbolicName, jsonElement.GetString()));
+                                                cv.Add(new StringParameterValue(scp, jsonElement.GetString()));
                                                 break;
                                             case BoolConfigParameter bcp:
                                                 switch (jsonElement.ValueKind)
@@ -109,16 +109,16 @@ namespace MakroBoard.Controllers
                                                     case JsonValueKind.Array:
                                                         break;
                                                     case JsonValueKind.String:
-                                                        cv.Add(new PluginContract.ConfigValue(c.SymbolicName, bool.Parse(jsonElement.GetString())));
+                                                        cv.Add(new BoolParameterValue(bcp, bool.Parse(jsonElement.GetString())));
                                                         break;
                                                     case JsonValueKind.Number:
-                                                        cv.Add(new PluginContract.ConfigValue(c.SymbolicName, jsonElement.GetInt32() > 0));
+                                                        cv.Add(new BoolParameterValue(bcp, jsonElement.GetInt32() > 0));
                                                         break;
                                                     case JsonValueKind.True:
-                                                        cv.Add(new PluginContract.ConfigValue(c.SymbolicName, true));
+                                                        cv.Add(new BoolParameterValue(bcp, true));
                                                         break;
                                                     case JsonValueKind.False:
-                                                        cv.Add(new PluginContract.ConfigValue(c.SymbolicName, false));
+                                                        cv.Add(new BoolParameterValue(bcp, false));
                                                         break;
                                                     case JsonValueKind.Null:
                                                         break;
@@ -133,7 +133,7 @@ namespace MakroBoard.Controllers
                                     }
                                     else
                                     {
-                                        cv.Add(new PluginContract.ConfigValue(c.SymbolicName, c.Value));
+                                        //cv.Add(new StringC(c.SymbolicName, c.Value));
                                     }
                                 }
                                 bv.Execute(cv);

@@ -13,6 +13,7 @@ namespace MakroBoard.Controllers
         public const string AddOrUpdatePage = "AddOrUpdatePage";
         public const string AddOrUpdateGroup = "AddOrUpdateGroup"; 
         public const string AddOrUpdatePanel = "AddOrUpdatePanel"; 
+        public const string UpdatePanelData = "UpdatePanelData";
 
     }
 }

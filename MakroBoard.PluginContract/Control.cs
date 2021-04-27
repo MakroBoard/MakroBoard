@@ -2,6 +2,7 @@
 using NLog;
 using MakroBoard.PluginContract.Parameters;
 using MakroBoard.PluginContract.Views;
+using System;
 
 namespace MakroBoard.PluginContract
 {
@@ -30,6 +31,10 @@ namespace MakroBoard.PluginContract
         protected void AddConfigParameter(ConfigParameter configParameter)
         {
             _ConfigParameters.Add(configParameter);
+        }
+
+        public virtual void Subscribe(ParameterValues configParameters, int panelId, Action<PanelChangedEventArgs> onControlChanged)
+        {
         }
     }
 }

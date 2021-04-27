@@ -23,9 +23,9 @@ namespace MakroBoard.Plugin.ShellExecute
             //AddConfigParameter(new BoolConfigParameter(_ConfigCommand, false));
         }
 
-        private string ExecuteCommand(ConfigValues arg)
+        private string ExecuteCommand(ParameterValues arg)
         {
-            if (!arg.TryGetConfigValue(_ConfigExecutable, out var command) || command?.Value == null || string.IsNullOrEmpty(command.Value.ToString()))
+            if (!arg.TryGetConfigValue(_ConfigExecutable, out var command) || command?.UntypedValue == null || string.IsNullOrEmpty(command.UntypedValue.ToString()))
             {
                 _logger.Error("No Command defined!", arg, command);
                 return "No Command defined!";
@@ -34,14 +34,14 @@ namespace MakroBoard.Plugin.ShellExecute
             _ = arg.TryGetConfigValue(_ConfigArguments, out var arguments);
 
             bool waitForExit = false;
-            if (arg.TryGetConfigValue(_ConfigWaitForExit, out var waitForExitParameter) && waitForExitParameter?.Value is bool b)
+            if (arg.TryGetConfigValue(_ConfigWaitForExit, out var waitForExitParameter) && waitForExitParameter?.UntypedValue is bool b)
             {
                 waitForExit = b;
             }
 
             try
             {
-                var process = Process.Start(new ProcessStartInfo(command.Value.ToString(), arguments?.Value?.ToString())
+                var process = Process.Start(new ProcessStartInfo(command.UntypedValue.ToString(), arguments?.UntypedValue?.ToString())
                 {
                     UseShellExecute = true
                 });

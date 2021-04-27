@@ -13,6 +13,8 @@ namespace MakroBoard.PluginContract
 
         }
 
+        public string SymbolicName => GetType().Name;
+
         public virtual async Task<Control> GetControl(string symbolicName)
         {
             return await Task.FromResult<Control>(null);

@@ -8,7 +8,7 @@ using MakroBoard.PluginContract.Views;
 namespace MakroBoard.Plugin.Keyboard
 {
 
- public class KeyboardControl : Control
+    public class KeyboardControl : Control
     {
         private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
         private const string _ConfigChar = "char";
@@ -18,16 +18,16 @@ namespace MakroBoard.Plugin.Keyboard
             AddConfigParameter(new StringConfigParameter(_ConfigChar, string.Empty, "[\x00-\x7F]"));
         }
 
-        private string ExecuteChar(ConfigValues configValues)
+        private string ExecuteChar(ParameterValues configValues)
         {
             if (configValues.TryGetConfigValue(_ConfigChar, out var configValue))
             {
                 // TODO Better Convert
-                new Robot().Type(configValue.Value.ToString());
-                _logger.Debug($"Pressed {configValue.Value}");
-                return $"Pressed {configValue.Value}";
+                new Robot().Type(configValue.UntypedValue.ToString());
+                _logger.Debug($"Pressed {configValue.UntypedValue}");
+                return $"Pressed {configValue.UntypedValue}";
             }
-  _logger.Debug("Config value not found!");
+            _logger.Debug("Config value not found!");
             return "Config value not found!";
         }
 
@@ -35,4 +35,4 @@ namespace MakroBoard.Plugin.Keyboard
 
         public override string SymbolicName => "Keyboard";
     }
-    }
+}
