@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Include>
-    <?define HarvestPath  = "..\Release"?>
-</Include>
 <Project ToolsVersion="4.0" DefaultTargets="Build" InitialTargets="EnsureWixToolsetInstalled" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Include>
+      <?define HarvestPath  = "..\Release"?>
+  </Include>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
