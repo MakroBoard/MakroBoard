@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="MakroBoard.Setup" Language="1033" Version="1.0.0.0" Manufacturer="MakroBoard" UpgradeCode="624330C8-D926-423F-A775-9A2BEF477E92">
+  <Product Id="*" Name="MakroBoard Host" Language="1033" Version="1.0.0.0" Manufacturer="MakroBoard" UpgradeCode="624330C8-D926-423F-A775-9A2BEF477E92">
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of MakroBoard is already installed." />
     <MediaTemplate EmbedCab="yes" />
 
-    <Feature Id="ProductFeature" Title="MakroBoard.Setup" Level="1">
+    <Feature Id="ProductFeature" Title="MakroBoard Host" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
     </Feature>
   </Product>
