@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?define HarvestPath  = "..\Release"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" InitialTargets="EnsureWixToolsetInstalled" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -24,7 +23,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="MakroBoardInstallFiles.wxs" />
-    <Compile Include="PluginInstallFiles.wxs" />
     <Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>
