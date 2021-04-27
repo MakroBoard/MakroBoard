@@ -6,7 +6,7 @@
     <ProductVersion>3.10</ProductVersion>
     <ProjectGuid>3ce0a329-0e7f-4ff8-b3d5-c3621ed861f1</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>MakroBoard Host</OutputName>
+    <OutputName>MakroBoard_Host</OutputName>
     <OutputType>Package</OutputType>
     <DefineConstants>HarvestPath=..\Release</DefineConstants>
     <SuppressFileDefaultVital>True</SuppressFileDefaultVital>
