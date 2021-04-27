@@ -168,7 +168,7 @@ jobs:
     - name: gci
       run: Get-ChildItem $env:GITHUB_WORKSPACE -Recurse    
     - name: Build MSIs dotnet
-      run: msbuild
+      run: msbuild /property:Configuration=Release
       working-directory: ${{ github.workspace }}\MakroBoard.Setup
       env:
           WIX: ${{ github.workspace }}\wix
