@@ -8,6 +8,7 @@
 
     <Feature Id="ProductFeature" Title="MakroBoard Host" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
+      <ComponentRef Id="ApplicationShortcut" />  
     </Feature>
   </Product>
 
