@@ -140,21 +140,21 @@ jobs:
     - name: Add Flutter tags
       run: git fetch origin +refs/tags/*:refs/tags/*
       working-directory: ${{ github.workspace }}/flutter
-    # - name: flutter config windows
-    #   working-directory: ${{ github.workspace }}\makro_board_client
-    #   run: flutter config --enable-windows-desktop
+    - name: flutter config windows
+      working-directory: ${{ github.workspace }}\makro_board_client
+      run: flutter config --enable-windows-desktop
     - name: flutter get dependencies
       working-directory: ${{ github.workspace }}\makro_board_client
       run: flutter pub get
-    # - name: flutter disable analytics
-    #   working-directory: ${{ github.workspace }}\makro_board_client
-    #   run: flutter config --no-analytics
+    - name: flutter disable analytics
+      working-directory: ${{ github.workspace }}\makro_board_client
+      run: flutter config --no-analytics
     - name: flutter build web
       working-directory: ${{ github.workspace }}\makro_board_client
       run: flutter build web
-    # - name: flutter build windows
-    #   working-directory: ${{ github.workspace }}\makro_board_client
-    #   run: flutter build windows --release
+    - name: flutter build windows
+      working-directory: ${{ github.workspace }}\makro_board_client
+      run: flutter build windows --release
     - name: copy web to dotnet
       run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\makro_board_client\build\web\*") -Destination $($env:GITHUB_WORKSPACE + "\MakroBoard\wwwroot\")
     - name: Restore dependencies
