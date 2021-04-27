@@ -9,24 +9,47 @@
     <OutputName>MakroBoard.Setup</OutputName>
     <OutputType>Package</OutputType>
     <DefineConstants>HarvestPath=..\Release</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>Debug</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <SuppressAllWarnings>False</SuppressAllWarnings>
+    <SuppressFileDefaultVital>True</SuppressFileDefaultVital>
     <Pedantic>True</Pedantic>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <SuppressIces>ICE03</SuppressIces>
+    <LinkerAdditionalOptions>-spdb -sh</LinkerAdditionalOptions>
+    <CompilerAdditionalOptions>-pedantic</CompilerAdditionalOptions>
+    <VerboseOutput>True</VerboseOutput>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MakroBoardInstallFiles.wxs" />
     <Compile Include="Product.wxs" />
+    <Compile Include="MakroBoardInstallFiles.wxs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Binaries.xslt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MakroBoard.Plugin.Keyboard\MakroBoard.Plugin.Keyboard.csproj">
+      <Name>MakroBoard.Plugin.Keyboard</Name>
+      <Project>{6e9b8298-332c-4a0a-b2fe-4d56d0f2bd72}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\MakroBoard.Plugin.ShellExecute\MakroBoard.Plugin.ShellExecute.csproj">
+      <Name>MakroBoard.Plugin.ShellExecute</Name>
+      <Project>{a23eeeaf-9920-45c0-bc54-dfc65b64ede9}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\MakroBoard\MakroBoard.csproj">
+      <Name>MakroBoard</Name>
+      <Project>{19d0305e-163e-4b81-b6dc-5a62e1d84775}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />

@@ -60,7 +60,7 @@ namespace MakroBoard.HubConfig
 
             foreach (var configParameter in configParameters)
             {
-                var controlConfigParameter = control.ConfigParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase)) ?? control.View.ConfigParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase)) ?? ?? control.View.PluginParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase));
+                var controlConfigParameter = control.ConfigParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase)) ?? control.View.ConfigParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase)) ?? control.View.PluginParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase));
                 switch (controlConfigParameter)
                 {
                     case IntConfigParameter icp:
