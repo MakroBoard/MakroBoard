@@ -161,10 +161,17 @@ namespace MakroBoard.Controllers
 
         private static ApiModels.Plugin CreatePluginModel(string pluginName, IEnumerable<PluginContract.Control> controls)
         {
-            return new ApiModels.Plugin(pluginName, controls.Select(x => new ApiModels.Control(x.SymbolicName, new ApiModels.View(x.View.Type.ToString(), new ApiModels.ConfigParameters(x.View.ConfigParameters.Select(c => CreateConfigParameter(c)).Concat(x.View.PluginParameters.Select(c => CreateConfigParameter(c))).ToList())), new ApiModels.ConfigParameters(x.ConfigParameters.Select(c => CreateConfigParameter(c)).ToList()))));
+            return new ApiModels.Plugin(pluginName, controls.Select(x => new ApiModels.Control(x.SymbolicName,
+                new ApiModels.View(x.View.Type.ToString(), ToApiConfigParameters(x.View.ConfigParameters), ToApiConfigParameters(x.View.PluginParameters)),
+                ToApiConfigParameters(x.ConfigParameters))));
         }
 
-        private static ApiModels.ConfigParameter CreateConfigParameter(PluginContract.Parameters.ConfigParameter configParameter)
+        private static ApiModels.ConfigParameters ToApiConfigParameters(ConfigParameters configParameters)
+        {
+            return new ApiModels.ConfigParameters(configParameters.Select(c => CreateConfigParameter(c)).ToList());
+        }
+
+        private static ApiModels.ConfigParameter CreateConfigParameter(ConfigParameter configParameter)
         {
             return configParameter switch
             {

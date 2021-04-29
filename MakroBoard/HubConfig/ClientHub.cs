@@ -26,6 +26,7 @@ namespace MakroBoard.HubConfig
             _PluginContext = pluginContext;
             _hubContext = hubContext;
 
+            // Subscribe Panels with small delay to be sure connection is
             SubscribePanels().Wait();
         }
 
@@ -80,12 +81,12 @@ namespace MakroBoard.HubConfig
                 }
             }
 
-            foreach(var pluginParameter in control.View.PluginParameters)
+            foreach (var pluginParameter in control.View.PluginParameters)
             {
                 switch (pluginParameter)
                 {
                     case IntConfigParameter icp:
-                        parameterValues.Add(new IntParameterValue(icp, 0));
+                        parameterValues.Add(new IntParameterValue(icp, icp.DefaultValue));
                         break;
                     case StringConfigParameter scp:
                         parameterValues.Add(new StringParameterValue(scp, scp.DefaultValue));

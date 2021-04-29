@@ -7,6 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakroBoard", "MakroBoard\Ma
 	ProjectSection(ProjectDependencies) = postProject
 		{5138F21D-04A2-4BF8-AA48-9C48E120DC37} = {5138F21D-04A2-4BF8-AA48-9C48E120DC37}
 		{6E9B8298-332C-4A0A-B2FE-4D56D0F2BD72} = {6E9B8298-332C-4A0A-B2FE-4D56D0F2BD72}
+		{4DAA6DA6-0ECD-4078-964E-0DDCC1C10407} = {4DAA6DA6-0ECD-4078-964E-0DDCC1C10407}
 		{A23EEEAF-9920-45C0-BC54-DFC65B64EDE9} = {A23EEEAF-9920-45C0-BC54-DFC65B64EDE9}
 	EndProjectSection
 EndProject
@@ -25,9 +26,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakroBoard.Plugin.ShellExec
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "MakroBoard.Setup", "MakroBoard.Setup\MakroBoard.Setup.wixproj", "{3CE0A329-0E7F-4FF8-B3D5-C3621ED861F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakroBoard.Plugin", "MakroBoard.Plugin\MakroBoard.Plugin.csproj", "{CFD64CFA-F0D0-49AF-A3EF-2FA50B00AF8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakroBoard.Plugin", "MakroBoard.Plugin\MakroBoard.Plugin.csproj", "{CFD64CFA-F0D0-49AF-A3EF-2FA50B00AF8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakroBoard.Plugin.Clock", "MakroBoard.Plugin.Clock\MakroBoard.Plugin.Clock.csproj", "{5138F21D-04A2-4BF8-AA48-9C48E120DC37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MakroBoard.Plugin.Clock", "MakroBoard.Plugin.Clock\MakroBoard.Plugin.Clock.csproj", "{5138F21D-04A2-4BF8-AA48-9C48E120DC37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MakroBoard.Plugin.SystemInfo", "MakroBoard.Plugin.SystemInfo\MakroBoard.Plugin.SystemInfo.csproj", "{4DAA6DA6-0ECD-4078-964E-0DDCC1C10407}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,6 +103,14 @@ Global
 		{5138F21D-04A2-4BF8-AA48-9C48E120DC37}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5138F21D-04A2-4BF8-AA48-9C48E120DC37}.Release|x86.ActiveCfg = Release|Any CPU
 		{5138F21D-04A2-4BF8-AA48-9C48E120DC37}.Release|x86.Build.0 = Release|Any CPU
+		{4DAA6DA6-0ECD-4078-964E-0DDCC1C10407}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DAA6DA6-0ECD-4078-964E-0DDCC1C10407}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DAA6DA6-0ECD-4078-964E-0DDCC1C10407}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4DAA6DA6-0ECD-4078-964E-0DDCC1C10407}.Debug|x86.Build.0 = Debug|Any CPU
+		{4DAA6DA6-0ECD-4078-964E-0DDCC1C10407}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DAA6DA6-0ECD-4078-964E-0DDCC1C10407}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DAA6DA6-0ECD-4078-964E-0DDCC1C10407}.Release|x86.ActiveCfg = Release|Any CPU
+		{4DAA6DA6-0ECD-4078-964E-0DDCC1C10407}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

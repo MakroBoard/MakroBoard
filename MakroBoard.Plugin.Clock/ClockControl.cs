@@ -23,7 +23,7 @@ namespace MakroBoard.Plugin.Clock
         {
             if (_Timer == null)
             {
-                _Timer = new Timer(100);
+                _Timer = new Timer(1000);
                 _Timer.Elapsed += (s, a) => OnControlChanged(new ParameterValues() { new StringParameterValue(_TextView.TextParameter, DateTime.Now.ToLongTimeString()) });
                 _Timer.Start();
             }

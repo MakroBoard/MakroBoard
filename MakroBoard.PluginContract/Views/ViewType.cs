@@ -12,6 +12,7 @@ namespace MakroBoard.PluginContract.Views
         Button,
         Image,
         Slider,
-        Text
+        Text,
+        ProgressBar
     }
 }

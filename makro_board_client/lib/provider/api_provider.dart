@@ -71,6 +71,7 @@ class ApiProvider {
               HttpConnectionOptions(
                 logging: (level, message) => print(message),
               ))
+          .withAutomaticReconnect()
           .build();
 
       await _connection!.start();
@@ -219,10 +220,17 @@ class ApiProvider {
             for (var value in values) {
               var symbolicName = value["symbolicName"];
               var parameterValue = value["value"];
+
+              log('UpdatePanelData: $symbolicName => $parameterValue');
+
               // value.
               var configValue = existingPanel.configValues.firstWhere(
                 (element) => element.symbolicName == symbolicName,
-                orElse: () => ViewConfigValue(symbolicName: symbolicName, defaultValue: parameterValue),
+                orElse: () {
+                  var result = ViewConfigValue(symbolicName: symbolicName, defaultValue: parameterValue);
+                  existingPanel.configValues.add(result);
+                  return result;
+                },
               );
 
               configValue.value = parameterValue;

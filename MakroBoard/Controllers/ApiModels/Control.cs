@@ -33,10 +33,11 @@ namespace MakroBoard.Controllers.ApiModels
 
     public class View
     {
-        public View(string viewType, ConfigParameters configParameters)
+        public View(string viewType, ConfigParameters configParameters, ConfigParameters pluginParameters)
         {
             ViewType = viewType;
             ConfigParameters = configParameters;
+            PluginParameters = pluginParameters;
         }
 
         public string ViewType { get; }
@@ -44,6 +45,7 @@ namespace MakroBoard.Controllers.ApiModels
         public string Value { get; }
 
         public ConfigParameters ConfigParameters { get; }
+        public ConfigParameters PluginParameters { get; }
     }
 
     public class ConfigParameter

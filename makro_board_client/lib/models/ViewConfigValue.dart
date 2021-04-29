@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ViewConfigValue with ChangeNotifier {
+class ViewConfigValue extends ChangeNotifier {
   final String symbolicName;
   Object? _value;
 
@@ -24,5 +24,16 @@ class ViewConfigValue with ChangeNotifier {
       'symbolicName': symbolicName,
       'value': value,
     };
+  }
+}
+
+class ChangeNotifiers with ChangeNotifier {
+  final List<ChangeNotifier> changeNotifiers;
+  ChangeNotifiers({required this.changeNotifiers}) {
+    changeNotifiers.forEach((element) {
+      element.addListener(() {
+        notifyListeners();
+      });
+    });
   }
 }

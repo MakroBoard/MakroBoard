@@ -3,6 +3,7 @@ using NLog;
 using MakroBoard.PluginContract.Parameters;
 using MakroBoard.PluginContract.Views;
 using System;
+using System.Threading.Tasks;
 
 namespace MakroBoard.PluginContract
 {
@@ -39,7 +40,12 @@ namespace MakroBoard.PluginContract
         public void Subscribe(ParameterValues configParameters, int panelId, Action<PanelChangedEventArgs> onControlChanged)
         {
             _Subscriptions.Add(new Tuple<int, Action<PanelChangedEventArgs>>(panelId, onControlChanged));
-            Subscribe(configParameters);
+            Task.Run(async () =>
+            {
+                // Delay Subscribe To be sure connection is established
+                await Task.Delay(1000);
+                Subscribe(configParameters);
+            });
         }
 
         protected virtual void Subscribe(ParameterValues configParameters)

@@ -32,23 +32,114 @@ class ControlPanel extends StatelessWidget {
           ),
         );
       case "Text":
-        return ChangeNotifierProvider.value(
-          value: configValues.firstWhere(
-            (element) => element.symbolicName == "text",
+        return Center(
+          child: ChangeNotifierProvider.value(
+            value: configValues.firstWhere(
+              (element) => element.symbolicName == "text",
+              orElse: () {
+                var newConfigValue = ViewConfigValue(symbolicName: "text", defaultValue: null);
+                configValues.add(newConfigValue);
+                return newConfigValue;
+              },
+            ),
+            builder: (context, _) => Text(context.watch<ViewConfigValue>().value.toString()),
+          ),
+        );
+      case "ProgressBar":
+        return ProgressBarControl(
+          minValue: configValues.firstWhere(
+            (element) => element.symbolicName == "min",
             orElse: () {
-              var newConfigValue = ViewConfigValue(symbolicName: "text", defaultValue: null);
+              var newConfigValue = ViewConfigValue(symbolicName: "min", defaultValue: null);
               configValues.add(newConfigValue);
               return newConfigValue;
             },
           ),
-          builder: (context, _) => Text(context.watch<ViewConfigValue>().value.toString()),
+          maxValue: configValues.firstWhere(
+            (element) => element.symbolicName == "max",
+            orElse: () {
+              var newConfigValue = ViewConfigValue(symbolicName: "max", defaultValue: null);
+              configValues.add(newConfigValue);
+              return newConfigValue;
+            },
+          ),
+          value: configValues.firstWhere(
+            (element) => element.symbolicName == "value",
+            orElse: () {
+              var newConfigValue = ViewConfigValue(symbolicName: "value", defaultValue: null);
+              configValues.add(newConfigValue);
+              return newConfigValue;
+            },
+          ),
         );
-      // case "Image":
-      //   return Text(control.view.viewType);
-      // case "Slider":
-      //   return Text(control.view.viewType);
+
       default:
         return Text("Missing Control: " + control.view.viewType);
     }
+  }
+}
+
+class ProgressBarControl extends StatefulWidget {
+  final ViewConfigValue minValue;
+  final ViewConfigValue maxValue;
+  final ViewConfigValue value;
+
+  ProgressBarControl({Key? key, required this.minValue, required this.maxValue, required this.value}) : super(key: key);
+
+  @override
+  _ProgressBarControlState createState() => _ProgressBarControlState();
+}
+
+class _ProgressBarControlState extends State<ProgressBarControl> {
+  @override
+  void initState() {
+    widget.minValue.addListener(() {
+      setState(() {});
+    });
+    widget.maxValue.addListener(() {
+      setState(() {});
+    });
+    widget.value.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var minValue = widget.minValue.value as int? ?? 0;
+    var maxValue = widget.maxValue.value as int? ?? 16000;
+    var value = widget.value.value as int? ?? 0;
+
+    var progress = value / (maxValue - minValue);
+    return Container(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (minValue != 0) Text(minValue.toString()),
+              Expanded(
+                child: SizedBox(
+                  height: 50,
+                  child: Stack(
+                    children: [
+                      SizedBox.expand(
+                        child: LinearProgressIndicator(
+                          value: progress,
+                        ),
+                      ),
+                      Center(
+                        child: Text(value.toString()),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Text(maxValue.toString()),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
