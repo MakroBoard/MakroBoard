@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using MakroBoard.ActionFilters;
 using MakroBoard.Data;
 using MakroBoard.HubConfig;
+using MakroBoard.Plugin;
 
 // QR Code auf Localhost
 // auf Handy -> Code anzeigen
@@ -21,13 +22,16 @@ namespace MakroBoard.Controllers
     {
         private readonly ILogger<LayoutController> _logger;
         private readonly DatabaseContext _Context;
+        private readonly PluginContext _PluginContext;
         private readonly IHubContext<ClientHub> _ClientHub;
 
-        public LayoutController(ILogger<LayoutController> logger, DatabaseContext context, IHubContext<ClientHub> clientHub)
+
+        public LayoutController(ILogger<LayoutController> logger, DatabaseContext context, IHubContext<ClientHub> clientHub, PluginContext pluginContext)
         {
             _logger = logger;
             _Context = context;
             _ClientHub = clientHub;
+            _PluginContext = pluginContext;
         }
 
         /// <summary>
@@ -88,7 +92,7 @@ namespace MakroBoard.Controllers
             {
                 SymbolicName = panel.SymbolicName,
                 PluginName = panel.PluginName,
-                GroupID = panel.GroupId                
+                GroupID = panel.GroupId
             };
 
             newPanel.ConfigParameters = panel.ConfigValues.Select(x => new Data.ConfigParameterValue
@@ -105,6 +109,9 @@ namespace MakroBoard.Controllers
             _logger.LogDebug($"Added new Panel {newPanel.SymbolicName}({newPanel.PluginName})");
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePanel, newPanel);
+
+            await _PluginContext.Subscribe(newPanel.ID, panel.PluginName, panel.SymbolicName, newPanel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value));
+
             return Ok();
         }
 

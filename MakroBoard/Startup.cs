@@ -50,7 +50,7 @@ namespace MakroBoard
                 services.AddDatabaseDeveloperPageExceptionFilter();
             }
 
-            services.AddSingleton(new PluginContext());
+            services.AddSingleton<PluginContext>();
             services.AddSignalR(o => { o.EnableDetailedErrors = _Env.IsDevelopment(); });
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory

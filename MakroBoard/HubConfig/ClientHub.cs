@@ -18,23 +18,19 @@ namespace MakroBoard.HubConfig
     {
         private readonly DatabaseContext _DatabaseContext;
         private readonly PluginContext _PluginContext;
-        IHubContext<ClientHub> _hubContext = null;
 
-        public ClientHub(DatabaseContext databaseContext, PluginContext pluginContext, IHubContext<ClientHub> hubContext)
+        public ClientHub(DatabaseContext databaseContext, PluginContext pluginContext)
         {
             _DatabaseContext = databaseContext;
             _PluginContext = pluginContext;
-            _hubContext = hubContext;
 
-            // Subscribe Panels with small delay to be sure connection is
-            SubscribePanels().Wait();
+            //SubscribePanels().Wait();
         }
 
         private bool IsLocalHost(IPAddress ipAddress)
         {
             return IPAddress.IsLoopback(ipAddress);
         }
-
 
         private async Task SubscribePanels()
         {
@@ -54,59 +50,55 @@ namespace MakroBoard.HubConfig
                     continue;
                 }
 
-                control.Subscribe(CreateParameterValues(control, panel.ConfigParameters), panel.ID, OnControlChanged);
+                //_PluginContext.Subscribe(panel.ID, control, CreateParameterValues(control, panel.ConfigParameters));
+                _PluginContext.Subscribe(panel.ID, panel.PluginName, panel.SymbolicName, panel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value));
             }
         }
 
-        private ParameterValues CreateParameterValues(PluginContract.Control control, IList<Data.ConfigParameterValue> configParameters)
-        {
-            var parameterValues = new ParameterValues();
+        //private ParameterValues CreateParameterValues(PluginContract.Control control, IList<Data.ConfigParameterValue> configParameters)
+        //{
+        //    var parameterValues = new ParameterValues();
 
-            foreach (var configParameter in configParameters)
-            {
-                var controlConfigParameter = control.ConfigParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase)) ?? control.View.ConfigParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase)) ?? control.View.PluginParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase));
-                switch (controlConfigParameter)
-                {
-                    case IntConfigParameter icp:
-                        parameterValues.Add(new IntParameterValue(icp, int.Parse(configParameter.Value)));
-                        break;
-                    case StringConfigParameter scp:
-                        parameterValues.Add(new StringParameterValue(scp, configParameter.Value));
-                        break;
-                    case BoolConfigParameter bcp:
-                        parameterValues.Add(new BoolParameterValue(bcp, configParameter.Value != null ? bool.Parse(configParameter.Value) : bcp.DefaultValue));
-                        break;
-                    default:
-                        throw new NotImplementedException($"{controlConfigParameter.GetType().Name} is not yet implemented!");
-                }
-            }
+        //    foreach (var configParameter in configParameters)
+        //    {
+        //        var controlConfigParameter = control.ConfigParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase)) ?? control.View.ConfigParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase)) ?? control.View.PluginParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase));
+        //        switch (controlConfigParameter)
+        //        {
+        //            case IntConfigParameter icp:
+        //                parameterValues.Add(new IntParameterValue(icp, int.Parse(configParameter.Value)));
+        //                break;
+        //            case StringConfigParameter scp:
+        //                parameterValues.Add(new StringParameterValue(scp, configParameter.Value));
+        //                break;
+        //            case BoolConfigParameter bcp:
+        //                parameterValues.Add(new BoolParameterValue(bcp, configParameter.Value != null ? bool.Parse(configParameter.Value) : bcp.DefaultValue));
+        //                break;
+        //            default:
+        //                throw new NotImplementedException($"{controlConfigParameter.GetType().Name} is not yet implemented!");
+        //        }
+        //    }
 
-            foreach (var pluginParameter in control.View.PluginParameters)
-            {
-                switch (pluginParameter)
-                {
-                    case IntConfigParameter icp:
-                        parameterValues.Add(new IntParameterValue(icp, icp.DefaultValue));
-                        break;
-                    case StringConfigParameter scp:
-                        parameterValues.Add(new StringParameterValue(scp, scp.DefaultValue));
-                        break;
-                    case BoolConfigParameter bcp:
-                        parameterValues.Add(new BoolParameterValue(bcp, bcp.DefaultValue));
-                        break;
-                    default:
-                        throw new NotImplementedException($"{pluginParameter.GetType().Name} is not yet implemented!");
-                }
-            }
+        //    foreach (var pluginParameter in control.View.PluginParameters)
+        //    {
+        //        switch (pluginParameter)
+        //        {
+        //            case IntConfigParameter icp:
+        //                parameterValues.Add(new IntParameterValue(icp, icp.DefaultValue));
+        //                break;
+        //            case StringConfigParameter scp:
+        //                parameterValues.Add(new StringParameterValue(scp, scp.DefaultValue));
+        //                break;
+        //            case BoolConfigParameter bcp:
+        //                parameterValues.Add(new BoolParameterValue(bcp, bcp.DefaultValue));
+        //                break;
+        //            default:
+        //                throw new NotImplementedException($"{pluginParameter.GetType().Name} is not yet implemented!");
+        //        }
+        //    }
 
-            return parameterValues;
-        }
+        //    return parameterValues;
+        //}
 
-        private void OnControlChanged(PanelChangedEventArgs panelChangedEventArgs)
-        {
-            //panelChangedEventArgs.
-            _ = _hubContext.Clients.All.SendAsync(ClientMethods.UpdatePanelData, new PanelData(panelChangedEventArgs.PanelId, panelChangedEventArgs.ParameterValues.Select(x => new ConfigValue(x.ConfigParameter.SymbolicName, x.UntypedValue)).ToList()));
-        }
 
         public async override Task OnConnectedAsync()
         {
@@ -148,7 +140,7 @@ namespace MakroBoard.HubConfig
 
             if (existingClient.State == ClientState.Confirmed)
             {
-                Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token);
+                _ = Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token);
             }
 
             var pages = await _DatabaseContext.Pages.Include(p => p.Groups).ThenInclude((g) => g.Panels).ThenInclude(p => p.ConfigParameters).ToListAsync();
@@ -156,6 +148,8 @@ namespace MakroBoard.HubConfig
             {
                 _ = Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, page);
             }
+
+            _ = SubscribePanels();
 
             await base.OnConnectedAsync();
         }

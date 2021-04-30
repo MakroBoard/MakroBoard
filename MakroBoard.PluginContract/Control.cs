@@ -4,6 +4,7 @@ using MakroBoard.PluginContract.Parameters;
 using MakroBoard.PluginContract.Views;
 using System;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace MakroBoard.PluginContract
 {
@@ -11,7 +12,7 @@ namespace MakroBoard.PluginContract
     {
         private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
         private IList<ConfigParameter> _ConfigParameters = new List<ConfigParameter>();
-        private List<Tuple<int, Action<PanelChangedEventArgs>>> _Subscriptions = new List<Tuple<int, Action<PanelChangedEventArgs>>>();
+        private IDictionary<int, Action<PanelChangedEventArgs>> _Subscriptions = new ConcurrentDictionary<int, Action<PanelChangedEventArgs>>();
 
         protected Control()
         {
@@ -39,7 +40,7 @@ namespace MakroBoard.PluginContract
 
         public void Subscribe(ParameterValues configParameters, int panelId, Action<PanelChangedEventArgs> onControlChanged)
         {
-            _Subscriptions.Add(new Tuple<int, Action<PanelChangedEventArgs>>(panelId, onControlChanged));
+            _Subscriptions.TryAdd(panelId, onControlChanged);
             Task.Run(async () =>
             {
                 // Delay Subscribe To be sure connection is established
@@ -59,7 +60,7 @@ namespace MakroBoard.PluginContract
             {
                 try
                 {
-                    subscription.Item2(new PanelChangedEventArgs(this, subscription.Item1, parameterValues));
+                    subscription.Value(new PanelChangedEventArgs(this, subscription.Key, parameterValues));
                 }
                 catch (Exception e)
                 {
