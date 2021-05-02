@@ -1,2 +1,4 @@
-- name: Articles
-  href: articles/
+- name: Download
+  href: download.md
+- name: Users Guide
+  href: user/

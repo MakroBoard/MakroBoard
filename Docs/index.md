@@ -1,4 +1,5 @@
-# This is the **HOMEPAGE**.
-Refer to [Markdown](http://daringfireball.net/projects/markdown/) for how to write markdown files.
-## Quick Start Notes:
-1. Add images to the *images* folder if the file is referencing an image.
+# MakroBoard
+is an open source software solution to use any device capable of displaying a website as a remote macro keyboard for your Windows / Linux / Mac PC
+## Users Quick Start Notes:
+1. If you want to use MakroBoard, please take a look into the [Quickstart Section of the Users guide](user/quickstart.html) or the whole Users Guide.
+2. If you just want to download MakroBoard go to [Download](download.html)
