@@ -1,26 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
   <Product Id="*" Name="MakroBoard Host" Language="1033" Version="1.0.0.0" Manufacturer="MakroBoard" UpgradeCode="624330C8-D926-423F-A775-9A2BEF477E92">
-    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" />
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" Platform="x64" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of MakroBoard is already installed." />
     <MediaTemplate EmbedCab="yes" />
 
+
+    <SetProperty Id='makroBoardExe' Value="[INSTALLFOLDER]MakroBoard.exe" After="CostFinalize"/>
+
     <Feature Id="ProductFeature" Title="MakroBoard Host" Level="1">
-      <ComponentGroupRef Id="ProductComponents" /> 
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentRef Id="AppPathsEntry"/>
+      <ComponentRef Id="ApplicationShortcut"/>
+      <ComponentRef Id="Firewall"/>
     </Feature>
   </Product>
 
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFilesFolder">
-        <Directory Id="INSTALLFOLDER" Name="MakroBoard" >
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLFOLDER" Name="MakroBoard" ComponentGuidGenerationSeed="8FF5CCB8-BE5C-4DC3-8526-D1D355DDF388">
         </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="MakroBoard"/>
       </Directory>
     </Directory>
   </Fragment>
-  
 
+  <Fragment>
+    <!--<Component Id="AppPathsEntry" Guid="DCA59546-1424-4F57-AFF7-13A571C9F1E7" KeyPath="yes" Directory="INSTALLFOLDER">-->
+    <Component Id="AppPathsEntry" Guid="DF0FD2AC-477D-4721-A33C-66AEF07FB07C" KeyPath="yes" Directory="INSTALLFOLDER" Win64="yes">
+      <RegistryKey Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\MakroBoard.exe">
+        <RegistryValue Type="string" Value="[makroBoardExe]"/>
+      </RegistryKey>
+    </Component>
+  </Fragment>
+
+  <Fragment>
+    <!--<Component Id="ApplicationShortcut" Guid="C5114258-FBEF-4B1C-A87C-62F33BDCEB79" Directory="ApplicationProgramsFolder">-->
+    <Component Id="ApplicationShortcut" Guid="E5B75F74-F57E-47B9-A465-BF920CF48A8E"  Directory="ApplicationProgramsFolder" Win64="yes">
+
+      <Shortcut Id="makroBoardStartMenuShortcut"
+              Name="MakroBoard"
+              Description="MakroBoard - Host"
+              Target="[makroBoardExe]"
+              WorkingDirectory="APPLICATIONROOTDIRECTORY"/>
+
+
+      <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall"/>
+      <RegistryValue Root="HKCU" Key="Software\MakroBoard\MakroBoard" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+    </Component>
+
+  </Fragment>
+
+  <Fragment>
+    <Component Id="Firewall" Guid="D5F7BFCA-269D-4DB4-B8DF-E28F1B6B70BA" KeyPath="yes" Directory="INSTALLFOLDER" Win64="yes">
+      <!--MakroBoard.exe => filDCD77FE378D97498D1328EDB065E28EC-->
+      <fire:FirewallException Id="firewallMakroBoard" Name="MakroBoard Host" Scope="any" File="filDCD77FE378D97498D1328EDB065E28EC"/>
+    </Component>
+  </Fragment>
 
   <Fragment>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">

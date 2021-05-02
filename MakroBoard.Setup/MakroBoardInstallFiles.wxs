@@ -2,6 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Fragment>
         <DirectoryRef Id="INSTALLFOLDER">
+            <Directory Id="dirA216F006FB0C06B6DEA9FFA841D64B8D" Name="Plugins" />
             <Directory Id="dir3D83A529A2122889D4016E7D784625D5" Name="wwwroot" />
         </DirectoryRef>
     </Fragment>
@@ -1152,6 +1153,30 @@
             </Component>
             <Component Id="cmpDAA3391D8641EF11234B08CC2E598C87" Directory="INSTALLFOLDER" Guid="*">
                 <File Id="fil327DED7675664D46042FF952F3C8C1EF" KeyPath="yes" Source="$(var.HarvestPath)\WindowsBase.dll" />
+            </Component>
+            <Component Id="cmpFA28B680D6BF0D25EB8C0F511166CFC9" Directory="dirA216F006FB0C06B6DEA9FFA841D64B8D" Guid="*">
+                <File Id="fil532CD61986C6092B25A52F94B2734A59" KeyPath="yes" Source="$(var.HarvestPath)\Plugins\Desktop.Robot.dll" />
+            </Component>
+            <Component Id="cmp7D6D69BFB81CBA32EC533CCB3793188F" Directory="dirA216F006FB0C06B6DEA9FFA841D64B8D" Guid="*">
+                <File Id="fil6DF9E4A9804D3AB03EFD9B1497E56EB2" KeyPath="yes" Source="$(var.HarvestPath)\Plugins\MakroBoard.Plugin.Keyboard.deps.json" />
+            </Component>
+            <Component Id="cmp34DE63EA7AE3418951A40221D902B40C" Directory="dirA216F006FB0C06B6DEA9FFA841D64B8D" Guid="*">
+                <File Id="fil280F383CD4102A07706B0697B7A423D1" KeyPath="yes" Source="$(var.HarvestPath)\Plugins\MakroBoard.Plugin.Keyboard.dll" />
+            </Component>
+            <Component Id="cmpC077E023D16EAA6F979B9B5846EB4AF5" Directory="dirA216F006FB0C06B6DEA9FFA841D64B8D" Guid="*">
+                <File Id="fil89C37427348C41BEC6C69A66B77C5DB2" KeyPath="yes" Source="$(var.HarvestPath)\Plugins\MakroBoard.PluginContract.dll" />
+            </Component>
+            <Component Id="cmpD7EF5BD45FB7672809F844EB770CA88A" Directory="dirA216F006FB0C06B6DEA9FFA841D64B8D" Guid="*">
+                <File Id="fil354E6F693D02D86896288B519AE07FD5" KeyPath="yes" Source="$(var.HarvestPath)\Plugins\NLog.dll" />
+            </Component>
+            <Component Id="cmp09432F230E69A140BB941E22D6074F2C" Directory="dirA216F006FB0C06B6DEA9FFA841D64B8D" Guid="*">
+                <File Id="fil4EF12702AF0C0128DCEC4989D5B4D9B5" KeyPath="yes" Source="$(var.HarvestPath)\Plugins\NLog.Extensions.Logging.dll" />
+            </Component>
+            <Component Id="cmpF833274894BC05D1596AB84121BC302D" Directory="dirA216F006FB0C06B6DEA9FFA841D64B8D" Guid="*">
+                <File Id="filF3F55F469DEB05DB4EFAB4453F1959DA" KeyPath="yes" Source="$(var.HarvestPath)\Plugins\NLog.Web.AspNetCore.dll" />
+            </Component>
+            <Component Id="cmp211B501C983BEEA4C32EF87A34D0E4A3" Directory="dirA216F006FB0C06B6DEA9FFA841D64B8D" Guid="*">
+                <File Id="fil0EE8DB68239BE6D78CF057DB29A47013" KeyPath="yes" Source="$(var.HarvestPath)\Plugins\System.Drawing.Common.dll" />
             </Component>
             <Component Id="cmpAB0E58BAF5F4BCAE8E99681804ED832E" Directory="dir3D83A529A2122889D4016E7D784625D5" Guid="*">
                 <File Id="fil242848BCD47FF3C57A1B5B763FA48171" KeyPath="yes" Source="$(var.HarvestPath)\wwwroot\.last_build_id" />
