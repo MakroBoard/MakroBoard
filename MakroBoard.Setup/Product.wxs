@@ -19,23 +19,9 @@
         </Directory>
       </Directory>
     </Directory>
-    <Directory Id="ProgramMenuFolder">
-      <Directory Id="ApplicationProgramsFolder" Name="MakroBoard"/>
-    </Directory>
   </Fragment>
   
-  <Fragment>
-        <DirectoryRef Id="ApplicationProgramsFolder">
-            <Component Id="ApplicationShortcut" Guid="*">
-                <Shortcut Id="ApplicationStartMenuShortcut" 
-                     Name="MakroBoard Host" 
-                   Description="Host application of MakroBoard"
-                    Target="[#MakroBoard.exe]"
-                          WorkingDirectory="APPLICATIONROOTDIRECTORY"/>
-                <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
-           </Component>
-        </DirectoryRef>
-  </Fragment>
+
 
   <Fragment>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
