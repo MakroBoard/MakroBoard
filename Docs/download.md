@@ -1,2 +1,2 @@
 # Download
-Currently we have no releases available. Stay tuned!
+There is no released version so far. Stay tuned!
