@@ -2,8 +2,8 @@
     "build": {
         "content": [{
             "files": [
-                "articles/**.md",
-                "articles/**/toc.yml",
+                "user/**.md",
+                "user/**/toc.yml",
                 "toc.yml",
                 "*.md"
             ]
