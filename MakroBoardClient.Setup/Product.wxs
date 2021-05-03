@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
+  <Product Id="*" Name="MakroBoard Client" Language="1033" Version="1.0.0.0" Manufacturer="MakroBoard" UpgradeCode="a70bd7e5-e158-4c1e-ba2b-0ff7b8a839ba">
+    <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" Platform="x64" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of MakroBoard Client is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+
+    <SetProperty Id='makroBoardClientExe' Value="[INSTALLFOLDER]makro_board_client.exe" After="CostFinalize"/>
+
+    <Feature Id="ProductFeature" Title="MakroBoard Client" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentRef Id="AppPathsEntry"/>
+      <ComponentRef Id="ApplicationShortcut"/>
+    </Feature>
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLFOLDER" Name="MakroBoardClient" ComponentGuidGenerationSeed="fd069c81-3a2c-45ab-b2ba-5c07a870cdd9">
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="MakroBoard"/>
+      </Directory>
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <!--<Component Id="AppPathsEntry" Guid="DCA59546-1424-4F57-AFF7-13A571C9F1E7" KeyPath="yes" Directory="INSTALLFOLDER">-->
+    <Component Id="AppPathsEntry" Guid="00747b5c-5a6e-4f71-bb51-d6e50150172b" KeyPath="yes" Directory="INSTALLFOLDER" Win64="yes">
+      <RegistryKey Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\makro_board_client.exe">
+        <RegistryValue Type="string" Value="[makroBoardClientExe]"/>
+      </RegistryKey>
+    </Component>
+  </Fragment>
+
+  <Fragment>
+    <!--<Component Id="ApplicationShortcut" Guid="C5114258-FBEF-4B1C-A87C-62F33BDCEB79" Directory="ApplicationProgramsFolder">-->
+    <Component Id="ApplicationShortcut" Guid="b37f0475-709f-46f7-a33d-743d1debc91d"  Directory="ApplicationProgramsFolder" Win64="yes">
+
+      <Shortcut Id="makroBoardStartMenuShortcut"
+              Name="MakroBoard Client"
+              Description="MakroBoard - Client"
+              Target="[makroBoardClientExe]"
+              WorkingDirectory="APPLICATIONROOTDIRECTORY"/>
+
+
+      <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall"/>
+      <RegistryValue Root="HKCU" Key="Software\MakroBoard\MakroBoardClient" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+    </Component>
+
+  </Fragment>
+
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+      <!-- <Component Id="ProductComponent"> -->
+      <!-- TODO: Insert files, registry keys, and other resources here. -->
+      <!-- </Component> -->
+
+      <ComponentGroupRef Id="MakroBoardComponentGroup"/>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" InitialTargets="EnsureWixToolsetInstalled" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <InstallerPlatform>x64</InstallerPlatform>
+    <ProductVersion>3.10</ProductVersion>
+    <ProjectGuid>dc2e2c17-bdaa-4239-8118-38cfe038eba9</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>MakroBoard_Client</OutputName>
+    <OutputType>Package</OutputType>
+    <DefineConstants>HarvestPath=..\makro_board_client\build\windows\runner\Release</DefineConstants>
+    <SuppressFileDefaultVital>True</SuppressFileDefaultVital>
+    <Pedantic>True</Pedantic>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <SuppressIces>ICE03</SuppressIces>
+    <LinkerAdditionalOptions>-spdb -sh</LinkerAdditionalOptions>
+    <CompilerAdditionalOptions>-pedantic</CompilerAdditionalOptions>
+    <VerboseOutput>True</VerboseOutput>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Product.wxs" />
+    <Compile Include="MakroBoardClientInstallFiles.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Binaries.xslt" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
+  <Target Name="EnsureWixToolsetInstalled" Condition=" '$(WixTargetsImported)' != 'true' ">
+    <!-- <Error Text="The WiX Toolset v3.11 (or newer) build tools must be installed to build this project. To download the WiX Toolset, see http://wixtoolset.org/releases/" /> -->
+  </Target>
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+  <Target Name="Harvest">
+    <Message Text="Start Harvest MakroBoard Client" Importance="high" />
+    <HeatDirectory OutputFile="$(ProjectDir)\MakroBoardClientInstallFiles.wxs" VerboseOutput="true" Directory="..\makro_board_client\build\windows\runner\Release" ComponentGroupName="MakroBoardComponentGroup" PreprocessorVariable="var.HarvestPath" DirectoryRefId="INSTALLFOLDER" AutogenerateGuids="true" SuppressRegistry="true" SuppressCom="true" SuppressRootDirectory="true" ToolPath="$(WixToolPath)" NoLogo="true" Transforms="$(Projectdir)Binaries.xslt" />
+  </Target>
+</Project>
