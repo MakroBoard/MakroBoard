@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <InstallerPlatform>x64</InstallerPlatform>
     <ProductVersion>3.10</ProductVersion>
-    <ProjectGuid>dc2e2c17-bdaa-4239-8118-38cfe038eba9</ProjectGuid>
+    <ProjectGuid>DC2E2C17-BDAA-4239-8118-38CFE038EBA9</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>MakroBoard_Client</OutputName>
     <OutputType>Package</OutputType>

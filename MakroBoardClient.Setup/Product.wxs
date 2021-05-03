@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
-  <Product Id="*" Name="MakroBoard Client" Language="1033" Version="1.0.0.0" Manufacturer="MakroBoard" UpgradeCode="a70bd7e5-e158-4c1e-ba2b-0ff7b8a839ba">
+  <Product Id="*" Name="MakroBoard Client" Language="1033" Version="1.0.0.0" Manufacturer="MakroBoard" UpgradeCode="A70BD7E5-E158-4C1E-BA2B-0FF7B8A839BA">
     <Package InstallerVersion="500" Compressed="yes" InstallScope="perMachine" Platform="x64" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of MakroBoard Client is already installed." />
@@ -20,7 +20,7 @@
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFiles64Folder">
-        <Directory Id="INSTALLFOLDER" Name="MakroBoardClient" ComponentGuidGenerationSeed="fd069c81-3a2c-45ab-b2ba-5c07a870cdd9">
+        <Directory Id="INSTALLFOLDER" Name="MakroBoardClient" ComponentGuidGenerationSeed="FD069C81-3A2C-45AB-B2BA-5C07A870CDD9">
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder">
@@ -31,7 +31,7 @@
 
   <Fragment>
     <!--<Component Id="AppPathsEntry" Guid="DCA59546-1424-4F57-AFF7-13A571C9F1E7" KeyPath="yes" Directory="INSTALLFOLDER">-->
-    <Component Id="AppPathsEntry" Guid="00747b5c-5a6e-4f71-bb51-d6e50150172b" KeyPath="yes" Directory="INSTALLFOLDER" Win64="yes">
+    <Component Id="AppPathsEntry" Guid="00747B5C-5A6E-4F71-BB51-D6E50150172B" KeyPath="yes" Directory="INSTALLFOLDER" Win64="yes">
       <RegistryKey Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\makro_board_client.exe">
         <RegistryValue Type="string" Value="[makroBoardClientExe]"/>
       </RegistryKey>
@@ -40,7 +40,7 @@
 
   <Fragment>
     <!--<Component Id="ApplicationShortcut" Guid="C5114258-FBEF-4B1C-A87C-62F33BDCEB79" Directory="ApplicationProgramsFolder">-->
-    <Component Id="ApplicationShortcut" Guid="b37f0475-709f-46f7-a33d-743d1debc91d"  Directory="ApplicationProgramsFolder" Win64="yes">
+    <Component Id="ApplicationShortcut" Guid="B37F0475-709F-46F7-A33D-743D1DEBC91D"  Directory="ApplicationProgramsFolder" Win64="yes">
 
       <Shortcut Id="makroBoardStartMenuShortcut"
               Name="MakroBoard Client"

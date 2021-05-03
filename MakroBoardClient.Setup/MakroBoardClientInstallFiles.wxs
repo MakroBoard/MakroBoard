@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="INSTALLFOLDER">
+            <Directory Id="dir76A8B56EDC1C4DD3CB4177F3704BC91E" Name="data" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="MakroBoardComponentGroup">
+            <Component Id="cmpDC22F85144003CB2F05080B8CF79FC46" Directory="INSTALLFOLDER" Guid="*">
+                <File Id="fil230F9A11CF93D3D1A94FAA7A9D69118F" KeyPath="yes" Source="$(var.HarvestPath)\flutter_windows.dll" />
+            </Component>
+            <Component Id="cmp206E7913A0E99F49C8E98653F1F72A3F" Directory="INSTALLFOLDER" Guid="*">
+                <File Id="fil25EA1E463C6D68B96EEE0A2D22D7DBE6" KeyPath="yes" Source="$(var.HarvestPath)\makro_board_client.exe" />
+            </Component>
+            <Component Id="cmp39E7414C8679E28554E4A9F5B3298D3E" Directory="INSTALLFOLDER" Guid="*">
+                <File Id="fil34CEE0072415DFB04188A3F265BF58F8" KeyPath="yes" Source="$(var.HarvestPath)\url_launcher_windows_plugin.dll" />
+            </Component>
+            <Component Id="cmpCF83D7D65587D05A151D1E25702E167F" Directory="dir76A8B56EDC1C4DD3CB4177F3704BC91E" Guid="*">
+                <File Id="filC8D6740BEA75F19BA5204B613C03D8A8" KeyPath="yes" Source="$(var.HarvestPath)\data\app.so" />
+            </Component>
+            <Component Id="cmp0E0DCB81807E433F9DBCEB0D089B25B5" Directory="dir76A8B56EDC1C4DD3CB4177F3704BC91E" Guid="*">
+                <File Id="filFB2ED5EBC1081127146486443055DB0D" KeyPath="yes" Source="$(var.HarvestPath)\data\icudtl.dat" />
+            </Component>
+            <Component Id="cmp75131C7E850BF8649161906B63E97A22" Directory="dir4311D903D70E55164A03E9E9374AC9B0" Guid="*">
+                <File Id="filB615B988CD753762830B641F1427F799" KeyPath="yes" Source="$(var.HarvestPath)\data\flutter_assets\AssetManifest.json" />
+            </Component>
+            <Component Id="cmp7A9B0136F23F84A4A09D4D0E28D8636B" Directory="dir4311D903D70E55164A03E9E9374AC9B0" Guid="*">
+                <File Id="fil130B1805FDD25A50E354B5ADEEAC89F4" KeyPath="yes" Source="$(var.HarvestPath)\data\flutter_assets\FontManifest.json" />
+            </Component>
+            <Component Id="cmp1E42532F35A044D9DA68AAA1287AFA7E" Directory="dir4311D903D70E55164A03E9E9374AC9B0" Guid="*">
+                <File Id="fil2858D28C4C888EEE941699C9A7F9910E" KeyPath="yes" Source="$(var.HarvestPath)\data\flutter_assets\NOTICES" />
+            </Component>
+            <Component Id="cmp439067C3E4E0A7284D7E176B7B7CE92B" Directory="dirE2A82CA30E4E1381D520C8FF40996653" Guid="*">
+                <File Id="filB60BDC045162291701EC66A57218D767" KeyPath="yes" Source="$(var.HarvestPath)\data\flutter_assets\fonts\Hack-Bold.ttf" />
+            </Component>
+            <Component Id="cmpE41693C55FDB33489F205154F87C0589" Directory="dirE2A82CA30E4E1381D520C8FF40996653" Guid="*">
+                <File Id="fil3F0E16E639C2B56B836CDF90B398251C" KeyPath="yes" Source="$(var.HarvestPath)\data\flutter_assets\fonts\Hack-Italic.ttf" />
+            </Component>
+            <Component Id="cmp56505CAADBE4019A3A916CCF875EB2BE" Directory="dirE2A82CA30E4E1381D520C8FF40996653" Guid="*">
+                <File Id="fil5EE9F7641C338DC3B79E45751BEF7F77" KeyPath="yes" Source="$(var.HarvestPath)\data\flutter_assets\fonts\Hack-Regular.ttf" />
+            </Component>
+            <Component Id="cmp9475753282C5250DEC233DF924257EDD" Directory="dirE2A82CA30E4E1381D520C8FF40996653" Guid="*">
+                <File Id="fil95709FE501C331265C6CAAD00C2EA783" KeyPath="yes" Source="$(var.HarvestPath)\data\flutter_assets\fonts\MaterialIcons-Regular.otf" />
+            </Component>
+            <Component Id="cmp995EB1479D86208A86E88112F9873FE0" Directory="dir3FA823D26185B1B6457D4DCE2A77C372" Guid="*">
+                <File Id="fil7EC168CAE9512344DB7F6000958E43CF" KeyPath="yes" Source="$(var.HarvestPath)\data\flutter_assets\packages\cupertino_icons\assets\CupertinoIcons.ttf" />
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir5FF583AEA68E18714B78C24666F2A264">
+            <Directory Id="dir3FA823D26185B1B6457D4DCE2A77C372" Name="assets" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir76A8B56EDC1C4DD3CB4177F3704BC91E">
+            <Directory Id="dir4311D903D70E55164A03E9E9374AC9B0" Name="flutter_assets" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dirE3A5CD763BAF580FDB3696619F614D3F">
+            <Directory Id="dir5FF583AEA68E18714B78C24666F2A264" Name="cupertino_icons" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir4311D903D70E55164A03E9E9374AC9B0">
+            <Directory Id="dirE2A82CA30E4E1381D520C8FF40996653" Name="fonts" />
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="dir4311D903D70E55164A03E9E9374AC9B0">
+            <Directory Id="dirE3A5CD763BAF580FDB3696619F614D3F" Name="packages" />
+        </DirectoryRef>
+    </Fragment>
+</Wix>

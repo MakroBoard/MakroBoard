@@ -167,15 +167,22 @@ jobs:
       run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\windows") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_" }
     - name: gci
       run: Get-ChildItem $env:GITHUB_WORKSPACE -Recurse    
-    - name: Build MSIs dotnet
+    - name: Build Host MSI dotnet
       run: msbuild /property:Configuration=Release
       working-directory: ${{ github.workspace }}\MakroBoard.Setup
       env:
           WIX: ${{ github.workspace }}\wix
+    - name: Build Client MSI dotnet
+      run: msbuild /property:Configuration=Release
+      working-directory: ${{ github.workspace }}\MakroBoardClient.Setup
+      env:
+          WIX: ${{ github.workspace }}\wix
     - name: make upload folders
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64") 
-    - name: copy msis
+    - name: copy host msi
       run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\MakroBoard.Setup\bin\Release\*.msi") -Destination $($env:GITHUB_WORKSPACE + "\upload")
+    - name: copy Client msi
+      run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\MakroBoardClient.Setup\bin\Release\*.msi") -Destination $($env:GITHUB_WORKSPACE + "\upload")
     - name: copy windows client x64
       run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\makro_board_client\build\windows\runner\Release\*") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64\")
     - name: copy windows Host x64
