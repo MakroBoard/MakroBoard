@@ -23,17 +23,20 @@ on:
 
 jobs:
 
-  # set_version:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: set Version
-  #     if: ${{ (!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) && github.event_name == 'push' }}
-  #     run:  echo "MAKROBOARDVER=$(date +'%Y%m%d%H%M')" >> $GITHUB_ENV  
-  #   - name: set Version
-  #     if: ${{ startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' || contains(github.event.head_commit.message, 'forcepublish') }}
-  #     run:  echo "MAKROBOARDVER=0.0.1" >> $GITHUB_ENV  
-  #   - name: get
-  #     run:  echo "$MAKROBOARDVER" 
+  set_version:
+    runs-on: ubuntu-latest
+    steps:
+    - name: set Version
+      if: ${{ (!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) && github.event_name == 'push' }}
+      run:  echo "MAKROBOARDVER=$(date +'%Y%m%d%H%M')" >> $GITHUB_ENV  
+    - name: set Version
+      if: ${{ startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' || contains(github.event.head_commit.message, 'forcepublish') }}
+      run:  echo "MAKROBOARDVER=0.0.1" >> $GITHUB_ENV  
+    - name: get
+      run:  echo "$MAKROBOARDVER" 
+    - name: test
+      run: echo $(echo ${GITHUB_REF:10})
+      shell: bash
   
   # set_version:
   #   runs-on: windows-2019
@@ -50,20 +53,20 @@ jobs:
   #     run:  Write-Host "$ENV:MAKROBOARDVER"
       
 
-  set_version:
-    runs-on: macos-latest
-    steps:
-    - name: set Version
-      if: ${{ (!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) && github.event_name == 'push' }}
-      run:  echo "MAKROBOARDVER=$(date +'%Y%m%d%H%M')" >> $GITHUB_ENV  
-      shell: bash
-    - name: set Version
-      if: ${{ startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' || contains(github.event.head_commit.message, 'forcepublish') }}
-      run:  echo "MAKROBOARDVER=0.0.1" >> $GITHUB_ENV  
-      shell: bash
-    - name: get
-      run:  echo "$MAKROBOARDVER" 
-      shell: bash
+  # set_version:
+  #   runs-on: macos-latest
+  #   steps:
+  #   - name: set Version
+  #     if: ${{ (!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) && github.event_name == 'push' }}
+  #     run:  echo "MAKROBOARDVER=$(date +'%Y%m%d%H%M')" >> $GITHUB_ENV  
+  #     shell: bash
+  #   - name: set Version
+  #     if: ${{ startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' || contains(github.event.head_commit.message, 'forcepublish') }}
+  #     run:  echo "MAKROBOARDVER=0.0.1" >> $GITHUB_ENV  
+  #     shell: bash
+  #   - name: get
+  #     run:  echo "$MAKROBOARDVER" 
+  #     shell: bash
     
 
   # build_linux:
@@ -102,6 +105,16 @@ jobs:
   #     run: sudo apt-get update && sudo apt-get install libidn11 jq curl wget ninja-build clang tar pkg-config cmake-data libblkid-dev libgtk-3-dev liblzma-dev flatpak -y
   #   - name: install appimagekit
   #     run: wget $(curl -sL https://api.github.com/repos/AppImage/AppImageKit/releases/latest | jq -r '.assets[].browser_download_url' | grep "appimagetool-x86_64.AppImage$") && chmod +x appimagetool-x86_64.AppImage
+  
+  #   - name: set Version
+  #     if: ${{ (!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) && github.event_name == 'push' }}
+  #     run:  echo "MAKROBOARDVER=$(date +'%Y%m%d%H%M')" >> $GITHUB_ENV  
+  #   - name: set Version
+  #     if: ${{ startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' || contains(github.event.head_commit.message, 'forcepublish') }}
+  #     run:  echo "MAKROBOARDVER=0.0.1" >> $GITHUB_ENV  
+  #   - name: get
+  #     run:  echo "$MAKROBOARDVER" 
+
   #   - name: flutter get dependencies
   #     working-directory: ./makro_board_client
   #     run: flutter pub get
