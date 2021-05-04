@@ -33,6 +33,7 @@ jobs:
       
       
   get_devversion:
+    needs: set_devversion
     runs-on: ubuntu-latest
     steps:
     - name: get
