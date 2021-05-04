@@ -20,8 +20,6 @@ on:
     - '!README.md'
     - '!.github/workflows/MakroBoard_website_build.yml'
 
-env:
-  DEVVERSION: ""
 
 jobs:
 
@@ -30,6 +28,8 @@ jobs:
     steps:
     - name: set Devversion
       run:  echo "DEVVERSION=$(date +'%Y%m%d%H%M')" >> $GITHUB_ENV  
+    - name: get
+      run:  echo "$DEVVERSION"
       
       
   get_devversion:
