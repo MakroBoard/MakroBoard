@@ -35,7 +35,7 @@ jobs:
     - name: get
       run:  echo "$MAKROBOARDVER" 
     - name: test
-      run: echo $(echo ${GITHUB_REF:10})
+      run: echo $(echo ${GITHUB_REF})
       shell: bash
   
   # set_version:
