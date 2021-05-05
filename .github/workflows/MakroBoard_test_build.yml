@@ -256,7 +256,7 @@ jobs:
         java-version: '12.x'
     - uses: subosito/flutter-action@v1
       with:
-        flutter-version: '1.22.4'
+        flutter-version: '2.0.4'
     - name: install gsed
       run: brew install gnu-sed
     - name: set Version
