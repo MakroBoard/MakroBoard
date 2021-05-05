@@ -272,7 +272,7 @@ jobs:
       run:  echo "$MAKROBOARDVER"
       shell: bash
     - name: set client version
-      run: 'sed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
+      run: 'sed -i '' "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
       working-directory: ./makro_board_client
       shell: bash
     - name: set host msi version
