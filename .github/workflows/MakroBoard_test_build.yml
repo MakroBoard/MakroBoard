@@ -215,7 +215,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build Windows dotnet MakroBoard
-      run: dotnet publish MakroBoard\MakroBoard.csproj -r win-x64 -c release --output Release -p:Version=$MAKROBOARDNETVER
+      run: dotnet publish MakroBoard\MakroBoard.csproj -r win-x64 -c release --output Release -p:Version=$MAKROBOARDNETVER -p:AssemblyVersion=$MAKROBOARDNETVER
     - name: Build global Windows dotnet MakroBoard Plugins
       run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\global") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_ -p:Version=$MAKROBOARDNETVER" } 
     - name: Build windows Windows dotnet MakroBoard Plugins
