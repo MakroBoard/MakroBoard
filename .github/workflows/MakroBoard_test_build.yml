@@ -184,12 +184,6 @@ jobs:
       run: sed -i "s|Version=\".*\" M|Version=$MAKROBOARDNETVER M|g" Product.wxs
       working-directory: ./MakroBoardClient.Setup
       shell: bash
-    - name: check
-      run: Get-Content Product.wxs
-      working-directory: ./MakroBoard.Setup
-    - name: check
-      run: Get-Content Product.wxs
-      working-directory: ./MakroBoardClient.Setup
     - name: Setup Wix
       run: Invoke-WebRequest -Uri $($($(Invoke-WebRequest -Uri https://api.github.com/repos/wixtoolset/wix3/releases/latest).Content | ConvertFrom-Json).assets | Where-Object {$_.browser_download_url -Like "*wix*-binaries.zip"}).browser_download_url -OutFile "wix.zip" && Expand-Archive ./wix.zip && Remove-Item ./wix.zip
     - name: Add Flutter and wix to path and to wix var 
@@ -222,13 +216,12 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build Windows dotnet MakroBoard
-      run: dotnet publish MakroBoard\MakroBoard.csproj -r win-x64 -c release --output Release 
-      #-p:Version=$MAKROBOARDNETVER -p:AssemblyVersion=$MAKROBOARDNETVER
-
+      run: dotnet publish MakroBoard\MakroBoard.csproj -r win-x64 -c release --output Release -p:Version=$ENV:MAKROBOARDNETVER 
+      #-p:AssemblyVersion=$ENV:MAKROBOARDNETVER
     - name: Build global Windows dotnet MakroBoard Plugins
-      run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\global") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_ -p:Version=$MAKROBOARDNETVER" } 
+      run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\global") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_ -p:Version=$ENV:MAKROBOARDNETVER" } 
     - name: Build windows Windows dotnet MakroBoard Plugins
-      run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\windows") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_ -p:Version=$MAKROBOARDNETVER" }
+      run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\windows") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_ -p:Version=$ENV:MAKROBOARDNETVER" }
     - name: gci
       run: Get-ChildItem $env:GITHUB_WORKSPACE -Recurse    
     - name: Build MSIs dotnet
