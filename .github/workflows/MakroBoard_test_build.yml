@@ -69,7 +69,7 @@ jobs:
       run:  echo "$MAKROBOARDVER" 
 
     - name: set flutter version
-      run: sed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml
+      run: 'sed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
       working-directory: ./makro_board_client
     - name: set host msi version
       run: sed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDVER\" M|g" Product.wxs
