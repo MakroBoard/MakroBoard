@@ -86,9 +86,6 @@ jobs:
   #   - name: flutter get dependencies
   #     working-directory: ./makro_board_client
   #     run: flutter pub get
-  #   - name: flutter build apk
-  #     working-directory: ./makro_board_client
-  #     run: flutter build apk --release
   #   - name: flutter disable analytics
   #     working-directory: ./makro_board_client
   #     run: flutter config --no-analytics
@@ -180,11 +177,11 @@ jobs:
       working-directory: ./makro_board_client
       shell: bash
     - name: set host msi version
-      run: sed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDVER\" M|g" Product.wxs
+      run: sed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDNETVER\" M|g" Product.wxs
       working-directory: ./MakroBoard.Setup 
       shell: bash
     - name: set client msi version
-      run: sed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDVER\" M|g" Product.wxs
+      run: sed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDNETVER\" M|g" Product.wxs
       working-directory: ./MakroBoardClient.Setup
       shell: bash
     - name: Setup Wix
