@@ -168,7 +168,7 @@ jobs:
       run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
       shell: bash
     - name: set dotnetversionnumber
-      run:  echo "MAKROBOARDNETVER=$(echo \"$MAKROBOARDVER\" | sed 's|+|.|g')" >> $GITHUB_ENV
+      run:  echo "MAKROBOARDNETVER=$(echo $MAKROBOARDVER | sed 's|+|.|g')" >> $GITHUB_ENV
       shell: bash   
     - name: get Versionnumber
       run:  Write-Host "$ENV:MAKROBOARDVER"
@@ -177,11 +177,11 @@ jobs:
       working-directory: ./makro_board_client
       shell: bash
     - name: set host msi version
-      run: sed -i "s|Version=\".*\" M|Version=$MAKROBOARDNETVER M|g" Product.wxs
+      run: sed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDNETVER\" M|g" Product.wxs
       working-directory: ./MakroBoard.Setup 
       shell: bash
     - name: set client msi version
-      run: sed -i "s|Version=\".*\" M|Version=$MAKROBOARDNETVER M|g" Product.wxs
+      run: sed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDNETVER\" M|g" Product.wxs
       working-directory: ./MakroBoardClient.Setup
       shell: bash
     - name: Setup Wix
