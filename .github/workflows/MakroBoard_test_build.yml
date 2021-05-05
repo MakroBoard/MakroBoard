@@ -177,11 +177,11 @@ jobs:
       working-directory: ./makro_board_client
       shell: bash
     - name: set host msi version
-      run: sed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDNETVER\" M|g" Product.wxs
+      run: sed -i "s|Version=\".*\" M|Version=$MAKROBOARDNETVER M|g" Product.wxs
       working-directory: ./MakroBoard.Setup 
       shell: bash
     - name: set client msi version
-      run: sed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDNETVER\" M|g" Product.wxs
+      run: sed -i "s|Version=\".*\" M|Version=$MAKROBOARDNETVER M|g" Product.wxs
       working-directory: ./MakroBoardClient.Setup
       shell: bash
     - name: check
