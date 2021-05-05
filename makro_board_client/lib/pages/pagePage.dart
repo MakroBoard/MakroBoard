@@ -20,46 +20,41 @@ class PagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EditMode(
-      editMode: false,
-      child: Builder(
-        builder: (context) => Scaffold(
-          appBar: WmskAppBar(
-            titleText: initialPage.label,
-            additionalActions: [
-              Tooltip(
-                message: "EditModus aktivieren",
-                child: Switch(
-                    value: EditMode.of(context)?.editMode ?? false,
-                    onChanged: (v) {
-                      var editMode = EditMode.of(context);
-                      if (editMode != null) {
-                        editMode.updateEditMode(v);
-                      }
-                    }),
-              ),
-            ],
+    return Scaffold(
+      appBar: WmskAppBar(
+        titleText: initialPage.label,
+        additionalActions: [
+          Tooltip(
+            message: "EditModus aktivieren",
+            child: Switch(
+                value: GlobalSettings.of(context)?.editMode ?? false,
+                onChanged: (v) {
+                  var editMode = GlobalSettings.of(context);
+                  if (editMode != null) {
+                    editMode.updateEditMode(v);
+                  }
+                }),
           ),
-          body: Container(
-            child: StreamBuilder(
-              stream: initialPage.groupsStream,
-              initialData: initialPage.groups,
-              builder: (context, snapshot) => ResponsiveGridList(
-                desiredItemWidth: 200,
-                minSpacing: 10,
-                children: _getGroupWidgets(context, snapshot.data as List<models.Group>),
-              ),
-            ),
+        ],
+      ),
+      body: Container(
+        child: StreamBuilder(
+          stream: initialPage.groupsStream,
+          initialData: initialPage.groups,
+          builder: (context, snapshot) => ResponsiveGridList(
+            desiredItemWidth: 200,
+            minSpacing: 10,
+            children: _getGroupWidgets(context, snapshot.data as List<models.Group>),
           ),
-          floatingActionButton: EditMode.of(context)?.editMode == true
-              ? FloatingActionButton(
-                  child: Icon(Icons.add_box_outlined),
-                  onPressed: () => showCreateGroupDialog(context, initialPage),
-                  tooltip: "Neue Gruppe Anlegen",
-                )
-              : null,
         ),
       ),
+      floatingActionButton: GlobalSettings.of(context)?.editMode == true
+          ? FloatingActionButton(
+              child: Icon(Icons.add_box_outlined),
+              onPressed: () => showCreateGroupDialog(context, initialPage),
+              tooltip: "Neue Gruppe Anlegen",
+            )
+          : null,
     );
   }
 
@@ -75,7 +70,7 @@ class PagePage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  if (EditMode.of(context)?.editMode == true)
+                  if (GlobalSettings.of(context)?.editMode == true)
                     ListTile(
                       title: Text(group.label),
                       leading: Icon(Icons.done),

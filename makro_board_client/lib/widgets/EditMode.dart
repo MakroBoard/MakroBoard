@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class InheritedEditMode extends InheritedWidget {
+class InheritedGlobalSettings extends InheritedWidget {
   // Data is your entire state. In our case just 'User'
-  final EditModeState data;
+  final GlobalSettingsState data;
 
   // You must pass through a child and your state.
-  InheritedEditMode({
+  InheritedGlobalSettings({
     required this.data,
     required Widget child,
   }) : super(child: child);
@@ -14,32 +14,30 @@ class InheritedEditMode extends InheritedWidget {
   // any state has changed. If not, no reason to rebuild all the widgets
   // that rely on your state.
   @override
-  bool updateShouldNotify(InheritedEditMode old) => true;
+  bool updateShouldNotify(InheritedGlobalSettings old) => true;
 }
 
-class EditMode extends StatefulWidget {
+class GlobalSettings extends StatefulWidget {
   // You must pass through a child.
   final Widget child;
-  final bool editMode;
 
-  EditMode({
+  GlobalSettings({
     required this.child,
-    required this.editMode,
   });
 
   // This is the secret sauce. Write your own 'of' method that will behave
   // Exactly like MediaQuery.of and Theme.of
   // It basically says 'get the data from the widget of this type.
-  static EditModeState? of(BuildContext context) {
-    var widgetOfType = context.dependOnInheritedWidgetOfExactType<InheritedEditMode>();
+  static GlobalSettingsState? of(BuildContext context) {
+    var widgetOfType = context.dependOnInheritedWidgetOfExactType<InheritedGlobalSettings>();
     return widgetOfType?.data;
   }
 
   @override
-  EditModeState createState() => new EditModeState();
+  GlobalSettingsState createState() => new GlobalSettingsState();
 }
 
-class EditModeState extends State<EditMode> {
+class GlobalSettingsState extends State<GlobalSettings> {
   // Whichever properties you wanna pass around your app as state
   bool editMode = false;
 
@@ -55,7 +53,7 @@ class EditModeState extends State<EditMode> {
   // your InheritedWidget
   @override
   Widget build(BuildContext context) {
-    return InheritedEditMode(
+    return InheritedGlobalSettings(
       data: this,
       child: widget.child,
     );

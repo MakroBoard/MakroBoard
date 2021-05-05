@@ -13,11 +13,7 @@ void main() {
   HttpOverrides.global = new MyHttpOverrides();
   runApp(ModularApp(
     module: AppModule(),
-    // child: EditMode(
-    //   editMode: false,
-    //   child: AppWidget(),
-    // ),
-    child: AppWidget(),
+    child: GlobalSettings(child: AppWidget()),
   ));
 }
 
