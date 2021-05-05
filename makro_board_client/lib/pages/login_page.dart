@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WmskAppBar(title: 'Client anmelden').getAppBar(context),
+      appBar: WmskAppBar(titleText: 'Client anmelden'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

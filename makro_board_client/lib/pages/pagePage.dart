@@ -6,6 +6,7 @@ import 'package:makro_board_client/dialogs/create_group_dialog.dart';
 import 'package:makro_board_client/dialogs/create_panel_dialog.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/widgets/ControlPanel.dart';
+import 'package:makro_board_client/widgets/EditMode.dart';
 import 'package:makro_board_client/widgets/WmskAppBar.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:makro_board_client/models/plugin.dart' as models;
@@ -19,23 +20,45 @@ class PagePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: WmskAppBar(title: initialPage.label).getAppBar(context),
-      body: Container(
-        child: StreamBuilder(
-          stream: initialPage.groupsStream,
-          initialData: initialPage.groups,
-          builder: (context, snapshot) => ResponsiveGridList(
-            desiredItemWidth: 200,
-            minSpacing: 10,
-            children: _getGroupWidgets(context, snapshot.data as List<models.Group>),
+    return EditMode(
+      editMode: false,
+      child: Builder(
+        builder: (context) => Scaffold(
+          appBar: WmskAppBar(
+            titleText: initialPage.label,
+            additionalActions: [
+              Tooltip(
+                message: "EditModus aktivieren",
+                child: Switch(
+                    value: EditMode.of(context)?.editMode ?? false,
+                    onChanged: (v) {
+                      var editMode = EditMode.of(context);
+                      if (editMode != null) {
+                        editMode.updateEditMode(v);
+                      }
+                    }),
+              ),
+            ],
           ),
+          body: Container(
+            child: StreamBuilder(
+              stream: initialPage.groupsStream,
+              initialData: initialPage.groups,
+              builder: (context, snapshot) => ResponsiveGridList(
+                desiredItemWidth: 200,
+                minSpacing: 10,
+                children: _getGroupWidgets(context, snapshot.data as List<models.Group>),
+              ),
+            ),
+          ),
+          floatingActionButton: EditMode.of(context)?.editMode == true
+              ? FloatingActionButton(
+                  child: Icon(Icons.add_box_outlined),
+                  onPressed: () => showCreateGroupDialog(context, initialPage),
+                  tooltip: "Neue Gruppe Anlegen",
+                )
+              : null,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add_box_outlined),
-        onPressed: () => showCreateGroupDialog(context, initialPage),
-        tooltip: "Neue Gruppe Anlegen",
       ),
     );
   }
@@ -52,33 +75,34 @@ class PagePage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  ListTile(
-                    title: Text(group.label),
-                    leading: Icon(Icons.done),
-                    trailing: PopupMenuButton<GroupContextMenu>(
-                      onSelected: (selectedValue) {
-                        switch (selectedValue) {
-                          case GroupContextMenu.delete:
-                            // TODO: Handle this case.
-                            break;
-                          case GroupContextMenu.addPanel:
-                            _showAddPanelDialog(context, group);
-                            break;
-                        }
-                      },
-                      itemBuilder: (context) => [
-                        const PopupMenuItem<GroupContextMenu>(
-                          value: GroupContextMenu.delete,
-                          child: Icon(Icons.delete),
-                        ),
-                        const PopupMenuItem<GroupContextMenu>(
-                          value: GroupContextMenu.addPanel,
-                          child: Icon(Icons.add),
-                        ),
-                      ],
-                      icon: Icon(Icons.more_vert),
+                  if (EditMode.of(context)?.editMode == true)
+                    ListTile(
+                      title: Text(group.label),
+                      leading: Icon(Icons.done),
+                      trailing: PopupMenuButton<GroupContextMenu>(
+                        onSelected: (selectedValue) {
+                          switch (selectedValue) {
+                            case GroupContextMenu.delete:
+                              // TODO: Handle this case.
+                              break;
+                            case GroupContextMenu.addPanel:
+                              _showAddPanelDialog(context, group);
+                              break;
+                          }
+                        },
+                        itemBuilder: (context) => [
+                          const PopupMenuItem<GroupContextMenu>(
+                            value: GroupContextMenu.delete,
+                            child: Icon(Icons.delete),
+                          ),
+                          const PopupMenuItem<GroupContextMenu>(
+                            value: GroupContextMenu.addPanel,
+                            child: Icon(Icons.add),
+                          ),
+                        ],
+                        icon: Icon(Icons.more_vert),
+                      ),
                     ),
-                  ),
                   FutureBuilder(
                     future: Modular.get<ApiProvider>().getAvailableControls(),
                     builder: (context, availableControlsSnapShot) => StreamBuilder(

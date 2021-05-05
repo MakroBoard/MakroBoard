@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WmskAppBar(title: "Home").getAppBar(context),
+      appBar: WmskAppBar(titleText: "Home"),
       body: Container(
         child: StreamBuilder(
           stream: Modular.get<ApiProvider>().pages,

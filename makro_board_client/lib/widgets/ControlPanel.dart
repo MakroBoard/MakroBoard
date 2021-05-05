@@ -93,16 +93,25 @@ class ProgressBarControl extends StatefulWidget {
 class _ProgressBarControlState extends State<ProgressBarControl> {
   @override
   void initState() {
-    widget.minValue.addListener(() {
-      setState(() {});
-    });
-    widget.maxValue.addListener(() {
-      setState(() {});
-    });
-    widget.value.addListener(() {
-      setState(() {});
-    });
+    widget.minValue.addListener(updateProgressBar);
+    widget.maxValue.addListener(updateProgressBar);
+    widget.value.addListener(updateProgressBar);
+
     super.initState();
+  }
+
+  void updateProgressBar() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.minValue.removeListener(updateProgressBar);
+    widget.maxValue.removeListener(updateProgressBar);
+    widget.value.removeListener(updateProgressBar);
   }
 
   @override

@@ -4,13 +4,21 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:makro_board_client/widgets/EditMode.dart';
 
 import 'app_module.dart';
 import 'app_widget.dart';
 
 void main() {
   HttpOverrides.global = new MyHttpOverrides();
-  runApp(ModularApp(module: AppModule(), child: AppWidget()));
+  runApp(ModularApp(
+    module: AppModule(),
+    // child: EditMode(
+    //   editMode: false,
+    //   child: AppWidget(),
+    // ),
+    child: AppWidget(),
+  ));
 }
 
 class MyHttpOverrides extends HttpOverrides {
