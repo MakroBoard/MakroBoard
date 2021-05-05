@@ -45,8 +45,8 @@ jobs:
     - name: get Versionnumber
       run:  echo "$MAKROBOARDVER"
       shell: bash
-    # - name: install gsed
-    #   run: brew install gnu-sed
+    - name: install gsed
+      run: brew install gnu-sed
     - name: set client version
       run: 'gsed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
       working-directory: ./makro_board_client
@@ -285,30 +285,32 @@ jobs:
   #   - uses: subosito/flutter-action@v1
   #     with:
   #       flutter-version: '1.22.4'
+  #   - name: install gsed
+  #     run: brew install gnu-sed
   #   - name: set Version
   #     if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-  #     run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV  
+  #     run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | gsed 's|refs/heads/||g' | gsed 's|refs/tags/v||g' | gsed 's|-beta||g' )" >> $GITHUB_ENV  
   #     shell: bash
   #   - name: set Version
   #     if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
   #     run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
   #     shell: bash
   #   - name: set dotnetversionnumber
-  #     run:  echo "MAKROBOARDNETVER=$(echo \"$MAKROBOARDVER\" | sed 's|+|.|g')" >> $GITHUB_ENV
+  #     run:  echo "MAKROBOARDNETVER=$(echo \"$MAKROBOARDVER\" | gsed 's|+|.|g')" >> $GITHUB_ENV
   #     shell: bash   
   #   - name: get Versionnumber
   #     run:  echo "$MAKROBOARDVER"
   #     shell: bash
   #   - name: set client version
-  #     run: 'sed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
+  #     run: 'gsed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
   #     working-directory: ./makro_board_client
   #     shell: bash
   #   - name: set host msi version
-  #     run: sed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDVER\" M|g" Product.wxs
+  #     run: gsed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDVER\" M|g" Product.wxs
   #     working-directory: ./MakroBoard.Setup 
   #     shell: bash
   #   - name: set client msi version
-  #     run: sed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDVER\" M|g" Product.wxs
+  #     run: gsed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDVER\" M|g" Product.wxs
   #     working-directory: ./MakroBoardClient.Setup
   #     shell: bash
   #   - name: flutter doctor
