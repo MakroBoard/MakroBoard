@@ -9,7 +9,7 @@ import 'package:makro_board_client/widgets/ControlPanel.dart';
 import 'package:makro_board_client/widgets/EditMode.dart';
 import 'package:makro_board_client/widgets/WmskAppBar.dart';
 import 'package:responsive_grid/responsive_grid.dart';
-import 'package:makro_board_client/models/plugin.dart';
+import 'package:makro_board_client/models/plugin.dart' as models;
 import 'package:makro_board_client/models/page.dart' as models;
 import 'package:makro_board_client/models/group.dart' as models;
 import 'package:makro_board_client/models/panel.dart' as models;
@@ -104,7 +104,7 @@ class PagePage extends StatelessWidget {
                       stream: group.panelsStream,
                       initialData: group.panels,
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        return _getGroupPanelWidgets(context, availableControlsSnapShot.data as List<Plugin>, snapshot.data);
+                        return _getGroupPanelWidgets(context, availableControlsSnapShot.data as List<models.Plugin>, snapshot.data);
                       },
                     ),
                   ),
@@ -116,7 +116,7 @@ class PagePage extends StatelessWidget {
         .toList();
   }
 
-  Widget _getGroupPanelWidgets(BuildContext context, List<Plugin>? plugins, List<models.Panel>? panels) {
+  Widget _getGroupPanelWidgets(BuildContext context, List<models.Plugin>? plugins, List<models.Panel>? panels) {
     if (plugins == null || plugins.isEmpty || panels == null || panels.isEmpty) {
       return Center(
         child: Text("Keine Panels konfiguriert"),
