@@ -56,7 +56,7 @@ class SelectServerPage extends StatelessWidget {
                             return null;
                           },
                           onChanged: (value) async {
-                            await Settings.setValue("server_host", "https://" + value);
+                            await Settings.setValue("server_host", value);
                           },
                         ),
                         TextFormField(
@@ -111,7 +111,7 @@ class SelectServerPage extends StatelessWidget {
                                     // you'd often call a server or save the information in a database.
                                     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Processing Data')));
                                   } else {
-                                    EasyLoading.showError("Es konnte keine Verbindung hergestellt werden.", dismissOnTap: true);
+                                    EasyLoading.showError("Es konnte keine Verbindung hergestellt werden: " + serverUri.toString(), dismissOnTap: true);
                                   }
                                 }
                                 EasyLoading.dismiss();
