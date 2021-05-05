@@ -27,34 +27,6 @@ on:
 
 jobs:
 
-  try_macos:
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: set Version
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV  
-      shell: bash
-    - name: set Version
-      if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
-      shell: bash
-    - name: set dotnetversionnumber
-      run:  echo "MAKROBOARDNETVER=$(echo \"$MAKROBOARDVER\" | sed 's|+|.|g')" >> $GITHUB_ENV
-      shell: bash   
-    - name: get Versionnumber
-      run:  echo "$MAKROBOARDVER"
-      shell: bash
-    - name: install gsed
-      run: brew install gnu-sed
-    - name: set client version
-      run: 'gsed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
-      working-directory: ./makro_board_client
-      shell: bash
-    - name: test
-      run: cat pubspec.yaml
-      working-directory: ./makro_board_client
-
   # build_linux:
   #   runs-on: ubuntu-latest
   #   steps:
@@ -275,71 +247,71 @@ jobs:
   #       retention-days: 10
 
 
-  # build_macos:
-  #   runs-on: macos-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - uses: actions/setup-java@v1
-  #     with:
-  #       java-version: '12.x'
-  #   - uses: subosito/flutter-action@v1
-  #     with:
-  #       flutter-version: '1.22.4'
-  #   - name: install gsed
-  #     run: brew install gnu-sed
-  #   - name: set Version
-  #     if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-  #     run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | gsed 's|refs/heads/||g' | gsed 's|refs/tags/v||g' | gsed 's|-beta||g' )" >> $GITHUB_ENV  
-  #     shell: bash
-  #   - name: set Version
-  #     if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
-  #     run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
-  #     shell: bash
-  #   - name: set dotnetversionnumber
-  #     run:  echo "MAKROBOARDNETVER=$(echo \"$MAKROBOARDVER\" | gsed 's|+|.|g')" >> $GITHUB_ENV
-  #     shell: bash   
-  #   - name: get Versionnumber
-  #     run:  echo "$MAKROBOARDVER"
-  #     shell: bash
-  #   - name: set client version
-  #     run: 'gsed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
-  #     working-directory: ./makro_board_client
-  #     shell: bash
-  #   - name: set host msi version
-  #     run: gsed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDVER\" M|g" Product.wxs
-  #     working-directory: ./MakroBoard.Setup 
-  #     shell: bash
-  #   - name: set client msi version
-  #     run: gsed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDVER\" M|g" Product.wxs
-  #     working-directory: ./MakroBoardClient.Setup
-  #     shell: bash
-  #   - name: flutter doctor
-  #     run: flutter doctor -v
-  #   - name: flutter get dependencies
-  #     working-directory: ./makro_board_client
-  #     run: flutter pub get
-  #   - name: flutter disable analytics
-  #     working-directory: ./makro_board_client
-  #     run: flutter config --no-analytics
-  #   - name: flutter build ios
-  #     working-directory: ./makro_board_client
-  #     run: flutter build ios --release --no-codesign
-  #   - name: flutter config macos
-  #     working-directory: ./makro_board_client
-  #     run: flutter config --enable-macos-desktop
-  #   - name: flutter build macos
-  #     working-directory: ./makro_board_client
-  #     run: flutter build macos --release
-  #   - name: Restore dependencies
-  #     run: dotnet restore
-  #   - name: Build mac dotnet
-  #     run: dotnet publish -r osx-x64 -c release  --output Release -p:Version=$MAKROBOARDNETVER
-  #   - name: Build global macos dotnet MakroBoard Plugins
-  #     run: cat ./packaging/plugins/global | xargs -I % dotnet publish MakroBoard.Plugin.%/MakroBoard.Plugin.%.csproj -r osx-x64 -c release --output Release/Plugins/MakroBoard.Plugin.% -p:Version=$MAKROBOARDNETVER
-  #     shell: bash
-  #   - name: Build macos macos dotnet MakroBoard Plugins
-  #     run: cat ./packaging/plugins/macos | xargs -I % dotnet publish MakroBoard.Plugin.%/MakroBoard.Plugin.%.csproj -r osx-x64 -c release --output Release/Plugins/MakroBoard.Plugin.% -p:Version=$MAKROBOARDNETVER
-  #     shell: bash
+  build_macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+    - uses: subosito/flutter-action@v1
+      with:
+        flutter-version: '1.22.4'
+    - name: install gsed
+      run: brew install gnu-sed
+    - name: set Version
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | gsed 's|refs/heads/||g' | gsed 's|refs/tags/v||g' | gsed 's|-beta||g' )" >> $GITHUB_ENV  
+      shell: bash
+    - name: set Version
+      if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
+      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
+      shell: bash
+    - name: set dotnetversionnumber
+      run:  echo "MAKROBOARDNETVER=$(echo \"$MAKROBOARDVER\" | gsed 's|+|.|g')" >> $GITHUB_ENV
+      shell: bash   
+    - name: get Versionnumber
+      run:  echo "$MAKROBOARDVER"
+      shell: bash
+    - name: set client version
+      run: 'gsed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
+      working-directory: ./makro_board_client
+      shell: bash
+    - name: set host msi version
+      run: gsed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDVER\" M|g" Product.wxs
+      working-directory: ./MakroBoard.Setup 
+      shell: bash
+    - name: set client msi version
+      run: gsed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDVER\" M|g" Product.wxs
+      working-directory: ./MakroBoardClient.Setup
+      shell: bash
+    - name: flutter doctor
+      run: flutter doctor -v
+    - name: flutter get dependencies
+      working-directory: ./makro_board_client
+      run: flutter pub get
+    - name: flutter disable analytics
+      working-directory: ./makro_board_client
+      run: flutter config --no-analytics
+    - name: flutter build ios
+      working-directory: ./makro_board_client
+      run: flutter build ios --release --no-codesign
+    - name: flutter config macos
+      working-directory: ./makro_board_client
+      run: flutter config --enable-macos-desktop
+    - name: flutter build macos
+      working-directory: ./makro_board_client
+      run: flutter build macos --release
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build mac dotnet
+      run: dotnet publish -r osx-x64 -c release  --output Release -p:Version=$MAKROBOARDNETVER
+    - name: Build global macos dotnet MakroBoard Plugins
+      run: cat ./packaging/plugins/global | xargs -I % dotnet publish MakroBoard.Plugin.%/MakroBoard.Plugin.%.csproj -r osx-x64 -c release --output Release/Plugins/MakroBoard.Plugin.% -p:Version=$MAKROBOARDNETVER
+      shell: bash
+    - name: Build macos macos dotnet MakroBoard Plugins
+      run: cat ./packaging/plugins/macos | xargs -I % dotnet publish MakroBoard.Plugin.%/MakroBoard.Plugin.%.csproj -r osx-x64 -c release --output Release/Plugins/MakroBoard.Plugin.% -p:Version=$MAKROBOARDNETVER
+      shell: bash
 
 
 
