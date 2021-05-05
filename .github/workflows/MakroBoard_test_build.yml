@@ -221,7 +221,7 @@ jobs:
     - name: Build Windows dotnet MakroBoard
       run: dotnet publish MakroBoard\MakroBoard.csproj -r win-x64 -c release --output Release 
       #-p:Version=$MAKROBOARDNETVER -p:AssemblyVersion=$MAKROBOARDNETVER
-      
+
     - name: Build global Windows dotnet MakroBoard Plugins
       run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\global") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_ -p:Version=$MAKROBOARDNETVER" } 
     - name: Build windows Windows dotnet MakroBoard Plugins
@@ -236,7 +236,7 @@ jobs:
     - name: make upload folders
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\android") 
-      - name: copy android
+    - name: copy android
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: cp -rf ./makro_board_client/build/app/outputs/flutter-apk/* upload/android/
     - name: copy msis
