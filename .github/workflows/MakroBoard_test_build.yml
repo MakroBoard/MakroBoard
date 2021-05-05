@@ -67,9 +67,9 @@ jobs:
       run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
     - name: get Versionnumber
       run:  echo "$MAKROBOARDVER" 
-    - name: set client version
-      run: 'sed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
-      working-directory: ./makro_board_client
+    # - name: set client version
+    #   run: 'sed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
+    #   working-directory: ./makro_board_client
     - name: set host msi version
       run: sed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDVER\" M|g" Product.wxs
       working-directory: ./MakroBoard.Setup 
