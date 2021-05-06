@@ -86,6 +86,9 @@ jobs:
     - name: flutter build web
       working-directory: ./makro_board_client
       run: flutter build web
+    - name: flutter build apk
+      working-directory: ./makro_board_client
+      run: flutter build apk --release
     - name: flutter config linux
       working-directory: ./makro_board_client
       run: flutter config --enable-linux-desktop
@@ -112,7 +115,7 @@ jobs:
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_host_x64.AppDir/ MakroBoard_host_x64.AppImage --sign -u 'gh-releases-zsync|MakroBoard|MakroBoard|latest|MakroBoard_host_x64.AppImage.zsync'
     - name: make upload folders
       #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run: mkdir upload && mkdir upload/linuxhost_x64 && mkdir upload/linuxclient_x64 && mkdir upload/linuxclient_appimage_x64 && mkdir upload/linuxhost_appimage_x64 
+      run: mkdir upload && mkdir upload/linuxhost_x64 && mkdir upload/linuxclient_x64 && mkdir upload/linuxclient_appimage_x64 && mkdir upload/linuxhost_appimage_x64 && mkdir upload/android
     - name: copy linux client x64
       #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: cp -rf ./makro_board_client/build/linux/release/bundle/* upload/linuxclient_x64/ && cd upload/linuxclient_x64/ && tar cfvz ../linuxclient_x64.tar.gz *
@@ -125,12 +128,15 @@ jobs:
     - name: copy linux Host x64
       #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: cp -rf ./Release/* upload/linuxhost_x64/ && cd upload/linuxhost_x64/ && tar cfvz ../linuxhost_x64.tar.gz *
+    - name: copy android
+      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      run: cp -rf ./makro_board_client/build/app/outputs/flutter-apk/* upload/android/
     - uses: actions/upload-artifact@v2
       #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
       with:
         name: latest_linux
         path: upload/
-        retention-days: 10
+        retention-days: 5
 
 
   build_windows:
@@ -195,9 +201,6 @@ jobs:
     - name: flutter build web
       working-directory: ${{ github.workspace }}\makro_board_client
       run: flutter build web
-    - name: flutter build apk
-      working-directory: ./makro_board_client
-      run: flutter build apk --release
     - name: flutter build windows
       working-directory: ${{ github.workspace }}\makro_board_client
       run: flutter build windows --release
@@ -225,10 +228,7 @@ jobs:
           WIX: ${{ github.workspace }}\wix
     - name: make upload folders
       #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\android") 
-    - name: copy android
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run: cp -rf ./makro_board_client/build/app/outputs/flutter-apk/* upload/android/
+      run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64") && New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64")
     - name: copy host x64 msi
       #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\MakroBoard.Setup\bin\Release\*.msi") -Destination $($env:GITHUB_WORKSPACE + "\upload")
@@ -239,14 +239,14 @@ jobs:
       #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\makro_board_client\build\windows\runner\Release\*") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64\")
     - name: copy windows Host x64
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\Release\*") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64\")
     - uses: actions/upload-artifact@v2
       #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
       with:
         name: latest_windows
         path: upload/
-        retention-days: 10
+        retention-days: 5
 
 
   build_macos:
@@ -319,16 +319,16 @@ jobs:
       #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: cp -rf ./makro_board_client/build/ios/* upload/ios/ && cd upload/ios/ && tar cfvz ../ios.tar.gz *
     - uses: actions/upload-artifact@v2
-     # if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
+     #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
       with:
         name: latest_linux
         path: upload/
-        retention-days: 10
+        retention-days: 5
 
 
   release:
      name: Release
-    #  if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
      needs:
      - build_linux
      - build_windows
@@ -342,7 +342,19 @@ jobs:
     #  - name: Release
     #     uses: softprops/action-gh-release@v1
     #     with:
-    #       files: Release.txt
+    #       files: 
+    #       -
+    #       -
+    #       -
+    #       -
+    #       -
+    #       -
+    #       -
+    #       -
+    #       -
+    #       -
+    #       -
+    #       -
     #     env:
     #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
