@@ -326,17 +326,26 @@ jobs:
         retention-days: 10
 
 
-  # release:
-  #    name: Release
-  #    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
-  #    needs:
-  #    - build_linux
-  #    - build_windows
-  #    - build_macos
-  #    runs-on: ubuntu-latest
-  #    steps:
-  #    - name: get artifacts
-  #    - name: publish 
+  release:
+     name: Release
+    #  if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+     needs:
+     - build_linux
+     - build_windows
+     - build_macos
+     runs-on: ubuntu-latest
+     steps:
+     - name: get artifacts
+       uses: actions/download-artifact@v2
+     - name: Display structure of downloaded files
+       run: ls -R
+    #  - name: Release
+    #     uses: softprops/action-gh-release@v1
+    #     with:
+    #       files: Release.txt
+    #     env:
+    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
 
 # flatpak for future
