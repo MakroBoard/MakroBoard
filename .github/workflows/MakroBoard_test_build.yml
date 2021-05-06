@@ -259,9 +259,17 @@ jobs:
     - uses: subosito/flutter-action@v1
       with:
         flutter-version: '2.0.4'
-    - name: flutter get dependencies
+    - name: flutter config
       working-directory: ./makro_board_client
-      run: flutter create --platforms=macos .
+      run: flutter config --enable-macos-desktop    
+    - name: flutter create
+      run: flutter create --platforms=macos ./makro_board_client
+    - name: flutter config macos
+      working-directory: ./makro_board_client
+      run: flutter config --enable-macos-desktop
+    - name: flutter build macos
+      working-directory: ./makro_board_client
+      run: flutter build macos --release
     - uses: actions/upload-artifact@v2
       with:
         name: latest_gen_macos
