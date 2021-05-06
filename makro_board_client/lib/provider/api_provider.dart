@@ -11,7 +11,7 @@ import 'package:makro_board_client/models/panel.dart';
 
 import 'package:signalr_core/signalr_core.dart';
 import 'package:makro_board_client/models/Control.dart';
-import 'package:makro_board_client/models/plugin.dart';
+import 'package:makro_board_client/models/Plugin.dart';
 import 'package:makro_board_client/models/ViewConfigValue.dart';
 import 'package:makro_board_client/models/client.dart';
 import 'package:makro_board_client/models/page.dart';

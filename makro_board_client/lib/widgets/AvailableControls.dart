@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/models/Control.dart';
 import 'package:makro_board_client/models/ViewConfigParameter.dart';
-import 'package:makro_board_client/models/plugin.dart';
+import 'package:makro_board_client/models/Plugin.dart';
 import 'package:makro_board_client/models/ViewConfigValue.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 

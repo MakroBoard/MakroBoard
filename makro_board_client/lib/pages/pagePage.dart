@@ -9,7 +9,7 @@ import 'package:makro_board_client/widgets/ControlPanel.dart';
 import 'package:makro_board_client/widgets/EditMode.dart';
 import 'package:makro_board_client/widgets/WmskAppBar.dart';
 import 'package:responsive_grid/responsive_grid.dart';
-import 'package:makro_board_client/models/plugin.dart' as models;
+import 'package:makro_board_client/models/Plugin.dart' as models;
 import 'package:makro_board_client/models/page.dart' as models;
 import 'package:makro_board_client/models/group.dart' as models;
 import 'package:makro_board_client/models/panel.dart' as models;
