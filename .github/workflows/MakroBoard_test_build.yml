@@ -253,6 +253,12 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+    - uses: subosito/flutter-action@v1
+      with:
+        flutter-version: '2.0.4'
     - name: flutter get dependencies
       working-directory: ./makro_board_client
       run: flutter create --platforms=macos .
