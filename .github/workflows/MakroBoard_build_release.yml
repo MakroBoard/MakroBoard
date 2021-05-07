@@ -153,6 +153,8 @@ jobs:
     - build_web_client
     runs-on: ubuntu-latest
     steps:
+    - name: checkout
+      uses: actions/checkout@v2
     - name: get artifacts
       uses: actions/download-artifact@v2
       with:
