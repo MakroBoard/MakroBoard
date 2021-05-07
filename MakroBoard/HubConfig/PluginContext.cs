@@ -36,7 +36,7 @@ namespace MakroBoard.Plugin
         public async Task InitializePlugins()
         {
             var pathToBinDebug = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var pluginDir = Path.GetFullPath(Path.Combine(pathToBinDebug, "../../../../PluginOutput"));
+            var pluginDir = Path.GetFullPath(Path.Combine(pathToBinDebug, "./Plugins"));
 
             var loaders = new List<PluginLoader>();
 
