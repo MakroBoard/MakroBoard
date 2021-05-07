@@ -377,7 +377,7 @@ jobs:
         path: upload/
         retention-days: 5
 
- build_windows_host_x64:
+  build_windows_host_x64:
     runs-on: windows-2019
     needs:
     - build_web_client
