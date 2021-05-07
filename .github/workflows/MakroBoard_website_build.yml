@@ -31,7 +31,7 @@ jobs:
 
   publish_dev:
     runs-on: ubuntu-latest
-    if: ${{ (!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) && github.event_name == 'push' }}
+    if: ${{ ((!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) && github.event_name == 'push' ) || (startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' && (contains(github.ref, '-beta'))) }}
     steps:
     - uses: actions/checkout@v2
     - name: add dev warning to index
@@ -63,7 +63,7 @@ jobs:
   publish:
     name: Release
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' || contains(github.event.head_commit.message, 'forcepublish') }}
+    if: ${{ (startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' && !(contains(github.ref, '-beta'))) || (contains(github.event.head_commit.message, 'forcepublish') && github.event_name == 'push') }}
     steps:
     - uses: actions/checkout@v2
     - uses: nikeee/docfx-action@v1.0.0
