@@ -1,8 +1,8 @@
 name: clean old workflow runs
 on:
   schedule:
-    - cron: '*/5 * * * *'
-# Run monthly, at 00:00 on the 1st day of month.
+    - cron: '0 0 * * 0'
+# Run weekly
 
 jobs:
   del_runs:
