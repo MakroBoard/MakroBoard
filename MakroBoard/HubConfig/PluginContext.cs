@@ -25,10 +25,6 @@ namespace MakroBoard.Plugin
         public PluginContext(IHubContext<ClientHub> hubContext)
         {
             _HubContext = hubContext;
-            //_Connection = new HubConnectionBuilder()
-            //    .WithUrl("https://localhost:5001/hub/clients")
-            //    .WithAutomaticReconnect()
-            //    .Build();
         }
 
         public IList<IMakroBoardPlugin> Plugins { get; private set; }
@@ -36,7 +32,14 @@ namespace MakroBoard.Plugin
         public async Task InitializePlugins()
         {
             var pathToBinDebug = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var pluginDir = Path.GetFullPath(Path.Combine(pathToBinDebug, "../../../../PluginOutput"));
+
+            var pluginDir = Path.GetFullPath("Plugins");
+            if (!Directory.Exists(pluginDir))
+            {
+                pluginDir = Path.GetFullPath(Path.Combine(pathToBinDebug, "../../../../PluginOutput"));
+            }
+
+            _Logger.Info($"Using PluginDirectory: \"{pluginDir}\"");
 
             var loaders = new List<PluginLoader>();
 
