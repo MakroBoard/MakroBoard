@@ -137,6 +137,8 @@ jobs:
       run: mkdir -p ./appimage/MakroBoard_client_x64.AppDir &&  cp -rf ./linuxclient_x64/* ./appimage/MakroBoard_client_x64.AppDir/ && cp ./packaging/AppImage/linuxclient_Apprun ./appimage/MakroBoard_client_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_client_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_client_x64.AppDir/MakroBoardClient.png && cp ./packaging/AppImage/linuxclient_desktop ./appimage/MakroBoard_client_x64.AppDir/MakroBoard_client_x64.desktop
     - name: build appimage linuxclient x64
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_client_x64.AppDir/ MakroBoard_client_x64.AppImage --sign -u 'gh-releases-zsync|MakroBoard|MakroBoard|latest|MakroBoard_client_x64.AppImage.zsync'
+      env:
+          ARCH: x86_64
     - name: copy linux client appimage x64
       #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/linuxclient_appimage_x64/ && cp -rf MakroBoard_client_x64.AppImage* upload/linuxclient_appimage_x64/
@@ -222,6 +224,8 @@ jobs:
       run: mkdir -p ./appimage/MakroBoard_host_x64.AppDir &&  cp -rf ./linuxhost_x64/* ./appimage/MakroBoard_host_x64.AppDir/ && cp ./packaging/AppImage/linuxhost_Apprun ./appimage/MakroBoard_host_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_host_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_host_x64.AppDir/MakroBoardHost.png && cp ./packaging/AppImage/linuxhost_desktop ./appimage/MakroBoard_host_x64.AppDir/MakroBoard_host_x64.desktop
     - name: build appimage linuxhost x64
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_host_x64.AppDir/ MakroBoard_host_x64.AppImage --sign -u 'gh-releases-zsync|MakroBoard|MakroBoard|latest|MakroBoard_host_x64.AppImage.zsync'
+      env:
+          ARCH: x86_64
     - name: copy linux host appimage x64
       #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/linuxhost_appimage_x64/ && cp -rf MakroBoard_host_x64.AppImage* upload/linuxhost_appimage_x64/
