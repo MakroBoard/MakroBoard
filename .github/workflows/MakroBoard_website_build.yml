@@ -57,7 +57,8 @@ jobs:
     - name: readd cname
       run: echo "dev.makroboard.app" >> ./dev.makroboard.app/docs/CNAME
     - name: push pages repo
-      run: cd ./dev.makroboard.app && git add . && git commit -m "CI Build" && git push
+      run: cd ./dev.makroboard.app && if [ $(git status --short | wc -l) -gt 0 ]; then git add . && git commit -m "CI Build" && git push; fi
+             
 
 
   publish:
@@ -87,7 +88,7 @@ jobs:
     - name: readd cname
       run: echo "www.makroboard.app" >> ./makroboard.app/docs/CNAME
     - name: push pages repo
-      run: cd ./makroboard.app && git add . && git commit -m "CI Build" && git push
+      run: cd ./makroboard.app && if [ $(git status --short | wc -l) -gt 0 ]; then git add . && git commit -m "CI Build" && git push; fi
     
 
 
