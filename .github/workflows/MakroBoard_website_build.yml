@@ -31,7 +31,7 @@ jobs:
 
   publish_dev:
     runs-on: ubuntu-latest
-    if: ${{ (!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) && github.event_name == 'push' }}
+    if: ${{ ((!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) && github.event_name == 'push' ) || (startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' && (contains(github.ref, '-beta'))) }}
     steps:
     - uses: actions/checkout@v2
     - name: add dev warning to index
@@ -57,13 +57,14 @@ jobs:
     - name: readd cname
       run: echo "dev.makroboard.app" >> ./dev.makroboard.app/docs/CNAME
     - name: push pages repo
-      run: cd ./dev.makroboard.app && git add . && git commit -m "CI Build" && git push
+      run: cd ./dev.makroboard.app && if [ $(git status --short | wc -l) -gt 0 ]; then git add . && git commit -m "CI Build" && git push; fi
+             
 
 
   publish:
     name: Release
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' || contains(github.event.head_commit.message, 'forcepublish') }}
+    if: ${{ (startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' && !(contains(github.ref, '-beta'))) || (contains(github.event.head_commit.message, 'forcepublish') && github.event_name == 'push') }}
     steps:
     - uses: actions/checkout@v2
     - uses: nikeee/docfx-action@v1.0.0
@@ -87,7 +88,7 @@ jobs:
     - name: readd cname
       run: echo "www.makroboard.app" >> ./makroboard.app/docs/CNAME
     - name: push pages repo
-      run: cd ./makroboard.app && git add . && git commit -m "CI Build" && git push
+      run: cd ./makroboard.app && if [ $(git status --short | wc -l) -gt 0 ]; then git add . && git commit -m "CI Build" && git push; fi
     
 
 

@@ -12,6 +12,7 @@ on:
     - '!packaging/Docs**'
     - '!README.md'
     - '!.github/workflows/MakroBoard_website_build.yml'
+    - '!.github/workflows/MakroBoard_clean_workflowruns.yml'
   pull_request:
     branches: 
     - main
@@ -23,6 +24,7 @@ on:
     - '!packaging/Docs**'
     - '!README.md'
     - '!.github/workflows/MakroBoard_website_build.yml'
+    - '!.github/workflows/MakroBoard_clean_workflowruns.yml'
 
 jobs:
 
@@ -134,17 +136,23 @@ jobs:
     - name: install appimagekit
       run: wget $(curl -sL https://api.github.com/repos/AppImage/AppImageKit/releases/latest | jq -r '.assets[].browser_download_url' | grep "appimagetool-x86_64.AppImage$") && chmod +x appimagetool-x86_64.AppImage
     - name: prepare appimage linxuclient x64 dir
-      run: mkdir -p ./appimage/MakroBoard_client_x64.AppDir &&  cp -rf ./linuxclient_x64/* ./appimage/MakroBoard_client_x64.AppDir/ && cp ./packaging/AppImage/linuxclient_Apprun ./appimage/MakroBoard_client_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_client_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_client_x64.AppDir/MakroBoardClient.png && cp ./packaging/AppImage/linuxclient_desktop ./appimage/MakroBoard_client_x64.AppDir/MakroBoard_client_x64.desktop
+      run: mkdir -p ./appimage/MakroBoard_client_x64.AppDir &&  cp -rf ./linuxclient_x64/* ./appimage/MakroBoard_client_x64.AppDir/ && chmod +x ./appimage/MakroBoard_client_x64.AppDir/MakroBoardClient && cp ./packaging/AppImage/linuxclient_Apprun ./appimage/MakroBoard_client_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_client_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_client_x64.AppDir/MakroBoardClient.png && cp ./packaging/AppImage/linuxclient_desktop ./appimage/MakroBoard_client_x64.AppDir/MakroBoard_client_x64.desktop
+    - name: build appimage linuxclient x64 beta
+      if: ${{ (contains(github.ref, '-beta')) }}
+      run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_client_x64.AppDir/ MakroBoard_client_x64.AppImage --sign
+      env:
+          ARCH: x86_64
     - name: build appimage linuxclient x64
+      if: ${{ !(contains(github.ref, '-beta')) }}
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_client_x64.AppDir/ MakroBoard_client_x64.AppImage --sign -u 'gh-releases-zsync|MakroBoard|MakroBoard|latest|MakroBoard_client_x64.AppImage.zsync'
       env:
           ARCH: x86_64
     - name: copy linux client appimage x64
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/linuxclient_appimage_x64/ && cp -rf MakroBoard_client_x64.AppImage* upload/linuxclient_appimage_x64/
     - name: upload artifact linux client x64 appimage
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_linux_client_x64_appimage
         path: upload/
@@ -187,7 +195,7 @@ jobs:
     - name: Build linux linux dotnet MakroBoard Plugins
       run: cat ./packaging/plugins/linux | xargs -I % dotnet publish MakroBoard.Plugin.%/MakroBoard.Plugin.%.csproj -r linux-x64 -c release --output Release/Plugins/MakroBoard.Plugin.% -p:Version=$MAKROBOARDNETVER
     - name: copy linux Host x64
-      run: mkdir -p upload/linuxhost_x64 && cp -rf ./Release/* upload/linuxhost_x64/ && cd upload/linuxhost_x64/ && tar cfvz ../linuxhost_x64.tar.gz *
+      run: mkdir -p upload/linuxhost_x64 && cp -rf ./Release/* upload/linuxhost_x64/ && cd upload/linuxhost_x64/ && rm -rf *.pdb && tar cfvz ../linuxhost_x64.tar.gz *
     - name: upload artifact linux Host x64
       uses: actions/upload-artifact@v2
       with:
@@ -221,17 +229,23 @@ jobs:
     - name: install appimagekit
       run: wget $(curl -sL https://api.github.com/repos/AppImage/AppImageKit/releases/latest | jq -r '.assets[].browser_download_url' | grep "appimagetool-x86_64.AppImage$") && chmod +x appimagetool-x86_64.AppImage
     - name: prepare appimage linxhost x64 dir
-      run: mkdir -p ./appimage/MakroBoard_host_x64.AppDir &&  cp -rf ./linuxhost_x64/* ./appimage/MakroBoard_host_x64.AppDir/ && cp ./packaging/AppImage/linuxhost_Apprun ./appimage/MakroBoard_host_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_host_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_host_x64.AppDir/MakroBoardHost.png && cp ./packaging/AppImage/linuxhost_desktop ./appimage/MakroBoard_host_x64.AppDir/MakroBoard_host_x64.desktop
+      run: mkdir -p ./appimage/MakroBoard_host_x64.AppDir &&  cp -rf ./linuxhost_x64/* ./appimage/MakroBoard_host_x64.AppDir/ && chmod +x ./appimage/MakroBoard_host_x64.AppDir/MakroBoard && cp ./packaging/AppImage/linuxhost_Apprun ./appimage/MakroBoard_host_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_host_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_host_x64.AppDir/MakroBoardHost.png && cp ./packaging/AppImage/linuxhost_desktop ./appimage/MakroBoard_host_x64.AppDir/MakroBoard_host_x64.desktop
+    - name: build appimage linuxhost x64 beta
+      if: ${{ (contains(github.ref, '-beta')) }}
+      run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_host_x64.AppDir/ MakroBoard_host_x64.AppImage --sign
+      env:
+          ARCH: x86_64
     - name: build appimage linuxhost x64
+      if: ${{ !(contains(github.ref, '-beta')) }}
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_host_x64.AppDir/ MakroBoard_host_x64.AppImage --sign -u 'gh-releases-zsync|MakroBoard|MakroBoard|latest|MakroBoard_host_x64.AppImage.zsync'
       env:
           ARCH: x86_64
     - name: copy linux host appimage x64
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/linuxhost_appimage_x64/ && cp -rf MakroBoard_host_x64.AppImage* upload/linuxhost_appimage_x64/
     - name: upload artifact linux Host x64 appimage
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_linux_host_x64_appimage
         path: upload/
@@ -272,11 +286,11 @@ jobs:
       working-directory: ./makro_board_client
       run: flutter build apk --release
     - name: copy android client
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/android && cp -rf ./makro_board_client/build/app/outputs/flutter-apk/* upload/android/
     - name: upload artifact android client
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_android_client
         path: upload/
@@ -377,11 +391,11 @@ jobs:
       env:
           WIX: ${{ github.workspace }}\wi
     - name: copy windows client x64 msi
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64_msi") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\MakroBoardClient.Setup\bin\Release\*.msi") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64_msi\")
     - name: upload artifact windows client x64 msi
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_windows_client_x64_msi
         path: upload/
@@ -478,11 +492,11 @@ jobs:
       env:
           WIX: ${{ github.workspace }}\wix
     - name: copy windows host x64 msi
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64_msi") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\MakroBoard.Setup\bin\Release\*.msi") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64_msi\")
     - name: upload artifact windows host x64 msi
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_windows_host_x64_msi
         path: upload/
@@ -526,11 +540,11 @@ jobs:
       working-directory: ./makro_board_client
       run: flutter build ios --release --no-codesign
     - name: copy ios client
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/ios && cp -rf ./makro_board_client/build/ios/* upload/ios/
     - name: upload artifact ios client
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_ios_client
         path: upload/
@@ -576,11 +590,11 @@ jobs:
       working-directory: ./makro_board_client
       run: flutter build macos --release
     - name: copy macos client x64
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/macosclient_x64 && cp -rf ./makro_board_client/build/macos/Build/Products/Release/* upload/macosclient_x64/
     - name: upload artifact macos client x64
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_macos_client_x64
         path: upload/
@@ -624,11 +638,11 @@ jobs:
       run: cat ./packaging/plugins/macos | xargs -I % dotnet publish MakroBoard.Plugin.%/MakroBoard.Plugin.%.csproj -r osx-x64 -c release --output Release/Plugins/MakroBoard.Plugin.% -p:Version=$MAKROBOARDNETVER
       shell: bash
     - name: copy macos host x64
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run: mkdir -p upload/macoshost_x64 && cp -rf ./Release/* upload/macoshost_x64/ && cd upload/macoshost_x64/ && tar cfvz ../macoshost_x64.tar.gz *
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      run: mkdir -p upload/macoshost_x64 && cp -rf ./Release/* upload/macoshost_x64/ && cd upload/macoshost_x64/ && rm -rf *.pdb && tar cfvz ../macoshost_x64.tar.gz *
     - name: upload artifact macos host x64
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
+      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_macos_host_x64
         path: upload/
@@ -637,7 +651,7 @@ jobs:
 
   release:
      name: Release
-     #if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
      needs:
      - build_linux_host_x64
      - build_linux_host_x64_appimage
@@ -657,25 +671,39 @@ jobs:
        uses: actions/download-artifact@v2
      - name: Display structure of downloaded files
        run: ls -R
-  
-    #  - name: Release
-    #    uses: softprops/action-gh-release@v1
-    #    with:
-    #     files: 
-    #     -
-    #     -
-    #     -
-    #     -
-    #     -
-    #     -
-    #     -
-    #     -
-    #     -
-    #     -
-    #     -
-    #     -
-    #    env:
-    #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+     - name: rename android client
+       run: mv ./latest_android_client/android/app-release.apk ./latest_android_client/android/app.makroboard.client-release.apk
+     - name: Release
+       if: ${{ !(contains(github.ref, '-beta')) }}
+       uses: softprops/action-gh-release@v1
+       with:
+        files: |
+          ./latest_android_client/android/app.makroboard.client-release.apk
+          ./latest_linux_client_x64/linuxclient_x64.tar.gz
+          ./latest_linux_client_x64_appimage/linuxclient_appimage_x64/MakroBoard_client_x64.AppImage
+          ./latest_linux_client_x64_appimage/linuxclient_appimage_x64/MakroBoard_client_x64.AppImage.zsync
+          ./latest_linux_host_x64/linuxhost_x64.tar.gz
+          ./latest_linux_host_x64_appimage/linuxhost_appimage_x64/MakroBoard_host_x64.AppImage
+          ./latest_linux_host_x64_appimage/linuxhost_appimage_x64/MakroBoard_host_x64.AppImage.zsync
+          ./latest_windows_client_x64_msi/windowsclient_x64_msi/MakroBoard_Client.msi
+          ./latest_windows_host_x64_msi/windowshost_x64_msi/MakroBoard_Host.msi
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}     
+     - name: pre Release
+       if: ${{ (contains(github.ref, '-beta')) }}
+       uses: softprops/action-gh-release@v1
+       with:
+        prerelease: true
+        files: |
+          ./latest_android_client/android/app.makroboard.client-release.apk
+          ./latest_linux_client_x64/linuxclient_x64.tar.gz
+          ./latest_linux_client_x64_appimage/linuxclient_appimage_x64/MakroBoard_client_x64.AppImage
+          ./latest_linux_host_x64/linuxhost_x64.tar.gz
+          ./latest_linux_host_x64_appimage/linuxhost_appimage_x64/MakroBoard_host_x64.AppImage
+          ./latest_windows_client_x64_msi/windowsclient_x64_msi/MakroBoard_Client.msi
+          ./latest_windows_host_x64_msi/windowshost_x64_msi/MakroBoard_Host.msi
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
 
