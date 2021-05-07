@@ -189,7 +189,9 @@ jobs:
     - name: Build linux linux dotnet MakroBoard Plugins
       run: cat ./packaging/plugins/linux | xargs -I % dotnet publish MakroBoard.Plugin.%/MakroBoard.Plugin.%.csproj -r linux-x64 -c release --output Release/Plugins/MakroBoard.Plugin.% -p:Version=$MAKROBOARDNETVER
     - name: copy linux Host x64
-      run: mkdir -p upload/linuxhost_x64 && cp -rf ./Release/* upload/linuxhost_x64/ && cd upload/linuxhost_x64/ && tar cfvz ../linuxhost_x64.tar.gz *
+      run: mkdir -p upload/linuxhost_x64 && cp -rf ./Release/* upload/linuxhost_x64/ && cd upload/linuxhost_x64/ && rm -rf *.pdb && rm -rf *.deps.json && tar cfvz ../linuxhost_x64.tar.gz *
+    - name: cleanup linux client 
+      run: 
     - name: upload artifact linux Host x64
       uses: actions/upload-artifact@v2
       with:
