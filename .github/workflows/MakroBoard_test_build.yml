@@ -328,7 +328,7 @@ jobs:
 
   release:
      name: Release
-     if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+     #if: ${{ startsWith(github.ref, 'refs/tags/v') }}
      needs:
      - build_linux
      - build_windows
