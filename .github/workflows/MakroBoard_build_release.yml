@@ -136,7 +136,7 @@ jobs:
     - name: install appimagekit
       run: wget $(curl -sL https://api.github.com/repos/AppImage/AppImageKit/releases/latest | jq -r '.assets[].browser_download_url' | grep "appimagetool-x86_64.AppImage$") && chmod +x appimagetool-x86_64.AppImage
     - name: prepare appimage linxuclient x64 dir
-      run: mkdir -p ./appimage/MakroBoard_client_x64.AppDir &&  cp -rf ./latest_linux_client_x64/linuxclient_x64/* ./appimage/MakroBoard_client_x64.AppDir/ && cp ./packaging/AppImage/linuxclient_Apprun ./appimage/MakroBoard_client_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_client_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_client_x64.AppDir/MakroBoardClient.png && cp ./packaging/AppImage/linuxclient_desktop ./appimage/MakroBoard_client_x64.AppDir/MakroBoard_client_x64.desktop
+      run: mkdir -p ./appimage/MakroBoard_client_x64.AppDir &&  cp -rf ./linuxclient_x64/* ./appimage/MakroBoard_client_x64.AppDir/ && cp ./packaging/AppImage/linuxclient_Apprun ./appimage/MakroBoard_client_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_client_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_client_x64.AppDir/MakroBoardClient.png && cp ./packaging/AppImage/linuxclient_desktop ./appimage/MakroBoard_client_x64.AppDir/MakroBoard_client_x64.desktop
     - name: build appimage linuxclient x64
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_client_x64.AppDir/ MakroBoard_client_x64.AppImage --sign -u 'gh-releases-zsync|MakroBoard|MakroBoard|latest|MakroBoard_client_x64.AppImage.zsync'
     - name: copy linux client appimage x64
@@ -179,7 +179,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: copy web to dotnet
-      run: cp -rf ./latest_web_client/web/* ./MakroBoard/wwwroot/
+      run: cp -rf ./web/* ./MakroBoard/wwwroot/
     - name: Build linux dotnet
       run: dotnet publish -r linux-x64 -c release --output Release -p:Version=$MAKROBOARDNETVER
     - name: Build global linux dotnet MakroBoard Plugins
@@ -221,7 +221,7 @@ jobs:
     - name: install appimagekit
       run: wget $(curl -sL https://api.github.com/repos/AppImage/AppImageKit/releases/latest | jq -r '.assets[].browser_download_url' | grep "appimagetool-x86_64.AppImage$") && chmod +x appimagetool-x86_64.AppImage
     - name: prepare appimage linxhost x64 dir
-      run: mkdir -p ./appimage/MakroBoard_host_x64.AppDir &&  cp -rf ./latest_linux_host_x64/linuxhost_x64/* ./appimage/MakroBoard_host_x64.AppDir/ && cp ./packaging/AppImage/linuxhost_Apprun ./appimage/MakroBoard_host_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_host_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_host_x64.AppDir/MakroBoardHost.png && cp ./packaging/AppImage/linuxhost_desktop ./appimage/MakroBoard_host_x64.AppDir/MakroBoard_host_x64.desktop
+      run: mkdir -p ./appimage/MakroBoard_host_x64.AppDir &&  cp -rf ./linuxhost_x64/* ./appimage/MakroBoard_host_x64.AppDir/ && cp ./packaging/AppImage/linuxhost_Apprun ./appimage/MakroBoard_host_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_host_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_host_x64.AppDir/MakroBoardHost.png && cp ./packaging/AppImage/linuxhost_desktop ./appimage/MakroBoard_host_x64.AppDir/MakroBoard_host_x64.desktop
     - name: build appimage linuxhost x64
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_host_x64.AppDir/ MakroBoard_host_x64.AppImage --sign -u 'gh-releases-zsync|MakroBoard|MakroBoard|latest|MakroBoard_host_x64.AppImage.zsync'
     - name: copy linux host appimage x64
@@ -370,7 +370,7 @@ jobs:
       working-directory: ./MakroBoardClient.Setup
       shell: bash
     - name: copy windows client bin
-      run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\makro_board_client\build\windows\runner\Release") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\latest_windows_client_x64\windowsclient_x64\*") -Destination $($env:GITHUB_WORKSPACE + "\makro_board_client\build\windows\runner\Release\")
+      run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\makro_board_client\build\windows\runner\Release") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\windowsclient_x64\*") -Destination $($env:GITHUB_WORKSPACE + "\makro_board_client\build\windows\runner\Release\")
     - name: Build windows Client x64 MSI
       run: msbuild /property:Configuration=Release
       working-directory: ${{ github.workspace }}\MakroBoardClient.Setup
@@ -416,7 +416,7 @@ jobs:
       run:  echo "MAKROBOARDNETVER=$(echo $MAKROBOARDVER | sed 's|+|.|g')" >> $GITHUB_ENV
       shell: bash   
     - name: copy web to dotnet
-      run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\latest_web_client\web\*") -Destination $($env:GITHUB_WORKSPACE + "\MakroBoard\wwwroot\")
+      run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\web\*") -Destination $($env:GITHUB_WORKSPACE + "\MakroBoard\wwwroot\")
     - name: Restore dependencies
       run: dotnet restore
     - name: Build Windows dotnet MakroBoard
@@ -473,7 +473,7 @@ jobs:
       working-directory: ./MakroBoard.Setup 
       shell: bash
     - name: copy windows host bin
-      run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\Release") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\latest_windows_host_x64\windowshost_x64\*") -Destination $($env:GITHUB_WORKSPACE + "\Release\")
+      run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\Release") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\windowshost_x64\*") -Destination $($env:GITHUB_WORKSPACE + "\Release\")
     - name: Build Host x64 MSI dotnet
       run: msbuild /property:Configuration=Release
       working-directory: ${{ github.workspace }}\MakroBoard.Setup
@@ -614,7 +614,7 @@ jobs:
       run:  echo "MAKROBOARDNETVER=$(echo $MAKROBOARDVER | gsed 's|+|.|g')" >> $GITHUB_ENV
       shell: bash   
     - name: copy web to dotnet
-      run: cp -rf ./latest_web_client/web/* ./MakroBoard/wwwroot/
+      run: cp -rf ./web/* ./MakroBoard/wwwroot/
     - name: Restore dependencies
       run: dotnet restore
     - name: Build macos host x64 dotnet
