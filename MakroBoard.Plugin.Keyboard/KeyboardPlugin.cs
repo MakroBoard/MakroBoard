@@ -12,7 +12,8 @@ namespace MakroBoard.Plugin.Keyboard
         {
             var controls = new List<Control>
             {
-                new KeyboardControl()
+                new KeyboardControl(),
+                new TextControl()
             };
 
             var result = await Task.FromResult(controls).ConfigureAwait(false);
@@ -21,12 +22,20 @@ namespace MakroBoard.Plugin.Keyboard
 
         public async override Task<Control> GetControl(string symbolicName)
         {
-            if(!symbolicName.Equals("Keyboard"))
+            Control control;
+            switch (symbolicName)
             {
-                return null;
+                case "Keyboard":
+                    control = new KeyboardControl();
+                    break;
+                case "Text":
+                    control = new TextControl();
+                    break;
+                default:
+                    return null;
             }
 
-            return await Task.FromResult(new KeyboardControl()).ConfigureAwait(false);
+            return await Task.FromResult(control).ConfigureAwait(false);
         }
     }
 

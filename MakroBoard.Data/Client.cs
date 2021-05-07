@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace MakroBoard.Data
@@ -21,13 +23,21 @@ namespace MakroBoard.Data
 
         [JsonIgnore]
         public List<Session> Sessions { get; set; }
+
+        public void CreateNewToken(string seed)
+        {
+            byte[] bytes = SHA512.Create().ComputeHash(Encoding.UTF8.GetBytes($"WMSK_{ClientIp}{Code}{DateTime.Now:O}{seed}{new Random().Next()}"));
+            var token = Convert.ToBase64String(bytes);
+            Token = token;
+        }
     }
 
     public enum ClientState
     {
-        None,
-        Confirmed,
-        Blocked
+        None = 0,
+        Blocked = 10,
+        Confirmed = 100,
+        Admin = 1000
     }
 
     public class Session

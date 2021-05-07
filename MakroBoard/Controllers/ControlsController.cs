@@ -31,7 +31,8 @@ namespace MakroBoard.Controllers
 
         // GET: api/client/requesttokens
         [HttpGet("availablecontrols")]
-        [LocalHost]
+        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        //[ServiceFilter(typeof(AuthenticatedClient))]
         public async Task<ActionResult> GetAvailableControls()
         {
             var plugins = _PluginContext.Plugins;
@@ -52,7 +53,7 @@ namespace MakroBoard.Controllers
         /// POST: api/controls/confirmclient
         /// </summary>
         [HttpPost("execute")]
-        [LocalHost]
+        [ServiceFilter(typeof(AuthenticatedClient))]
         public async Task<ActionResult> PostExecute([FromBody] JsonElement data)
         {
             var symbolicName = string.Empty;

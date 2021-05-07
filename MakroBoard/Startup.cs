@@ -10,6 +10,7 @@ using MakroBoard.Data;
 using MakroBoard.HubConfig;
 using System;
 using MakroBoard.Plugin;
+using MakroBoard.ActionFilters;
 
 namespace MakroBoard
 {
@@ -39,7 +40,6 @@ namespace MakroBoard
                 );
             });
 
-
             var sqliteConnectionString = $"Filename={Path.Combine(Constants.DataDirectory, "wmsk.db")}";
             services.AddDbContext<DatabaseContext>(options => options.UseSqlite(sqliteConnectionString));
 
@@ -50,9 +50,16 @@ namespace MakroBoard
                 services.AddDatabaseDeveloperPageExceptionFilter();
             }
 
+            services.AddScoped<AuthenticatedClient>();
+            services.AddScoped<AuthenticatedAdmin>();
             services.AddSingleton<PluginContext>();
             services.AddSignalR(o => { o.EnableDetailedErrors = _Env.IsDevelopment(); });
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<AuthenticatedClient>();
+                options.Filters.Add<AuthenticatedAdmin>();
+            });
+            
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

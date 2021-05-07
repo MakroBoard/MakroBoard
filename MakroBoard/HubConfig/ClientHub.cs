@@ -51,7 +51,7 @@ namespace MakroBoard.HubConfig
                 }
 
                 //_PluginContext.Subscribe(panel.ID, control, CreateParameterValues(control, panel.ConfigParameters));
-                _PluginContext.Subscribe(panel.ID, panel.PluginName, panel.SymbolicName, panel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value));
+                _ = _PluginContext.Subscribe(panel.ID, panel.PluginName, panel.SymbolicName, panel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value));
             }
         }
 
@@ -110,12 +110,20 @@ namespace MakroBoard.HubConfig
                 return;
             }
 
+            var isLocalHost = IsLocalHost(ipAddress);
+
             var existingClient = await _DatabaseContext.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(ipAddress.ToString()));
 
             if (existingClient == null)
             {
-                existingClient = new Data.Client { ClientIp = ipAddress.ToString(), RegisterDate = DateTime.UtcNow };
+                existingClient = new Data.Client { ClientIp = ipAddress.ToString(), RegisterDate = DateTime.UtcNow, State = isLocalHost ? ClientState.Admin : ClientState.None };
+                if (isLocalHost)
+                {
+                    existingClient.CreateNewToken(Constants.Seed);
+                    _ = Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token);
+                }
             }
+
             existingClient.LastConnection = DateTime.UtcNow;
 
             await _DatabaseContext.Sessions.AddAsync(new Session { ClientSignalrId = Context.ConnectionId, Client = existingClient });
@@ -123,7 +131,7 @@ namespace MakroBoard.HubConfig
 
 
 
-            if (IsLocalHost(ipAddress))
+            if (isLocalHost)
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup);
 
@@ -138,10 +146,10 @@ namespace MakroBoard.HubConfig
                 // Any sync needed?
             }
 
-            if (existingClient.State == ClientState.Confirmed)
-            {
-                _ = Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token);
-            }
+            //if (existingClient.State >= ClientState.Confirmed)
+            //{
+            //    _ = Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token);
+            //}
 
             var pages = await _DatabaseContext.Pages.Include(p => p.Groups).ThenInclude((g) => g.Panels).ThenInclude(p => p.ConfigParameters).ToListAsync();
             foreach (var page in pages)

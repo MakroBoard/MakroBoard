@@ -54,3 +54,25 @@ class Client {
 
   bool get isEmpty => id < 0;
 }
+
+class ClientState {
+  static const none = 0;
+  static const blocked = 10;
+  static const confirmed = 100;
+  static const admin = 1000;
+
+  static String getText(int clientState) {
+    switch (clientState) {
+      case none:
+        return "Benutzer nicht freigeschalten";
+      case blocked:
+        return "Benutzer gesperrt";
+      case confirmed:
+        return "Benutzer";
+      case admin:
+        return "Administrator";
+      default:
+        return "ClientState noch nicht unterstützt: $clientState";
+    }
+  }
+}

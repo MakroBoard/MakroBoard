@@ -23,7 +23,7 @@ class AvailableClients extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         ListTile(
                           leading: Icon(
@@ -32,22 +32,27 @@ class AvailableClients extends StatelessWidget {
                           title: Text("Client:" + client.clientIp),
                           subtitle: Text("Token: " + client.code.toString()),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            client.state == 1
-                                ? TextButton.icon(
-                                    onPressed: () => {Modular.get<ApiProvider>().removeClient(client)},
-                                    icon: Icon(Icons.remove),
-                                    label: Text("Löschen"),
-                                  )
-                                : TextButton.icon(
-                                    onPressed: () => {Modular.get<ApiProvider>().confirmClient(client)},
-                                    icon: Icon(Icons.check),
-                                    label: Text("Freischalten"),
-                                  ),
-                          ],
-                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(68.0, 0, 0, 0),
+                          child: Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            children: [
+                              Text(ClientState.getText(client.state)),
+                              // Expanded(child: Placeholder()),
+                              client.state >= ClientState.confirmed
+                                  ? TextButton.icon(
+                                      onPressed: () => {Modular.get<ApiProvider>().removeClient(client)},
+                                      icon: Icon(Icons.remove),
+                                      label: Text("Löschen"),
+                                    )
+                                  : TextButton.icon(
+                                      onPressed: () => {Modular.get<ApiProvider>().confirmClient(client)},
+                                      icon: Icon(Icons.check),
+                                      label: Text("Freischalten"),
+                                    ),
+                            ],
+                          ),
+                        )
                       ],
                     ),
                   ),

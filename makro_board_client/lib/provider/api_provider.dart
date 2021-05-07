@@ -64,6 +64,10 @@ class ApiProvider {
   Future<bool> initialize(Uri serverUri) async {
     try {
       _serverUri = serverUri;
+
+      // // Always call first to be sure on hub connection the client is known
+      // await isAuthenticated();
+
       var url = serverUri.replace(path: requestTokenUrl).toString();
       _connection = HubConnectionBuilder()
           .withUrl(
@@ -251,15 +255,10 @@ class ApiProvider {
   Future<bool> isAuthenticated() async {
     // return false;
     try {
-      var authToken = Settings.getValue("server_token", "");
-      if (authToken.isEmpty) {
-        return false;
-      }
-
       var response = await http.get(
         _serverUri!.replace(path: checkTokenUrl),
         headers: <String, String>{
-          HttpHeaders.authorizationHeader: authToken,
+          HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
@@ -274,6 +273,7 @@ class ApiProvider {
     var response = await http.post(
       _serverUri!.replace(path: submitCodeUrl),
       headers: <String, String>{
+        HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: json.encode(code),
@@ -305,6 +305,7 @@ class ApiProvider {
       await http.post(
         _serverUri!.replace(path: removeClientUrl),
         headers: <String, String>{
+          HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: json.encode(client),
@@ -323,6 +324,7 @@ class ApiProvider {
         var response = await http.get(
           _serverUri!.replace(path: getControlsUrl),
           headers: <String, String>{
+            HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
             'Content-Type': 'application/json; charset=UTF-8',
           },
         );
@@ -346,6 +348,7 @@ class ApiProvider {
       await http.post(
         _serverUri!.replace(path: executeControlUrl),
         headers: <String, String>{
+          HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonBody,
@@ -362,6 +365,7 @@ class ApiProvider {
     await http.post(
       _serverUri!.replace(path: addPageUrl),
       headers: <String, String>{
+        HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: json.encode(page),
@@ -372,6 +376,7 @@ class ApiProvider {
     await http.post(
       _serverUri!.replace(path: addGroupUrl),
       headers: <String, String>{
+        HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: json.encode(group),
@@ -382,6 +387,7 @@ class ApiProvider {
     await http.post(
       _serverUri!.replace(path: addPanelUrl),
       headers: <String, String>{
+        HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: json.encode(panel),
