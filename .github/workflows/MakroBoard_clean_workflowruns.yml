@@ -1,7 +1,7 @@
 name: clean old workflow runs
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "0 0 * * *"
 # Run weekly
 
 jobs:

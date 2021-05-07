@@ -12,6 +12,7 @@ on:
     - '!packaging/Docs**'
     - '!README.md'
     - '!.github/workflows/MakroBoard_website_build.yml'
+    - '!.github/workflows/MakroBoard_clean_workflowruns.yml'
   pull_request:
     branches: 
     - main
@@ -23,6 +24,7 @@ on:
     - '!packaging/Docs**'
     - '!README.md'
     - '!.github/workflows/MakroBoard_website_build.yml'
+    - '!.github/workflows/MakroBoard_clean_workflowruns.yml'
 
 jobs:
 
