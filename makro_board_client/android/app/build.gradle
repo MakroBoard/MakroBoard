@@ -49,7 +49,7 @@ android {
             applicationVariants.all { variant ->
                 variant.outputs.all {
                     def appName = "MakroBoardClient"
-                    def buildType = variant.variantData.variantConfiguration.buildType.name
+                    def buildType = variant.buildType.name
                     def newName
                     if (buildType == 'debug'){
                         newName = "${appName}-${variant.getFlavorName()}-debug.apk"
