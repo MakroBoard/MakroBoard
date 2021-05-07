@@ -36,7 +36,7 @@
   <xsl:template match="wix:ComponentRef[key('pdbRemove', @Id)]" />
   
   <!-- but exclude deps.json -->
-  <xsl:key name="pdbRemove" match="wix:Component[user:HasFileExtension(wix:File/@Source, '.deps.json')]" use="@Id"/>
+  <xsl:key name="depsJsonRemove" match="wix:Component[user:HasFileExtension(wix:File/@Source, '.deps.json')]" use="@Id"/>
   <xsl:template match="wix:Component[key('depsJsonRemove', @Id)]" />
   <xsl:template match="wix:ComponentRef[key('depsJsonRemove', @Id)]" />
 
