@@ -664,16 +664,16 @@ jobs:
      - name: Release
        uses: softprops/action-gh-release@v1
        with:
-        files: 
-        - ./latest_android_client/android/app.makroboard.client-release.apk
-        - ./latest_linux_client_x64/linuxclient_x64.tar.gz
-        - ./latest_linux_client_x64_appimage/linuxclient_appimage_x64/MakroBoard_client_x64.AppImage
-        - ./latest_linux_client_x64_appimage/linuxclient_appimage_x64/MakroBoard_client_x64.AppImage.zsync
-        - ./latest_linux_host_x64/linuxhost_x64.tar.gz
-        - ./latest_linux_host_x64_appimage/linuxhost_appimage_x64/MakroBoard_host_x64.AppImage
-        - ./latest_linux_host_x64_appimage/linuxhost_appimage_x64/MakroBoard_host_x64.AppImage.zsync
-        - ./latest_windows_client_x64_msi/windowsclient_x64_msi/MakroBoard_Client.msi
-        - ./latest_windows_host_x64_msi/windowshost_x64_msi/MakroBoard_Host.msi
+        files: |
+          ./latest_android_client/android/app.makroboard.client-release.apk
+          ./latest_linux_client_x64/linuxclient_x64.tar.gz
+          ./latest_linux_client_x64_appimage/linuxclient_appimage_x64/MakroBoard_client_x64.AppImage
+          ./latest_linux_client_x64_appimage/linuxclient_appimage_x64/MakroBoard_client_x64.AppImage.zsync
+          ./latest_linux_host_x64/linuxhost_x64.tar.gz
+          ./latest_linux_host_x64_appimage/linuxhost_appimage_x64/MakroBoard_host_x64.AppImage
+          ./latest_linux_host_x64_appimage/linuxhost_appimage_x64/MakroBoard_host_x64.AppImage.zsync
+          ./latest_windows_client_x64_msi/windowsclient_x64_msi/MakroBoard_Client.msi
+          ./latest_windows_host_x64_msi/windowshost_x64_msi/MakroBoard_Host.msi
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
