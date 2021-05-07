@@ -54,11 +54,9 @@ jobs:
       working-directory: ./makro_board_client
       run: flutter build web
     - name: copy web client
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/web && cp -rf ./makro_board_client/build/web/* upload/web/
     - name: upload artifact web client
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
       with:
         name: latest_web_client
         path: upload/
@@ -103,11 +101,9 @@ jobs:
       working-directory: ./makro_board_client
       run: flutter build linux --release
     - name: copy linux client x64
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/linuxclient_x64 && cp -rf ./makro_board_client/build/linux/release/bundle/* upload/linuxclient_x64/ && cd upload/linuxclient_x64/ && tar cfvz ../linuxclient_x64.tar.gz *
     - name: upload artifact linux client x64
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
       with:
         name: latest_linux_client_x64
         path: upload/
@@ -118,6 +114,8 @@ jobs:
     - build_linux_client_x64
     runs-on: ubuntu-latest
     steps:
+    - name: checkout
+      uses: actions/checkout@v2
     - name: get artifacts
       uses: actions/download-artifact@v2
       with:
@@ -144,7 +142,7 @@ jobs:
       run: mkdir -p upload/linuxclient_appimage_x64/ && cp -rf MakroBoard_client_x64.AppImage* upload/linuxclient_appimage_x64/
     - name: upload artifact linux client x64 appimage
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
+      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_linux_client_x64_appimage
         path: upload/
@@ -187,11 +185,9 @@ jobs:
     - name: Build linux linux dotnet MakroBoard Plugins
       run: cat ./packaging/plugins/linux | xargs -I % dotnet publish MakroBoard.Plugin.%/MakroBoard.Plugin.%.csproj -r linux-x64 -c release --output Release/Plugins/MakroBoard.Plugin.% -p:Version=$MAKROBOARDNETVER
     - name: copy linux Host x64
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/linuxhost_x64 && cp -rf ./Release/* upload/linuxhost_x64/ && cd upload/linuxhost_x64/ && tar cfvz ../linuxhost_x64.tar.gz *
     - name: upload artifact linux Host x64
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
       with:
         name: latest_linux_host_x64
         path: upload/
@@ -203,6 +199,8 @@ jobs:
     - build_linux_host_x64
     runs-on: ubuntu-latest
     steps:
+    - name: checkout
+      uses: actions/checkout@v2
     - name: get artifacts
       uses: actions/download-artifact@v2
       with:
@@ -229,7 +227,7 @@ jobs:
       run: mkdir -p upload/linuxhost_appimage_x64/ && cp -rf MakroBoard_host_x64.AppImage* upload/linuxhost_appimage_x64/
     - name: upload artifact linux Host x64 appimage
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
+      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_linux_host_x64_appimage
         path: upload/
@@ -274,7 +272,7 @@ jobs:
       run: mkdir -p upload/android && cp -rf ./makro_board_client/build/app/outputs/flutter-apk/* upload/android/
     - name: upload artifact android client
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
+      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_android_client
         path: upload/
@@ -323,11 +321,9 @@ jobs:
       working-directory: ${{ github.workspace }}\makro_board_client
       run: flutter build windows --release
     - name: copy windows client x64
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\makro_board_client\build\windows\runner\Release\*") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64\")
     - name: upload artifact windows client x64
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
       with:
         name: latest_windows_client_x64
         path: upload/
@@ -381,7 +377,7 @@ jobs:
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64_msi") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\MakroBoardClient.Setup\bin\Release\*.msi") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64_msi\")
     - name: upload artifact windows client x64 msi
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
+      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_windows_client_x64_msi
         path: upload/
@@ -426,11 +422,9 @@ jobs:
     - name: Build windows Windows dotnet MakroBoard Plugins
       run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\windows") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_ -p:Version=$ENV:MAKROBOARDNETVER" }
     - name: copy windows host x64 
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\Release\*") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64\")
     - name: upload artifact windows client x64 msi
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
       with:
         name: latest_windows_host_x64
         path: upload/
@@ -484,7 +478,7 @@ jobs:
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64_msi") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\MakroBoard.Setup\bin\Release\*.msi") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64_msi\")
     - name: upload artifact windows host x64 msi
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
+      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_windows_host_x64_msi
         path: upload/
@@ -532,7 +526,7 @@ jobs:
       run: mkdir -p upload/ios && cp -rf ./makro_board_client/build/ios/* upload/ios/
     - name: upload artifact ios client
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
+      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_ios_client
         path: upload/
@@ -582,7 +576,7 @@ jobs:
       run: mkdir -p upload/macosclient_x64 && cp -rf ./makro_board_client/build/macos/Build/Products/Release/* upload/macosclient_x64/
     - name: upload artifact macos client x64
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
+      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_macos_client_x64
         path: upload/
@@ -630,7 +624,7 @@ jobs:
       run: mkdir -p upload/macoshost_x64 && cp -rf ./Release/* upload/macoshost_x64/ && cd upload/macoshost_x64/ && tar cfvz ../macoshost_x64.tar.gz *
     - name: upload artifact macos host x64
       uses: actions/upload-artifact@v2
-      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) && !(env.ACT) }}
+      #if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_macos_host_x64
         path: upload/
