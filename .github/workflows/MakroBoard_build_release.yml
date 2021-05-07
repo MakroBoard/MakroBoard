@@ -657,3 +657,34 @@ jobs:
        uses: actions/download-artifact@v2
      - name: Display structure of downloaded files
        run: ls -R
+  
+    #  - name: Release
+    #    uses: softprops/action-gh-release@v1
+    #    with:
+    #     files: 
+    #     -
+    #     -
+    #     -
+    #     -
+    #     -
+    #     -
+    #     -
+    #     -
+    #     -
+    #     -
+    #     -
+    #     -
+    #    env:
+    #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+
+# flatpak for future
+#
+
+    # - name: prepare flatpak linuxclient
+    #   run: mkdir -p ./flatpakbuild/linuxclient && cp  ./packaging/flatpak/org.wmsk.client.yml ./flatpakbuild/linuxclient/ && cp -rf ./makro_board_client/build/linux/release/bundle/* ./flatpakbuild/linuxclient/
+    # - name: build flatpak linuxclient
+    #   run: cd ./flatpakbuild/linuxclien && flatpak-builder build-dir org.wmsk.client.yml
+      # - name: install flatpak SDK
+      # run:  flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo && flatpak install flathub org.freedesktop.Platform//19.08 org.freedesktop.Sdk//19.08
