@@ -627,7 +627,7 @@ jobs:
         retention-days: 5
 
 
-release:
+  release:
      name: Release
      #if: ${{ startsWith(github.ref, 'refs/tags/v') }}
      needs:
