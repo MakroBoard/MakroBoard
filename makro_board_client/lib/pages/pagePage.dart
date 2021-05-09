@@ -89,11 +89,17 @@ class PagePage extends StatelessWidget {
                         itemBuilder: (context) => [
                           const PopupMenuItem<GroupContextMenu>(
                             value: GroupContextMenu.delete,
-                            child: Icon(Icons.delete),
+                            child: ListTile(
+                              leading: Icon(Icons.delete),
+                              title: Text('Gruppe Löschen'),
+                            ),
                           ),
                           const PopupMenuItem<GroupContextMenu>(
                             value: GroupContextMenu.addPanel,
-                            child: Icon(Icons.add),
+                            child: ListTile(
+                              leading: Icon(Icons.add),
+                              title: Text('Panel hinzufügen'),
+                            ),
                           ),
                         ],
                         icon: Icon(Icons.more_vert),
