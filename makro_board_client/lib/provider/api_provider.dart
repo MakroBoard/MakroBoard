@@ -29,6 +29,7 @@ class ApiProvider {
   static const String executeControlUrl = "/api/controls/execute";
   static const String addPageUrl = "/api/layout/addpage";
   static const String addGroupUrl = "/api/layout/addgroup";
+  static const String editGroupUrl = "/api/layout/editgroup";
   static const String addPanelUrl = "/api/layout/addpanel";
 
   List<Plugin> currentPlugins = [];
@@ -376,6 +377,17 @@ class ApiProvider {
   Future addGroup(Group group) async {
     await http.post(
       _serverUri!.replace(path: addGroupUrl),
+      headers: <String, String>{
+        HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode(group),
+    );
+  }
+
+  Future editGroup(Group group) async {
+    var response = await http.post(
+      _serverUri!.replace(path: editGroupUrl),
       headers: <String, String>{
         HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
         'Content-Type': 'application/json; charset=UTF-8',

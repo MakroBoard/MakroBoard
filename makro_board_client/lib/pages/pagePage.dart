@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/dialogs/create_group_dialog.dart';
 import 'package:makro_board_client/dialogs/create_panel_dialog.dart';
+import 'package:makro_board_client/dialogs/edit_group_dialog.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/widgets/ControlPanel.dart';
 import 'package:makro_board_client/widgets/EditMode.dart';
@@ -79,6 +80,9 @@ class PagePage extends StatelessWidget {
                           switch (selectedValue) {
                             case GroupContextMenu.delete:
                               // TODO: Handle this case.
+                              break; 
+                            case GroupContextMenu.edit:
+                              _showEditGroupDialog(context, group);
                               break;
                             case GroupContextMenu.addPanel:
                               _showAddPanelDialog(context, group);
@@ -91,6 +95,13 @@ class PagePage extends StatelessWidget {
                             child: ListTile(
                               leading: Icon(Icons.delete),
                               title: Text('Gruppe Löschen'),
+                            ),
+                          ),
+                          const PopupMenuItem<GroupContextMenu>(
+                            value: GroupContextMenu.edit,
+                            child: ListTile(
+                              leading: Icon(Icons.edit),
+                              title: Text('Gruppe bearbeiten'),
                             ),
                           ),
                           const PopupMenuItem<GroupContextMenu>(
@@ -159,7 +170,16 @@ class PagePage extends StatelessWidget {
         return CreatePanelDialog(group: group);
       },
     );
+  } 
+  
+  Future _showEditGroupDialog(BuildContext context, models.Group group) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return EditGroupDialog(group: group);
+      },
+    );
   }
 }
 
-enum GroupContextMenu { delete, addPanel }
+enum GroupContextMenu { delete, edit, addPanel }

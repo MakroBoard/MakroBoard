@@ -59,7 +59,7 @@ namespace MakroBoard.Controllers
         }
 
         /// <summary>
-        /// POST: api/layout/addpage
+        /// POST: api/layout/addgroup
         /// </summary>
         [HttpPost("addgroup")]
         [LocalHost]
@@ -76,6 +76,25 @@ namespace MakroBoard.Controllers
             await _Context.SaveChangesAsync();
 
             _logger.LogDebug($"Added new Group {newGroup.Label}");
+
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdateGroup, newGroup);
+            return Ok();
+        }  
+        
+        /// <summary>
+        /// POST: api/layout/editgroup
+        /// </summary>
+        [HttpPost("editgroup")]
+        [LocalHost]
+        public async Task<ActionResult> PostEditGroup([FromBody] ApiModels.Group group)
+        {
+
+            var newGroup =_Context.Groups.Find(group.Id);
+            newGroup.Label = group.Label;
+
+            await _Context.SaveChangesAsync();
+
+            _logger.LogDebug($"Group {newGroup.Label} edited");
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdateGroup, newGroup);
             return Ok();

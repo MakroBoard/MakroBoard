@@ -4,12 +4,11 @@ import 'panel.dart';
 
 class Group {
   final int id;
-  final int width;
-  final int height;
-  final String label;
+  int height;
+  String label;
   final String symbolicName;
-  final int order;
-  final int pageId;
+  int order;
+  int pageId;
   final List<Panel> panels;
 
   StreamController<List<Panel>> streamPanelController = StreamController<List<Panel>>.broadcast();
@@ -17,7 +16,6 @@ class Group {
 
   Group({
     required this.id,
-    required this.width,
     required this.height,
     required this.symbolicName,
     required this.label,
@@ -28,25 +26,22 @@ class Group {
 
   Group.createNew({required this.label, required this.pageId})
       : id = 0,
-        width = -1,
         height = -1,
         symbolicName = "",
         order = -1,
         panels = List.empty(growable: true);
-
+  
   Group.fromJson(Map<String, dynamic> json)
       : id = json["id"],
-        width = json["width"],
         height = json["height"],
         label = json["label"],
         symbolicName = json["symbolicName"],
         order = json["order"],
-        pageId = json["pageId"],
+        pageId = json["pageId"] ?? 0,
         panels = json["panels"] != null ? List.castFrom(json["panels"]).map<Panel>((jsonPanel) => Panel.fromJson(jsonPanel)).toList() : List.empty(growable: true);
 
   Group.empty()
       : id = -1,
-        width = -1,
         height = -1,
         label = "",
         symbolicName = "",
@@ -57,6 +52,8 @@ class Group {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'height': height,
+      'order': order,
       'symbolicName': symbolicName,
       'label': label,
       'pageId': pageId,
@@ -68,4 +65,9 @@ class Group {
   void notifyPanelsUpdated() {
     streamPanelController.add(panels);
   }
+
+  Group clone (){
+  return Group(id: id, height: height,order: order, symbolicName: symbolicName, label: label, pageId: pageId,panels: panels.map((p) => p.clone()).toList());  
+  }
+
 }

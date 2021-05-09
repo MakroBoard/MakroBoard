@@ -25,6 +25,11 @@ class ViewConfigValue extends ChangeNotifier {
       'value': value,
     };
   }
+
+ViewConfigValue clone () {
+  return ViewConfigValue(symbolicName: symbolicName, defaultValue: value);
+}
+
 }
 
 class ChangeNotifiers with ChangeNotifier {
