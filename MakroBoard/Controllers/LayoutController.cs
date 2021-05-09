@@ -9,6 +9,8 @@ using MakroBoard.ActionFilters;
 using MakroBoard.Data;
 using MakroBoard.HubConfig;
 using MakroBoard.Plugin;
+using Org.BouncyCastle.Math.EC.Rfc7748;
+using Microsoft.EntityFrameworkCore;
 
 // QR Code auf Localhost
 // auf Handy -> Code anzeigen
@@ -38,7 +40,7 @@ namespace MakroBoard.Controllers
         /// POST: api/layout/addpage
         /// </summary>
         [HttpPost("addpage")]
-        [LocalHost]
+        [ServiceFilter(typeof(AuthenticatedAdmin))]
         public async Task<ActionResult> PostAddPAge([FromBody] ApiModels.Page page)
         {
             var newPage = new Data.Page
@@ -62,7 +64,7 @@ namespace MakroBoard.Controllers
         /// POST: api/layout/addgroup
         /// </summary>
         [HttpPost("addgroup")]
-        [LocalHost]
+        [ServiceFilter(typeof(AuthenticatedAdmin))]
         public async Task<ActionResult> PostAddGroup([FromBody] ApiModels.Group group)
         {
             var newGroup = new Data.Group
@@ -100,11 +102,31 @@ namespace MakroBoard.Controllers
             return Ok();
         }
 
+        [HttpPost("removegroup")]
+        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        public async Task<ActionResult> PostRemoveGroup([FromBody] int groupId)
+        {
+            // Include Panels to cascade delete 
+            var groupToDelete = await _Context.Groups.Where(x=>x.ID == groupId).Include(x=>x.Panels).FirstAsync();
+            if (groupToDelete == null)
+            {
+                return Conflict();
+            }
+
+            _Context.Groups.Remove(groupToDelete);
+            await _Context.SaveChangesAsync();
+
+            _logger.LogDebug($"Removed Group {groupToDelete.Label}");
+
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.RemoveGroup, groupToDelete);
+            return Ok();
+        }
+
         /// <summary>
         /// POST: api/layout/addpage
         /// </summary>
         [HttpPost("addpanel")]
-        [LocalHost]
+        [ServiceFilter(typeof(AuthenticatedAdmin))]
         public async Task<ActionResult> PostAddPanel([FromBody] ApiModels.Panel panel)
         {
             var newPanel = new Data.Panel
