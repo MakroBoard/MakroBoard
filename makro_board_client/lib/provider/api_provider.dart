@@ -280,6 +280,7 @@ class ApiProvider {
     );
 
     var dateTime = DateTime.parse(json.decode(response.body));
+    Settings.setValue("server_code", code);
     return dateTime;
   }
 
