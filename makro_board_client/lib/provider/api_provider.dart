@@ -30,6 +30,7 @@ class ApiProvider {
   static const String addPageUrl = "/api/layout/addpage";
   static const String addGroupUrl = "/api/layout/addgroup";
   static const String addPanelUrl = "/api/layout/addpanel";
+  static const String removeGroupUrl = "/api/layout/removegroup";
 
   List<Plugin> currentPlugins = [];
 
@@ -84,6 +85,7 @@ class ApiProvider {
       _connection!.on('RemoveClient', _onRemoveClient);
       _connection!.on('AddOrUpdatePage', _onAddOrUpdatePage);
       _connection!.on('AddOrUpdateGroup', _onAddOrUpdateGroup);
+      _connection!.on('RemoveGroup', _onRemoveGroup);
       _connection!.on('AddOrUpdatePanel', _onAddOrUpdatePanel);
       _connection!.on('UpdatePanelData', _onUpdatePanelData);
 
@@ -173,6 +175,30 @@ class ApiProvider {
         var index = existingPage.groups.indexOf(existingGroup);
         existingPage.groups[index] = newGroup;
       }
+      existingPage.notifyGroupsUpdated();
+    }
+  }
+
+  void _onRemoveGroup(groups) async {
+    for (var group in groups!) {
+      var existingPage = currentPages.firstWhere(
+        (element) => element.id == group["pageID"],
+        orElse: () => Page.empty(),
+      );
+
+      if (existingPage.isEmpty) {
+        continue;
+      }
+
+      var existingGroup = existingPage.groups.firstWhere(
+        (element) => element.id == group["id"],
+        orElse: () => Group.empty(),
+      );
+
+      if (!existingGroup.isEmpty) {
+        existingPage.groups.remove(existingGroup);
+      }
+
       existingPage.notifyGroupsUpdated();
     }
   }
@@ -393,5 +419,23 @@ class ApiProvider {
       },
       body: json.encode(panel),
     );
+  }
+
+  Future removeGroup(Group group) async {
+    try {
+      await http.post(
+        _serverUri!.replace(path: removeGroupUrl),
+        headers: <String, String>{
+          HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(group.id),
+      );
+
+      // var dateTime = DateTime.parse(json.decode(response.body));
+      // return LoginCode(code: randomNumber, validUntil: dateTime);
+    } on Exception catch (e) {
+      print('never reached' + e.toString());
+    }
   }
 }

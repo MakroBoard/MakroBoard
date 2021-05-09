@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/dialogs/create_group_dialog.dart';
 import 'package:makro_board_client/dialogs/create_panel_dialog.dart';
+import 'package:makro_board_client/dialogs/delete_dialog.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/widgets/ControlPanel.dart';
 import 'package:makro_board_client/widgets/EditMode.dart';
@@ -78,7 +79,7 @@ class PagePage extends StatelessWidget {
                         onSelected: (selectedValue) {
                           switch (selectedValue) {
                             case GroupContextMenu.delete:
-                              // TODO: Handle this case.
+                              _removeGroupDialog(context, group);
                               break;
                             case GroupContextMenu.addPanel:
                               _showAddPanelDialog(context, group);
@@ -154,6 +155,20 @@ class PagePage extends StatelessWidget {
       },
     );
   }
+}
+
+Future _removeGroupDialog(BuildContext context, models.Group group) {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return DeleteDialog(
+        title: "Gruppe Löschen",
+        deleteText: "Soll die Gruppe ${group.symbolicName} wirklich gelöscht werden?",
+        executeText: "Gruppe ${group.symbolicName} wird gelöscht ...",
+        deleteCallback: () => Modular.get<ApiProvider>().removeGroup(group),
+      );
+    },
+  );
 }
 
 enum GroupContextMenu { delete, addPanel }
