@@ -146,7 +146,7 @@ namespace MakroBoard.Controllers
         /// POST: api/client/confirmclient
         /// </summary>
         [HttpPost("confirmclient")]
-        [LocalHost]
+        [ServiceFilter(typeof(AuthenticatedAdmin))]
         public async Task<ActionResult> PostConfirmClient([FromBody] ApiModels.Client client)
         {
             var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(client.ClientIp) && x.Code.Equals(client.Code));
@@ -165,8 +165,6 @@ namespace MakroBoard.Controllers
 
             _ = _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, currentClient);
 
-            //var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(client.ClientIp)).ToListAsync()).Select(x => x.ClientSignalrId);
-            //_ = _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, currentClient.Token);
             await SendToken(currentClient);
 
 
@@ -176,13 +174,19 @@ namespace MakroBoard.Controllers
         /// <summary>
         /// GET: api/client/confirmclient
         [HttpPost("removeClient")]
-        [LocalHost]
+        [ServiceFilter(typeof(AuthenticatedAdmin))]
         public async Task<ActionResult> PostRemoveClient([FromBody] ApiModels.Client client)
         {
             var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(client.ClientIp));
             if (currentClient == null)
             {
                 return BadRequest("No suitable client found.");
+            }
+
+            if (Request.HttpContext.Connection.RemoteIpAddress.ToString().Equals(currentClient.ClientIp))
+            {
+                _logger.LogWarning("Client can not delete him self");
+                return Conflict();
             }
 
             _Context.Clients.Remove(currentClient);
