@@ -106,7 +106,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: AnimatedTextKit(
                   animatedTexts: [
                     TypewriterAnimatedText(
-                      'Console.WriteLine("Hallo Alex")',
+                      'Console.WriteLine("Hallo")',
                       speed: Duration(milliseconds: 65),
                     ),
                   ],
