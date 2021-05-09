@@ -96,8 +96,13 @@ class SelectServerPage extends StatelessWidget {
                               onPressed: () async {
                                 EasyLoading.show(status: 'verbinden ...');
                                 if (_loginFormKey.currentState!.validate()) {
-                                  var port = int.parse(Settings.getValue("server_port", "5001"));
+                                  var port = int.parse(Settings.getValue("server_port", "0"));
                                   var serverUriString = Settings.getValue("server_host", "");
+                                  if (port == 0)
+                                  {
+                                    await Settings.setValue("server_port", "5001");
+                                    port = 5001;
+                                  }
                                   var serverUri = Uri.parse(serverUriString);
                                   serverUri = serverUri.replace(port: port);
                                   if (await Modular.get<ApiProvider>().initialize(serverUri)) {
