@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:makro_board_client/models/client.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 
@@ -10,6 +11,7 @@ class AvailableClients extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var ownCode = int.parse(Settings.getValue("server_code", "0"));
     return StreamBuilder<List<Client>>(
       stream: Modular.get<ApiProvider>().clients,
       initialData: Modular.get<ApiProvider>().currentClients,
@@ -38,18 +40,18 @@ class AvailableClients extends StatelessWidget {
                             alignment: WrapAlignment.spaceBetween,
                             children: [
                               Text(ClientState.getText(client.state)),
-                              // Expanded(child: Placeholder()),
-                              client.state >= ClientState.confirmed
-                                  ? TextButton.icon(
-                                      onPressed: () => {Modular.get<ApiProvider>().removeClient(client)},
-                                      icon: Icon(Icons.remove),
-                                      label: Text("Löschen"),
-                                    )
-                                  : TextButton.icon(
-                                      onPressed: () => {Modular.get<ApiProvider>().confirmClient(client)},
-                                      icon: Icon(Icons.check),
-                                      label: Text("Freischalten"),
-                                    ),
+                              if (ownCode != 0 && ownCode != client.code)
+                                client.state >= ClientState.confirmed
+                                    ? TextButton.icon(
+                                        onPressed: () => {Modular.get<ApiProvider>().removeClient(client)},
+                                        icon: Icon(Icons.remove),
+                                        label: Text("Löschen"),
+                                      )
+                                    : TextButton.icon(
+                                        onPressed: () => {Modular.get<ApiProvider>().confirmClient(client)},
+                                        icon: Icon(Icons.check),
+                                        label: Text("Freischalten"),
+                                      ),
                             ],
                           ),
                         )
