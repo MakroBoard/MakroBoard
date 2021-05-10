@@ -1,4 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 
 import 'group.dart';
 
@@ -6,7 +10,7 @@ class Page {
   final int id;
   final String symbolicName;
   final String label;
-  final String icon;
+  final IconData icon;
   final List<Group> groups;
 
   StreamController<List<Group>> streamGroupController = StreamController<List<Group>>.broadcast();
@@ -29,14 +33,14 @@ class Page {
       : id = -1,
         symbolicName = "",
         label = "",
-        icon = "",
+        icon = Icons.not_interested,
         groups = List.empty();
 
   Page.fromJson(Map<String, dynamic> json)
       : id = json["id"],
         symbolicName = json["symbolicName"],
         label = json["label"],
-        icon = json["icon"],
+        icon = json["icon"] != null && json["icon"] != "" ? mapToIconData(jsonDecode(json["icon"])) : Icons.not_interested,
         groups = json["groups"] != null ? List.castFrom(json["groups"]).map<Group>((jsonGroup) => Group.fromJson(jsonGroup)).toList() : List.empty(growable: true);
 
   Map<String, dynamic> toJson() {
@@ -44,7 +48,7 @@ class Page {
       'id': id,
       'symbolicName': symbolicName,
       'label': label,
-      'icon': icon,
+      'icon': jsonEncode(iconDataToMap(icon)),
       'groups': groups,
     };
   }

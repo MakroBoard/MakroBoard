@@ -378,11 +378,12 @@ class ApiProvider {
   }
 
   Future addPage(Page page) async {
-    await http.post(
+    var response = await http.post(
       _serverUri!.replace(path: addPageUrl),
       headers: _defaultHeader,
       body: json.encode(page),
     );
+    log(response.body);
   }
 
   Future addGroup(Group group) async {

@@ -38,6 +38,7 @@ dependencies:
   responsive_grid: ^2.0.0
   page_transition: ^2.0.2
   enhanced_future_builder: ^1.0.3
+  flutter_iconpicker: ^3.0.0
 
 dev_dependencies:
   flutter_test:

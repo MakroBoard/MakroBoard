@@ -65,7 +65,7 @@ class HomePage extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
                       title: Text(page.label),
-                      leading: Icon(Icons.done),
+                      leading: Icon(page.icon),
                     ),
                   ),
                 ),
