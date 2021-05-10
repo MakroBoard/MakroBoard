@@ -33,6 +33,11 @@ class ApiProvider {
   static const String addPanelUrl = "/api/layout/addpanel";
   static const String removeGroupUrl = "/api/layout/removegroup";
 
+  Map<String, String> get _defaultHeader => <String, String>{
+        HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
+        'Content-Type': 'application/json; charset=UTF-8',
+      };
+
   List<Plugin> currentPlugins = [];
 
   StreamController<List<Page>> streamPageController = StreamController<List<Page>>.broadcast();
@@ -284,10 +289,7 @@ class ApiProvider {
     try {
       var response = await http.get(
         _serverUri!.replace(path: checkTokenUrl),
-        headers: <String, String>{
-          HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        headers: _defaultHeader,
       );
       return true;
     } on Exception catch (e) {
@@ -299,10 +301,7 @@ class ApiProvider {
   Future<DateTime> submitCode(int code) async {
     var response = await http.post(
       _serverUri!.replace(path: submitCodeUrl),
-      headers: <String, String>{
-        HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      headers: _defaultHeader,
       body: json.encode(code),
     );
 
@@ -315,9 +314,7 @@ class ApiProvider {
     try {
       await http.post(
         _serverUri!.replace(path: confirmClientUrl),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        headers: _defaultHeader,
         body: json.encode(client),
       );
 
@@ -332,10 +329,7 @@ class ApiProvider {
     try {
       await http.post(
         _serverUri!.replace(path: removeClientUrl),
-        headers: <String, String>{
-          HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        headers: _defaultHeader,
         body: json.encode(client),
       );
 
@@ -351,10 +345,7 @@ class ApiProvider {
       if (currentPlugins.isEmpty) {
         var response = await http.get(
           _serverUri!.replace(path: getControlsUrl),
-          headers: <String, String>{
-            HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
+          headers: _defaultHeader,
         );
 
         var jsonData = json.decode(response.body);
@@ -375,10 +366,7 @@ class ApiProvider {
       var jsonBody = json.encode({"symbolicName": control.symbolicName, "configValues": configValues});
       await http.post(
         _serverUri!.replace(path: executeControlUrl),
-        headers: <String, String>{
-          HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        headers: _defaultHeader,
         body: jsonBody,
       );
 
@@ -392,10 +380,7 @@ class ApiProvider {
   Future addPage(Page page) async {
     await http.post(
       _serverUri!.replace(path: addPageUrl),
-      headers: <String, String>{
-        HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      headers: _defaultHeader,
       body: json.encode(page),
     );
   }
@@ -403,10 +388,7 @@ class ApiProvider {
   Future addGroup(Group group) async {
     await http.post(
       _serverUri!.replace(path: addGroupUrl),
-      headers: <String, String>{
-        HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      headers: _defaultHeader,
       body: json.encode(group),
     );
   }
@@ -414,10 +396,7 @@ class ApiProvider {
   Future editGroup(Group group) async {
     var response = await http.post(
       _serverUri!.replace(path: editGroupUrl),
-      headers: <String, String>{
-        HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      headers: _defaultHeader,
       body: json.encode(group),
     );
   }
@@ -425,10 +404,7 @@ class ApiProvider {
   Future addPanel(Panel panel) async {
     await http.post(
       _serverUri!.replace(path: addPanelUrl),
-      headers: <String, String>{
-        HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
+      headers: _defaultHeader,
       body: json.encode(panel),
     );
   }
@@ -437,10 +413,7 @@ class ApiProvider {
     try {
       await http.post(
         _serverUri!.replace(path: removeGroupUrl),
-        headers: <String, String>{
-          HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
+        headers: _defaultHeader,
         body: json.encode(group.id),
       );
 
