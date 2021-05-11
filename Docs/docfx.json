@@ -20,7 +20,7 @@
             "default",
             "statictoc",
             "templates/discordfx",
-            "templates/DocFx.Plugins.PlantUml"
+            "templates/DocFx.Plugins.PlantUml",
             "templates/makroboard"
         ],
         "postProcessors": [],
