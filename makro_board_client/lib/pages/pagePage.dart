@@ -31,9 +31,9 @@ class PagePage extends StatelessWidget {
             child: Switch(
                 value: GlobalSettings.of(context)?.editMode ?? false,
                 onChanged: (v) {
-                  var editMode = GlobalSettings.of(context);
-                  if (editMode != null) {
-                    editMode.updateEditMode(v);
+                  var globalSettings = GlobalSettings.of(context);
+                  if (globalSettings != null) {
+                    globalSettings.updateEditMode(v);
                   }
                 }),
           ),
@@ -43,11 +43,30 @@ class PagePage extends StatelessWidget {
         child: StreamBuilder(
           stream: initialPage.groupsStream,
           initialData: initialPage.groups,
-          builder: (context, snapshot) => ResponsiveGridList(
-            desiredItemWidth: 200,
-            minSpacing: 10,
-            children: _getGroupWidgets(context, snapshot.data as List<models.Group>),
-          ),
+          builder: (context, snapshot) => initialPage.groups.length > 0
+              ? ResponsiveGridList(
+                  desiredItemWidth: 200,
+                  minSpacing: 10,
+                  children: _getGroupWidgets(context, snapshot.data as List<models.Group>),
+                )
+              : Center(
+                  child: Wrap(
+                    alignment: WrapAlignment.center,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    runAlignment: WrapAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.hourglass_empty,
+                        size: 256,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      Text(
+                        "Leider ist die Seite noch Leer.",
+                        style: Theme.of(context).textTheme.headline2,
+                      ),
+                    ],
+                  ),
+                ),
         ),
       ),
       floatingActionButton: GlobalSettings.of(context)?.editMode == true
@@ -81,7 +100,7 @@ class PagePage extends StatelessWidget {
                           switch (selectedValue) {
                             case GroupContextMenu.delete:
                               _removeGroupDialog(context, group);
-                              break; 
+                              break;
                             case GroupContextMenu.edit:
                               _showEditGroupDialog(context, group);
                               break;
@@ -171,8 +190,8 @@ class PagePage extends StatelessWidget {
         return CreatePanelDialog(group: group);
       },
     );
-  } 
-  
+  }
+
   Future _showEditGroupDialog(BuildContext context, models.Group group) {
     return showDialog(
       context: context,
