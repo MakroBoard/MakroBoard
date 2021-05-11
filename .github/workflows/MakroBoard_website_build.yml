@@ -26,7 +26,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: copy logos
-      run: cp ./Design/Logo_small.svg ./Docs/templates/makroboard/logo.svg && cp ./Design/favicon.ico ./Docs/templates/makroboard/favicon.ico
+      run: cp ./Design/Logo.svg ./Docs/templates/makroboard/logo.svg && cp ./Design/favicon.ico ./Docs/templates/makroboard/favicon.ico
     - uses: nikeee/docfx-action@v1.0.0
       name: Build Documentation
       with:
@@ -41,7 +41,7 @@ jobs:
     - name: add dev warning to index
       run: chmod +x ./packaging/Docs/adddevwarning.sh && ./packaging/Docs/adddevwarning.sh
     - name: copy logos
-      run: cp ./Design/Logo_small.svg ./Docs/templates/makroboard/logo.svg && cp ./Design/favicon.ico ./Docs/templates/makroboard/favicon.ico
+      run: cp ./Design/Logo.svg ./Docs/templates/makroboard/logo.svg && cp ./Design/favicon.ico ./Docs/templates/makroboard/favicon.ico
     - uses: nikeee/docfx-action@v1.0.0
       name: Build Documentation
       with:
