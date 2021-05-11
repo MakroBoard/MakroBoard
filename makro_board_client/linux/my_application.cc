@@ -1,5 +1,11 @@
 #include "my_application.h"
 
+#include <stdio.h>
+#include <sys/auxv.h>
+#include <string>
+#include <cstddef>  
+
+
 #include <flutter_linux/flutter_linux.h>
 #ifdef GDK_WINDOWING_X11
 #include <gdk/gdkx.h>
@@ -47,6 +53,12 @@ static void my_application_activate(GApplication* application) {
   else {
     gtk_window_set_title(window, "MakroBoard Client");
   }
+
+  std::string exepath = (char *)getauxval(AT_EXECFN);
+  std::string folderpath = exepath.substr(0,exepath.find_last_of("/\\"));
+  std::string logopath = folderpath.append("/logo.png");
+
+  gtk_window_set_icon_from_file(window, logopath.c_str(), NULL);
 
   gtk_window_set_default_size(window, 1280, 720);
   gtk_widget_show(GTK_WIDGET(window));
