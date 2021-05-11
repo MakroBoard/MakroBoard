@@ -1,4 +1,5 @@
-# MakroBoard
+<img alt="Makroboard Logo" src="logo.svg" width="50%">
+
 is an open source software solution to use any device capable of displaying a website as a remote macro keyboard for your Windows / Linux / Mac PC
 
 Its currently under heavy development, so only use it for testing or development.
@@ -8,4 +9,5 @@ Its currently under heavy development, so only use it for testing or development
 
 ## Developer Notes:
 Github Url: [https://github.com/MakroBoard/MakroBoard](https://github.com/MakroBoard/MakroBoard)
+
 

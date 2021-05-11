@@ -1,4 +1,4 @@
-# MakroBoard
+![Makroboard Logo](Design/Logo.svg)
 
 MakroBoard is an open source software solution to use any device capable of displaying a website as a remote macro keyboard for your Windows / Linux / Mac PC.
 Its written in C#/dotnet for the API on the pc and the client which is also served by the c# app is written in [Dart](https://dart.dev) with the [Flutter](https://flutter.dev) framework.
