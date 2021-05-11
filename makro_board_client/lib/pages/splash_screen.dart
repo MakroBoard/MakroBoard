@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -84,6 +86,21 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 64, 64, 64),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                ),
+                child: Image.asset(
+                  'assets/images/Logo_small_1024_1024.png',
+                  width: 100.0,
+                  alignment: Alignment.center,
+                  height: 100.0,
+                  isAntiAlias: true,
+                  filterQuality: FilterQuality.high,
+                ),
+              ),
               DefaultTextStyle(
                 style: const TextStyle(
                   fontSize: 64.0,
