@@ -88,6 +88,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 style: const TextStyle(
                   fontSize: 64.0,
                   fontFamily: 'Hack',
+                  letterSpacing: -5,
                 ),
                 child: AnimatedTextKit(
                   animatedTexts: [
