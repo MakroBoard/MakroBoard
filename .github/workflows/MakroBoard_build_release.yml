@@ -284,7 +284,7 @@ jobs:
       run: flutter config --no-analytics
     - name: flutter build android client
       working-directory: ./makro_board_client
-      run: flutter build apk --release
+      run: flutter build apk --release --no-tree-shake-icons
     - name: copy android client
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/android && cp -rf ./makro_board_client/build/app/outputs/flutter-apk/* upload/android/
@@ -538,7 +538,7 @@ jobs:
       run: flutter config --no-analytics
     - name: flutter build ios
       working-directory: ./makro_board_client
-      run: flutter build ios --release --no-codesign
+      run: flutter build ios --release --no-codesign --no-tree-shake-icons
     - name: copy ios client
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/ios && cp -rf ./makro_board_client/build/ios/* upload/ios/
@@ -588,7 +588,7 @@ jobs:
       run: flutter config --enable-macos-desktop
     - name: flutter build macos
       working-directory: ./makro_board_client
-      run: flutter build macos --release
+      run: flutter build macos --release --no-tree-shake-icons
     - name: copy macos client x64
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/macosclient_x64 && cp -rf ./makro_board_client/build/macos/Build/Products/Release/* upload/macosclient_x64/
