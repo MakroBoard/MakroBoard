@@ -1,4 +1,6 @@
 # MakroBoard
+![Makroboard Logo](logo.svg)
+
 is an open source software solution to use any device capable of displaying a website as a remote macro keyboard for your Windows / Linux / Mac PC
 
 Its currently under heavy development, so only use it for testing or development.
