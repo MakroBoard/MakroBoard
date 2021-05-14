@@ -56,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
 
     await minFuture;
-    Modular.to.navigate(navigationTarget);
+    Modular.to.pushReplacementNamed(navigationTarget);
   }
 
   void _initializeEasyLoading() {
