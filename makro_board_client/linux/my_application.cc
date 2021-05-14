@@ -56,7 +56,7 @@ static void my_application_activate(GApplication* application) {
 
   std::string exepath = (char *)getauxval(AT_EXECFN);
   std::string folderpath = exepath.substr(0,exepath.find_last_of("/\\"));
-  std::string logopath = folderpath.append("/logo.png");
+  std::string logopath = folderpath.append("/data/flutter_assets/assets/images/Logo_small_1024_1024.png");
 
   gtk_window_set_icon_from_file(window, logopath.c_str(), NULL);
 
