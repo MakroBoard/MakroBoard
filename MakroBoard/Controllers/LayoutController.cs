@@ -41,7 +41,7 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("addpage")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult> PostAddPAge([FromBody] ApiModels.Page page)
+        public async Task<ActionResult> PostAddPAge([FromBody] MakroBoard.ApiModels.Page page)
         {
             var newPage = new Data.Page
             {
@@ -65,7 +65,7 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("addgroup")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult> PostAddGroup([FromBody] ApiModels.Group group)
+        public async Task<ActionResult> PostAddGroup([FromBody] MakroBoard.ApiModels.Group group)
         {
             var newGroup = new Data.Group
             {
@@ -88,7 +88,7 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("editgroup")]
         [LocalHost]
-        public async Task<ActionResult> PostEditGroup([FromBody] ApiModels.Group group)
+        public async Task<ActionResult> PostEditGroup([FromBody] MakroBoard.ApiModels.Group group)
         {
 
             var newGroup =_Context.Groups.Find(group.Id);
@@ -127,7 +127,7 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("addpanel")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult> PostAddPanel([FromBody] ApiModels.Panel panel)
+        public async Task<ActionResult> PostAddPanel([FromBody] MakroBoard.ApiModels.Panel panel)
         {
             var newPanel = new Data.Panel
             {

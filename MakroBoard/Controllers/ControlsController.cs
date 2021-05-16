@@ -9,6 +9,7 @@ using MakroBoard.ActionFilters;
 using MakroBoard.PluginContract.Parameters;
 using MakroBoard.PluginContract.Views;
 using MakroBoard.Plugin;
+using MakroBoard.ApiModels;
 
 // QR Code auf Localhost
 // auf Handy -> Code anzeigen
@@ -37,7 +38,7 @@ namespace MakroBoard.Controllers
         {
             var plugins = _PluginContext.Plugins;
 
-            var result = new List<ApiModels.Plugin>();
+            var result = new List<MakroBoard.ApiModels.Plugin>();
             foreach (var plugin in plugins)
             {
                 var pluginControls = await plugin.GetControls().ConfigureAwait(false);
@@ -57,7 +58,7 @@ namespace MakroBoard.Controllers
         public async Task<ActionResult> PostExecute([FromBody] JsonElement data)
         {
             var symbolicName = string.Empty;
-            ApiModels.ConfigValues configValues = null;
+            ConfigValues configValues = null;
             foreach (var element in data.EnumerateObject())
             {
                 switch (element.Name)
@@ -68,7 +69,7 @@ namespace MakroBoard.Controllers
                     case "configValues":
                         var json = element.Value.GetRawText();
                         // TODO Deseriaize
-                        configValues = JsonSerializer.Deserialize<ApiModels.ConfigValues>(json, new JsonSerializerOptions
+                        configValues = JsonSerializer.Deserialize<ConfigValues>(json, new JsonSerializerOptions
                         {
                             PropertyNameCaseInsensitive = true,
                         });
@@ -160,19 +161,19 @@ namespace MakroBoard.Controllers
         }
 
 
-        private static ApiModels.Plugin CreatePluginModel(string pluginName, IEnumerable<PluginContract.Control> controls)
+        private static MakroBoard.ApiModels.Plugin CreatePluginModel(string pluginName, IEnumerable<PluginContract.Control> controls)
         {
             return new ApiModels.Plugin(pluginName, controls.Select(x => new ApiModels.Control(x.SymbolicName,
                 new ApiModels.View(x.View.Type.ToString(), ToApiConfigParameters(x.View.ConfigParameters), ToApiConfigParameters(x.View.PluginParameters)),
                 ToApiConfigParameters(x.ConfigParameters))));
         }
 
-        private static ApiModels.ConfigParameters ToApiConfigParameters(ConfigParameters configParameters)
+        private static MakroBoard.ApiModels.ConfigParameters ToApiConfigParameters(PluginContract.Parameters.ConfigParameters configParameters)
         {
             return new ApiModels.ConfigParameters(configParameters.Select(c => CreateConfigParameter(c)).ToList());
         }
 
-        private static ApiModels.ConfigParameter CreateConfigParameter(ConfigParameter configParameter)
+        private static MakroBoard.ApiModels.ConfigParameter CreateConfigParameter(PluginContract.Parameters.ConfigParameter configParameter)
         {
             return configParameter switch
             {

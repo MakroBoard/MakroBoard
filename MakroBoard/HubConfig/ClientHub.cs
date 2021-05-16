@@ -7,10 +7,6 @@ using MakroBoard.Controllers;
 using MakroBoard.Data;
 using MakroBoard.Plugin;
 using System.Linq;
-using MakroBoard.PluginContract.Parameters;
-using System.Collections.Generic;
-using MakroBoard.PluginContract;
-using MakroBoard.Controllers.ApiModels;
 
 namespace MakroBoard.HubConfig
 {

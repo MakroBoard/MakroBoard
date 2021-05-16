@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MakroBoard.Controllers.ApiModels
+namespace MakroBoard.ApiModels
 {
     public class Panel
     {

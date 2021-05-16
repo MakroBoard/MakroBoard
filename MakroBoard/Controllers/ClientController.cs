@@ -4,13 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using MakroBoard.ActionFilters;
 using MakroBoard.Data;
 using MakroBoard.HubConfig;
-using Org.BouncyCastle.Utilities.Net;
+using MakroBoard.ApiModels;
 
 // QR Code auf Localhost
 // auf Handy -> Code anzeigen
@@ -35,31 +33,17 @@ namespace MakroBoard.Controllers
 
         // GET: api/client/requesttokens
         [HttpGet("requesttokens")]
-        public async Task<ActionResult<Client[]>> GetRequestTokens()
+        public async Task<ActionResult<ApiModels.RequestTokensResponse>> GetRequestTokens()
         {
             var currentTime = DateTime.Now;
             var currentClients = await _Context.Clients.Where(x => x.State == ClientState.None && x.ValidUntil < currentTime).ToArrayAsync();
-            return Ok(currentClients);
-            //var clientIp = Request.HttpContext.Connection.RemoteIpAddress;
-            //var token = new Random().Next(10000, 99999);
-
-            //var client = new Client
-            //{
-            //    Code = token,
-            //    ClientIp = clientIp.ToString(),
-            //};
-
-            //Console.WriteLine($"RequestToken: {client.ClientIp} - {client.Code}");
-
-            //await _Context.Clients.AddAsync(client);
-            //await _Context.SaveChangesAsync();
-
-            //return Ok();
+            var result = currentClients.Select(ApiModels.Client.FromDataClient).ToArray();
+            return Ok(new ApiModels.RequestTokensResponse(result));
         }
 
         [HttpGet("checktoken")]
         [ServiceFilter(typeof(AuthenticatedClient))]
-        public async Task<ActionResult<bool>> GetCheckToken([FromHeader] string authorization)
+        public async Task<ActionResult<ApiModels.CheckTokenResponse>> GetCheckToken([FromHeader] string authorization)
         {
             var clientIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
 
@@ -74,19 +58,17 @@ namespace MakroBoard.Controllers
                 }
                 else
                 {
-                    await PostRemoveClient(new ApiModels.Client { ClientIp = client.ClientIp });
+                    await PostRemoveClient(new RemoveClientRequest { Client = new ApiModels.Client { ClientIp = client.ClientIp } });
                 }
             }
-            return Ok(result);
+            return Ok(new CheckTokenResponse(result));
         }
-
-
 
         /// <summary>
         /// GET: api/client/submittoken
         //[HttpGet("submittoken")]
         [HttpPost("submitcode")]
-        public async Task<ActionResult<DateTime>> PostSubmitCode([FromBody] int code)
+        public async Task<ActionResult<DateTime>> PostSubmitCode([FromBody] SubmitCodeRequest request)
         {
             var isLocalHost = System.Net.IPAddress.IsLoopback(Request.HttpContext.Connection.RemoteIpAddress);
             var clientIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
@@ -95,7 +77,7 @@ namespace MakroBoard.Controllers
             var client = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(clientIp));
             if (client != null)
             {
-                client.Code = code;
+                client.Code = request.Code;
                 client.ValidUntil = DateTime.UtcNow.AddMinutes(0.5);
                 client.State = ClientState.None;
 
@@ -107,7 +89,7 @@ namespace MakroBoard.Controllers
             {
                 client = new Data.Client
                 {
-                    Code = code,
+                    Code = request.Code,
                     ValidUntil = DateTime.UtcNow.AddMinutes(5),
                     ClientIp = clientIp,
                     State = isLocalHost ? ClientState.Admin : ClientState.None
@@ -130,13 +112,13 @@ namespace MakroBoard.Controllers
 
             if (isLocalHost)
             {
-                await SendToken(client);
+                await SendToken(ApiModels.Client.FromDataClient(client));
             }
 
-            return Ok(client.ValidUntil);
+            return Ok(new SubmitCodeResponse(client.ValidUntil));
         }
 
-        private async Task SendToken(Client client)
+        private async Task SendToken(ApiModels.Client client)
         {
             var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(client.ClientIp)).ToListAsync()).Select(x => x.ClientSignalrId);
             _ = _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, client.Token);
@@ -147,9 +129,9 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("confirmclient")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult> PostConfirmClient([FromBody] ApiModels.Client client)
+        public async Task<ActionResult> PostConfirmClient([FromBody] ApiModels.ConfirmClientRequest request)
         {
-            var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(client.ClientIp) && x.Code.Equals(client.Code));
+            var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(request.Client.ClientIp) && x.Code.Equals(request.Client.Code));
             if (currentClient == null)
             {
                 return BadRequest("No suitable client found.");
@@ -157,7 +139,6 @@ namespace MakroBoard.Controllers
 
             currentClient.CreateNewToken(Constants.Seed);
             currentClient.State = ClientState.Confirmed;
-            client.State = (int)ClientState.Confirmed;
 
             await _Context.SaveChangesAsync();
 
@@ -165,28 +146,28 @@ namespace MakroBoard.Controllers
 
             _ = _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, currentClient);
 
-            await SendToken(currentClient);
+            await SendToken(ApiModels.Client.FromDataClient(currentClient));
 
 
-            return Ok();
+            return Ok(new ConfirmClientResponse());
         }
 
         /// <summary>
         /// GET: api/client/confirmclient
         [HttpPost("removeClient")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult> PostRemoveClient([FromBody] ApiModels.Client client)
+        public async Task<ActionResult> PostRemoveClient([FromBody] ApiModels.RemoveClientRequest request)
         {
-            var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(client.ClientIp));
+            var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(request.Client.ClientIp));
             if (currentClient == null)
             {
-                return BadRequest("No suitable client found.");
+                return BadRequest(new RemoveClientResponse { Status = ResponseStatus.Error, Error = "No suitable client found." });
             }
 
             if (Request.HttpContext.Connection.RemoteIpAddress.ToString().Equals(currentClient.ClientIp))
             {
-                _logger.LogWarning("Client can not delete him self");
-                return Conflict();
+                _logger.LogWarning("Client can not delete him self.");
+                return Conflict(new RemoveClientResponse { Status = ResponseStatus.Error, Error = "Client can not delete him self." });
             }
 
             _Context.Clients.Remove(currentClient);
@@ -194,14 +175,13 @@ namespace MakroBoard.Controllers
 
             _logger.LogDebug($"Remove Client: {currentClient.ClientIp} - {currentClient.Code}");
 
-            var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(client.ClientIp)).ToListAsync()).Select(x => x.ClientSignalrId);
+            var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(request.Client.ClientIp)).ToListAsync()).Select(x => x.ClientSignalrId);
             _ = _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, string.Empty);
 
-            _ = _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.RemoveClient, client);
+            _ = _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.RemoveClient, request.Client);
 
 
-            return Ok();
+            return Ok(new RemoveClientResponse());
         }
-
     }
 }

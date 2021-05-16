@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:http/http.dart' as http;
+import 'package:makro_board_client/models/api/Request.dart';
 import 'package:makro_board_client/models/group.dart';
 import 'package:makro_board_client/models/panel.dart';
 
@@ -287,11 +288,12 @@ class ApiProvider {
   Future<bool> isAuthenticated() async {
     // return false;
     try {
-      var response = await http.get(
+      var jsonResponse = await http.get(
         _serverUri!.replace(path: checkTokenUrl),
         headers: _defaultHeader,
       );
-      return true;
+      var response = CheckTokenResponse.fromJson(json.decode(jsonResponse.body));
+      return _handleResponse(response);
     } on Exception catch (e) {
       log('Exception: ' + e.toString());
       return false;
@@ -299,27 +301,29 @@ class ApiProvider {
   }
 
   Future<DateTime> submitCode(int code) async {
-    var response = await http.post(
-      _serverUri!.replace(path: submitCodeUrl),
-      headers: _defaultHeader,
-      body: json.encode(code),
-    );
+    var response = await http.post(_serverUri!.replace(path: submitCodeUrl),
+        headers: _defaultHeader,
+        // body: json.encode(code),
+        body: json.encode(SubmitCodeRequest(code)));
 
-    var dateTime = DateTime.parse(json.decode(response.body));
+    var submitCodeResponse = SubmitCodeResponse.fromJson(json.decode(response.body));
+
+    var dateTime = DateTime.parse(submitCodeResponse.validUntil);
     Settings.setValue("server_code", code);
     return dateTime;
   }
 
   Future confirmClient(Client client) async {
     try {
-      await http.post(
+      var jsonResponse = await http.post(
         _serverUri!.replace(path: confirmClientUrl),
         headers: _defaultHeader,
-        body: json.encode(client),
+        // body: json.encode(client),
+        body: json.encode(ConfirmClientRequest(client)),
       );
 
-      // var dateTime = DateTime.parse(json.decode(response.body));
-      // return LoginCode(code: randomNumber, validUntil: dateTime);
+      var response = ConfirmClientResponse.fromJson(json.decode(jsonResponse.body));
+      _handleResponse(response);
     } on Exception catch (e) {
       print('never reached' + e.toString());
     }
@@ -327,14 +331,15 @@ class ApiProvider {
 
   Future removeClient(Client client) async {
     try {
-      await http.post(
+      var jsonResponse = await http.post(
         _serverUri!.replace(path: removeClientUrl),
         headers: _defaultHeader,
-        body: json.encode(client),
+        // body: json.encode(client),
+        body: json.encode(RemoveClientRequest(client)),
       );
 
-      // var dateTime = DateTime.parse(json.decode(response.body));
-      // return LoginCode(code: randomNumber, validUntil: dateTime);
+      var response = RemoveClientResponse.fromJson(json.decode(jsonResponse.body));
+      _handleResponse(response);
     } on Exception catch (e) {
       print('never reached' + e.toString());
     }
@@ -423,5 +428,14 @@ class ApiProvider {
     } on Exception catch (e) {
       print('never reached' + e.toString());
     }
+  }
+
+  bool _handleResponse(Response response) {
+    if (response.status == ResponseStatus.Ok) {
+      return true;
+    }
+
+    // TODO Error Notification
+    return false;
   }
 }

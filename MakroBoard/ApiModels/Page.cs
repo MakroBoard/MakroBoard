@@ -1,4 +1,4 @@
-﻿namespace MakroBoard.Controllers.ApiModels
+﻿namespace MakroBoard.ApiModels
 {
     public class Page
     {

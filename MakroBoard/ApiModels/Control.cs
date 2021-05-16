@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace MakroBoard.Controllers.ApiModels
+namespace MakroBoard.ApiModels
 {
     public class Plugin
     {
@@ -105,9 +105,9 @@ namespace MakroBoard.Controllers.ApiModels
             Value = value;
         }
 
-        public string SymbolicName { get;  }
+        public string SymbolicName { get; }
 
-        public object Value { get;  }
+        public object Value { get; }
     }
 
     public class ConfigValues : Collection<ConfigValue>

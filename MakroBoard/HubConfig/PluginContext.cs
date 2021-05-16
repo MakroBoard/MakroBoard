@@ -1,5 +1,5 @@
 ﻿using MakroBoard.Controllers;
-using MakroBoard.Controllers.ApiModels;
+using MakroBoard.ApiModels;
 using MakroBoard.HubConfig;
 using MakroBoard.PluginContract;
 using MakroBoard.PluginContract.Parameters;
