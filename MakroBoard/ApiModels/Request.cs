@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace MakroBoard.ApiModels
 {
@@ -77,6 +79,28 @@ namespace MakroBoard.ApiModels
     }
 
     public class RemoveClientResponse : Response
+    {
+
+    }
+
+    public class AvailableControlsResponse : Response
+    {
+        public AvailableControlsResponse(List<Plugin> plugins)
+        {
+            Plugins = plugins;
+        }
+
+        public List<Plugin> Plugins { get; }
+    }
+
+    public class ExecuteRequest : Request
+    {
+        public string SymbolicName { get; set; }
+
+        public ConfigValues ConfigValues { get; set; }
+    }
+
+    public class ExecuteResponse : Response
     {
 
     }

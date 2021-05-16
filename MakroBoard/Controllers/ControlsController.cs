@@ -34,7 +34,7 @@ namespace MakroBoard.Controllers
         [HttpGet("availablecontrols")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
         //[ServiceFilter(typeof(AuthenticatedClient))]
-        public async Task<ActionResult> GetAvailableControls()
+        public async Task<ActionResult<AvailableControlsResponse>> GetAvailableControls()
         {
             var plugins = _PluginContext.Plugins;
 
@@ -45,7 +45,7 @@ namespace MakroBoard.Controllers
                 result.Add(CreatePluginModel(plugin.SymbolicName, pluginControls));
             }
 
-            return Ok(result);
+            return Ok(new AvailableControlsResponse(result));
         }
 
 
@@ -55,43 +55,43 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("execute")]
         [ServiceFilter(typeof(AuthenticatedClient))]
-        public async Task<ActionResult> PostExecute([FromBody] JsonElement data)
+        public async Task<ActionResult<ExecuteResponse>> PostExecute([FromBody] ExecuteRequest executeRequest)
         {
-            var symbolicName = string.Empty;
-            ConfigValues configValues = null;
-            foreach (var element in data.EnumerateObject())
-            {
-                switch (element.Name)
-                {
-                    case "symbolicName":
-                        symbolicName = element.Value.GetString();
-                        break;
-                    case "configValues":
-                        var json = element.Value.GetRawText();
-                        // TODO Deseriaize
-                        configValues = JsonSerializer.Deserialize<ConfigValues>(json, new JsonSerializerOptions
-                        {
-                            PropertyNameCaseInsensitive = true,
-                        });
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(data), $"Data Property {element.Name} is not yet implemented!");
-                }
-            }
+            //var symbolicName = string.Empty;
+            //ConfigValues configValues = null;
+            //foreach (var element in data.EnumerateObject())
+            //{
+            //    switch (element.Name)
+            //    {
+            //        case "symbolicName":
+            //            symbolicName = element.Value.GetString();
+            //            break;
+            //        case "configValues":
+            //            var json = element.Value.GetRawText();
+            //            // TODO Deseriaize
+            //            configValues = JsonSerializer.Deserialize<ConfigValues>(json, new JsonSerializerOptions
+            //            {
+            //                PropertyNameCaseInsensitive = true,
+            //            });
+            //            break;
+            //        default:
+            //            throw new ArgumentOutOfRangeException(nameof(data), $"Data Property {element.Name} is not yet implemented!");
+            //    }
+            //}
 
             var plugins = _PluginContext.Plugins;
             foreach (var plugin in plugins)
             {
                 try
                 {
-                    var control = await plugin.GetControl(symbolicName);
+                    var control = await plugin.GetControl(executeRequest.SymbolicName);
                     if (control != null)
                     {
                         switch (control.View)
                         {
                             case ButtonView bv:
                                 var cv = new ParameterValues();
-                                foreach (var c in configValues)
+                                foreach (var c in executeRequest.ConfigValues)
                                 {
                                     if (c.Value is JsonElement jsonElement)
                                     {
@@ -149,6 +149,8 @@ namespace MakroBoard.Controllers
                 catch (Exception e)
                 {
                     _logger.LogError($"Failed to execute: { e.Message }");
+
+                    return Ok(new ExecuteResponse { Status = ResponseStatus.Error, Error = $"Failed to execute: { e.Message }" });
                 }
             }
             //var control = plugins.SelectMany(x => x.Controls).FirstOrDefault(x => x.SymbolicName.Equals(symbolicName, StringComparison.OrdinalIgnoreCase));
@@ -157,7 +159,7 @@ namespace MakroBoard.Controllers
             //    return StatusCode(418);
             //}
 
-            return Ok();
+            return Ok(new ExecuteResponse());
         }
 
 

@@ -1,5 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'ViewConfigParameter.dart';
 
+@JsonSerializable()
 class View {
   final String viewType;
   final String? value;

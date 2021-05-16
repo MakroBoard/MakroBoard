@@ -1,4 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:makro_board_client/models/Plugin.dart';
+import '../ViewConfigValue.dart';
 import '../client.dart';
 
 /// This allows the `User` class to access private members in
@@ -119,4 +121,36 @@ class RemoveClientResponse extends Response {
   factory RemoveClientResponse.fromJson(Map<String, dynamic> json) => _$RemoveClientResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$RemoveClientResponseToJson(this);
+}
+
+@JsonSerializable()
+class AvailableControlsResponse extends Response {
+  final List<Plugin> plugins;
+
+  AvailableControlsResponse(this.plugins, ResponseStatus status, String errorMessage) : super(status, errorMessage);
+
+  factory AvailableControlsResponse.fromJson(Map<String, dynamic> json) => _$AvailableControlsResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AvailableControlsResponseToJson(this);
+}
+
+@JsonSerializable()
+class ExecuteRequest extends Request {
+  final String symbolicName;
+  final List<ViewConfigValue> configValues;
+
+  ExecuteRequest(this.symbolicName, this.configValues);
+
+  factory ExecuteRequest.fromJson(Map<String, dynamic> json) => _$ExecuteRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ExecuteRequestToJson(this);
+}
+
+@JsonSerializable()
+class ExecuteResponse extends Response {
+  ExecuteResponse(ResponseStatus status, String errorMessage) : super(status, errorMessage);
+
+  factory ExecuteResponse.fromJson(Map<String, dynamic> json) => _$ExecuteResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ExecuteResponseToJson(this);
 }

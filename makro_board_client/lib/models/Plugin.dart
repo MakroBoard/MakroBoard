@@ -1,5 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'Control.dart';
 
+@JsonSerializable()
 class Plugin {
   final String pluginName;
   final List<Control> controls;

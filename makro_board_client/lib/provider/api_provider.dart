@@ -292,8 +292,9 @@ class ApiProvider {
         _serverUri!.replace(path: checkTokenUrl),
         headers: _defaultHeader,
       );
-      var response = CheckTokenResponse.fromJson(json.decode(jsonResponse.body));
-      return _handleResponse(response);
+
+      var result = _handleResponse(jsonResponse, (r) => CheckTokenResponse.fromJson(r));
+      return _checkResponse(result);
     } on Exception catch (e) {
       log('Exception: ' + e.toString());
       return false;
@@ -322,8 +323,8 @@ class ApiProvider {
         body: json.encode(ConfirmClientRequest(client)),
       );
 
-      var response = ConfirmClientResponse.fromJson(json.decode(jsonResponse.body));
-      _handleResponse(response);
+      var result = _handleResponse(jsonResponse, (r) => ConfirmClientResponse.fromJson(r));
+      _checkResponse(result);
     } on Exception catch (e) {
       print('never reached' + e.toString());
     }
@@ -338,8 +339,8 @@ class ApiProvider {
         body: json.encode(RemoveClientRequest(client)),
       );
 
-      var response = RemoveClientResponse.fromJson(json.decode(jsonResponse.body));
-      _handleResponse(response);
+      var result = _handleResponse(jsonResponse, (r) => RemoveClientResponse.fromJson(r));
+      _checkResponse(result);
     } on Exception catch (e) {
       print('never reached' + e.toString());
     }
@@ -348,13 +349,14 @@ class ApiProvider {
   Future<List<Plugin>> getAvailableControls() async {
     try {
       if (currentPlugins.isEmpty) {
-        var response = await http.get(
+        var jsonResponse = await http.get(
           _serverUri!.replace(path: getControlsUrl),
           headers: _defaultHeader,
         );
 
-        var jsonData = json.decode(response.body);
-        currentPlugins = List.castFrom(jsonData).map((jsonPlugin) => Plugin.fromJson(jsonPlugin)).toList();
+        var jsonData = AvailableControlsResponse.fromJson(json.decode(jsonResponse.body));
+        // currentPlugins = List.castFrom(jsonData).map((jsonPlugin) => Plugin.fromJson(jsonPlugin)).toList();
+        currentPlugins = jsonData.plugins;
       }
       return currentPlugins;
       // var dateTime = DateTime.parse(json.decode(response.body));
@@ -368,15 +370,14 @@ class ApiProvider {
 
   Future executeControl(Control control, List<ViewConfigValue> configValues) async {
     try {
-      var jsonBody = json.encode({"symbolicName": control.symbolicName, "configValues": configValues});
-      await http.post(
+      var jsonResponse = await http.post(
         _serverUri!.replace(path: executeControlUrl),
         headers: _defaultHeader,
-        body: jsonBody,
+        body: json.encode(ExecuteRequest(control.symbolicName, configValues)),
       );
 
-      // var dateTime = DateTime.parse(json.decode(response.body));
-      // return LoginCode(code: randomNumber, validUntil: dateTime);
+      var result = _handleResponse(jsonResponse, (r) => ExecuteResponse.fromJson(r));
+      _checkResponse(result);
     } on Exception catch (e) {
       print('never reached' + e.toString());
     }
@@ -430,8 +431,21 @@ class ApiProvider {
     }
   }
 
-  bool _handleResponse(Response response) {
-    if (response.status == ResponseStatus.Ok) {
+  T? _handleResponse<T extends Response>(http.Response response, T Function(Map<String, dynamic>) create) {
+    if (response.statusCode == 200) {
+      var result = create(jsonDecode(response.body));
+
+      if (result.status != ResponseStatus.Ok) {
+        // TODO Handle Error
+      }
+      return result;
+    }
+
+    return null;
+  }
+
+  bool _checkResponse(Response? response) {
+    if (response != null && response.status == ResponseStatus.Ok) {
       return true;
     }
 

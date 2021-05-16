@@ -167,3 +167,50 @@ Map<String, dynamic> _$RemoveClientResponseToJson(
       'status': _$ResponseStatusEnumMap[instance.status],
       'errorMessage': instance.errorMessage,
     };
+
+AvailableControlsResponse _$AvailableControlsResponseFromJson(
+    Map<String, dynamic> json) {
+  return AvailableControlsResponse(
+    (json['plugins'] as List<dynamic>)
+        .map((e) => Plugin.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    _$enumDecode(_$ResponseStatusEnumMap, json['status']),
+    json['errorMessage'] as String,
+  );
+}
+
+Map<String, dynamic> _$AvailableControlsResponseToJson(
+        AvailableControlsResponse instance) =>
+    <String, dynamic>{
+      'status': _$ResponseStatusEnumMap[instance.status],
+      'errorMessage': instance.errorMessage,
+      'plugins': instance.plugins,
+    };
+
+ExecuteRequest _$ExecuteRequestFromJson(Map<String, dynamic> json) {
+  return ExecuteRequest(
+    json['symbolicName'] as String,
+    (json['configValues'] as List<dynamic>)
+        .map((e) => ViewConfigValue.fromJson(e as Map<String, dynamic>))
+        .toList(),
+  );
+}
+
+Map<String, dynamic> _$ExecuteRequestToJson(ExecuteRequest instance) =>
+    <String, dynamic>{
+      'symbolicName': instance.symbolicName,
+      'configValues': instance.configValues,
+    };
+
+ExecuteResponse _$ExecuteResponseFromJson(Map<String, dynamic> json) {
+  return ExecuteResponse(
+    _$enumDecode(_$ResponseStatusEnumMap, json['status']),
+    json['errorMessage'] as String,
+  );
+}
+
+Map<String, dynamic> _$ExecuteResponseToJson(ExecuteResponse instance) =>
+    <String, dynamic>{
+      'status': _$ResponseStatusEnumMap[instance.status],
+      'errorMessage': instance.errorMessage,
+    };

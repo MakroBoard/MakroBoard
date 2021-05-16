@@ -1,6 +1,9 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'ViewConfigParameter.dart';
 import 'View.dart';
 
+@JsonSerializable()
 class Control {
   final String symbolicName;
   final View view;
