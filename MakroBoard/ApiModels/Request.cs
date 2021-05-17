@@ -29,7 +29,7 @@ namespace MakroBoard.ApiModels
             Clients = clients;
         }
 
-        public Client[] Clients { get; } 
+        public Client[] Clients { get; }
     }
 
     public class CheckTokenResponse : Response
@@ -101,6 +101,56 @@ namespace MakroBoard.ApiModels
     }
 
     public class ExecuteResponse : Response
+    {
+
+    }
+
+    public class AddPageRequest : Request
+    {
+        public Page Page { get; set; }
+    }
+
+    public class AddPageResponse : Response
+    {
+
+    }
+
+    public class AddGroupRequest : Request
+    {
+        public Group Group { get; set; }
+    }
+
+    public class AddGroupResponse : Response
+    {
+
+    }
+
+    public class EditGroupRequest : Request
+    {
+        public Group Group { get; set; }
+    }
+
+    public class EditGroupResponse : Response
+    {
+
+    }
+
+    public class RemoveGroupRequest : Request
+    {
+        public int GroupId { get; set; }
+    }
+
+    public class RemoveGroupResponse : Response
+    {
+
+    }
+
+    public class AddPanelRequest : Request
+    {
+        public Panel Panel { get; set; }
+    }
+
+    public class AddPanelResponse : Response
     {
 
     }

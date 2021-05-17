@@ -11,6 +11,7 @@ using MakroBoard.HubConfig;
 using MakroBoard.Plugin;
 using Org.BouncyCastle.Math.EC.Rfc7748;
 using Microsoft.EntityFrameworkCore;
+using MakroBoard.ApiModels;
 
 // QR Code auf Localhost
 // auf Handy -> Code anzeigen
@@ -41,13 +42,13 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("addpage")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult> PostAddPAge([FromBody] MakroBoard.ApiModels.Page page)
+        public async Task<ActionResult<ApiModels.AddPageResponse>> PostAddPAge([FromBody] ApiModels.AddPageRequest addPageRequest)
         {
             var newPage = new Data.Page
             {
-                SymbolicName = ConvertToSymbolicName(page.Label),
-                Label = page.Label,
-                Icon = page.Icon,
+                SymbolicName = ConvertToSymbolicName(addPageRequest.Page.Label),
+                Label = addPageRequest.Page.Label,
+                Icon = addPageRequest.Page.Icon,
                 Groups = new List<Data.Group>()
             };
             _Context.Pages.Add(newPage);
@@ -57,7 +58,7 @@ namespace MakroBoard.Controllers
             _logger.LogDebug($"Added new Page {newPage.Label}");
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, newPage);
-            return Ok();
+            return Ok(new AddPageResponse());
         }
 
         /// <summary>
@@ -65,13 +66,13 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("addgroup")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult> PostAddGroup([FromBody] MakroBoard.ApiModels.Group group)
+        public async Task<ActionResult<AddGroupResponse>> PostAddGroup([FromBody] ApiModels.AddGroupRequest addGroupRequest)
         {
             var newGroup = new Data.Group
             {
-                SymbolicName = ConvertToSymbolicName(group.Label),
-                Label = group.Label,
-                PageID = group.PageID
+                SymbolicName = ConvertToSymbolicName(addGroupRequest.Group.Label),
+                Label = addGroupRequest.Group.Label,
+                PageID = addGroupRequest.Group.PageID
             };
             _Context.Groups.Add(newGroup);
 
@@ -80,7 +81,7 @@ namespace MakroBoard.Controllers
             _logger.LogDebug($"Added new Group {newGroup.Label}");
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdateGroup, newGroup);
-            return Ok();
+            return Ok(new AddGroupResponse());
         }  
         
         /// <summary>
@@ -88,29 +89,28 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("editgroup")]
         [LocalHost]
-        public async Task<ActionResult> PostEditGroup([FromBody] MakroBoard.ApiModels.Group group)
+        public async Task<ActionResult<EditGroupResponse>> PostEditGroup([FromBody] EditGroupRequest editGroupRequest)
         {
-
-            var newGroup =_Context.Groups.Find(group.Id);
-            newGroup.Label = group.Label;
+            var newGroup =_Context.Groups.Find(editGroupRequest.Group.Id);
+            newGroup.Label = editGroupRequest.Group.Label;
 
             await _Context.SaveChangesAsync();
 
             _logger.LogDebug($"Group {newGroup.Label} edited");
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdateGroup, newGroup);
-            return Ok();
+            return Ok(new EditGroupResponse());
         }
 
         [HttpPost("removegroup")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult> PostRemoveGroup([FromBody] int groupId)
+        public async Task<ActionResult<RemoveGroupResponse>> PostRemoveGroup([FromBody] RemoveGroupRequest removeGroupRequest)
         {
             // Include Panels to cascade delete 
-            var groupToDelete = await _Context.Groups.Where(x=>x.ID == groupId).Include(x=>x.Panels).FirstAsync();
+            var groupToDelete = await _Context.Groups.Where(x=>x.ID == removeGroupRequest.GroupId).Include(x=>x.Panels).FirstAsync();
             if (groupToDelete == null)
             {
-                return Conflict();
+                return Conflict(new RemoveGroupResponse { Status = ResponseStatus.Error, Error = "Group to delete not found" });
             }
 
             _Context.Groups.Remove(groupToDelete);
@@ -119,7 +119,7 @@ namespace MakroBoard.Controllers
             _logger.LogDebug($"Removed Group {groupToDelete.Label}");
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.RemoveGroup, groupToDelete);
-            return Ok();
+            return Ok(new RemoveGroupResponse());
         }
 
         /// <summary>
@@ -127,16 +127,16 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("addpanel")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult> PostAddPanel([FromBody] MakroBoard.ApiModels.Panel panel)
+        public async Task<ActionResult<AddPanelResponse>> PostAddPanel([FromBody] AddPanelRequest addPanelRequest)
         {
             var newPanel = new Data.Panel
             {
-                SymbolicName = panel.SymbolicName,
-                PluginName = panel.PluginName,
-                GroupID = panel.GroupId
+                SymbolicName = addPanelRequest.Panel.SymbolicName,
+                PluginName = addPanelRequest.Panel.PluginName,
+                GroupID = addPanelRequest.Panel.GroupId
             };
 
-            newPanel.ConfigParameters = panel.ConfigValues.Select(x => new Data.ConfigParameterValue
+            newPanel.ConfigParameters = addPanelRequest.Panel.ConfigValues.Select(x => new Data.ConfigParameterValue
             {
                 SymbolicName = x.SymbolicName,
                 Value = x.Value?.ToString(),
@@ -151,9 +151,9 @@ namespace MakroBoard.Controllers
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePanel, newPanel);
 
-            await _PluginContext.Subscribe(newPanel.ID, panel.PluginName, panel.SymbolicName, newPanel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value));
+            await _PluginContext.Subscribe(newPanel.ID, addPanelRequest.Panel.PluginName, addPanelRequest.Panel.SymbolicName, newPanel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value));
 
-            return Ok();
+            return Ok(new AddPanelResponse());
         }
 
         private static string ConvertToSymbolicName(string name)

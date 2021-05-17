@@ -58,23 +58,11 @@ class ApiProvider {
   final EnvProvider envProvider;
   ApiProvider({
     required this.envProvider, // ← The parameters of the constructur will define the generated binding
-  }) {
-    // Stream<Client> subscribeClients() async* {
-    //   // while (!(await isAuthenticated())) {
-    //   //   var loginCode = await _getNewLoginCode();
-    //   //   Duration timerDuration = loginCode.validUntil.difference(DateTime.now());
-    //   //   yield loginCode;
-    //   //   await Future.delayed(timerDuration);
-    //   // }
-    // }
-  }
+  }) {}
 
   Future<bool> initialize(Uri serverUri) async {
     try {
       _serverUri = serverUri;
-
-      // // Always call first to be sure on hub connection the client is known
-      // await isAuthenticated();
 
       var url = serverUri.replace(path: requestTokenUrl).toString();
       _connection = HubConnectionBuilder()
@@ -260,7 +248,6 @@ class ApiProvider {
 
               log('UpdatePanelData: $symbolicName => $parameterValue');
 
-              // value.
               var configValue = existingPanel.configValues.firstWhere(
                 (element) => element.symbolicName == symbolicName,
                 orElse: () {
@@ -286,7 +273,6 @@ class ApiProvider {
   }
 
   Future<bool> isAuthenticated() async {
-    // return false;
     try {
       var jsonResponse = await http.get(
         _serverUri!.replace(path: checkTokenUrl),
@@ -302,10 +288,7 @@ class ApiProvider {
   }
 
   Future<DateTime> submitCode(int code) async {
-    var response = await http.post(_serverUri!.replace(path: submitCodeUrl),
-        headers: _defaultHeader,
-        // body: json.encode(code),
-        body: json.encode(SubmitCodeRequest(code)));
+    var response = await http.post(_serverUri!.replace(path: submitCodeUrl), headers: _defaultHeader, body: json.encode(SubmitCodeRequest(code)));
 
     var submitCodeResponse = SubmitCodeResponse.fromJson(json.decode(response.body));
 
@@ -319,7 +302,6 @@ class ApiProvider {
       var jsonResponse = await http.post(
         _serverUri!.replace(path: confirmClientUrl),
         headers: _defaultHeader,
-        // body: json.encode(client),
         body: json.encode(ConfirmClientRequest(client)),
       );
 
@@ -335,7 +317,6 @@ class ApiProvider {
       var jsonResponse = await http.post(
         _serverUri!.replace(path: removeClientUrl),
         headers: _defaultHeader,
-        // body: json.encode(client),
         body: json.encode(RemoveClientRequest(client)),
       );
 
@@ -359,8 +340,6 @@ class ApiProvider {
         currentPlugins = jsonData.plugins;
       }
       return currentPlugins;
-      // var dateTime = DateTime.parse(json.decode(response.body));
-      // return LoginCode(code: randomNumber, validUntil: dateTime);
     } on Exception catch (e) {
       print('never reached' + e.toString());
     }
@@ -384,48 +363,58 @@ class ApiProvider {
   }
 
   Future addPage(Page page) async {
-    var response = await http.post(
+    var jsonResponse = await http.post(
       _serverUri!.replace(path: addPageUrl),
       headers: _defaultHeader,
-      body: json.encode(page),
+      body: json.encode(AddPageRequest(page)),
     );
-    log(response.body);
+
+    var result = _handleResponse(jsonResponse, (r) => AddPageResponse.fromJson(r));
+    _checkResponse(result);
   }
 
   Future addGroup(Group group) async {
-    await http.post(
+    var jsonResponse = await http.post(
       _serverUri!.replace(path: addGroupUrl),
       headers: _defaultHeader,
-      body: json.encode(group),
+      body: json.encode(AddGroupRequest(group)),
     );
+
+    var result = _handleResponse(jsonResponse, (r) => AddGroupResponse.fromJson(r));
+    _checkResponse(result);
   }
 
   Future editGroup(Group group) async {
-    var response = await http.post(
+    var jsonResponse = await http.post(
       _serverUri!.replace(path: editGroupUrl),
       headers: _defaultHeader,
-      body: json.encode(group),
+      body: json.encode(EditGroupRequest(group)),
     );
+
+    var result = _handleResponse(jsonResponse, (r) => EditGroupResponse.fromJson(r));
+    _checkResponse(result);
   }
 
   Future addPanel(Panel panel) async {
-    await http.post(
+    var jsonResponse = await http.post(
       _serverUri!.replace(path: addPanelUrl),
       headers: _defaultHeader,
-      body: json.encode(panel),
+      body: json.encode(AddPanelRequest(panel)),
     );
+
+    var result = _handleResponse(jsonResponse, (r) => AddPanelResponse.fromJson(r));
+    _checkResponse(result);
   }
 
   Future removeGroup(Group group) async {
     try {
-      await http.post(
+      var jsonResponse = await http.post(
         _serverUri!.replace(path: removeGroupUrl),
         headers: _defaultHeader,
-        body: json.encode(group.id),
+        body: json.encode(RemoveGroupRequest(group.id)),
       );
-
-      // var dateTime = DateTime.parse(json.decode(response.body));
-      // return LoginCode(code: randomNumber, validUntil: dateTime);
+      var result = _handleResponse(jsonResponse, (r) => RemoveGroupResponse.fromJson(r));
+      _checkResponse(result);
     } on Exception catch (e) {
       print('never reached' + e.toString());
     }
