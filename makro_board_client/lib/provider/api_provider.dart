@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:makro_board_client/models/api/Request.dart';
 import 'package:makro_board_client/models/group.dart';
 import 'package:makro_board_client/models/panel.dart';
+import 'package:makro_board_client/provider/notification_provider.dart';
 
 import 'package:signalr_core/signalr_core.dart';
 import 'package:makro_board_client/models/Control.dart';
@@ -56,9 +57,11 @@ class ApiProvider {
   Uri? _serverUri;
 
   final EnvProvider envProvider;
+  final NotificationProvider notificationProvider;
   ApiProvider({
     required this.envProvider, // ← The parameters of the constructur will define the generated binding
-  }) {}
+    required this.notificationProvider, // ← The parameters of the constructur will define the generated binding
+  });
 
   Future<bool> initialize(Uri serverUri) async {
     try {
@@ -347,8 +350,12 @@ class ApiProvider {
     return List.empty(growable: true);
   }
 
-  Future executeControl(Control control, List<ViewConfigValue> configValues) async {
+  Future<String?> executeControl(Control control, List<ViewConfigValue> configValues) async {
     try {
+      // notificationProvider.addSnackBarNotification(Notification(
+      //   text: "Execute " + control.symbolicName,
+      // ));
+
       var jsonResponse = await http.post(
         _serverUri!.replace(path: executeControlUrl),
         headers: _defaultHeader,
@@ -356,7 +363,21 @@ class ApiProvider {
       );
 
       var result = _handleResponse(jsonResponse, (r) => ExecuteResponse.fromJson(r));
-      _checkResponse(result);
+
+      // notificationProvider.hideSnackBarNotification(Notification(
+      //   text: "Execute " + control.symbolicName,
+      // ));
+
+      if (result != null && result.status == ResponseStatus.Ok) {
+        notificationProvider.addSnackBarNotification(Notification(
+          text: result.result,
+          notificationType: NotificationType.success,
+        ));
+      }
+
+      if (_checkResponse(result)) {
+        return result?.result;
+      }
     } on Exception catch (e) {
       print('never reached' + e.toString());
     }
@@ -426,6 +447,11 @@ class ApiProvider {
 
       if (result.status != ResponseStatus.Ok) {
         // TODO Handle Error
+
+        notificationProvider.addSnackBarNotification(Notification(
+          text: result.errorMessage,
+          notificationType: NotificationType.error,
+        ));
       }
       return result;
     }

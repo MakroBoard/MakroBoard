@@ -22,7 +22,12 @@ class ControlPanel extends StatelessWidget {
     switch (control.view.viewType) {
       case "Button":
         return TextButton(
-          onPressed: () => Modular.get<ApiProvider>().executeControl(control, configValues),
+          onPressed: () async {
+            var result = await Modular.get<ApiProvider>().executeControl(control, configValues);
+            if (result != null) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
+            }
+          },
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: ChangeNotifierProvider.value(

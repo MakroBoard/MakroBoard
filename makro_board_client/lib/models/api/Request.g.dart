@@ -204,6 +204,7 @@ Map<String, dynamic> _$ExecuteRequestToJson(ExecuteRequest instance) =>
 
 ExecuteResponse _$ExecuteResponseFromJson(Map<String, dynamic> json) {
   return ExecuteResponse(
+    json['result'] as String,
     _$enumDecode(_$ResponseStatusEnumMap, json['status']),
     json['errorMessage'] as String,
   );
@@ -213,6 +214,7 @@ Map<String, dynamic> _$ExecuteResponseToJson(ExecuteResponse instance) =>
     <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'errorMessage': instance.errorMessage,
+      'result': instance.result,
     };
 
 AddPageRequest _$AddPageRequestFromJson(Map<String, dynamic> json) {

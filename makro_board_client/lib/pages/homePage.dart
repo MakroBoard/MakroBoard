@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/dialogs/create_page_dialog.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
+import 'package:makro_board_client/widgets/SnackBarNotification.dart';
 import 'package:makro_board_client/widgets/WmskAppBar.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:makro_board_client/models/page.dart' as models;
@@ -15,14 +16,16 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: WmskAppBar(titleText: "Home"),
-      body: Container(
-        child: StreamBuilder(
-          stream: Modular.get<ApiProvider>().pages,
-          initialData: Modular.get<ApiProvider>().currentPages,
-          builder: (context, snapshot) => ResponsiveGridList(
-            desiredItemWidth: 200,
-            minSpacing: 10,
-            children: _getPageWidgets(context, snapshot.data as List<models.Page>),
+      body: SnackBarNotification(
+        child: Container(
+          child: StreamBuilder(
+            stream: Modular.get<ApiProvider>().pages,
+            initialData: Modular.get<ApiProvider>().currentPages,
+            builder: (context, snapshot) => ResponsiveGridList(
+              desiredItemWidth: 200,
+              minSpacing: 10,
+              children: _getPageWidgets(context, snapshot.data as List<models.Page>),
+            ),
           ),
         ),
       ),

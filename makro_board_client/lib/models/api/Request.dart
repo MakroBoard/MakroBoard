@@ -153,7 +153,9 @@ class ExecuteRequest extends Request {
 
 @JsonSerializable()
 class ExecuteResponse extends Response {
-  ExecuteResponse(ResponseStatus status, String errorMessage) : super(status, errorMessage);
+  final String result;
+
+  ExecuteResponse(this.result, ResponseStatus status, String errorMessage) : super(status, errorMessage);
 
   factory ExecuteResponse.fromJson(Map<String, dynamic> json) => _$ExecuteResponseFromJson(json);
 

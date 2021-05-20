@@ -10,6 +10,7 @@ import 'package:makro_board_client/pages/login_page.dart';
 import 'package:makro_board_client/pages/splash_screen.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/provider/env_provider.dart';
+import 'package:makro_board_client/provider/notification_provider.dart';
 
 import 'pages/homePage.dart';
 import 'app_widget.dart';
@@ -21,7 +22,8 @@ class AppModule extends Module {
   @override
   final List<Bind> binds = [
     Bind.singleton((i) => EnvProvider()),
-    Bind.singleton<ApiProvider>((i) => ApiProvider(envProvider: i<EnvProvider>())),
+    Bind.singleton((i) => NotificationProvider()),
+    Bind.singleton<ApiProvider>((i) => ApiProvider(envProvider: i<EnvProvider>(), notificationProvider: i<NotificationProvider>())),
     Bind.lazySingleton((i) => AuthProvider(apiProvider: i<ApiProvider>())),
   ];
 

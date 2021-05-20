@@ -57,33 +57,13 @@ namespace MakroBoard.Controllers
         [ServiceFilter(typeof(AuthenticatedClient))]
         public async Task<ActionResult<ExecuteResponse>> PostExecute([FromBody] ExecuteRequest executeRequest)
         {
-            //var symbolicName = string.Empty;
-            //ConfigValues configValues = null;
-            //foreach (var element in data.EnumerateObject())
-            //{
-            //    switch (element.Name)
-            //    {
-            //        case "symbolicName":
-            //            symbolicName = element.Value.GetString();
-            //            break;
-            //        case "configValues":
-            //            var json = element.Value.GetRawText();
-            //            // TODO Deseriaize
-            //            configValues = JsonSerializer.Deserialize<ConfigValues>(json, new JsonSerializerOptions
-            //            {
-            //                PropertyNameCaseInsensitive = true,
-            //            });
-            //            break;
-            //        default:
-            //            throw new ArgumentOutOfRangeException(nameof(data), $"Data Property {element.Name} is not yet implemented!");
-            //    }
-            //}
-
             var plugins = _PluginContext.Plugins;
+            string result = string.Empty;
             foreach (var plugin in plugins)
             {
                 try
                 {
+                    // TODO Better Plugin/Control Loading
                     var control = await plugin.GetControl(executeRequest.SymbolicName);
                     if (control != null)
                     {
@@ -138,11 +118,13 @@ namespace MakroBoard.Controllers
                                         //cv.Add(new StringC(c.SymbolicName, c.Value));
                                     }
                                 }
-                                bv.Execute(cv);
+                                result = bv.Execute(cv);
                                 break;
                             default:
                                 throw new NotSupportedException($"ViewType {control.View.GetType().Name} is not yet implemented.");
                         }
+
+                        break;
                     }
 
                 }
@@ -150,16 +132,11 @@ namespace MakroBoard.Controllers
                 {
                     _logger.LogError($"Failed to execute: { e.Message }");
 
-                    return Ok(new ExecuteResponse { Status = ResponseStatus.Error, Error = $"Failed to execute: { e.Message }" });
+                    return Ok(new ExecuteResponse(string.Empty) { Status = ResponseStatus.Error, Error = $"Failed to execute: { e.Message }" });
                 }
             }
-            //var control = plugins.SelectMany(x => x.Controls).FirstOrDefault(x => x.SymbolicName.Equals(symbolicName, StringComparison.OrdinalIgnoreCase));
-            //if (control == null)
-            //{
-            //    return StatusCode(418);
-            //}
-
-            return Ok(new ExecuteResponse());
+   
+            return Ok(new ExecuteResponse(result));
         }
 
 
