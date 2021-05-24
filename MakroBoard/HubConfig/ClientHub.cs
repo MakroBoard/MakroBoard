@@ -19,8 +19,6 @@ namespace MakroBoard.HubConfig
         {
             _DatabaseContext = databaseContext;
             _PluginContext = pluginContext;
-
-            //SubscribePanels().Wait();
         }
 
         private bool IsLocalHost(IPAddress ipAddress)
@@ -51,51 +49,6 @@ namespace MakroBoard.HubConfig
             }
         }
 
-        //private ParameterValues CreateParameterValues(PluginContract.Control control, IList<Data.ConfigParameterValue> configParameters)
-        //{
-        //    var parameterValues = new ParameterValues();
-
-        //    foreach (var configParameter in configParameters)
-        //    {
-        //        var controlConfigParameter = control.ConfigParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase)) ?? control.View.ConfigParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase)) ?? control.View.PluginParameters.FirstOrDefault(x => x.SymbolicName.Equals(configParameter.SymbolicName, StringComparison.OrdinalIgnoreCase));
-        //        switch (controlConfigParameter)
-        //        {
-        //            case IntConfigParameter icp:
-        //                parameterValues.Add(new IntParameterValue(icp, int.Parse(configParameter.Value)));
-        //                break;
-        //            case StringConfigParameter scp:
-        //                parameterValues.Add(new StringParameterValue(scp, configParameter.Value));
-        //                break;
-        //            case BoolConfigParameter bcp:
-        //                parameterValues.Add(new BoolParameterValue(bcp, configParameter.Value != null ? bool.Parse(configParameter.Value) : bcp.DefaultValue));
-        //                break;
-        //            default:
-        //                throw new NotImplementedException($"{controlConfigParameter.GetType().Name} is not yet implemented!");
-        //        }
-        //    }
-
-        //    foreach (var pluginParameter in control.View.PluginParameters)
-        //    {
-        //        switch (pluginParameter)
-        //        {
-        //            case IntConfigParameter icp:
-        //                parameterValues.Add(new IntParameterValue(icp, icp.DefaultValue));
-        //                break;
-        //            case StringConfigParameter scp:
-        //                parameterValues.Add(new StringParameterValue(scp, scp.DefaultValue));
-        //                break;
-        //            case BoolConfigParameter bcp:
-        //                parameterValues.Add(new BoolParameterValue(bcp, bcp.DefaultValue));
-        //                break;
-        //            default:
-        //                throw new NotImplementedException($"{pluginParameter.GetType().Name} is not yet implemented!");
-        //        }
-        //    }
-
-        //    return parameterValues;
-        //}
-
-
         public async override Task OnConnectedAsync()
         {
             var ctx = Context.GetHttpContext();
@@ -110,13 +63,14 @@ namespace MakroBoard.HubConfig
 
             var existingClient = await _DatabaseContext.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(ipAddress.ToString()));
 
+            var sendToken = false;
             if (existingClient == null)
             {
                 existingClient = new Data.Client { ClientIp = ipAddress.ToString(), RegisterDate = DateTime.UtcNow, State = isLocalHost ? ClientState.Admin : ClientState.None };
                 if (isLocalHost)
                 {
                     existingClient.CreateNewToken(Constants.Seed);
-                    _ = Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token);
+                    sendToken = true;
                 }
             }
 
@@ -125,8 +79,6 @@ namespace MakroBoard.HubConfig
             await _DatabaseContext.Sessions.AddAsync(new Session { ClientSignalrId = Context.ConnectionId, Client = existingClient });
             await _DatabaseContext.SaveChangesAsync();
 
-
-
             if (isLocalHost)
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup);
@@ -134,7 +86,7 @@ namespace MakroBoard.HubConfig
                 var clients = await _DatabaseContext.Clients.ToListAsync();//.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
                 foreach (var client in clients)
                 {
-                    _ = Clients.Caller.SendAsync(ClientMethods.AddOrUpdateClient, client);
+                    await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateClient, client);
                 }
             }
             else
@@ -142,18 +94,19 @@ namespace MakroBoard.HubConfig
                 // Any sync needed?
             }
 
-            //if (existingClient.State >= ClientState.Confirmed)
-            //{
-            //    _ = Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token);
-            //}
-
             var pages = await _DatabaseContext.Pages.Include(p => p.Groups).ThenInclude((g) => g.Panels).ThenInclude(p => p.ConfigParameters).ToListAsync();
             foreach (var page in pages)
             {
-                _ = Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, page);
+                await Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, page);
             }
 
-            _ = SubscribePanels();
+            await SubscribePanels();
+            if(sendToken)
+            {
+                await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token);
+            }
+
+            await Clients.Caller.SendAsync(ClientMethods.Initialized);
 
             await base.OnConnectedAsync();
         }
@@ -172,7 +125,5 @@ namespace MakroBoard.HubConfig
 
             await base.OnDisconnectedAsync(exception);
         }
-
-        //private void OnPanelDataChanged(PanelsChangedEventArgs)
     }
 }

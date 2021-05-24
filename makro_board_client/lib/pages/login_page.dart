@@ -15,15 +15,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   @override
-  void initState() {
-    super.initState();
-
-    Modular.get<AuthProvider>().waitForAuthenticated().then(
-          (isAutenticated) => {if (isAutenticated) Modular.to.pushReplacementNamed('/home') else Modular.to.pushReplacementNamed('/login')},
-        );
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: WmskAppBar(titleText: 'Client anmelden'),

@@ -7,6 +7,7 @@ namespace MakroBoard.Controllers
 {
     public static class ClientMethods
     {
+        public const string Initialized = "Initialized";
         public const string AddOrUpdateClient = "AddOrUpdateClient";
         public const string AddOrUpdateToken = "AddOrUpdateToken";
         public const string RemoveClient = "RemoveClient";

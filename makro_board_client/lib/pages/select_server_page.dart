@@ -94,7 +94,6 @@ class SelectServerPage extends StatelessWidget {
                             alignment: MainAxisAlignment.center,
                             children: [
                               TextButton(
-                                // onPressed: () => Modular.to.navigate('/login'),
                                 onPressed: () async {
                                   EasyLoading.show(status: 'verbinden ...');
                                   if (_loginFormKey.currentState!.validate()) {

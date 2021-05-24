@@ -50,9 +50,6 @@ class ApiProvider {
   Stream<List<Client>> get clients => streamClientController.stream;
   List<Client> currentClients = [];
 
-  StreamController<String> streamTokenController = StreamController<String>.broadcast();
-  Stream<String> get token => streamTokenController.stream;
-
   HubConnection? _connection;
   Uri? _serverUri;
 
@@ -77,7 +74,6 @@ class ApiProvider {
           .withAutomaticReconnect()
           .build();
 
-      await _connection!.start();
       _connection!.on('AddOrUpdateClient', _onAddOrUpdateClient);
       _connection!.on('AddOrUpdateToken', _onAddOrUpdateToken);
       _connection!.on('RemoveClient', _onRemoveClient);
@@ -87,6 +83,10 @@ class ApiProvider {
       _connection!.on('AddOrUpdatePanel', _onAddOrUpdatePanel);
       _connection!.on('UpdatePanelData', _onUpdatePanelData);
 
+      Completer c = new Completer();
+      _connection!.on('Initialized', (_) => c.complete());
+      await _connection!.start();
+      await c.future;
       return true;
     } on Exception catch (e) {
       print(e.toString());
@@ -108,7 +108,8 @@ class ApiProvider {
     for (var newToken in tokens!) {
       var newTokenString = newToken.toString();
       await Settings.setValue("server_token", newTokenString);
-      streamTokenController.add(newTokenString);
+
+      Modular.to.pushReplacementNamed('/home');
     }
   }
 
