@@ -133,7 +133,7 @@ namespace MakroBoard.Controllers
             {
                 SymbolicName = addPanelRequest.Panel.SymbolicName,
                 PluginName = addPanelRequest.Panel.PluginName,
-                GroupID = addPanelRequest.Panel.GroupId
+                GroupId = addPanelRequest.Panel.GroupId
             };
 
             newPanel.ConfigParameters = addPanelRequest.Panel.ConfigValues.Select(x => new Data.ConfigParameterValue

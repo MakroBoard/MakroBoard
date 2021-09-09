@@ -25,11 +25,11 @@ class Request {
 @JsonSerializable()
 class Response {
   final ResponseStatus status;
-  final String errorMessage;
+  final String? error;
 
   Response(
     this.status,
-    this.errorMessage,
+    this.error,
   );
 
   factory Response.fromJson(Map<String, dynamic> json) => _$ResponseFromJson(json);
@@ -49,7 +49,7 @@ enum ResponseStatus {
 class RequestTokensResponse extends Response {
   final List<Client> clients;
 
-  RequestTokensResponse(this.clients, ResponseStatus status, String errorMessage) : super(status, errorMessage);
+  RequestTokensResponse(this.clients, ResponseStatus status, String? error) : super(status, error);
 
   factory RequestTokensResponse.fromJson(Map<String, dynamic> json) => _$RequestTokensResponseFromJson(json);
 
@@ -60,7 +60,7 @@ class RequestTokensResponse extends Response {
 class CheckTokenResponse extends Response {
   final bool isValid;
 
-  CheckTokenResponse(this.isValid, ResponseStatus status, String errorMessage) : super(status, errorMessage);
+  CheckTokenResponse(this.isValid, ResponseStatus status, String? error) : super(status, error);
 
   factory CheckTokenResponse.fromJson(Map<String, dynamic> json) => _$CheckTokenResponseFromJson(json);
 
@@ -82,7 +82,7 @@ class SubmitCodeRequest extends Request {
 class SubmitCodeResponse extends Response {
   final String validUntil;
 
-  SubmitCodeResponse(this.validUntil, ResponseStatus status, String errorMessage) : super(status, errorMessage);
+  SubmitCodeResponse(this.validUntil, ResponseStatus status, String? error) : super(status, error);
   factory SubmitCodeResponse.fromJson(Map<String, dynamic> json) => _$SubmitCodeResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$SubmitCodeResponseToJson(this);
@@ -101,7 +101,7 @@ class ConfirmClientRequest extends Request {
 
 @JsonSerializable()
 class ConfirmClientResponse extends Response {
-  ConfirmClientResponse(ResponseStatus status, String errorMessage) : super(status, errorMessage);
+  ConfirmClientResponse(ResponseStatus status, String? error) : super(status, error);
 
   factory ConfirmClientResponse.fromJson(Map<String, dynamic> json) => _$ConfirmClientResponseFromJson(json);
 
@@ -121,7 +121,7 @@ class RemoveClientRequest extends Request {
 
 @JsonSerializable()
 class RemoveClientResponse extends Response {
-  RemoveClientResponse(ResponseStatus status, String errorMessage) : super(status, errorMessage);
+  RemoveClientResponse(ResponseStatus status, String? error) : super(status, error);
 
   factory RemoveClientResponse.fromJson(Map<String, dynamic> json) => _$RemoveClientResponseFromJson(json);
 
@@ -132,7 +132,7 @@ class RemoveClientResponse extends Response {
 class AvailableControlsResponse extends Response {
   final List<Plugin> plugins;
 
-  AvailableControlsResponse(this.plugins, ResponseStatus status, String errorMessage) : super(status, errorMessage);
+  AvailableControlsResponse(this.plugins, ResponseStatus status, String? error) : super(status, error);
 
   factory AvailableControlsResponse.fromJson(Map<String, dynamic> json) => _$AvailableControlsResponseFromJson(json);
 
@@ -155,7 +155,7 @@ class ExecuteRequest extends Request {
 class ExecuteResponse extends Response {
   final String result;
 
-  ExecuteResponse(this.result, ResponseStatus status, String errorMessage) : super(status, errorMessage);
+  ExecuteResponse(this.result, ResponseStatus status, String? error) : super(status, error);
 
   factory ExecuteResponse.fromJson(Map<String, dynamic> json) => _$ExecuteResponseFromJson(json);
 
@@ -175,7 +175,7 @@ class AddPageRequest extends Request {
 
 @JsonSerializable()
 class AddPageResponse extends Response {
-  AddPageResponse(ResponseStatus status, String errorMessage) : super(status, errorMessage);
+  AddPageResponse(ResponseStatus status, String? error) : super(status, error);
 
   factory AddPageResponse.fromJson(Map<String, dynamic> json) => _$AddPageResponseFromJson(json);
 
@@ -195,7 +195,7 @@ class AddGroupRequest extends Request {
 
 @JsonSerializable()
 class AddGroupResponse extends Response {
-  AddGroupResponse(ResponseStatus status, String errorMessage) : super(status, errorMessage);
+  AddGroupResponse(ResponseStatus status, String? error) : super(status, error);
 
   factory AddGroupResponse.fromJson(Map<String, dynamic> json) => _$AddGroupResponseFromJson(json);
 
@@ -215,7 +215,7 @@ class EditGroupRequest extends Request {
 
 @JsonSerializable()
 class EditGroupResponse extends Response {
-  EditGroupResponse(ResponseStatus status, String errorMessage) : super(status, errorMessage);
+  EditGroupResponse(ResponseStatus status, String? error) : super(status, error);
 
   factory EditGroupResponse.fromJson(Map<String, dynamic> json) => _$EditGroupResponseFromJson(json);
 
@@ -235,7 +235,7 @@ class RemoveGroupRequest extends Request {
 
 @JsonSerializable()
 class RemoveGroupResponse extends Response {
-  RemoveGroupResponse(ResponseStatus status, String errorMessage) : super(status, errorMessage);
+  RemoveGroupResponse(ResponseStatus status, String? error) : super(status, error);
 
   factory RemoveGroupResponse.fromJson(Map<String, dynamic> json) => _$RemoveGroupResponseFromJson(json);
 
@@ -255,7 +255,7 @@ class AddPanelRequest extends Request {
 
 @JsonSerializable()
 class AddPanelResponse extends Response {
-  AddPanelResponse(ResponseStatus status, String errorMessage) : super(status, errorMessage);
+  AddPanelResponse(ResponseStatus status, String? error) : super(status, error);
 
   factory AddPanelResponse.fromJson(Map<String, dynamic> json) => _$AddPanelResponseFromJson(json);
 

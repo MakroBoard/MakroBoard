@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
-@Injectable() // ← Injectable annotation
 class EnvProvider {
   // String getBaseUrl() {
   //   if (kDebugMode) {

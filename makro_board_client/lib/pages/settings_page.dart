@@ -17,7 +17,7 @@ class SettingsPage extends StatelessWidget {
               title: "Host",
               settingKey: "server_host",
               validator: (value) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return "Um fortzufahren wird ein Host benötigt.";
                 }
 
@@ -32,7 +32,7 @@ class SettingsPage extends StatelessWidget {
               keyboardType: TextInputType.number,
               settingKey: "server_port",
               validator: (value) {
-                if (value.isEmpty) {
+                if (value!.isEmpty) {
                   return "Um fortzufahren wird ein Port benötigt.";
                 }
 

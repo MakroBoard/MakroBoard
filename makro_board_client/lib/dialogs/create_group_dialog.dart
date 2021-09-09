@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/models/page.dart' as models;
 import 'package:makro_board_client/models/group.dart' as models;
+import 'package:provider/provider.dart';
 
 class CreateGroupDialog extends StatelessWidget {
   final models.Page page;
@@ -49,7 +49,7 @@ class CreateGroupDialog extends StatelessWidget {
                       EasyLoading.show(status: 'Neue Gruppe anlegen ...');
                       if (_createGroupFormKey.currentState!.validate()) {
                         try {
-                          await Modular.get<ApiProvider>().addGroup(models.Group.createNew(label: groupLabel, pageId: page.id));
+                          await Provider.of<ApiProvider>(context, listen: false).addGroup(models.Group.createNew(label: groupLabel, pageId: page.id));
 
                           Navigator.of(context, rootNavigator: true).pop();
                         } catch (e) {

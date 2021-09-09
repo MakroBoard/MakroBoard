@@ -1,11 +1,11 @@
-import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/models/page.dart' as models;
+import 'package:provider/provider.dart';
 
 class CreatePageDialog extends StatefulWidget {
   const CreatePageDialog({Key? key}) : super(key: key);
@@ -72,10 +72,11 @@ class _CreatePageDialogState extends State<CreatePageDialog> {
                         EasyLoading.show(status: 'Neue Seite anlegen ...');
                         if (_createPageFormKey.currentState!.validate()) {
                           try {
-                            await Modular.get<ApiProvider>().addPage(models.Page.createNew(label: pageLabel, icon: icon));
+                            await Provider.of<ApiProvider>(context, listen: false).addPage(models.Page.createNew(label: pageLabel, icon: icon));
 
                             Navigator.of(context, rootNavigator: true).pop();
                           } catch (e) {
+                            log('Exception: ' + e.toString());
                             // TODO Fehler anzeigen?
                           }
                         }

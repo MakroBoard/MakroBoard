@@ -23,7 +23,7 @@ namespace MakroBoard.Data
         public int Order {get; set; }
 
         [ForeignKey("Group")]
-        public int GroupID  { get; set; }
+        public int GroupId  { get; set; }
 
         [JsonIgnore]
         public Group Group {get; set; }

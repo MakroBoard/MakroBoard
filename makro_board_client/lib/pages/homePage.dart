@@ -1,16 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/dialogs/create_page_dialog.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/widgets/SnackBarNotification.dart';
 import 'package:makro_board_client/widgets/WmskAppBar.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:makro_board_client/models/page.dart' as models;
 
 class HomePage extends StatelessWidget {
-  const HomePage({required Key key}) : super(key: key);
+  final ValueChanged<models.Page> selectedPageChanged;
+
+  const HomePage({
+    required this.selectedPageChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +23,8 @@ class HomePage extends StatelessWidget {
       body: SnackBarNotification(
         child: Container(
           child: StreamBuilder(
-            stream: Modular.get<ApiProvider>().pages,
-            initialData: Modular.get<ApiProvider>().currentPages,
+            stream: Provider.of<ApiProvider>(context, listen: false).pages,
+            initialData: Provider.of<ApiProvider>(context, listen: false).currentPages,
             builder: (context, snapshot) => ResponsiveGridList(
               desiredItemWidth: 200,
               minSpacing: 10,
@@ -39,18 +43,18 @@ class HomePage extends StatelessWidget {
 
   List<Widget> _getPageWidgets(BuildContext context, List<models.Page>? pages) {
     var result = <Widget>[
-      // Card(
-      //   child: InkWell(
-      //     onTap: () => showCreatePageDialog(context),
-      //     child: Padding(
-      //       padding: const EdgeInsets.all(8.0),
-      //       child: ListTile(
-      //         title: Text("Add New Page"),
-      //         leading: Icon(Icons.add),
-      //       ),
-      //     ),
-      //   ),
-      // ),
+      Card(
+        child: InkWell(
+          onTap: () => showCreatePageDialog(context),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+              title: Text("Add New Page"),
+              leading: Icon(Icons.add),
+            ),
+          ),
+        ),
+      ),
     ];
 
     if (pages == null) {
@@ -62,7 +66,7 @@ class HomePage extends StatelessWidget {
               (page) => Card(
                 child: InkWell(
                   onTap: () {
-                    Modular.to.pushNamed('/page', arguments: page);
+                    selectedPageChanged(page);
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),

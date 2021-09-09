@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_modular/flutter_modular.dart';
-import 'package:makro_board_client/models/Control.dart';
-import 'package:makro_board_client/models/ViewConfigParameter.dart';
 import 'package:makro_board_client/models/Plugin.dart';
 import 'package:makro_board_client/models/ViewConfigValue.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
@@ -19,7 +15,7 @@ class AvailableControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: Modular.get<ApiProvider>().getAvailableControls(),
+      future: Provider.of<ApiProvider>(context, listen: false).getAvailableControls(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.none || !snapshot.hasData) {
           return Text("No Code Available");
@@ -35,11 +31,6 @@ class AvailableControls extends StatelessWidget {
           },
         );
       },
-      // builder: (context, snapshot) => snapshot.connectionState == ConnectionState.none || !snapshot.hasData
-      //     ? Text("No Code Available")
-      //     : Text(
-      //         snapshot.data.runtimeType.toString(),
-      //       ),
     );
   }
 

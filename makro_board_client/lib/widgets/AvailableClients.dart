@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:makro_board_client/models/client.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
+import 'package:provider/provider.dart';
 
 class AvailableClients extends StatelessWidget {
   const AvailableClients({
@@ -13,8 +13,8 @@ class AvailableClients extends StatelessWidget {
   Widget build(BuildContext context) {
     var ownCode = Settings.getValue("server_code", 0);
     return StreamBuilder<List<Client>>(
-      stream: Modular.get<ApiProvider>().clients,
-      initialData: Modular.get<ApiProvider>().currentClients,
+      stream: Provider.of<ApiProvider>(context, listen: false).clients,
+      initialData: Provider.of<ApiProvider>(context, listen: false).currentClients,
       builder: (context, snapshot) => !snapshot.hasData
           ? Text("No Code Available")
           : ListView.builder(
@@ -43,12 +43,12 @@ class AvailableClients extends StatelessWidget {
                               if (ownCode != 0 && ownCode != client.code)
                                 client.state >= ClientState.confirmed
                                     ? TextButton.icon(
-                                        onPressed: () => {Modular.get<ApiProvider>().removeClient(client)},
+                                        onPressed: () => {Provider.of<ApiProvider>(context, listen: false).removeClient(client)},
                                         icon: Icon(Icons.remove),
                                         label: Text("Löschen"),
                                       )
                                     : TextButton.icon(
-                                        onPressed: () => {Modular.get<ApiProvider>().confirmClient(client)},
+                                        onPressed: () => {Provider.of<ApiProvider>(context, listen: false).confirmClient(client)},
                                         icon: Icon(Icons.check),
                                         label: Text("Freischalten"),
                                       ),

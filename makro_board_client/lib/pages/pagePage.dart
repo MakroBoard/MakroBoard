@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/dialogs/create_group_dialog.dart';
 import 'package:makro_board_client/dialogs/create_panel_dialog.dart';
 import 'package:makro_board_client/dialogs/edit_group_dialog.dart';
@@ -11,6 +10,7 @@ import 'package:makro_board_client/widgets/ControlPanel.dart';
 import 'package:makro_board_client/widgets/EditMode.dart';
 import 'package:makro_board_client/widgets/SnackBarNotification.dart';
 import 'package:makro_board_client/widgets/WmskAppBar.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:makro_board_client/models/Plugin.dart' as models;
 import 'package:makro_board_client/models/page.dart' as models;
@@ -139,12 +139,12 @@ class PagePage extends StatelessWidget {
                       ),
                     ),
                   FutureBuilder(
-                    future: Modular.get<ApiProvider>().getAvailableControls(),
+                    future: Provider.of<ApiProvider>(context, listen: false).getAvailableControls(),
                     builder: (context, availableControlsSnapShot) => StreamBuilder(
                       stream: group.panelsStream,
                       initialData: group.panels,
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        return _getGroupPanelWidgets(context, availableControlsSnapShot.data as List<models.Plugin>, snapshot.data);
+                        return _getGroupPanelWidgets(context, availableControlsSnapShot.data != null ? availableControlsSnapShot.data as List<models.Plugin> : <models.Plugin>[], snapshot.data);
                       },
                     ),
                   ),
@@ -213,7 +213,7 @@ Future _removeGroupDialog(BuildContext context, models.Group group) {
         title: "Gruppe Löschen",
         deleteText: "Soll die Gruppe ${group.symbolicName} wirklich gelöscht werden?",
         executeText: "Gruppe ${group.symbolicName} wird gelöscht ...",
-        deleteCallback: () => Modular.get<ApiProvider>().removeGroup(group),
+        deleteCallback: () => Provider.of<ApiProvider>(context, listen: false).removeGroup(group),
       );
     },
   );

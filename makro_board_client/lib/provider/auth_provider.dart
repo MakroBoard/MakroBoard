@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/models/login_code.dart';
 
 import 'api_provider.dart';
 
-@Injectable() // ← Injectable annotation
 class AuthProvider {
   final ApiProvider apiProvider;
   AuthProvider({

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/models/Control.dart';
 import 'package:makro_board_client/models/ViewConfigValue.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
@@ -8,6 +7,7 @@ import 'package:makro_board_client/models/Plugin.dart' as models;
 import 'package:makro_board_client/models/group.dart' as models;
 import 'package:makro_board_client/models/panel.dart' as models;
 import 'package:makro_board_client/widgets/ConfigParameterInput.dart';
+import 'package:provider/provider.dart';
 
 class CreatePanelDialog extends StatefulWidget {
   final models.Group group;
@@ -28,7 +28,7 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
 
   @override
   void initState() {
-    _futurePlugins = Modular.get<ApiProvider>().getAvailableControls().then((value) => _currentPlugins = value);
+    _futurePlugins = Provider.of<ApiProvider>(context, listen: false).getAvailableControls().then((value) => _currentPlugins = value);
     super.initState();
   }
 
@@ -114,7 +114,7 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
                       EasyLoading.show(status: 'Neue Gruppe anlegen ...');
                       if (selectedPlugin != null && selectedControl != null && configValues != null && _createPanelFormKey.currentState!.validate()) {
                         try {
-                          await Modular.get<ApiProvider>().addPanel(
+                          await Provider.of<ApiProvider>(context, listen: false).addPanel(
                             models.Panel.createNew(
                               pluginName: selectedPlugin!.pluginName,
                               groupId: widget.group.id,

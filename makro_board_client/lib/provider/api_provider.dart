@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:http/http.dart' as http;
 import 'package:makro_board_client/models/api/Request.dart';
@@ -20,7 +19,6 @@ import 'package:makro_board_client/models/page.dart';
 
 import 'env_provider.dart';
 
-@Injectable() // ← Injectable annotation
 class ApiProvider {
   static const String requestTokenUrl = "/hub/clients";
   static const String confirmClientUrl = "/api/client/confirmclient";
@@ -109,7 +107,7 @@ class ApiProvider {
       var newTokenString = newToken.toString();
       await Settings.setValue("server_token", newTokenString);
 
-      Modular.to.pushReplacementNamed('/home');
+      // TODO Navigate to Home
     }
   }
 
@@ -450,7 +448,7 @@ class ApiProvider {
         // TODO Handle Error
 
         notificationProvider.addSnackBarNotification(Notification(
-          text: result.errorMessage,
+          text: result.error!,
           notificationType: NotificationType.error,
         ));
       }

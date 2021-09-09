@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
 import 'package:makro_board_client/models/login_code.dart';
 import 'package:makro_board_client/provider/auth_provider.dart';
 import 'package:makro_board_client/widgets/SnackBarNotification.dart';
 import 'package:makro_board_client/widgets/WmskAppBar.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({required Key key}) : super(key: key);
@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: Padding(
                   padding: EdgeInsets.all(16),
                   child: StreamBuilder<LoginCode>(
-                    stream: Modular.get<AuthProvider>().submitCode(),
+                    stream: Provider.of<AuthProvider>(context, listen: false).submitCode(),
                     builder: (context, snapshot) => !snapshot.hasData
                         ? Text("No Code Available")
                         : Column(

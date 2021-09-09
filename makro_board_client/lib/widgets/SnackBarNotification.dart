@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/provider/notification_provider.dart' as noti;
+import 'package:provider/provider.dart';
 
 class SnackBarNotification extends StatefulWidget {
   final Widget child;
@@ -21,7 +21,7 @@ class _SnackBarNotificationState extends State<SnackBarNotification> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_snackBarNotifications == null) {
-      _snackBarNotifications = Modular.get<noti.NotificationProvider>().snackBarNotifications.listen((notification) {
+      _snackBarNotifications = Provider.of<noti.NotificationProvider>(context, listen: false).snackBarNotifications.listen((notification) {
         if (_context == null) {
           return;
         }

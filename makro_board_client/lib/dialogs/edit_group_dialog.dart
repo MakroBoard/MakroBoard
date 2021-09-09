@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
-import 'package:makro_board_client/models/page.dart' as models;
 import 'package:makro_board_client/models/group.dart' as models;
+import 'package:provider/provider.dart';
 
 class EditGroupDialog extends StatelessWidget {
   final models.Group group;
@@ -14,7 +11,7 @@ class EditGroupDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _editGroupFormKey = GlobalKey<FormState>();
-    
+
     var editGroup = group.clone();
 
     return SimpleDialog(
@@ -27,8 +24,8 @@ class EditGroupDialog extends StatelessWidget {
               TextFormField(
                 decoration: InputDecoration(
                   labelText: "Name",
-                  prefixIcon: Icon(Icons.dns_outlined),                  
-                ),                
+                  prefixIcon: Icon(Icons.dns_outlined),
+                ),
                 initialValue: editGroup.label,
                 validator: (value) {
                   if (value == null) {
@@ -53,8 +50,7 @@ class EditGroupDialog extends StatelessWidget {
                       EasyLoading.show(status: 'Gruppe bearbeiten ...');
                       if (_editGroupFormKey.currentState!.validate()) {
                         try {
-                          
-                          await Modular.get<ApiProvider>().editGroup(editGroup);
+                          await Provider.of<ApiProvider>(context, listen: false).editGroup(editGroup);
 
                           Navigator.of(context, rootNavigator: true).pop();
                         } catch (e) {

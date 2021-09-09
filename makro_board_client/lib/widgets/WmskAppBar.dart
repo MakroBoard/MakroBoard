@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 
 class WmskAppBar extends AppBar {
   final String titleText;
@@ -10,27 +9,27 @@ class WmskAppBar extends AppBar {
           title: Text(titleText),
           actions: additionalActions +
               <Widget>[
-                TextButton(
-                  child: const Icon(
-                    Icons.settings,
-                    size: 24,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => Modular.to.pushNamed(
-                    '/settings',
-                  ),
-                ),
-                if (showAdminPanel)
-                  TextButton(
-                    child: const Icon(
-                      Icons.admin_panel_settings,
-                      size: 24,
-                      color: Colors.white,
-                    ),
-                    onPressed: () => Modular.to.pushNamed(
-                      '/config',
-                    ),
-                  )
+                // TextButton(
+                //   child: const Icon(
+                //     Icons.settings,
+                //     size: 24,
+                //     color: Colors.white,
+                //   ),
+                //   onPressed: () => Modular.to.pushNamed(
+                //     '/settings',
+                //   ),
+                // ),
+                // if (showAdminPanel)
+                //   TextButton(
+                //     child: const Icon(
+                //       Icons.admin_panel_settings,
+                //       size: 24,
+                //       color: Colors.white,
+                //     ),
+                //     onPressed: () => Modular.to.pushNamed(
+                //       '/config',
+                //     ),
+                //   )
               ],
         );
 

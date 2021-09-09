@@ -4,12 +4,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
-import 'package:makro_board_client/provider/auth_provider.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
+  final ValueChanged<Uri?> selectedServerChanged;
+
+  SplashScreen({
+    required this.selectedServerChanged,
+  });
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -43,20 +48,14 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     }
 
-    String navigationTarget;
-    if (serverUri == null || !(await Modular.get<ApiProvider>().initialize(serverUri))) {
-      navigationTarget = '/selectserver';
-    } else {
-      var isAuthenticated = await Modular.get<AuthProvider>().isAuthenticated();
-      if (isAuthenticated) {
-        navigationTarget = '/home';
-      } else {
-        navigationTarget = '/login';
-      }
+    var apiProvider = Provider.of<ApiProvider>(context, listen: false);
+
+    if (serverUri == null || !(await apiProvider.initialize(serverUri))) {
+      serverUri = Uri();
     }
 
     await minFuture;
-    Modular.to.pushReplacementNamed(navigationTarget);
+    this.widget.selectedServerChanged(serverUri);
   }
 
   void _initializeEasyLoading() {

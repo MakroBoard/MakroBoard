@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:makro_board_client/models/Control.dart';
 import 'package:makro_board_client/models/ViewConfigValue.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
@@ -23,7 +22,7 @@ class ControlPanel extends StatelessWidget {
       case "Button":
         return TextButton(
           onPressed: () async {
-            var result = await Modular.get<ApiProvider>().executeControl(control, configValues);
+            var result = await Provider.of<ApiProvider>(context, listen: false).executeControl(control, configValues);
             if (result != null) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
             }

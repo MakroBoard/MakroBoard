@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
-import 'package:makro_board_client/provider/notification_provider.dart';
 import 'package:makro_board_client/widgets/AvailableClients.dart';
 import 'package:makro_board_client/widgets/AvailableControls.dart';
 import 'package:makro_board_client/widgets/SnackBarNotification.dart';

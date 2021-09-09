@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'package:flutter_modular/flutter_modular.dart';
 
-@Injectable() // ← Injectable annotation
 class NotificationProvider {
   StreamController<NotificationUpdate> _streamSnackBarNotificationController = StreamController<NotificationUpdate>.broadcast();
   Stream<NotificationUpdate> get snackBarNotifications => _streamSnackBarNotificationController.stream;

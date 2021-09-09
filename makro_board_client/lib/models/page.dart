@@ -40,7 +40,7 @@ class Page {
       : id = json["id"],
         symbolicName = json["symbolicName"],
         label = json["label"],
-        icon = json["icon"] != null && json["icon"] != "" ? mapToIconData(jsonDecode(json["icon"])) : Icons.not_interested,
+        icon = json["icon"] != null && json["icon"] != "" ? deserializeIcon(jsonDecode(json["icon"])) ?? Icons.not_interested_rounded : Icons.not_interested,
         groups = json["groups"] != null ? List.castFrom(json["groups"]).map<Group>((jsonGroup) => Group.fromJson(jsonGroup)).toList() : List.empty(growable: true);
 
   Map<String, dynamic> toJson() {
@@ -48,7 +48,7 @@ class Page {
       'id': id,
       'symbolicName': symbolicName,
       'label': label,
-      'icon': jsonEncode(iconDataToMap(icon)),
+      'icon': jsonEncode(serializeIcon(icon)),
       'groups': groups,
     };
   }

@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 class ViewConfigParameter {
   final ConfigParameterType configParameterType;
   final String symbolicName;
-  final Object defaultValue;
+  final Object? defaultValue;
   final String? validationRegEx;
   final int? minValue;
   final int? maxValue;
