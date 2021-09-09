@@ -7,7 +7,7 @@ import 'package:makro_board_client/widgets/WmskAppBar.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({required Key key}) : super(key: key);
+  const LoginPage() : super();
 
   @override
   _LoginPageState createState() => _LoginPageState();

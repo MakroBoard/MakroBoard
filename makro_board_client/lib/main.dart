@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:makro_board_client/pages/homePage.dart';
+import 'package:makro_board_client/pages/login_page.dart';
 import 'package:makro_board_client/pages/pagePage.dart';
 import 'package:makro_board_client/pages/select_server_page.dart';
 import 'package:makro_board_client/pages/splash_screen.dart';
@@ -45,6 +46,14 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    Provider.of<ApiProvider>(context, listen: false).isAuthenticatedStream.listen((isAuthenticated) {
+      if (_isAuthenticated != isAuthenticated) {
+        setState(() {
+          _isAuthenticated = isAuthenticated;
+        });
+      }
+    });
+
     return MaterialApp(
       title: 'MakroBoard',
       // theme: ThemeData(
@@ -81,10 +90,10 @@ class _MyAppState extends State<MyApp> {
             else if (!_isAuthenticated)
               MaterialPage(
                 key: ValueKey('LoginPage'),
-                child: SelectServerPage(
-                  selectedServerChanged: _handleSelectedServer,
-                  isAuthenticatedChanged: _handleIsAuthenticatedChanged,
-                ),
+                child: LoginPage(
+                    // selectedServerChanged: _handleSelectedServer,
+                    // isAuthenticatedChanged: _handleIsAuthenticatedChanged,
+                    ),
               )
             else
               MaterialPage(

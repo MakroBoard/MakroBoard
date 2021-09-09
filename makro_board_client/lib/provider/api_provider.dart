@@ -48,6 +48,10 @@ class ApiProvider {
   Stream<List<Client>> get clients => streamClientController.stream;
   List<Client> currentClients = [];
 
+  StreamController<bool> streamIsAuthenticatedController = StreamController<bool>.broadcast();
+  Stream<bool> get isAuthenticatedStream => streamIsAuthenticatedController.stream;
+  bool currentIsAuthenticated = false;
+
   HubConnection? _connection;
   Uri? _serverUri;
 
@@ -106,8 +110,8 @@ class ApiProvider {
     for (var newToken in tokens!) {
       var newTokenString = newToken.toString();
       await Settings.setValue("server_token", newTokenString);
-
-      // TODO Navigate to Home
+      currentIsAuthenticated = true;
+      streamIsAuthenticatedController.add(currentIsAuthenticated);
     }
   }
 
