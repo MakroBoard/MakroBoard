@@ -37,6 +37,8 @@ namespace MakroBoard
                 await CreateDbIfNotExists(services);
                 await LoadPlugins(services);
 
+                logger.Info("Server Started");
+
                 host.Run();
             }
             catch (Exception ex)
@@ -101,13 +103,14 @@ namespace MakroBoard
                         logging.SetMinimumLevel(LogLevel.Trace);
                     })
                     .UseNLog()
+                    .UseUrls()
                     .UseKestrel(serverOptions =>
                     {
                         serverOptions.ListenAnyIP(5001, listenoptions =>
-                         {
-                             // certificate is an x509certificate2
-                             listenoptions.UseHttps(_Certificate);
-                         });
+                        {
+                            // certificate is an x509certificate2
+                            listenoptions.UseHttps(_Certificate);
+                        });
                     });
                 });
 
