@@ -10,7 +10,7 @@ import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'ControlPanel.dart';
-import 'EditMode.dart';
+import 'GlobalSettings.dart';
 
 class GroupCard extends StatelessWidget {
   final models.Group group;

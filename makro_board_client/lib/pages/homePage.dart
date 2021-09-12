@@ -17,7 +17,10 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WmskAppBar(titleText: "Home"),
+      appBar: WmskAppBar(
+        context: context,
+        titleText: "Home",
+      ),
       body: SnackBarNotification(
         child: Container(
           child: StreamBuilder(

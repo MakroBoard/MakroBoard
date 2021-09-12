@@ -17,7 +17,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WmskAppBar(titleText: 'Client anmelden'),
+      appBar: WmskAppBar(
+        context: context,
+        titleText: 'Client anmelden',
+      ),
       body: SnackBarNotification(
         child: Center(
           child: Column(

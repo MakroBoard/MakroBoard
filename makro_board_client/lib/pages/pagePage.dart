@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:makro_board_client/dialogs/create_group_dialog.dart';
-import 'package:makro_board_client/widgets/EditMode.dart';
+import 'package:makro_board_client/widgets/GlobalSettings.dart';
 import 'package:makro_board_client/widgets/GroupCard.dart';
 import 'package:makro_board_client/widgets/SnackBarNotification.dart';
 import 'package:makro_board_client/widgets/WmskAppBar.dart';
@@ -18,6 +18,7 @@ class PagePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: WmskAppBar(
+        context: context,
         titleText: initialPage.label,
         additionalActions: [
           Tooltip(

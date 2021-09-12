@@ -5,7 +5,8 @@ import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/provider/auth_provider.dart';
 import 'package:makro_board_client/provider/env_provider.dart';
 import 'package:makro_board_client/provider/notification_provider.dart';
-import 'package:makro_board_client/widgets/EditMode.dart';
+import 'package:makro_board_client/widgets/GlobalSettings.dart';
+import 'package:makro_board_client/widgets/MakroBoardRouter.dart';
 import 'package:provider/provider.dart';
 
 import 'MakroBoardApp.dart';
@@ -22,7 +23,9 @@ void main() {
         Provider<AuthProvider>(create: (c) => AuthProvider(apiProvider: Provider.of(c, listen: false)))
       ],
       child: GlobalSettings(
-        child: MakroBoardApp(),
+        child: MakroBoardRouter(
+          child: MakroBoardApp(),
+        ),
       ),
     ),
   );

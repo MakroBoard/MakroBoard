@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({required Key key}) : super(key: key);
+  const SettingsPage() : super();
 
   @override
   Widget build(BuildContext context) {

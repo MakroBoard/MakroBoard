@@ -4,7 +4,7 @@ import 'package:makro_board_client/widgets/AvailableControls.dart';
 import 'package:makro_board_client/widgets/SnackBarNotification.dart';
 
 class ConfigPage extends StatelessWidget {
-  const ConfigPage({required Key key}) : super(key: key);
+  const ConfigPage() : super();
 
   @override
   Widget build(BuildContext context) {

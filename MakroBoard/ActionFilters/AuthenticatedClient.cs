@@ -30,7 +30,7 @@ namespace MakroBoard.ActionFilters
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            if (context.HttpContext.Request.Headers.TryGetValue("authorization", out var token))
+            if (context.HttpContext.Request.Headers.TryGetValue("authorization", out var token) || IsLocalHost(context.HttpContext.Connection.RemoteIpAddress))
             {
                 var clientIp = context.HttpContext.Connection.RemoteIpAddress;
                 var client = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(clientIp.ToString()));
@@ -50,10 +50,19 @@ namespace MakroBoard.ActionFilters
                         await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, client);
                     }
                 }
+            }else
+            {
+
             }
+
 
             context.Result = new UnauthorizedResult();
 
+        }
+
+        private bool IsLocalHost(IPAddress ipAddress)
+        {
+            return IPAddress.IsLoopback(ipAddress);
         }
     }
 

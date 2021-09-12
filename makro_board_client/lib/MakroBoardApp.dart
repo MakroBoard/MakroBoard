@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:makro_board_client/models/page.dart' as models;
+import 'package:makro_board_client/pages/config_page.dart';
 import 'package:makro_board_client/pages/login_page.dart';
 import 'package:makro_board_client/pages/pagePage.dart';
 import 'package:makro_board_client/pages/select_server_page.dart';
+import 'package:makro_board_client/pages/settings_page.dart';
 import 'package:makro_board_client/pages/splash_screen.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
+import 'package:makro_board_client/widgets/MakroBoardRouter.dart';
 import 'package:provider/provider.dart';
 
 import 'pages/homePage.dart';
@@ -88,11 +91,24 @@ class _MakroBoardAppState extends State<MakroBoardApp> {
                 key: ValueKey(_selectedPage!.symbolicName),
               ),
             ),
+          if (MakroBoardRouter.of(context)!.showSettings)
+            MaterialPage(
+              key: ValueKey('Page_Settings'),
+              child: SettingsPage(),
+            ),
+          if (MakroBoardRouter.of(context)!.showConfig)
+            MaterialPage(
+              key: ValueKey('Page_Config'),
+              child: ConfigPage(),
+            ),
         ],
         onPopPage: (route, result) {
           if (_selectedPage != null) {
             _selectedPage = null;
           }
+
+          var router = MakroBoardRouter.of(context);
+          router!.reset();
 
           return route.didPop(result);
         },
