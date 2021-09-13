@@ -8,8 +8,9 @@ namespace MakroBoard.Plugin.Clock
 {
     public class ClockControl : Control
     {
+        private readonly TextView _TextView;
         private Timer _Timer;
-        private TextView _TextView;
+
         public ClockControl()
         {
             _TextView = new TextView("Clock");

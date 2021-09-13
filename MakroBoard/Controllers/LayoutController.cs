@@ -9,7 +9,6 @@ using MakroBoard.ActionFilters;
 using MakroBoard.Data;
 using MakroBoard.HubConfig;
 using MakroBoard.Plugin;
-using Org.BouncyCastle.Math.EC.Rfc7748;
 using Microsoft.EntityFrameworkCore;
 using MakroBoard.ApiModels;
 
@@ -55,7 +54,7 @@ namespace MakroBoard.Controllers
 
             await _Context.SaveChangesAsync();
 
-            _logger.LogDebug($"Added new Page {newPage.Label}");
+            _logger.LogDebug("Added new Page {Label}", newPage.Label);
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, newPage);
             return Ok(new AddPageResponse());
@@ -78,7 +77,7 @@ namespace MakroBoard.Controllers
 
             await _Context.SaveChangesAsync();
 
-            _logger.LogDebug($"Added new Group {newGroup.Label}");
+            _logger.LogDebug("Added new Group {Label}", newGroup.Label);
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdateGroup, newGroup);
             return Ok(new AddGroupResponse());
@@ -96,7 +95,7 @@ namespace MakroBoard.Controllers
 
             await _Context.SaveChangesAsync();
 
-            _logger.LogDebug($"Group {newGroup.Label} edited");
+            _logger.LogDebug("Group {Label} edited", newGroup.Label);
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdateGroup, newGroup);
             return Ok(new EditGroupResponse());
@@ -116,7 +115,7 @@ namespace MakroBoard.Controllers
             _Context.Groups.Remove(groupToDelete);
             await _Context.SaveChangesAsync();
 
-            _logger.LogDebug($"Removed Group {groupToDelete.Label}");
+            _logger.LogDebug("Removed Group {Label}", groupToDelete.Label);
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.RemoveGroup, groupToDelete);
             return Ok(new RemoveGroupResponse());
@@ -147,7 +146,7 @@ namespace MakroBoard.Controllers
 
             await _Context.SaveChangesAsync();
 
-            _logger.LogDebug($"Added new Panel {newPanel.SymbolicName}({newPanel.PluginName})");
+            _logger.LogDebug("Added new Panel {SymbolicName}({PluginName})", newPanel.SymbolicName, newPanel.PluginName);
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePanel, newPanel);
 

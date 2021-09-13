@@ -1,5 +1,4 @@
-﻿using NLog;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MakroBoard.PluginContract;
 
@@ -7,7 +6,6 @@ namespace MakroBoard.Plugin.Keyboard
 {
     public class KeyboardPlugin : MakroBoardPluginBase
     {
-        private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
         public override async Task<IEnumerable<Control>> GetControls()
         {
             var controls = new List<Control>

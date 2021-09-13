@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using System.IO;
 using MakroBoard.Data;
 using MakroBoard.HubConfig;
-using System;
 using MakroBoard.Plugin;
 using MakroBoard.ActionFilters;
 
@@ -17,11 +15,9 @@ namespace MakroBoard
     public class Startup
     {
         private readonly IWebHostEnvironment _Env;
-        private readonly IConfiguration _Configuration;
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment env)
+        public Startup(IConfiguration _, IWebHostEnvironment env)
         {
-            _Configuration = configuration;
             _Env = env;
         }
 

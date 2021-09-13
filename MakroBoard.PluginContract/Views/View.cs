@@ -6,8 +6,8 @@ namespace MakroBoard.PluginContract.Views
 {
     public abstract class View : PropertyChangedBase
     {
-        private IList<ConfigParameter> _ConfigParameters = new List<ConfigParameter>();
-        private IList<ConfigParameter> _PluginParameters = new List<ConfigParameter>();
+        private readonly IList<ConfigParameter> _ConfigParameters = new List<ConfigParameter>();
+        private readonly IList<ConfigParameter> _PluginParameters = new List<ConfigParameter>();
 
         internal View(string label)
         {

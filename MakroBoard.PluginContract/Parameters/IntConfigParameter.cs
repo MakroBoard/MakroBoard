@@ -2,7 +2,7 @@
 {
     public class IntConfigParameter : ConfigParameter
     {
-        public IntConfigParameter(string symbolicName, int defaultValue) : this(symbolicName, int.MinValue, int.MaxValue, 0)
+        public IntConfigParameter(string symbolicName, int defaultValue) : this(symbolicName, int.MinValue, int.MaxValue, defaultValue)
         {
         }
 

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using NLog;
 using MakroBoard.PluginContract;
 
 namespace MakroBoard.Plugin.ShellExecute
 {
     public class ShellExecutePlugin : MakroBoardPluginBase
     {
-      private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
         public async override Task<IEnumerable<Control>> GetControls()
         {
             var controls = new List<Control>

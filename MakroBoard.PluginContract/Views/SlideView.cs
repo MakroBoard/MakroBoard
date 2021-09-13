@@ -5,7 +5,7 @@ namespace MakroBoard.PluginContract.Views
 {
     public sealed class SlideView : View
     {
-        private Func<double, string> _Execute;
+        private readonly Func<double, string> _Execute;
 
         public SlideView(double min, double max, [NotNull] Func<double, string> execute) : base(string.Empty)
         {

@@ -11,8 +11,8 @@ namespace MakroBoard.PluginContract
     public abstract class Control
     {
         private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
-        private IList<ConfigParameter> _ConfigParameters = new List<ConfigParameter>();
-        private IDictionary<int, Action<PanelChangedEventArgs>> _Subscriptions = new ConcurrentDictionary<int, Action<PanelChangedEventArgs>>();
+        private readonly IList<ConfigParameter> _ConfigParameters = new List<ConfigParameter>();
+        private readonly IDictionary<int, Action<PanelChangedEventArgs>> _Subscriptions = new ConcurrentDictionary<int, Action<PanelChangedEventArgs>>();
 
         protected Control()
         {

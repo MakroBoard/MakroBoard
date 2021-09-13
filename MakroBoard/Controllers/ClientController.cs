@@ -20,13 +20,13 @@ namespace MakroBoard.Controllers
     [Route("api/[controller]")]
     public class ClientController : ControllerBase
     {
-        private readonly ILogger<ClientController> _logger;
+        private readonly ILogger<ClientController> _Logger;
         private readonly DatabaseContext _Context;
         private readonly IHubContext<ClientHub> _ClientHub;
 
         public ClientController(ILogger<ClientController> logger, DatabaseContext context, IHubContext<ClientHub> clientHub)
         {
-            _logger = logger;
+            _Logger = logger;
             _Context = context;
             _ClientHub = clientHub;
         }
@@ -83,7 +83,7 @@ namespace MakroBoard.Controllers
 
                 _Context.Clients.Update(client);
 
-                _logger.LogDebug($"Update existing Client: {client.ClientIp} - {client.Code}");
+                _Logger.LogDebug("Update existing Client: {ClientIp} - {Code}", client.ClientIp, client.Code);
             }
             else
             {
@@ -102,7 +102,7 @@ namespace MakroBoard.Controllers
 
                 await _Context.Clients.AddAsync(client);
 
-                _logger.LogDebug($"Add new Client: {client.ClientIp} - {client.Code}");
+                _Logger.LogDebug("Add new Client: {ClientIp} - {Code}", client.ClientIp, client.Code);
             }
 
             await _Context.SaveChangesAsync();
@@ -142,7 +142,7 @@ namespace MakroBoard.Controllers
 
             await _Context.SaveChangesAsync();
 
-            _logger.LogDebug($"Confirm Client: {currentClient.ClientIp} - {currentClient.Code}");
+            _Logger.LogDebug("Confirm Client: {ClientIp} - {Code}", currentClient.ClientIp, currentClient.Code);
 
             _ = _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, currentClient);
 
@@ -166,14 +166,14 @@ namespace MakroBoard.Controllers
 
             if (Request.HttpContext.Connection.RemoteIpAddress.ToString().Equals(currentClient.ClientIp))
             {
-                _logger.LogWarning("Client can not delete him self.");
+                _Logger.LogWarning("Client can not delete him self.");
                 return Conflict(new RemoveClientResponse { Status = ResponseStatus.Error, Error = "Client can not delete him self." });
             }
 
             _Context.Clients.Remove(currentClient);
             await _Context.SaveChangesAsync();
 
-            _logger.LogDebug($"Remove Client: {currentClient.ClientIp} - {currentClient.Code}");
+            _Logger.LogDebug("Remove Client: {ClientIp} - {Code}", currentClient.ClientIp, currentClient.Code);
 
             var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(request.Client.ClientIp)).ToListAsync()).Select(x => x.ClientSignalrId);
             _ = _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, string.Empty);

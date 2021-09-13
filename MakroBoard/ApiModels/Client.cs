@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MakroBoard.ApiModels
+﻿namespace MakroBoard.ApiModels
 {
     public class Client
     {

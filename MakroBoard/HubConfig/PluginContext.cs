@@ -18,9 +18,8 @@ namespace MakroBoard.Plugin
 {
     public class PluginContext
     {
-        private static ILogger _Logger = LogManager.GetCurrentClassLogger();
-        private HubConnection _Connection;
-        private IHubContext<ClientHub> _HubContext;
+        private static readonly ILogger _Logger = LogManager.GetCurrentClassLogger();
+        private readonly IHubContext<ClientHub> _HubContext;
 
         public PluginContext(IHubContext<ClientHub> hubContext)
         {
@@ -77,7 +76,6 @@ namespace MakroBoard.Plugin
         public void Subscribe(int panelId, PluginContract.Control control, ParameterValues parameterValues)
         {
             control.Subscribe(parameterValues, panelId, OnControlChanged);
-
         }
 
         public async Task Subscribe(int panelId, string pluginName, string controlName, Dictionary<string, string> configParameters)
@@ -88,7 +86,7 @@ namespace MakroBoard.Plugin
             control.Subscribe(CreateParameterValues(control, configParameters), panelId, OnControlChanged);
         }
 
-        private ParameterValues CreateParameterValues(PluginContract.Control control, Dictionary<string, string> configParameters)
+        private static ParameterValues CreateParameterValues(PluginContract.Control control, Dictionary<string, string> configParameters)
         {
             var parameterValues = new ParameterValues();
 

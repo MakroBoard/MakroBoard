@@ -81,12 +81,11 @@ namespace MakroBoard
 
         private static void InitializeCertificate()
         {
-            var _Certificates = new Certificates();
-            var cert = _Certificates.LoadCertificate("MakroBoard");
+            var cert = Certificates.LoadCertificate("MakroBoard");
             if (cert == null)
             {
-                cert = _Certificates.GenerateCertificate("MakroBoard");
-                _Certificates.SaveCertificate(cert);
+                cert = Certificates.GenerateCertificate("MakroBoard");
+                Certificates.SaveCertificate(cert);
             }
 
             _Certificate = cert;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-
-namespace MakroBoard.PluginContract
+﻿namespace MakroBoard.PluginContract
 {
     //public class ConfigValues : Collection<ConfigValue>
     //{
