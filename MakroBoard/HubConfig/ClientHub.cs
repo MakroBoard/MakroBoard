@@ -21,7 +21,7 @@ namespace MakroBoard.HubConfig
             _PluginContext = pluginContext;
         }
 
-        private bool IsLocalHost(IPAddress ipAddress)
+        private static bool IsLocalHost(IPAddress ipAddress)
         {
             return IPAddress.IsLoopback(ipAddress);
         }
@@ -63,14 +63,12 @@ namespace MakroBoard.HubConfig
 
             var existingClient = await _DatabaseContext.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(ipAddress.ToString()));
 
-            var sendToken = false;
             if (existingClient == null)
             {
                 existingClient = new Data.Client { ClientIp = ipAddress.ToString(), RegisterDate = DateTime.UtcNow, State = isLocalHost ? ClientState.Admin : ClientState.None };
                 if (isLocalHost)
                 {
                     existingClient.CreateNewToken(Constants.Seed);
-                    sendToken = true;
                 }
             }
 
@@ -101,7 +99,7 @@ namespace MakroBoard.HubConfig
             }
 
             await SubscribePanels();
-            if(sendToken)
+            if(isLocalHost)
             {
                 await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token);
             }
