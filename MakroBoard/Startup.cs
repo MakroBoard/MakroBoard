@@ -50,11 +50,7 @@ namespace MakroBoard
             services.AddScoped<AuthenticatedAdmin>();
             services.AddSingleton<PluginContext>();
             services.AddSignalR(o => { o.EnableDetailedErrors = _Env.IsDevelopment(); });
-            services.AddControllersWithViews(options =>
-            {
-                options.Filters.Add<AuthenticatedClient>();
-                options.Filters.Add<AuthenticatedAdmin>();
-            });
+            services.AddControllersWithViews();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
