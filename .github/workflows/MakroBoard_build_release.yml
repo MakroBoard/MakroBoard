@@ -103,7 +103,7 @@ jobs:
       working-directory: ./makro_board_client
       run: flutter build linux --release
     - name: copy linux client x64
-      run: find; mkdir -p upload/linuxclient_x64 && cp -rf ./makro_board_client/build/linux/release/bundle/* upload/linuxclient_x64/ && cd upload/linuxclient_x64/ && tar cfvz ../linuxclient_x64.tar.gz *
+      run: find; mkdir -p upload/linuxclient_x64 && cp -rf ./makro_board_client/build/linux/x64/release/bundle/* upload/linuxclient_x64/ && cd upload/linuxclient_x64/ && tar cfvz ../linuxclient_x64.tar.gz *
     - name: upload artifact linux client x64
       uses: actions/upload-artifact@v2
       with:
