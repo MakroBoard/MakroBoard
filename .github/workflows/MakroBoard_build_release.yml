@@ -57,7 +57,7 @@ jobs:
       run: flutter doctor -v
     - name: flutter build web
       working-directory: ./makro_board_client
-      run: flutter build web
+      run: flutter build web --verbose
     - name: copy web client
       run: mkdir -p upload/web && cp -rf ./makro_board_client/build/web/* upload/web/
     - name: upload artifact web client
@@ -107,7 +107,7 @@ jobs:
       run: flutter doctor -v
     - name: flutter build linux
       working-directory: ./makro_board_client
-      run: flutter build linux --release
+      run: flutter build linux --release --verbose
     - name: copy linux client x64
       run: find; mkdir -p upload/linuxclient_x64 && cp -rf ./makro_board_client/build/linux/x64/release/bundle/* upload/linuxclient_x64/ && cd upload/linuxclient_x64/ && tar cfvz ../linuxclient_x64.tar.gz *
     - name: upload artifact linux client x64
@@ -291,7 +291,7 @@ jobs:
       run: flutter doctor -v
     - name: flutter build android client
       working-directory: ./makro_board_client
-      run: flutter build apk --release --no-tree-shake-icons
+      run: flutter build apk --release --no-tree-shake-icons --verbose
     - name: copy android client
       run: mkdir -p upload/android && cp -rf ./makro_board_client/build/app/outputs/flutter-apk/* upload/android/
     - name: upload artifact android client
@@ -554,7 +554,7 @@ jobs:
       run: flutter doctor -v
     - name: flutter build ios
       working-directory: ./makro_board_client
-      run: flutter build ios --release --no-codesign --no-tree-shake-icons
+      run: flutter build ios --release --no-codesign --no-tree-shake-icons --verbose
     - name: copy ios client
       run: mkdir -p upload/ios && cp -rf ./makro_board_client/build/ios/* upload/ios/
     - name: upload artifact ios client
@@ -606,7 +606,7 @@ jobs:
       run: flutter doctor -v
     - name: flutter build macos
       working-directory: ./makro_board_client
-      run: flutter build macos --release --no-tree-shake-icons
+      run: flutter build macos --release --no-tree-shake-icons --verbose
     - name: copy macos client x64
       run: mkdir -p upload/macosclient_x64 && cp -rf ./makro_board_client/build/macos/Build/Products/Release/* upload/macosclient_x64/
     - name: upload artifact macos client x64
