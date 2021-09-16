@@ -52,6 +52,9 @@ jobs:
     - name: flutter disable analytics
       working-directory: ./makro_board_client
       run: flutter config --no-analytics
+    - name: flutter doctor
+      working-directory: ${{ github.workspace }}\makro_board_client
+      run: flutter doctor -v
     - name: flutter build web
       working-directory: ./makro_board_client
       run: flutter build web
@@ -99,6 +102,9 @@ jobs:
     - name: flutter config linux
       working-directory: ./makro_board_client
       run: flutter config --enable-linux-desktop
+    - name: flutter doctor
+      working-directory: ${{ github.workspace }}\makro_board_client
+      run: flutter doctor -v
     - name: flutter build linux
       working-directory: ./makro_board_client
       run: flutter build linux --release
@@ -280,6 +286,9 @@ jobs:
     - name: flutter disable analytics
       working-directory: ./makro_board_client
       run: flutter config --no-analytics
+    - name: flutter doctor
+      working-directory: ${{ github.workspace }}\makro_board_client
+      run: flutter doctor -v
     - name: flutter build android client
       working-directory: ./makro_board_client
       run: flutter build apk --release --no-tree-shake-icons
@@ -534,6 +543,9 @@ jobs:
     - name: flutter disable analytics
       working-directory: ./makro_board_client
       run: flutter config --no-analytics
+    - name: flutter doctor
+      working-directory: ${{ github.workspace }}\makro_board_client
+      run: flutter doctor -v
     - name: flutter build ios
       working-directory: ./makro_board_client
       run: flutter build ios --release --no-codesign --no-tree-shake-icons
@@ -583,6 +595,9 @@ jobs:
     - name: flutter config macos
       working-directory: ./makro_board_client
       run: flutter config --enable-macos-desktop
+    - name: flutter doctor
+      working-directory: ${{ github.workspace }}\makro_board_client
+      run: flutter doctor -v
     - name: flutter build macos
       working-directory: ./makro_board_client
       run: flutter build macos --release --no-tree-shake-icons
