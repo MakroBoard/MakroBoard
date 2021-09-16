@@ -331,7 +331,10 @@ jobs:
       run: flutter pub get
     - name: flutter disable analytics
       working-directory: ${{ github.workspace }}\makro_board_client
-      run: flutter config --no-analytics
+      run: flutter config --no-analytics    
+    - name: flutter doctor
+      working-directory: ${{ github.workspace }}\makro_board_client
+      run: flutter doctor -v
     - name: flutter build windows
       working-directory: ${{ github.workspace }}\makro_board_client
       run: flutter build windows --release --verbose
