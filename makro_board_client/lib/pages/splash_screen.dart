@@ -52,6 +52,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (serverUri == null || !(await apiProvider.initialize(serverUri))) {
       serverUri = Uri();
+    } else {
+      await apiProvider.isAuthenticated();
     }
 
     await minFuture;

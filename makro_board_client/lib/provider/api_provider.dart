@@ -286,7 +286,9 @@ class ApiProvider {
       );
 
       var result = _handleResponse(jsonResponse, (r) => CheckTokenResponse.fromJson(r));
-      return _checkResponse(result);
+      currentIsAuthenticated = _checkResponse(result);
+      streamIsAuthenticatedController.add(currentIsAuthenticated);
+      return currentIsAuthenticated;
     } on Exception catch (e) {
       log('Exception: ' + e.toString());
       return false;
