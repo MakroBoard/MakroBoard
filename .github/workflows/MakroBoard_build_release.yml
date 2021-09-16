@@ -103,7 +103,7 @@ jobs:
       working-directory: ./makro_board_client
       run: flutter build linux --release
     - name: copy linux client x64
-      run: mkdir -p upload/linuxclient_x64 && cp -rf ./makro_board_client/build/linux/release/bundle/* upload/linuxclient_x64/ && cd upload/linuxclient_x64/ && tar cfvz ../linuxclient_x64.tar.gz *
+      run: find; mkdir -p upload/linuxclient_x64 && cp -rf ./makro_board_client/build/linux/release/bundle/* upload/linuxclient_x64/ && cd upload/linuxclient_x64/ && tar cfvz ../linuxclient_x64.tar.gz *
     - name: upload artifact linux client x64
       uses: actions/upload-artifact@v2
       with:
@@ -148,7 +148,6 @@ jobs:
       env:
           ARCH: x86_64
     - name: copy linux client appimage x64
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/linuxclient_appimage_x64/ && cp -rf MakroBoard_client_x64.AppImage* upload/linuxclient_appimage_x64/
     - name: upload artifact linux client x64 appimage
       uses: actions/upload-artifact@v2
@@ -241,7 +240,6 @@ jobs:
       env:
           ARCH: x86_64
     - name: copy linux host appimage x64
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/linuxhost_appimage_x64/ && cp -rf MakroBoard_host_x64.AppImage* upload/linuxhost_appimage_x64/
     - name: upload artifact linux Host x64 appimage
       uses: actions/upload-artifact@v2
@@ -286,7 +284,6 @@ jobs:
       working-directory: ./makro_board_client
       run: flutter build apk --release --no-tree-shake-icons
     - name: copy android client
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/android && cp -rf ./makro_board_client/build/app/outputs/flutter-apk/* upload/android/
     - name: upload artifact android client
       uses: actions/upload-artifact@v2
@@ -391,7 +388,6 @@ jobs:
       env:
           WIX: ${{ github.workspace }}\wi
     - name: copy windows client x64 msi
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64_msi") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\MakroBoardClient.Setup\bin\Release\*.msi") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64_msi\")
     - name: upload artifact windows client x64 msi
       uses: actions/upload-artifact@v2
@@ -492,7 +488,6 @@ jobs:
       env:
           WIX: ${{ github.workspace }}\wix
     - name: copy windows host x64 msi
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64_msi") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\MakroBoard.Setup\bin\Release\*.msi") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64_msi\")
     - name: upload artifact windows host x64 msi
       uses: actions/upload-artifact@v2
@@ -540,7 +535,6 @@ jobs:
       working-directory: ./makro_board_client
       run: flutter build ios --release --no-codesign --no-tree-shake-icons
     - name: copy ios client
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/ios && cp -rf ./makro_board_client/build/ios/* upload/ios/
     - name: upload artifact ios client
       uses: actions/upload-artifact@v2
@@ -590,7 +584,6 @@ jobs:
       working-directory: ./makro_board_client
       run: flutter build macos --release --no-tree-shake-icons
     - name: copy macos client x64
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/macosclient_x64 && cp -rf ./makro_board_client/build/macos/Build/Products/Release/* upload/macosclient_x64/
     - name: upload artifact macos client x64
       uses: actions/upload-artifact@v2
@@ -638,7 +631,6 @@ jobs:
       run: cat ./packaging/plugins/macos | xargs -I % dotnet publish MakroBoard.Plugin.%/MakroBoard.Plugin.%.csproj -r osx-x64 -c release --output Release/Plugins/MakroBoard.Plugin.% -p:Version=$MAKROBOARDNETVER
       shell: bash
     - name: copy macos host x64
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run: mkdir -p upload/macoshost_x64 && cp -rf ./Release/* upload/macoshost_x64/ && cd upload/macoshost_x64/ && rm -rf *.pdb && tar cfvz ../macoshost_x64.tar.gz *
     - name: upload artifact macos host x64
       uses: actions/upload-artifact@v2
