@@ -334,7 +334,7 @@ jobs:
       run: flutter config --no-analytics
     - name: flutter build windows
       working-directory: ${{ github.workspace }}\makro_board_client
-      run: flutter build windows --release
+      run: flutter build windows --release --verbose
     - name: copy windows client x64
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\makro_board_client\build\windows\runner\Release\*") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64\")
     - name: upload artifact windows client x64
