@@ -12,7 +12,7 @@ namespace MakroBoard.Plugin.SystemInfo
 
         public MemoryControl()
         {
-            _ProgressBarView = new ProgressBarView("MemoryUsage");
+            _ProgressBarView = new ProgressBarView(SymbolicName);
         }
 
         public override string SymbolicName => "MemoryUsage";
