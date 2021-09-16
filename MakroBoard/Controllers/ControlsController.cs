@@ -32,8 +32,8 @@ namespace MakroBoard.Controllers
 
         // GET: api/client/requesttokens
         [HttpGet("availablecontrols")]
-        [ServiceFilter(typeof(AuthenticatedAdmin))]
-        //[ServiceFilter(typeof(AuthenticatedClient))]
+        //[ServiceFilter(typeof(AuthenticatedAdmin))]
+        [ServiceFilter(typeof(AuthenticatedClient))]
         public async Task<ActionResult<AvailableControlsResponse>> GetAvailableControls()
         {
             var plugins = _PluginContext.Plugins;
