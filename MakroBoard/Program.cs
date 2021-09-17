@@ -11,6 +11,8 @@ using NLog.Web;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using MakroBoard.Plugin;
+using MakroBoard.Tray;
+using System.Threading;
 
 namespace MakroBoard
 {
@@ -23,6 +25,15 @@ namespace MakroBoard
             var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
+                Thread thread = new Thread(() =>
+                {
+                    var tray = new TrayIcon();
+                    tray.Show();
+                });
+                thread.SetApartmentState(ApartmentState.STA);
+                thread.Start();
+
+
                 logger.Debug("init log");
                 logger.Debug($"Using Data Directory: { Constants.DataDirectory}");
                 InitializeDataDir();
