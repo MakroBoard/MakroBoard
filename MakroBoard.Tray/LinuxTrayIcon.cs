@@ -1,5 +1,4 @@
 ﻿using MakroBoard.Tray.Menu;
-using System;
 #if Linux
 using Gtk;
 using Gdk;

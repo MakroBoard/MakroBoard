@@ -1,11 +1,11 @@
 ﻿#if WINDOWS
 using Hardcodet.Wpf.TaskbarNotification;
 using System.Windows.Media.Imaging;
+using System.Windows.Input;
+using System.Windows.Controls;
 #endif
 using System;
-using System.Windows.Controls;
 using MakroBoard.Tray.Menu;
-using System.Windows.Input;
 using System.Diagnostics;
 
 namespace MakroBoard.Tray
@@ -32,17 +32,15 @@ namespace MakroBoard.Tray
 
             _TaskbarIcon = new TaskbarIcon
             {
-                //Icon = System.Drawing.Icon.ExtractAssociatedIcon(iconPath),
                 IconSource = new BitmapImage(new Uri("pack://application:,,,/MakroBoard;component/app_icon.ico")),
                 ToolTipText = "MakroBoard",
                 ContextMenu = contextMenu,
                 Visibility = System.Windows.Visibility.Visible,
                 MenuActivation = PopupActivationMode.LeftOrRightClick,
-                //DataContext = this,
             };
-            //_TaskbarIcon.TrayLeftMouseDown += (s, a) => ;
 #endif
         }
+#if WINDOWS
 
         public class RelayCommand : ICommand
         {
@@ -71,5 +69,6 @@ namespace MakroBoard.Tray
             public void Execute(object parameter) { _execute(parameter); }
 
         }
+#endif
     }
 }

@@ -15,7 +15,6 @@ using MakroBoard.Tray;
 using System.Threading;
 using MakroBoard.Tray.Menu;
 using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace MakroBoard
 {
