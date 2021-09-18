@@ -11,13 +11,14 @@ namespace MakroBoard.Tray
 
 #if WINDOWS
         private TaskbarIcon _TaskbarIcon;
+#endif
+
         private ITrayIconCallback _TrayIconCallback;
 
         public WindowsTrayIcon(ITrayIconCallback trayIconCallback)
         {
             _TrayIconCallback = trayIconCallback;
         }
-#endif
 
         public void Show()
         {
