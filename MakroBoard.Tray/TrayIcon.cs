@@ -1,12 +1,13 @@
 ﻿#if WINDOWS
 using Hardcodet.Wpf.TaskbarNotification;
+using System.Windows.Media.Imaging;
 #endif
 using System;
 using System.Runtime.InteropServices;
 
 namespace MakroBoard.Tray
 {
-    public class TrayIcon: ITrayIcon
+    public class TrayIcon : ITrayIcon
     {
         private ITrayIcon _InternalTrayIcon;
 
@@ -51,15 +52,34 @@ namespace MakroBoard.Tray
         public void Show()
         {
 #if WINDOWS
-            _TaskbarIcon = new TaskbarIcon {
-                Icon = System.Drawing.Icon.ExtractAssociatedIcon(@"C:\Users\Andy\Pictures\hahnlogo.png"),
+            var iconPath = System.Reflection.Assembly.GetEntryAssembly().Location;
+
+            var contextMenu = new System.Windows.Controls.ContextMenu
+            {
+                Items =
+                {
+                   new System.Windows.Controls.MenuItem
+                   {
+                       Header = "Test",
+                   }
+                }
             };
 
 
-            _TaskbarIcon.TrayLeftMouseDown += (s,a) => _TaskbarIcon.Dispose();
+            _TaskbarIcon = new TaskbarIcon
+            {
+                //Icon = System.Drawing.Icon.ExtractAssociatedIcon(iconPath),
+                IconSource = new BitmapImage(new Uri("pack://application:,,,/MakroBoard;component/app_icon.ico")),
+                ToolTipText = "MakroBoard",
+                ContextMenu = contextMenu,
+                Visibility = System.Windows.Visibility.Visible,
+                MenuActivation = PopupActivationMode.LeftClick,
+                PopupActivation = PopupActivationMode.RightClick,
+            };
+            _TaskbarIcon.TrayLeftMouseDown += (s, a) => _TaskbarIcon.Dispose();
 #else
 
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
 #endif
         }
     }

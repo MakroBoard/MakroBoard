@@ -19,20 +19,15 @@ namespace MakroBoard
     public class Program
     {
         private static X509Certificate2 _Certificate;
+        private static TrayIcon _TrayIcon;
+
         public static async Task Main(string[] args)
         {
             // NLog: setup the logger first to catch all errors :)
-            var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
-                Thread thread = new Thread(() =>
-                {
-                    var tray = new TrayIcon();
-                    tray.Show();
-                });
-                thread.SetApartmentState(ApartmentState.STA);
-                thread.Start();
-
+                ShowTrayIcon();
 
                 logger.Debug("init log");
                 logger.Debug($"Using Data Directory: { Constants.DataDirectory}");
@@ -66,6 +61,18 @@ namespace MakroBoard
 
         }
 
+        private static void ShowTrayIcon()
+        {
+            Thread thread = new Thread(() =>
+            {
+                _TrayIcon = new TrayIcon();
+                _TrayIcon.Show();
+            });
+#if WINDOWS
+                thread.SetApartmentState(ApartmentState.STA);
+#endif
+            thread.Start();
+        }
 
         private static async Task InitializeInstanceSeed()
         {
