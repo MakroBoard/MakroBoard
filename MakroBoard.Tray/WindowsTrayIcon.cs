@@ -3,12 +3,13 @@ using Hardcodet.Wpf.TaskbarNotification;
 using System.Windows.Media.Imaging;
 #endif
 using System;
+using System.Windows.Controls;
+using System.Windows.Forms;
 
 namespace MakroBoard.Tray
 {
     internal class WindowsTrayIcon : ITrayIcon
     {
-
 #if WINDOWS
         private TaskbarIcon _TaskbarIcon;
 #endif
@@ -41,15 +42,17 @@ namespace MakroBoard.Tray
                 //Icon = System.Drawing.Icon.ExtractAssociatedIcon(iconPath),
                 IconSource = new BitmapImage(new Uri("pack://application:,,,/MakroBoard;component/app_icon.ico")),
                 ToolTipText = "MakroBoard",
+                ToolTip = "MakroBoard TT",
                 ContextMenu = contextMenu,
                 Visibility = System.Windows.Visibility.Visible,
                 MenuActivation = PopupActivationMode.LeftClick,
                 PopupActivation = PopupActivationMode.RightClick,
                 DataContext = this,
+                TrayToolTip = new TextBlock {  Text = "ABC"},
+                TrayPopup = new TextBlock {  Text = "DEF"}
             };
-            _TaskbarIcon.IsMouseDirectlyOverChanged += (s, a) => { };
-            _TaskbarIcon.IsVisibleChanged += (s, a) => { };
-            _TaskbarIcon.TrayLeftMouseDown += (s, a) => _TaskbarIcon.Dispose();
+            //_TaskbarIcon.TrayLeftMouseDown += (s, a) => ;
+            Application.Run();
 #endif
         }
     }
