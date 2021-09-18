@@ -11,6 +11,12 @@ namespace MakroBoard.Tray
 
 #if WINDOWS
         private TaskbarIcon _TaskbarIcon;
+        private ITrayIconCallback _TrayIconCallback;
+
+        public WindowsTrayIcon(ITrayIconCallback trayIconCallback)
+        {
+            _TrayIconCallback = trayIconCallback;
+        }
 #endif
 
         public void Show()
@@ -38,7 +44,10 @@ namespace MakroBoard.Tray
                 Visibility = System.Windows.Visibility.Visible,
                 MenuActivation = PopupActivationMode.LeftClick,
                 PopupActivation = PopupActivationMode.RightClick,
+                DataContext = this,
             };
+            _TaskbarIcon.IsMouseDirectlyOverChanged += (s, a) => { };
+            _TaskbarIcon.IsVisibleChanged += (s, a) => { };
             _TaskbarIcon.TrayLeftMouseDown += (s, a) => _TaskbarIcon.Dispose();
 #endif
         }
