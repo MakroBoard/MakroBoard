@@ -10,11 +10,13 @@ namespace MakroBoard.Tray
     {
 #if Linux
         private static StatusIcon trayIcon;
+        private ITrayMenu _TrayMenu;
 #endif
 
         public void Show(ITrayMenu trayMenu)
         {
 #if Linux
+            _TrayMenu = trayMenu;
             var app = new Application("app.makroboard.client.tray", GLib.ApplicationFlags.None);
             app.Register(GLib.Cancellable.Current);
 
@@ -33,19 +35,19 @@ namespace MakroBoard.Tray
             MenuItem menuItemOpenMakroBoard = new MenuItem("Open MakroBoard");
             popupMenu.Add(menuItemOpenMakroBoard);
 
-            MenuItem menuItemQuit = new MenuItem("Quit");
+            foreach(var menuEntry in _TrayMenu.MenuEntries)
+            {
+                MenuItem menuItemQuit = new MenuItem(menuEntry.Title);
+                //Gtk.Image quitimg = new Gtk.Image(Stock.Quit, IconSize.Menu);
+                menuItemQuit.Activated += (s,a) => menuEntry.Clicked?.Invoke(menuEntry);
+                
+                popupMenu.Add(menuItemQuit);
+            }
 
-        
-            popupMenu.Add(menuItemQuit);
-
-
-            Gtk.Image quitimg = new Gtk.Image(Stock.Quit, IconSize.Menu);
             Gtk.Image appimg = new Gtk.Image(Stock.Quit, IconSize.Menu);
 
 
-
-            menuItemQuit.Activated += delegate { Application.Quit(); _TrayIconCallback.Shutdown(); }; //todo application exit call
-            menuItemOpenMakroBoard.Activated += delegate { _TrayIconCallback.Open(); }; //todo open makroboard
+            menuItemOpenMakroBoard.Activated += (s,a) => _TrayIconCallback.Open(); //todo open makroboard
 
             popupMenu.ShowAll();
             popupMenu.Popup();
