@@ -13,14 +13,9 @@ namespace MakroBoard.Tray
 {
     internal class WindowsTrayIcon : ITrayIcon
     {
-#if WINDOWS
-        private TaskbarIcon _TaskbarIcon;
-#endif
-
         public void Show(ITrayMenu trayMenu)
         {
 #if WINDOWS
-            var iconPath = System.Reflection.Assembly.GetEntryAssembly().Location;
 
             var contextMenu = new ContextMenu();
 
@@ -30,10 +25,11 @@ namespace MakroBoard.Tray
                 contextMenu.Items.Add(new MenuItem { Header = menuEntry.Title, Command = new RelayCommand(o => menuEntry.Clicked?.Invoke(menuEntry)) });
             }
 
+            var iconPath = Process.GetCurrentProcess().MainModule.FileName;
 
-            _TaskbarIcon = new TaskbarIcon
+            _ = new TaskbarIcon
             {
-                IconSource = new BitmapImage(new Uri("pack://application:,,,/MakroBoard;component/app_icon.ico")),
+                Icon = System.Drawing.Icon.ExtractAssociatedIcon(iconPath),
                 ToolTipText = "MakroBoard",
                 ContextMenu = contextMenu,
                 Visibility = System.Windows.Visibility.Visible,
@@ -63,13 +59,13 @@ namespace MakroBoard.Tray
             public RelayCommand(Action<object> execute, Predicate<object> canExecute)
             {
                 _execute = execute ?? throw new
-                ArgumentNullException("execute"); _canExecute = canExecute;
+                ArgumentNullException(nameof(execute)); _canExecute = canExecute;
             }
 
             [DebuggerStepThrough]
             public bool CanExecute(object parameter)
             {
-                return _canExecute == null ? true : _canExecute(parameter);
+                return _canExecute == null || _canExecute(parameter);
             }
             public event EventHandler CanExecuteChanged
             {

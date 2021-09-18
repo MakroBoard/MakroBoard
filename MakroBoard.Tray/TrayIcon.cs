@@ -6,7 +6,7 @@ namespace MakroBoard.Tray
 {
     public class TrayIcon : ITrayIcon
     {
-        private ITrayIcon _InternalTrayIcon;
+        private readonly ITrayIcon _InternalTrayIcon;
 
         public TrayIcon()
         {
