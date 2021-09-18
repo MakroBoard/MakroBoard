@@ -1,4 +1,5 @@
-﻿using MakroBoard.Tray.Menu;
+﻿using System;
+using MakroBoard.Tray.Menu;
 #if Linux
 using Gtk;
 using Gdk;
@@ -40,24 +41,14 @@ namespace MakroBoard.Tray
 #if Linux
         void OnTrayIconPopup(object o, EventArgs args)
         {
-            Menu popupMenu = new Menu();
-
-            MenuItem menuItemOpenMakroBoard = new MenuItem("Open MakroBoard");
-            popupMenu.Add(menuItemOpenMakroBoard);
+            Gtk.Menu popupMenu = new Gtk.Menu();
 
             foreach(var menuEntry in _TrayMenu.MenuEntries)
             {
-                MenuItem menuItemQuit = new MenuItem(menuEntry.Title);
-                //Gtk.Image quitimg = new Gtk.Image(Stock.Quit, IconSize.Menu);
-                menuItemQuit.Activated += (s,a) => menuEntry.Clicked?.Invoke(menuEntry);
-                
-                popupMenu.Add(menuItemQuit);
+                MenuItem menuItem = new MenuItem(menuEntry.Title);
+                menuItem.Activated += (s,a) => menuEntry.Clicked?.Invoke(menuEntry);
+                popupMenu.Add(menuItem);
             }
-
-            Gtk.Image appimg = new Gtk.Image(Stock.Quit, IconSize.Menu);
-
-
-            menuItemOpenMakroBoard.Activated += (s,a) => _TrayIconCallback.Open(); //todo open makroboard
 
             popupMenu.ShowAll();
             popupMenu.Popup();
