@@ -1,17 +1,11 @@
-﻿using System;
+﻿using MakroBoard.Tray.Menu;
+using System;
 
 namespace MakroBoard.Tray
 {
     internal class MacOsTrayIcon : ITrayIcon
     {
-        private ITrayIconCallback _TrayIconCallback;
-
-        public MacOsTrayIcon(ITrayIconCallback trayIconCallback)
-        {
-            _TrayIconCallback = trayIconCallback;
-        }
-
-        public void Show()
+        public void Show(ITrayMenu trayMenu)
         {
             throw new NotImplementedException();
         }

@@ -13,13 +13,17 @@ using System.Threading.Tasks;
 using MakroBoard.Plugin;
 using MakroBoard.Tray;
 using System.Threading;
+using MakroBoard.Tray.Menu;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace MakroBoard
 {
-    public class Program : ITrayIconCallback
+    public class Program
     {
         private static X509Certificate2 _Certificate;
         private static TrayIcon _TrayIcon;
+        private IHost _Host;
 
         public static async Task Main(string[] args)
         {
@@ -41,17 +45,19 @@ namespace MakroBoard
                 await InitializeInstanceSeed();
                 InitializeCertificate();
 
-                var host = CreateHostBuilder(args).Build();
-                using var scope = host.Services.CreateScope();
+                using (_Host = CreateHostBuilder(args).Build())
+                {
+                    using var scope = _Host.Services.CreateScope();
 
-                var services = scope.ServiceProvider;
+                    var services = scope.ServiceProvider;
 
-                await CreateDbIfNotExists(services);
-                await LoadPlugins(services);
+                    await CreateDbIfNotExists(services);
+                    await LoadPlugins(services);
 
-                logger.Info("Server Started");
+                    logger.Info("Server Started");
 
-                host.Run();
+                    _Host.Run();
+                }
             }
             catch (Exception ex)
             {
@@ -68,10 +74,17 @@ namespace MakroBoard
 
         private void ShowTrayIcon()
         {
-            Thread thread = new Thread(() =>
+            var thread = new Thread(() =>
             {
-                _TrayIcon = new TrayIcon(this);
-                _TrayIcon.Show();
+                _TrayIcon = new TrayIcon();
+                _TrayIcon.Show(new TrayMenu(new List<ITrayMenuItem>
+                {
+                    new TrayMenuItem("Beenden", async i =>
+                    {
+                        _TrayIcon.Remove();
+                        await _Host?.StopAsync();
+                    })
+                }));
             });
 #if WINDOWS
             thread.SetApartmentState(ApartmentState.STA);

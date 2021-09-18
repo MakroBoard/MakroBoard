@@ -4,7 +4,9 @@ using System.Windows.Media.Imaging;
 #endif
 using System;
 using System.Windows.Controls;
-using System.Windows.Forms;
+using MakroBoard.Tray.Menu;
+using System.Windows.Input;
+using System.Diagnostics;
 
 namespace MakroBoard.Tray
 {
@@ -14,46 +16,60 @@ namespace MakroBoard.Tray
         private TaskbarIcon _TaskbarIcon;
 #endif
 
-        private ITrayIconCallback _TrayIconCallback;
-
-        public WindowsTrayIcon(ITrayIconCallback trayIconCallback)
-        {
-            _TrayIconCallback = trayIconCallback;
-        }
-
-        public void Show()
+        public void Show(ITrayMenu trayMenu)
         {
 #if WINDOWS
             var iconPath = System.Reflection.Assembly.GetEntryAssembly().Location;
 
-            var contextMenu = new System.Windows.Controls.ContextMenu
+            var contextMenu = new ContextMenu();
+
+            foreach (var menuEntry in trayMenu.MenuEntries)
             {
-                Items =
-                {
-                   new System.Windows.Controls.MenuItem
-                   {
-                       Header = "Test",
-                   }
-                }
-            };
+                // TODO SubMenus
+                contextMenu.Items.Add(new MenuItem { Header = menuEntry.Title, Command = new RelayCommand(o => menuEntry.Clicked?.Invoke(menuEntry)) });
+            }
+
 
             _TaskbarIcon = new TaskbarIcon
             {
                 //Icon = System.Drawing.Icon.ExtractAssociatedIcon(iconPath),
                 IconSource = new BitmapImage(new Uri("pack://application:,,,/MakroBoard;component/app_icon.ico")),
                 ToolTipText = "MakroBoard",
-                ToolTip = "MakroBoard TT",
                 ContextMenu = contextMenu,
                 Visibility = System.Windows.Visibility.Visible,
-                MenuActivation = PopupActivationMode.LeftClick,
-                PopupActivation = PopupActivationMode.RightClick,
-                DataContext = this,
-                TrayToolTip = new TextBlock {  Text = "ABC"},
-                TrayPopup = new TextBlock {  Text = "DEF"}
+                MenuActivation = PopupActivationMode.LeftOrRightClick,
+                //DataContext = this,
             };
             //_TaskbarIcon.TrayLeftMouseDown += (s, a) => ;
-            Application.Run();
 #endif
+        }
+
+        public class RelayCommand : ICommand
+        {
+
+            readonly Action<object> _execute;
+            readonly Predicate<object> _canExecute;
+
+
+            public RelayCommand(Action<object> execute) : this(execute, null) { }
+            public RelayCommand(Action<object> execute, Predicate<object> canExecute)
+            {
+                _execute = execute ?? throw new
+                ArgumentNullException("execute"); _canExecute = canExecute;
+            }
+
+            [DebuggerStepThrough]
+            public bool CanExecute(object parameter)
+            {
+                return _canExecute == null ? true : _canExecute(parameter);
+            }
+            public event EventHandler CanExecuteChanged
+            {
+                add { CommandManager.RequerySuggested += value; }
+                remove { CommandManager.RequerySuggested -= value; }
+            }
+            public void Execute(object parameter) { _execute(parameter); }
+
         }
     }
 }

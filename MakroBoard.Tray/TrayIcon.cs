@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MakroBoard.Tray.Menu;
+using System;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace MakroBoard.Tray
 {
@@ -7,19 +9,19 @@ namespace MakroBoard.Tray
     {
         private ITrayIcon _InternalTrayIcon;
 
-        public TrayIcon(ITrayIconCallback trayIconCallback)
+        public TrayIcon()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                _InternalTrayIcon = new MacOsTrayIcon(trayIconCallback);
+                _InternalTrayIcon = new MacOsTrayIcon();
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                _InternalTrayIcon = new WindowsTrayIcon(trayIconCallback);
+                _InternalTrayIcon = new WindowsTrayIcon();
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                _InternalTrayIcon = new LinuxTrayIcon(trayIconCallback);
+                _InternalTrayIcon = new LinuxTrayIcon();
             }
             else
             {
@@ -27,19 +29,15 @@ namespace MakroBoard.Tray
             }
         }
 
-        public void Show()
+        public void Show(ITrayMenu trayMenu)
         {
-            _InternalTrayIcon.Show();
+            _InternalTrayIcon.Show(trayMenu);
+            Application.Run();
         }
-    }
 
-    internal interface ITrayIcon
-    {
-        void Show();
-    }
-
-    public interface ITrayIconCallback
-    {
-        void Shutdown();
+        public void Remove()
+        {
+            Application.Exit();
+        }
     }
 }

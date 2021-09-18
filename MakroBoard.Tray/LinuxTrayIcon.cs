@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MakroBoard.Tray.Menu;
+using System;
 #if Linux
 using Gtk;
 using Gdk;
@@ -11,18 +12,10 @@ namespace MakroBoard.Tray
 #if Linux
         private static StatusIcon trayIcon;
 #endif
-        private ITrayIconCallback _TrayIconCallback;
 
-        public LinuxTrayIcon(ITrayIconCallback trayIconCallback)
-        {
-            _TrayIconCallback = trayIconCallback;
-        }
-
-        public void Show()
+        public void Show(ITrayMenu trayMenu)
         {
 #if Linux
-            Application.Init();
-
             var app = new Application("app.makroboard.client.tray", GLib.ApplicationFlags.None);
             app.Register(GLib.Cancellable.Current);
 
@@ -30,7 +23,6 @@ namespace MakroBoard.Tray
             trayIcon.Visible = true;
             trayIcon.PopupMenu += OnTrayIconPopup;
 
-            Application.Run();
 #endif
         }
 
