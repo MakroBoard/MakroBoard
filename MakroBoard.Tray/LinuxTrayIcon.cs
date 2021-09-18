@@ -8,6 +8,12 @@ namespace MakroBoard.Tray
     {
 
         private static StatusIcon trayIcon;
+        private ITrayIconCallback _TrayIconCallback;
+
+        public LinuxTrayIcon(ITrayIconCallback trayIconCallback)
+        {
+            _TrayIconCallback = trayIconCallback;
+        }
 
         public void Show()
         {

@@ -16,12 +16,18 @@ using System.Threading;
 
 namespace MakroBoard
 {
-    public class Program
+    public class Program : ITrayIconCallback
     {
         private static X509Certificate2 _Certificate;
         private static TrayIcon _TrayIcon;
 
         public static async Task Main(string[] args)
+        {
+            var program = new Program();
+            await program.Start(args);
+        }
+
+        private async Task Start(string[] args)
         {
             // NLog: setup the logger first to catch all errors :)
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
@@ -58,18 +64,17 @@ namespace MakroBoard
                 // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
                 NLog.LogManager.Shutdown();
             }
-
         }
 
-        private static void ShowTrayIcon()
+        private void ShowTrayIcon()
         {
             Thread thread = new Thread(() =>
             {
-                _TrayIcon = new TrayIcon();
+                _TrayIcon = new TrayIcon(this);
                 _TrayIcon.Show();
             });
 #if WINDOWS
-                thread.SetApartmentState(ApartmentState.STA);
+            thread.SetApartmentState(ApartmentState.STA);
 #endif
             thread.Start();
         }
@@ -86,7 +91,6 @@ namespace MakroBoard
                 await File.WriteAllTextAsync(Constants.SeedFileName, Constants.Seed);
             }
         }
-
 
         private static void InitializeDataDir()
         {
@@ -157,6 +161,11 @@ namespace MakroBoard
                 var logger = services.GetRequiredService<ILogger<Program>>();
                 logger.LogError(ex, "An error occurred initializing plugins.");
             }
+        }
+
+        public void Shutdown()
+        {
+            throw new NotImplementedException();
         }
     }
 }
