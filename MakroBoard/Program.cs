@@ -24,10 +24,10 @@ namespace MakroBoard
         public static async Task Main(string[] args)
         {
             var program = new Program();
-            await program.Start();
+            await program.Start(args);
         }
 
-        private async Task Start()
+        private async Task Start(string[] args)
         {
             // NLog: setup the logger first to catch all errors :)
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
