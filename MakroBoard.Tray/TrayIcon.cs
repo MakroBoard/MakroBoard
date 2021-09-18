@@ -1,7 +1,6 @@
 ﻿using MakroBoard.Tray.Menu;
 using System;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 namespace MakroBoard.Tray
 {
@@ -32,12 +31,11 @@ namespace MakroBoard.Tray
         public void Show(ITrayMenu trayMenu)
         {
             _InternalTrayIcon.Show(trayMenu);
-            Application.Run();
         }
 
         public void Remove()
         {
-            Application.Exit();
+            _InternalTrayIcon.Remove();
         }
     }
 }

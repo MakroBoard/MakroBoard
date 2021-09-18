@@ -3,6 +3,7 @@ using Hardcodet.Wpf.TaskbarNotification;
 using System.Windows.Media.Imaging;
 using System.Windows.Input;
 using System.Windows.Controls;
+using System.Windows.Forms;
 #endif
 using System;
 using MakroBoard.Tray.Menu;
@@ -38,8 +39,17 @@ namespace MakroBoard.Tray
                 Visibility = System.Windows.Visibility.Visible,
                 MenuActivation = PopupActivationMode.LeftOrRightClick,
             };
+            Application.Run();
 #endif
         }
+
+        public void Remove()
+        {
+#if WINDOWS
+            Application.Exit();
+#endif
+        }
+
 #if WINDOWS
 
         public class RelayCommand : ICommand

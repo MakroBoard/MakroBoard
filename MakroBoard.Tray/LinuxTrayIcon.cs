@@ -8,6 +8,7 @@ namespace MakroBoard.Tray
 {
     internal class LinuxTrayIcon : ITrayIcon
     {
+
 #if Linux
         private static StatusIcon trayIcon;
         private ITrayMenu _TrayMenu;
@@ -16,6 +17,7 @@ namespace MakroBoard.Tray
         public void Show(ITrayMenu trayMenu)
         {
 #if Linux
+            Application.Init();
             _TrayMenu = trayMenu;
             var app = new Application("app.makroboard.client.tray", GLib.ApplicationFlags.None);
             app.Register(GLib.Cancellable.Current);
@@ -23,7 +25,15 @@ namespace MakroBoard.Tray
             trayIcon = new StatusIcon(new Pixbuf("/home/volza/projects/MakroBoard/MakroBoard/Design/Logo_small_256_256.png"));
             trayIcon.Visible = true;
             trayIcon.PopupMenu += OnTrayIconPopup;
+            
+            Application.Run();
+#endif
+        }
 
+        public void Remove()
+        {
+#if Linux
+            Application.Quit();
 #endif
         }
 
