@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace MakroBoard.Tray
 {
-    -public class TrayIcon : ITrayIcon
+    public class TrayIcon : ITrayIcon
     {
         private ITrayIcon _InternalTrayIcon;
 
