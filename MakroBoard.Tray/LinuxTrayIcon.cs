@@ -27,24 +27,26 @@ namespace MakroBoard.Tray
         }
 
 #if Linux
-        static void OnTrayIconPopup(object o, EventArgs args)
+        void OnTrayIconPopup(object o, EventArgs args)
         {
             Menu popupMenu = new Menu();
 
-            ImageMenuItem menuItemOpenMakroBoard = new ImageMenuItem("Open MakroBoard");
-            ImageMenuItem menuItemQuit = new ImageMenuItem("Quit");
+            MenuItem menuItemOpenMakroBoard = new MenuItem("Open MakroBoard");
+            popupMenu.Add(menuItemOpenMakroBoard);
+
+            MenuItem menuItemQuit = new MenuItem("Quit");
+
+        
+            popupMenu.Add(menuItemQuit);
+
+
             Gtk.Image quitimg = new Gtk.Image(Stock.Quit, IconSize.Menu);
             Gtk.Image appimg = new Gtk.Image(Stock.Quit, IconSize.Menu);
 
 
-            menuItemOpenMakroBoard.Image = appimg;
-            popupMenu.Add(menuItemOpenMakroBoard);
 
-            menuItemQuit.Image = quitimg;
-            popupMenu.Add(menuItemQuit);
-
-            menuItemQuit.Activated += delegate { Application.Quit(); }; //todo application exit call
-            menuItemOpenMakroBoard.Activated += delegate { }; //todo open makroboard
+            menuItemQuit.Activated += delegate { Application.Quit(); _TrayIconCallback.Shutdown(); }; //todo application exit call
+            menuItemOpenMakroBoard.Activated += delegate { _TrayIconCallback.Open(); }; //todo open makroboard
 
             popupMenu.ShowAll();
             popupMenu.Popup();
