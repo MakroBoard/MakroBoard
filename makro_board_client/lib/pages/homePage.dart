@@ -4,7 +4,7 @@ import 'package:makro_board_client/widgets/CreateNewPageCard.dart';
 import 'package:makro_board_client/widgets/EditModeSwitch.dart';
 import 'package:makro_board_client/widgets/GlobalSettings.dart';
 import 'package:makro_board_client/widgets/SnackBarNotification.dart';
-import 'package:makro_board_client/widgets/WmskAppBar.dart';
+import 'package:makro_board_client/widgets/MakroBoardAppBar.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:makro_board_client/models/page.dart' as models;
@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WmskAppBar(
+      appBar: MakroBoardAppBar(
         context: context,
         titleText: "Home",
         additionalActions: [
@@ -31,11 +31,13 @@ class HomePage extends StatelessWidget {
         child: Container(
           child: StreamBuilder(
             stream: Provider.of<ApiProvider>(context, listen: false).pages,
-            initialData: Provider.of<ApiProvider>(context, listen: false).currentPages,
+            initialData:
+                Provider.of<ApiProvider>(context, listen: false).currentPages,
             builder: (context, snapshot) => ResponsiveGridList(
               desiredItemWidth: 200,
               minSpacing: 10,
-              children: _getPageWidgets(context, snapshot.data as List<models.Page>),
+              children:
+                  _getPageWidgets(context, snapshot.data as List<models.Page>),
             ),
           ),
         ),

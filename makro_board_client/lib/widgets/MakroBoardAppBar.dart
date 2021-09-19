@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:makro_board_client/widgets/MakroBoardRouter.dart';
 
-class WmskAppBar extends AppBar {
+class MakroBoardAppBar extends AppBar {
   final BuildContext context;
   final String titleText;
   final bool showAdminPanel;
   final List<Widget> additionalActions;
-  WmskAppBar({required this.context, required this.titleText, this.showAdminPanel = true, this.additionalActions = const <Widget>[]})
+  MakroBoardAppBar(
+      {required this.context,
+      required this.titleText,
+      this.showAdminPanel = true,
+      this.additionalActions = const <Widget>[]})
       : super(
           title: Text(titleText),
           actions: additionalActions +
@@ -17,7 +21,8 @@ class WmskAppBar extends AppBar {
                     size: 24,
                     color: Colors.white,
                   ),
-                  onPressed: () => MakroBoardRouter.of(context)!.updateShowSettings(true),
+                  onPressed: () =>
+                      MakroBoardRouter.of(context)!.updateShowSettings(true),
                 ),
                 if (showAdminPanel)
                   TextButton(
@@ -26,7 +31,8 @@ class WmskAppBar extends AppBar {
                       size: 24,
                       color: Colors.white,
                     ),
-                    onPressed: () => MakroBoardRouter.of(context)!.updateShowConfig(true),
+                    onPressed: () =>
+                        MakroBoardRouter.of(context)!.updateShowConfig(true),
                   )
               ],
         );
