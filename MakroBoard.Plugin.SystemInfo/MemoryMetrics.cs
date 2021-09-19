@@ -19,16 +19,23 @@ namespace MakroBoard.Plugin.SystemInfo
             {
                 return GetUnixMetrics();
             }
-
+            if (IsMacOS())
+            {
+                return GetMacOSMetrics();
+            }
             return GetWindowsMetrics();
         }
 
         private static bool IsUnix()
         {
-            var isUnix = RuntimeInformation.IsOSPlatform(OSPlatform.OSX) ||
-                         RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-
+            var isUnix = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
             return isUnix;
+        }
+        private static bool IsMacOS()
+        {
+            var isMacOS = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+            return isMacOS;
         }
 
         private static MemoryMetrics GetWindowsMetrics()
@@ -89,6 +96,49 @@ namespace MakroBoard.Plugin.SystemInfo
                 Total = double.Parse(memory[1]),
                 Used = double.Parse(memory[2]),
                 Free = double.Parse(memory[3])
+            };
+
+            return metrics;
+        }
+        private static MemoryMetrics GetMacOSMetrics()
+        {
+            var output = "";
+            double totalmem = 0.0;
+            double freemem = 0.0;
+
+
+            var totalinfo = new ProcessStartInfo("sysctl hw.memsize | awk '{print $2}'")
+            {
+                FileName = "/bin/bash",
+                Arguments = "-c \"sysctl hw.memsize | awk '{print $2}'\"",
+                RedirectStandardOutput = true
+            };
+
+            var freeinfo = new ProcessStartInfo("vm_stat | grep free | awk '{print $3}' | sed 's/\\.//'")
+            {
+                FileName = "/bin/bash",
+                Arguments = "-c \"vm_stat | grep free | awk '{print $3}' | sed 's/\\.//' \"",
+                RedirectStandardOutput = true
+            };
+
+            using (var process = Process.Start(totalinfo))
+            {
+                output = process.StandardOutput.ReadToEnd();
+            }
+
+            totalmem = ((Convert.ToInt64(output) / 1024) / 1024);
+
+            using (var process = Process.Start(freeinfo))
+            {
+                output = process.StandardOutput.ReadToEnd();
+            }
+            freemem = ((Convert.ToInt64(output) * 4096) / 1048576);   
+
+            var metrics = new MemoryMetrics
+            {
+                Total = totalmem,
+                Used = totalmem - freemem,
+                Free = freemem
             };
 
             return metrics;
