@@ -39,7 +39,7 @@ namespace MakroBoard
 
         private async Task Start(string[] args)
         {
-         
+
             try
             {
                 ShowTrayIcon();
@@ -125,11 +125,10 @@ namespace MakroBoard
             {
                 Directory.CreateDirectory(Constants.DataDirectory);
             }
-        }       
-        
+        }
+
         private static void InitializeConfig()
         {
-
             try
             {
                 if (!File.Exists(Constants.LocalSettingsFileName))
@@ -142,27 +141,20 @@ namespace MakroBoard
                     _Localsettings = JsonSerializer.Deserialize<Localsettings>(File.ReadAllText(Constants.LocalSettingsFileName));
 
                     if (!_Localsettings.validatesettings())
-                    {          
-                        var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();               
-                         logger.Info("localsettings are not valid, starting with default config!");
+                    {
+                        var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+                        logger.Info("localsettings are not valid, starting with default config!");
                         _Localsettings = new Localsettings();
                     }
                 }
-                
-
             }
             catch (Exception ex)
-            {               
+            {
                 var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
                 logger.Error(ex, "An error occurred creating or reading the the localsettings file. starting with default config!");
                 _Localsettings = new Localsettings();
             }
-
-
-            
-            
         }
-
 
         private static void InitializeCertificate()
         {
