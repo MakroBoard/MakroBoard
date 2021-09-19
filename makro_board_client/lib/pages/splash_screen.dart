@@ -7,6 +7,7 @@ import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   final ValueChanged<Uri?> selectedServerChanged;
@@ -125,7 +126,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: AnimatedTextKit(
                   animatedTexts: [
                     TypewriterAnimatedText(
-                      'Console.WriteLine("Hallo")',
+                      'Console.WriteLine("' + AppLocalizations.of(context)!.hello + '")',
                       speed: Duration(milliseconds: 65),
                     ),
                   ],

@@ -18,11 +18,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using NLog;
 
 namespace MakroBoard
 {
     public class Program
     {
+        // NLog: setup the logger first to catch all errors :)
+        private static Logger _Logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
         private static X509Certificate2 _Certificate;
         private static TrayIcon _TrayIcon;
         private static Localsettings _Localsettings;
@@ -36,14 +39,13 @@ namespace MakroBoard
 
         private async Task Start(string[] args)
         {
-            // NLog: setup the logger first to catch all errors :)
-            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+         
             try
             {
                 ShowTrayIcon();
 
-                logger.Debug("init log");
-                logger.Debug($"Using Data Directory: { Constants.DataDirectory}");
+                _Logger.Debug("init log");
+                _Logger.Debug($"Using Data Directory: { Constants.DataDirectory}");
                 InitializeDataDir();
                 await InitializeInstanceSeed();
                 InitializeCertificate();
@@ -58,7 +60,7 @@ namespace MakroBoard
                     await CreateDbIfNotExists(services);
                     await LoadPlugins(services);
 
-                    logger.Info("Server Started");
+                    _Logger.Info("Server Started");
 
                     _Host.Run();
                 }
@@ -66,7 +68,7 @@ namespace MakroBoard
             catch (Exception ex)
             {
                 //NLog: catch setup errors
-                logger.Error(ex, "Stopped program because of exception");
+                _Logger.Error(ex, "Stopped program because of exception");
                 throw;
             }
             finally
@@ -182,7 +184,7 @@ namespace MakroBoard
                     .ConfigureLogging(logging =>
                     {
                         logging.ClearProviders();
-                        logging.SetMinimumLevel(LogLevel.Trace);
+                        logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
                     })
                     .UseNLog()
                     .UseUrls()
