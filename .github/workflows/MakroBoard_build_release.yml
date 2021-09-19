@@ -65,7 +65,7 @@ jobs:
       with:
         name: latest_web_client
         path: upload/
-        retention-days: 5
+        retention-days: 1
   
   
   
@@ -115,7 +115,7 @@ jobs:
       with:
         name: latest_linux_client_x64
         path: upload/
-        retention-days: 5
+        retention-days: 1
 
   build_linux_client_x64_appimage:
     needs:
@@ -157,11 +157,10 @@ jobs:
       run: mkdir -p upload/linuxclient_appimage_x64/ && cp -rf MakroBoard_client_x64.AppImage* upload/linuxclient_appimage_x64/
     - name: upload artifact linux client x64 appimage
       uses: actions/upload-artifact@v2
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_linux_client_x64_appimage
         path: upload/
-        retention-days: 5
+        retention-days: 1
 
   build_linux_host_x64:
     needs:
@@ -206,7 +205,7 @@ jobs:
       with:
         name: latest_linux_host_x64
         path: upload/
-        retention-days: 5
+        retention-days: 1
 
 
   build_linux_host_x64_appimage:
@@ -249,11 +248,10 @@ jobs:
       run: mkdir -p upload/linuxhost_appimage_x64/ && cp -rf MakroBoard_host_x64.AppImage* upload/linuxhost_appimage_x64/
     - name: upload artifact linux Host x64 appimage
       uses: actions/upload-artifact@v2
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_linux_host_x64_appimage
         path: upload/
-        retention-days: 5
+        retention-days: 1
 
 
   build_android_client:
@@ -296,11 +294,10 @@ jobs:
       run: mkdir -p upload/android && cp -rf ./makro_board_client/build/app/outputs/flutter-apk/* upload/android/
     - name: upload artifact android client
       uses: actions/upload-artifact@v2
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_android_client
         path: upload/
-        retention-days: 5
+        retention-days: 1
 
 
   build_windows_client_x64:
@@ -360,7 +357,7 @@ jobs:
       with:
         name: latest_windows_client_x64
         path: upload/
-        retention-days: 5
+        retention-days: 1
 
   build_windows_client_x64_msi:
     runs-on: windows-2019
@@ -409,11 +406,10 @@ jobs:
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64_msi") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\MakroBoardClient.Setup\bin\Release\*.msi") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowsclient_x64_msi\")
     - name: upload artifact windows client x64 msi
       uses: actions/upload-artifact@v2
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_windows_client_x64_msi
         path: upload/
-        retention-days: 5
+        retention-days: 1
 
   build_windows_host_x64:
     runs-on: windows-2019
@@ -460,7 +456,7 @@ jobs:
       with:
         name: latest_windows_host_x64
         path: upload/
-        retention-days: 5
+        retention-days: 1
 
   build_windows_host_x64_msi:
     runs-on: windows-2019
@@ -509,11 +505,10 @@ jobs:
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64_msi") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\MakroBoard.Setup\bin\Release\*.msi") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64_msi\")
     - name: upload artifact windows host x64 msi
       uses: actions/upload-artifact@v2
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_windows_host_x64_msi
         path: upload/
-        retention-days: 5
+        retention-days: 1
 
 
   build_ios_client:
@@ -559,11 +554,10 @@ jobs:
       run: mkdir -p upload/ios && cp -rf ./makro_board_client/build/ios/* upload/ios/
     - name: upload artifact ios client
       uses: actions/upload-artifact@v2
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_ios_client
         path: upload/
-        retention-days: 5
+        retention-days: 1
     
   build_macos_client_x64:
     runs-on: macos-latest
@@ -611,11 +605,10 @@ jobs:
       run: mkdir -p upload/macosclient_x64 && cp -rf ./makro_board_client/build/macos/Build/Products/Release/* upload/macosclient_x64/
     - name: upload artifact macos client x64
       uses: actions/upload-artifact@v2
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_macos_client_x64
         path: upload/
-        retention-days: 5
+        retention-days: 1
 
 
   build_macos_host_x64:
@@ -658,11 +651,10 @@ jobs:
       run: mkdir -p upload/macoshost_x64 && cp -rf ./Release/* upload/macoshost_x64/ && cd upload/macoshost_x64/ && rm -rf *.pdb && tar cfvz ../macoshost_x64.tar.gz *
     - name: upload artifact macos host x64
       uses: actions/upload-artifact@v2
-      if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       with:
         name: latest_macos_host_x64
         path: upload/
-        retention-days: 5
+        retention-days: 1
 
 
   release:
