@@ -1,0 +1,10 @@
+{
+  "hello": "Hallo!",
+  "settings": "Einstellungen",
+  "settings_connection": "Verbindungseinstellungen",
+  "settings_connection_sub": "Hier können Sie die Verbindung zu Ihrem MakroBoard Host einstellen",
+  "error_hostrequired": "Um fortzufahren wird ein Host benötigt.",
+  "error_portrequired": "Um fortzufahren wird ein Port benötigt.",
+  "error_systemportsnotallowed": "System Ports dürfen nicht verwendet werden. Min. Port: 1024",
+  "error_dynamicportsnotallowed": "Dynamische Ports dürfen nicht verwendet werden. Max. Port: 49151"
+}

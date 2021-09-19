@@ -1,0 +1,15 @@
+{
+  "hello": "Hello!",
+  "@hello": {
+    "description": "Hello Message for Console Writeline on SplashScreen"
+  },
+  "settings": "Settings",
+  "settings_connection": "Connection Settings",
+  "settings_connection_sub": "This section allows to configure the connection to your MakroBoard Host!",
+  "host": "Host",
+  "port": "Port",
+  "error_hostrequired": "Host is requried to continue.",
+  "error_portrequired": "Port is requried to continue.",
+  "error_systemportsnotallowed": "System ports are not allowed. Minimal port: 1024",
+  "error_dynamicportsnotallowed": "Dynamic ports are not allowed. Maximum port: 49151"
+}

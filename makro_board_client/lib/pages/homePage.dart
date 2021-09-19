@@ -8,6 +8,7 @@ import 'package:makro_board_client/widgets/WmskAppBar.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:makro_board_client/models/page.dart' as models;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatelessWidget {
   final ValueChanged<models.Page> selectedPageChanged;

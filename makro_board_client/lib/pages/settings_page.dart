@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage() : super();
@@ -7,18 +8,18 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SettingsScreen(
-      title: "Einstellungen",
+      title: AppLocalizations.of(context)!.settings,
       children: [
         SettingsGroup(
-          title: "Verbindungseinstellungen",
-          subtitle: "Verbindung zum MakroBoard Host einstellen",
+          title: AppLocalizations.of(context)!.settings_connection,
+          subtitle: AppLocalizations.of(context)!.settings_connection_sub,
           children: [
             TextInputSettingsTile(
-              title: "Host",
+              title: AppLocalizations.of(context)!.host,
               settingKey: "server_host",
               validator: (value) {
                 if (value!.isEmpty) {
-                  return "Um fortzufahren wird ein Host benötigt.";
+                  return AppLocalizations.of(context)!.error_hostrequired;
                 }
 
                 if (Uri.tryParse(value) == null) {
@@ -28,21 +29,21 @@ class SettingsPage extends StatelessWidget {
               },
             ),
             TextInputSettingsTile(
-              title: "Port",
+              title: AppLocalizations.of(context)!.port,
               keyboardType: TextInputType.number,
               settingKey: "server_port",
               validator: (value) {
                 if (value!.isEmpty) {
-                  return "Um fortzufahren wird ein Port benötigt.";
+                  return AppLocalizations.of(context)!.error_portrequired;
                 }
 
                 var port = int.parse(value);
                 if (port < 1024) {
-                  return "System Ports dürfen nicht verwendet werden. Min. Port: 1024";
+                  return AppLocalizations.of(context)!.error_systemportsnotallowed;
                 }
 
                 if (port > 49151) {
-                  return "Dynamic Ports dürfen nicht verwendet werden. Max. Port: 49151";
+                  return AppLocalizations.of(context)!.error_dynamicportsnotallowed;
                 }
 
                 return null;
