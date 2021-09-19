@@ -127,15 +127,37 @@ namespace MakroBoard
         
         private static void InitializeConfig()
         {
-            if (!File.Exists(Constants.LocalSettingsFileName))
+
+            try
             {
+                if (!File.Exists(Constants.LocalSettingsFileName))
+                {
+                    _Localsettings = new Localsettings();
+                    File.WriteAllText(Constants.LocalSettingsFileName, JsonSerializer.Serialize(_Localsettings));
+                }
+                else
+                {
+                    _Localsettings = JsonSerializer.Deserialize<Localsettings>(File.ReadAllText(Constants.LocalSettingsFileName));
+
+                    if (!_Localsettings.validatesettings())
+                    {          
+                        var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();               
+                         logger.Info("localsettings are not valid, starting with default config!");
+                        _Localsettings = new Localsettings();
+                    }
+                }
+                
+
+            }
+            catch (Exception ex)
+            {               
+                var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+                logger.Error(ex, "An error occurred creating or reading the the localsettings file. starting with default config!");
                 _Localsettings = new Localsettings();
-                File.WriteAllText(Constants.LocalSettingsFileName, JsonSerializer.Serialize(_Localsettings));
             }
-            else
-            {
-                _Localsettings = JsonSerializer.Deserialize<Localsettings>(File.ReadAllText(Constants.LocalSettingsFileName));
-            }
+
+
+            
             
         }
 
