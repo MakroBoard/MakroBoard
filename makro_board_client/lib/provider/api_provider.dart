@@ -35,10 +35,8 @@ class ApiProvider {
   static const String removeGroupUrl = "/api/layout/removegroup";
   static const String removePanelUrl = "/api/layout/removepanel";
 
-  Map<String, String> get _defaultHeader => <String, String>{
-        HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
-        'Content-Type': 'application/json; charset=UTF-8',
-      };
+  Map<String, String> get _defaultHeader =>
+      <String, String>{HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""), 'Content-Type': 'application/json; charset=UTF-8', 'Accept-Language': _locale ?? "*"};
 
   List<Plugin> currentPlugins = [];
 
@@ -56,6 +54,7 @@ class ApiProvider {
 
   HubConnection? _connection;
   Uri? _serverUri;
+  String? _locale;
 
   final EnvProvider envProvider;
   final NotificationProvider notificationProvider;
@@ -64,9 +63,10 @@ class ApiProvider {
     required this.notificationProvider, // ← The parameters of the constructur will define the generated binding
   });
 
-  Future<bool> initialize(Uri serverUri) async {
+  Future<bool> initialize(Uri serverUri, String locale) async {
     try {
       _serverUri = serverUri;
+      _locale = locale;
 
       var url = serverUri.replace(path: requestTokenUrl).toString();
       _connection = HubConnectionBuilder()

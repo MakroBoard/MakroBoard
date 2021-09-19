@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     var apiProvider = Provider.of<ApiProvider>(context, listen: false);
 
-    if (serverUri == null || !(await apiProvider.initialize(serverUri))) {
+    if (serverUri == null || !(await apiProvider.initialize(serverUri, AppLocalizations.of(context)!.localeName))) {
       serverUri = Uri();
     } else {
       await apiProvider.isAuthenticated();
