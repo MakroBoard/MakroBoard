@@ -15,6 +15,7 @@ using MakroBoard.Tray;
 using System.Threading;
 using MakroBoard.Tray.Menu;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MakroBoard
 {
@@ -80,7 +81,11 @@ namespace MakroBoard
                 {
                     new TrayMenuItem("MakroBoard öffnen", i =>
                     {
-                        throw new NotImplementedException();
+                        var process = Process.Start(new ProcessStartInfo("https://localhost:5001")
+                        {
+                            UseShellExecute = true
+                        });
+
                     }),
                     new TrayMenuItem("Beenden", async i =>
                     {
@@ -179,9 +184,6 @@ namespace MakroBoard
             }
         }
 
-        public void Shutdown()
-        {
-            throw new NotImplementedException();
-        }
+
     }
 }

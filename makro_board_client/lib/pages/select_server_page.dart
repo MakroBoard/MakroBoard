@@ -48,9 +48,10 @@ class SelectServerPage extends StatelessWidget {
                               labelText: "Host",
                               prefixIcon: Icon(Icons.dns_outlined),
                             ),
-                            initialValue: Settings.getValue("server_host", "https://"),
+                            initialValue:
+                                Settings.getValue("server_host", "https://"),
                             validator: (value) {
-                              if (value == null) {
+                              if (value == null || value == "https://") {
                                 return "Um fortzufahren wird ein Host benötigt.";
                               }
 
@@ -64,7 +65,11 @@ class SelectServerPage extends StatelessWidget {
                               return null;
                             },
                             onChanged: (value) async {
-                              await Settings.setValue("server_host", value);
+                              if (value != "" &&
+                                  value != "https://" &&
+                                  value.startsWith("https://")) {
+                                await Settings.setValue("server_host", value);
+                              }
                             },
                           ),
                           TextFormField(
@@ -74,8 +79,11 @@ class SelectServerPage extends StatelessWidget {
                               prefixIcon: Icon(Icons.tag),
                             ),
                             keyboardType: TextInputType.number,
-                            initialValue: Settings.getValue("server_port", "5001"),
-                            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly], // Only number
+                            initialValue:
+                                Settings.getValue("server_port", "5001"),
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly
+                            ], // Only number
                             validator: (value) {
                               if (value == null) {
                                 return "Um fortzufahren wird ein Port benötigt.";
@@ -103,24 +111,37 @@ class SelectServerPage extends StatelessWidget {
                                 onPressed: () async {
                                   EasyLoading.show(status: 'verbinden ...');
                                   if (_loginFormKey.currentState!.validate()) {
-                                    var port = int.parse(Settings.getValue("server_port", "0"));
-                                    var serverUriString = Settings.getValue("server_host", "");
+                                    var port = int.parse(
+                                        Settings.getValue("server_port", "0"));
+                                    var serverUriString =
+                                        Settings.getValue("server_host", "");
                                     if (port == 0) {
-                                      await Settings.setValue("server_port", "5001");
+                                      await Settings.setValue(
+                                          "server_port", "5001");
                                       port = 5001;
                                     }
                                     var serverUri = Uri.parse(serverUriString);
                                     serverUri = serverUri.replace(port: port);
-                                    var apiProvider = Provider.of<ApiProvider>(context, listen: false);
-                                    if (await apiProvider.initialize(serverUri)) {
-                                      var isAuthenticated = await Provider.of<AuthProvider>(context, listen: false).isAuthenticated();
+                                    var apiProvider = Provider.of<ApiProvider>(
+                                        context,
+                                        listen: false);
+                                    if (await apiProvider
+                                        .initialize(serverUri)) {
+                                      var isAuthenticated =
+                                          await Provider.of<AuthProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .isAuthenticated();
                                       isAuthenticatedChanged(isAuthenticated);
                                       selectedServerChanged(serverUri);
                                       // If the form is valid, display a snackbar. In the real world,
                                       // you'd often call a server or save the information in a database.
                                       // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Processing Data')));
                                     } else {
-                                      EasyLoading.showError("Es konnte keine Verbindung hergestellt werden: " + serverUri.toString(), dismissOnTap: true);
+                                      EasyLoading.showError(
+                                          "Es konnte keine Verbindung hergestellt werden: " +
+                                              serverUri.toString(),
+                                          dismissOnTap: true);
                                     }
                                   }
                                   EasyLoading.dismiss();
@@ -141,9 +162,11 @@ class SelectServerPage extends StatelessWidget {
                       children: [
                         ListTile(
                           leading: Icon(Icons.cloud_download),
-                          title: const Text('Jetzt MakroBoard Host installieren'),
+                          title:
+                              const Text('Jetzt MakroBoard Host installieren'),
                         ),
-                        Text("Wenn Sie noch keine MakroBoard Installation haben, ..."),
+                        Text(
+                            "Wenn Sie noch keine MakroBoard Installation haben, ..."),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ElevatedButton.icon(
@@ -154,7 +177,9 @@ class SelectServerPage extends StatelessWidget {
                                   url,
                                   forceSafariVC: true,
                                   forceWebView: true,
-                                  headers: <String, String>{'my_header_key': 'my_header_value'},
+                                  headers: <String, String>{
+                                    'my_header_key': 'my_header_value'
+                                  },
                                 );
                               } else {
                                 throw 'Could not launch $url';
