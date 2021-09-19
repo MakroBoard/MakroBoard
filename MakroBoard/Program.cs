@@ -16,6 +16,8 @@ using System.Threading;
 using MakroBoard.Tray.Menu;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MakroBoard
 {
@@ -23,6 +25,7 @@ namespace MakroBoard
     {
         private static X509Certificate2 _Certificate;
         private static TrayIcon _TrayIcon;
+        private static Localsettings _Localsettings;
         private IHost _Host;
 
         public static async Task Main(string[] args)
@@ -44,6 +47,7 @@ namespace MakroBoard
                 InitializeDataDir();
                 await InitializeInstanceSeed();
                 InitializeCertificate();
+                InitializeConfig();
 
                 using (_Host = CreateHostBuilder(args).Build())
                 {
@@ -81,7 +85,7 @@ namespace MakroBoard
                 {
                     new TrayMenuItem("MakroBoard öffnen", i =>
                     {
-                        var process = Process.Start(new ProcessStartInfo("https://localhost:5001")
+                        var process = Process.Start(new ProcessStartInfo("https://localhost:" + _Localsettings.Port.ToString())
                         {
                             UseShellExecute = true
                         });
@@ -119,6 +123,20 @@ namespace MakroBoard
             {
                 Directory.CreateDirectory(Constants.DataDirectory);
             }
+        }       
+        
+        private static void InitializeConfig()
+        {
+            if (!File.Exists(Constants.LocalSettingsFileName))
+            {
+                _Localsettings = new Localsettings();
+                File.WriteAllText(Constants.LocalSettingsFileName, JsonSerializer.Serialize(_Localsettings));
+            }
+            else
+            {
+                _Localsettings = JsonSerializer.Deserialize<Localsettings>(File.ReadAllText(Constants.LocalSettingsFileName));
+            }
+            
         }
 
 
@@ -148,7 +166,7 @@ namespace MakroBoard
                     .UseUrls()
                     .UseKestrel(serverOptions =>
                     {
-                        serverOptions.ListenAnyIP(5001, listenoptions =>
+                        serverOptions.ListenAnyIP(_Localsettings.Port, listenoptions =>
                         {
                             // certificate is an x509certificate2
                             listenoptions.UseHttps(_Certificate);

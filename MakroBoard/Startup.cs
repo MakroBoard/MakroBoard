@@ -36,9 +36,8 @@ namespace MakroBoard
                 );
             });
 
-            var sqliteConnectionString = $"Filename={Path.Combine(Constants.DataDirectory, "wmsk.db")}";
+            var sqliteConnectionString = $"Filename={Constants.DatabaseFileName}";
             services.AddDbContext<DatabaseContext>(options => options.UseSqlite(sqliteConnectionString));
-
 
 
             if (_Env.IsDevelopment())
