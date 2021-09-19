@@ -23,12 +23,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Resource Include="app_icon.ico">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </Resource>
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="McMaster.NETCore.Plugins" Version="1.4.0" />
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.0-preview.3.21201.13" />
 		<PackageReference Include="BouncyCastle" Version="1.8.9">
@@ -51,6 +45,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Update="app_icon.ico">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="nlog.config">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>

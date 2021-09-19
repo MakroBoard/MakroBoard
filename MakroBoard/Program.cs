@@ -78,10 +78,9 @@ namespace MakroBoard
                 _TrayIcon = new TrayIcon();
                 _TrayIcon.Show(new TrayMenu(new List<ITrayMenuItem>
                 {
-                    new TrayMenuItem("MakroBoard öffnen", async i =>
+                    new TrayMenuItem("MakroBoard öffnen", i =>
                     {
-                    //todo
-                    throw new NotImplementedException();
+                        throw new NotImplementedException();
                     }),
                     new TrayMenuItem("Beenden", async i =>
                     {
