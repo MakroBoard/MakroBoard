@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:makro_board_client/dialogs/create_group_dialog.dart';
+import 'package:makro_board_client/widgets/EditModeSwitch.dart';
 import 'package:makro_board_client/widgets/GlobalSettings.dart';
 import 'package:makro_board_client/widgets/GroupCard.dart';
 import 'package:makro_board_client/widgets/SnackBarNotification.dart';
@@ -21,17 +22,7 @@ class PagePage extends StatelessWidget {
         context: context,
         titleText: initialPage.label,
         additionalActions: [
-          Tooltip(
-            message: "EditModus aktivieren",
-            child: Switch(
-                value: GlobalSettings.of(context)?.editMode ?? false,
-                onChanged: (v) {
-                  var globalSettings = GlobalSettings.of(context);
-                  if (globalSettings != null) {
-                    globalSettings.updateEditMode(v);
-                  }
-                }),
-          ),
+          EditModeSwitch(),
         ],
       ),
       body: SnackBarNotification(
