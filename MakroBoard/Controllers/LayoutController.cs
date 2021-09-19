@@ -81,8 +81,8 @@ namespace MakroBoard.Controllers
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdateGroup, newGroup);
             return Ok(new AddGroupResponse());
-        }  
-        
+        }
+
         /// <summary>
         /// POST: api/layout/editgroup
         /// </summary>
@@ -90,7 +90,7 @@ namespace MakroBoard.Controllers
         [LocalHost]
         public async Task<ActionResult<EditGroupResponse>> PostEditGroup([FromBody] EditGroupRequest editGroupRequest)
         {
-            var newGroup =_Context.Groups.Find(editGroupRequest.Group.Id);
+            var newGroup = _Context.Groups.Find(editGroupRequest.Group.Id);
             newGroup.Label = editGroupRequest.Group.Label;
 
             await _Context.SaveChangesAsync();
@@ -106,7 +106,7 @@ namespace MakroBoard.Controllers
         public async Task<ActionResult<RemoveGroupResponse>> PostRemoveGroup([FromBody] RemoveGroupRequest removeGroupRequest)
         {
             // Include Panels to cascade delete 
-            var groupToDelete = await _Context.Groups.Where(x=>x.ID == removeGroupRequest.GroupId).Include(x=>x.Panels).FirstAsync();
+            var groupToDelete = await _Context.Groups.Where(x => x.ID == removeGroupRequest.GroupId).Include(x => x.Panels).FirstAsync();
             if (groupToDelete == null)
             {
                 return Conflict(new RemoveGroupResponse { Status = ResponseStatus.Error, Error = "Group to delete not found" });
@@ -153,6 +153,58 @@ namespace MakroBoard.Controllers
             await _PluginContext.Subscribe(newPanel.ID, addPanelRequest.Panel.PluginName, addPanelRequest.Panel.SymbolicName, newPanel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value));
 
             return Ok(new AddPanelResponse());
+        }
+
+        /// <summary>
+        /// POST: api/layout/addpage
+        /// </summary>
+        [HttpPost("editpanel")]
+        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        public async Task<ActionResult<EditPanelResponse>> PostAddPanel([FromBody] EditPanelRequest editPanelRequest)
+        {
+            // Include Panels to cascade delete 
+            var existingPanel = await _Context.Panels.Where(x => x.ID == editPanelRequest.Panel.ID).Include(x => x.ConfigParameters).FirstAsync();
+            if (existingPanel == null)
+            {
+                return Conflict(new RemovePanelResponse { Status = ResponseStatus.Error, Error = "Panel to delete not found" });
+            }
+
+            existingPanel.SymbolicName = editPanelRequest.Panel.SymbolicName;
+            existingPanel.GroupId = editPanelRequest.Panel.GroupId;
+            existingPanel.ConfigParameters.ForEach(cp =>
+            {
+                cp.Value = editPanelRequest.Panel.ConfigValues.FirstOrDefault(x => x.SymbolicName.Equals(cp.SymbolicName)).Value?.ToString() ?? cp.Value;
+            });
+
+            await _Context.SaveChangesAsync();
+
+            _logger.LogDebug("Edit Panel {ID} => {SymbolicName}({PluginName})", existingPanel.ID, existingPanel.SymbolicName, existingPanel.PluginName);
+
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePanel, existingPanel);
+
+            await _PluginContext.Subscribe(existingPanel.ID, existingPanel.PluginName, existingPanel.SymbolicName, existingPanel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value));
+
+            return Ok(new AddPanelResponse());
+        }
+
+        [HttpPost("removepanel")]
+        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        public async Task<ActionResult<RemovePanelResponse>> PostRemoveGroup([FromBody] RemovePanelRequest removePanelRequest)
+        {
+            // Include Panels to cascade delete 
+            var panelToDelete = await _Context.Panels.Where(x => x.ID == removePanelRequest.PanelId).FirstAsync();
+            if (panelToDelete == null)
+            {
+                return Conflict(new RemovePanelResponse { Status = ResponseStatus.Error, Error = "Panel to delete not found" });
+            }
+
+            _Context.Panels.Remove(panelToDelete);
+            await _Context.SaveChangesAsync();
+
+            _logger.LogDebug("Removed Panel {Label}", panelToDelete.SymbolicName);
+
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.RemovePanel, panelToDelete);
+            return Ok(new RemovePanelResponse());
         }
 
         private static string ConvertToSymbolicName(string name)

@@ -90,6 +90,7 @@ class AvailableControls extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ControlPanel(
+                          panel: null,
                           control: control,
                           configValues: configValues + viewConfigValues,
                         ),

@@ -31,7 +31,9 @@ class ApiProvider {
   static const String addGroupUrl = "/api/layout/addgroup";
   static const String editGroupUrl = "/api/layout/editgroup";
   static const String addPanelUrl = "/api/layout/addpanel";
+  static const String editPanelUrl = "/api/layout/editpanel";
   static const String removeGroupUrl = "/api/layout/removegroup";
+  static const String removePanelUrl = "/api/layout/removepanel";
 
   Map<String, String> get _defaultHeader => <String, String>{
         HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
@@ -83,6 +85,7 @@ class ApiProvider {
       _connection!.on('AddOrUpdateGroup', _onAddOrUpdateGroup);
       _connection!.on('RemoveGroup', _onRemoveGroup);
       _connection!.on('AddOrUpdatePanel', _onAddOrUpdatePanel);
+      _connection!.on('RemovePanel', _onRemovePanel);
       _connection!.on('UpdatePanelData', _onUpdatePanelData);
 
       Completer c = new Completer();
@@ -206,16 +209,7 @@ class ApiProvider {
 
   void _onAddOrUpdatePanel(panels) async {
     for (var panel in panels!) {
-      Group existingGroup = Group.empty();
-      for (var page in currentPages) {
-        existingGroup = page.groups.firstWhere(
-          (element) => element.id == panel["groupId"],
-          orElse: () => Group.empty(),
-        );
-        if (!existingGroup.isEmpty) {
-          break;
-        }
-      }
+      Group existingGroup = _getExistingGroup(panel);
 
       if (existingGroup.isEmpty) {
         continue;
@@ -235,6 +229,42 @@ class ApiProvider {
       }
       existingGroup.notifyPanelsUpdated();
     }
+  }
+
+  void _onRemovePanel(panels) async {
+    for (var panel in panels!) {
+      Group existingGroup = _getExistingGroup(panel);
+
+      if (existingGroup.isEmpty) {
+        continue;
+      }
+
+      var existingPanel = existingGroup.panels.firstWhere(
+        (element) => element.id == panel["id"],
+        orElse: () => Panel.empty(),
+      );
+
+      if (!existingPanel.isEmpty) {
+        existingGroup.panels.remove(existingPanel);
+      }
+
+      existingGroup.notifyPanelsUpdated();
+    }
+  }
+
+  Group _getExistingGroup(panel) {
+    Group existingGroup = Group.empty();
+
+    for (var page in currentPages) {
+      existingGroup = page.groups.firstWhere(
+        (element) => element.id == panel["groupId"],
+        orElse: () => Group.empty(),
+      );
+      if (!existingGroup.isEmpty) {
+        break;
+      }
+    }
+    return existingGroup;
   }
 
   void _onUpdatePanelData(panelDatas) async {
@@ -421,6 +451,20 @@ class ApiProvider {
     _checkResponse(result);
   }
 
+  Future removeGroup(Group group) async {
+    try {
+      var jsonResponse = await http.post(
+        _serverUri!.replace(path: removeGroupUrl),
+        headers: _defaultHeader,
+        body: json.encode(RemoveGroupRequest(group.id)),
+      );
+      var result = _handleResponse(jsonResponse, (r) => RemoveGroupResponse.fromJson(r));
+      _checkResponse(result);
+    } on Exception catch (e) {
+      print('never reached' + e.toString());
+    }
+  }
+
   Future addPanel(Panel panel) async {
     var jsonResponse = await http.post(
       _serverUri!.replace(path: addPanelUrl),
@@ -432,14 +476,25 @@ class ApiProvider {
     _checkResponse(result);
   }
 
-  Future removeGroup(Group group) async {
+  Future editPanel(Panel panel) async {
+    var jsonResponse = await http.post(
+      _serverUri!.replace(path: editPanelUrl),
+      headers: _defaultHeader,
+      body: json.encode(EditPanelRequest(panel)),
+    );
+
+    var result = _handleResponse(jsonResponse, (r) => EditPanelResponse.fromJson(r));
+    _checkResponse(result);
+  }
+
+  Future removePanel(Panel panel) async {
     try {
       var jsonResponse = await http.post(
-        _serverUri!.replace(path: removeGroupUrl),
+        _serverUri!.replace(path: removePanelUrl),
         headers: _defaultHeader,
-        body: json.encode(RemoveGroupRequest(group.id)),
+        body: json.encode(RemovePanelRequest(panel.id)),
       );
-      var result = _handleResponse(jsonResponse, (r) => RemoveGroupResponse.fromJson(r));
+      var result = _handleResponse(jsonResponse, (r) => RemovePanelResponse.fromJson(r));
       _checkResponse(result);
     } on Exception catch (e) {
       print('never reached' + e.toString());

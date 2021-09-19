@@ -117,6 +117,7 @@ class GroupCard extends StatelessWidget {
         var plugin = plugins.firstWhere((p) => p.pluginName == panel.pluginName);
         var control = plugin.controls.firstWhere((c) => c.symbolicName == panel.symbolicName);
         return ControlPanel(
+          panel: panel,
           control: control,
           configValues: panel.configValues,
         );
