@@ -23,7 +23,7 @@ class SettingsPage extends StatelessWidget {
                 }
 
                 if (Uri.tryParse(value) == null) {
-                  return "Der Host \"value\" ist keine gültige URI";
+                  return AppLocalizations.of(context)!.error_hostnouri(value);
                 }
                 return null;
               },
