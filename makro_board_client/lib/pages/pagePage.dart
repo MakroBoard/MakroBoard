@@ -6,19 +6,20 @@ import 'package:makro_board_client/widgets/EditModeSwitch.dart';
 import 'package:makro_board_client/widgets/GlobalSettings.dart';
 import 'package:makro_board_client/widgets/GroupCard.dart';
 import 'package:makro_board_client/widgets/SnackBarNotification.dart';
-import 'package:makro_board_client/widgets/WmskAppBar.dart';
+import 'package:makro_board_client/widgets/MakroBoardAppBar.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:makro_board_client/models/page.dart' as models;
 import 'package:makro_board_client/models/group.dart' as models;
 
 class PagePage extends StatelessWidget {
   final models.Page initialPage;
-  const PagePage({required Key key, required this.initialPage}) : super(key: key);
+  const PagePage({required Key key, required this.initialPage})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WmskAppBar(
+      appBar: MakroBoardAppBar(
         context: context,
         titleText: initialPage.label,
         additionalActions: [
@@ -34,7 +35,8 @@ class PagePage extends StatelessWidget {
                 ? ResponsiveGridList(
                     desiredItemWidth: 200,
                     minSpacing: 10,
-                    children: _getGroupWidgets(context, snapshot.data as List<models.Group>),
+                    children: _getGroupWidgets(
+                        context, snapshot.data as List<models.Group>),
                   )
                 : Center(
                     child: Wrap(
@@ -67,7 +69,8 @@ class PagePage extends StatelessWidget {
     );
   }
 
-  List<Widget> _getGroupWidgets(BuildContext context, List<models.Group>? groups) {
+  List<Widget> _getGroupWidgets(
+      BuildContext context, List<models.Group>? groups) {
     if (groups == null) {
       return <Widget>[];
     }

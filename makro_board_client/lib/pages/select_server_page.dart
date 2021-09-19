@@ -23,7 +23,7 @@ class SelectServerPage extends StatelessWidget {
     final _loginFormKey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      // appBar: WmskAppBar(title: "MakroBoard", showSettings: false).getAppBar(context),
+      // appBar: MakroBoardAppBar(title: "MakroBoard", showSettings: false).getAppBar(context),
       body: SnackBarNotification(
         child: Center(
           child: Container(
