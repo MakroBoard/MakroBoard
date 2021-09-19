@@ -158,4 +158,24 @@ namespace MakroBoard.ApiModels
     {
 
     }
+
+    public class EditPanelRequest : Request
+    {
+        public Panel Panel { get; set; }
+    }
+
+    public class EditPanelResponse : Response
+    {
+
+    }
+
+    public class RemovePanelRequest : Request
+    {
+        public int PanelId { get; set; }
+    }
+
+    public class RemovePanelResponse : Response
+    {
+
+    }
 }

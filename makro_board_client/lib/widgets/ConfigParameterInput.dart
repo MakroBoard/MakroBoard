@@ -35,6 +35,7 @@ class _ConfigParameterInputState extends State<ConfigParameterInput> {
             // border: OutlineInputBorder(),
             labelText: configParameter.symbolicName,
           ),
+          initialValue: configValue.value.toString(),
           // TODO
           validator: (value) {
             if (configParameter.validationRegEx != null && configParameter.validationRegEx!.isNotEmpty) {

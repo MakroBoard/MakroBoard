@@ -261,3 +261,43 @@ class AddPanelResponse extends Response {
 
   Map<String, dynamic> toJson() => _$AddPanelResponseToJson(this);
 }
+
+@JsonSerializable()
+class EditPanelRequest extends Request {
+  final Panel panel;
+
+  EditPanelRequest(this.panel);
+
+  factory EditPanelRequest.fromJson(Map<String, dynamic> json) => _$EditPanelRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$EditPanelRequestToJson(this);
+}
+
+@JsonSerializable()
+class EditPanelResponse extends Response {
+  EditPanelResponse(ResponseStatus status, String? error) : super(status, error);
+
+  factory EditPanelResponse.fromJson(Map<String, dynamic> json) => _$EditPanelResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$EditPanelResponseToJson(this);
+}
+
+@JsonSerializable()
+class RemovePanelRequest extends Request {
+  final int panelId;
+
+  RemovePanelRequest(this.panelId);
+
+  factory RemovePanelRequest.fromJson(Map<String, dynamic> json) => _$RemovePanelRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RemovePanelRequestToJson(this);
+}
+
+@JsonSerializable()
+class RemovePanelResponse extends Response {
+  RemovePanelResponse(ResponseStatus status, String? error) : super(status, error);
+
+  factory RemovePanelResponse.fromJson(Map<String, dynamic> json) => _$RemovePanelResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RemovePanelResponseToJson(this);
+}
