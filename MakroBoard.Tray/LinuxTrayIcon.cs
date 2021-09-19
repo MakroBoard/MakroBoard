@@ -23,7 +23,7 @@ namespace MakroBoard.Tray
             var app = new Application("app.makroboard.client.tray", GLib.ApplicationFlags.None);
             app.Register(GLib.Cancellable.Current);
 
-            trayIcon = new StatusIcon(new Pixbuf("/home/volza/projects/MakroBoard/MakroBoard/Design/Logo_small_256_256.png"));
+            trayIcon = new StatusIcon(new Pixbuf("app_icon.png"));
             trayIcon.Visible = true;
             trayIcon.PopupMenu += OnTrayIconPopup;
             
