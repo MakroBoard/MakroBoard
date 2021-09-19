@@ -11,35 +11,52 @@ using NLog.Web;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using MakroBoard.Plugin;
+using MakroBoard.Tray;
+using System.Threading;
+using MakroBoard.Tray.Menu;
+using System.Collections.Generic;
 
 namespace MakroBoard
 {
     public class Program
     {
         private static X509Certificate2 _Certificate;
+        private static TrayIcon _TrayIcon;
+        private IHost _Host;
+
         public static async Task Main(string[] args)
         {
+            var program = new Program();
+            await program.Start(args);
+        }
+
+        private async Task Start(string[] args)
+        {
             // NLog: setup the logger first to catch all errors :)
-            var logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
+                ShowTrayIcon();
+
                 logger.Debug("init log");
                 logger.Debug($"Using Data Directory: { Constants.DataDirectory}");
                 InitializeDataDir();
                 await InitializeInstanceSeed();
                 InitializeCertificate();
 
-                var host = CreateHostBuilder(args).Build();
-                using var scope = host.Services.CreateScope();
+                using (_Host = CreateHostBuilder(args).Build())
+                {
+                    using var scope = _Host.Services.CreateScope();
 
-                var services = scope.ServiceProvider;
+                    var services = scope.ServiceProvider;
 
-                await CreateDbIfNotExists(services);
-                await LoadPlugins(services);
+                    await CreateDbIfNotExists(services);
+                    await LoadPlugins(services);
 
-                logger.Info("Server Started");
+                    logger.Info("Server Started");
 
-                host.Run();
+                    _Host.Run();
+                }
             }
             catch (Exception ex)
             {
@@ -52,9 +69,31 @@ namespace MakroBoard
                 // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
                 NLog.LogManager.Shutdown();
             }
-
         }
 
+        private void ShowTrayIcon()
+        {
+            var thread = new Thread(() =>
+            {
+                _TrayIcon = new TrayIcon();
+                _TrayIcon.Show(new TrayMenu(new List<ITrayMenuItem>
+                {
+                    new TrayMenuItem("MakroBoard öffnen", i =>
+                    {
+                        throw new NotImplementedException();
+                    }),
+                    new TrayMenuItem("Beenden", async i =>
+                    {
+                        _TrayIcon.Remove();
+                        await _Host?.StopAsync();
+                    })
+                }));
+            });
+#if WINDOWS
+            thread.SetApartmentState(ApartmentState.STA);
+#endif
+            thread.Start();
+        }
 
         private static async Task InitializeInstanceSeed()
         {
@@ -68,7 +107,6 @@ namespace MakroBoard
                 await File.WriteAllTextAsync(Constants.SeedFileName, Constants.Seed);
             }
         }
-
 
         private static void InitializeDataDir()
         {
@@ -139,6 +177,11 @@ namespace MakroBoard
                 var logger = services.GetRequiredService<ILogger<Program>>();
                 logger.LogError(ex, "An error occurred initializing plugins.");
             }
+        }
+
+        public void Shutdown()
+        {
+            throw new NotImplementedException();
         }
     }
 }

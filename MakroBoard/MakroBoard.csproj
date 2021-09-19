@@ -1,50 +1,69 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
-    <IsPackable>false</IsPackable>
-    <SpaRoot>wwwroot\</SpaRoot>
-    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+	<PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+		<TargetFramework>net5.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
 
-    <!-- Set this to true if you enable server-side prerendering -->
-    <BuildServerSideRenderer>false</BuildServerSideRenderer>
-    <UserSecretsId>0bce7fd0-e6f3-4b6a-af05-3d8938e10671</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+		<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+		<IsPackable>false</IsPackable>
+		<SpaRoot>wwwroot\</SpaRoot>
+		<DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
 
-  <ItemGroup>
-    <PackageReference Include="McMaster.NETCore.Plugins" Version="1.4.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.0-preview.3.21201.13" />
-	<PackageReference Include="BouncyCastle" Version="1.8.9">
-		<NoWarn>NU1701</NoWarn>
-	</PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.10" />
-    <!--<PackageReference Include="Prise" Version="2.1.0" />-->
-    <PackageReference Include="NLog" Version="4.7.11" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="4.14.0" />
-  </ItemGroup>
+		<!-- Set this to true if you enable server-side prerendering -->
+		<BuildServerSideRenderer>false</BuildServerSideRenderer>
+		<UserSecretsId>0bce7fd0-e6f3-4b6a-af05-3d8938e10671</UserSecretsId>
+		<ApplicationIcon>app_icon.ico</ApplicationIcon>
+	</PropertyGroup>
 
-   <ItemGroup>
-    <ProjectReference Include="..\MakroBoard.Data\MakroBoard.Data.csproj" />
-    <ProjectReference Include="..\MakroBoard.PluginContract\MakroBoard.PluginContract.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="McMaster.NETCore.Plugins" Version="1.4.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.0-preview.3.21201.13" />
+		<PackageReference Include="BouncyCastle" Version="1.8.9">
+			<NoWarn>NU1701</NoWarn>
+		</PackageReference>
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.10" />
+		<!--<PackageReference Include="Prise" Version="2.1.0" />-->
+		<PackageReference Include="NLog" Version="4.7.11" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="4.14.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Update="nlog.config" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\MakroBoard.Data\MakroBoard.Data.csproj" />
+		<ProjectReference Include="..\MakroBoard.PluginContract\MakroBoard.PluginContract.csproj" />
+		<ProjectReference Include="..\MakroBoard.Tray\MakroBoard.Tray.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="nlog.config" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="app_icon.ico">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="nlog.config">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
 
 
-  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
 
-    <ItemGroup>
-      <DistFiles Include="$(SpaRoot)\**" />
-      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-        <RelativePath>%(DistFiles.Identity)</RelativePath>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      </ResolvedFileToPublish>
-    </ItemGroup>
-  </Target>
+		<ItemGroup>
+			<DistFiles Include="$(SpaRoot)\**" />
+			<ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+				<RelativePath>%(DistFiles.Identity)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+				<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			</ResolvedFileToPublish>
+		</ItemGroup>
+	</Target>
 
 </Project>
