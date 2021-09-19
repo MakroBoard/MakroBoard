@@ -209,7 +209,7 @@ class ApiProvider {
       Group existingGroup = Group.empty();
       for (var page in currentPages) {
         existingGroup = page.groups.firstWhere(
-          (element) => element.id == panel["groupID"],
+          (element) => element.id == panel["groupId"],
           orElse: () => Group.empty(),
         );
         if (!existingGroup.isEmpty) {
