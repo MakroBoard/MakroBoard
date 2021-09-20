@@ -6,7 +6,7 @@ Its written in C#/dotnet for the API on the pc and the client which is also serv
 Its currently under heavy development, so only use it for testing or development
 
 Web and full documentation: [makroboard.app](https://makroboard.app)
-Community: ![Discord](https://discordapp.com/api/guilds/889571217789550723/widget.png?style=banner2)
+Community: ![Discord](https://discordapp.com/api/guilds/889571217789550723/widget.png?style=banner3)
 
 ## Installation
 
