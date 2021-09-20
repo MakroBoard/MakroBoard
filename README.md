@@ -1,5 +1,5 @@
 ![build MakroBoard](https://github.com/MakroBoard/MakroBoard/actions/workflows/MakroBoard_build_release.yml/badge.svg)
-![build website](https://github.com/MakroBoard/MakroBoard/actions/workflows/MakroBoard_build_release.yml/badge.svg)
+![build website](https://github.com/MakroBoard/MakroBoard/actions/workflows/MakroBoard_website_build.yml/badge.svg)
 
 ![Makroboard Logo](Design/Logo.svg)
 
