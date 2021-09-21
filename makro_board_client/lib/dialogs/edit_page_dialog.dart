@@ -50,7 +50,12 @@ class _EditPageDialogState extends State<EditPageDialog> {
                 padding: const EdgeInsets.all(32.0),
                 tooltip: "Icon wählen",
                 onPressed: () async {
-                  var iconData = await FlutterIconPicker.showIconPicker(context, iconPackMode: IconPack.fontAwesomeIcons) ?? Icons.check;
+                  var iconData = await FlutterIconPicker.showIconPicker(
+                        context,
+                        iconPackMode: IconPack.material,
+                        adaptiveDialog: true,
+                      ) ??
+                      Icons.check;
                   setState(() {
                     page.icon = iconData;
                   });
