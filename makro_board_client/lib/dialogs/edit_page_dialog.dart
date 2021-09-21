@@ -4,7 +4,6 @@ import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:makro_board_client/models/page.dart' as models;
 import 'package:provider/provider.dart';
-import 'dart:developer';
 
 // test
 class EditPageDialog extends StatefulWidget {
@@ -16,16 +15,12 @@ class EditPageDialog extends StatefulWidget {
 }
 
 class _EditPageDialogState extends State<EditPageDialog> {
-  IconData icon = Icons.add_box;
-
   @override
   Widget build(BuildContext context) {
     final _editPageFormKey = GlobalKey<FormState>();
-    var editPage = widget.page.clone();
-    icon = editPage.icon;
 
     return SimpleDialog(
-      title: Text("Seite " + editPage.label + " bearbeiten"),
+      title: Text("Seite " + widget.page.label + " bearbeiten"),
       children: [
         Form(
           key: _editPageFormKey,
@@ -36,7 +31,7 @@ class _EditPageDialogState extends State<EditPageDialog> {
                   labelText: "Name",
                   prefixIcon: Icon(Icons.dns_outlined),
                 ),
-                initialValue: editPage.label,
+                initialValue: widget.page.label,
                 validator: (value) {
                   if (value == null) {
                     return "Um fortzufahren wird ein Name benötigt.";
@@ -45,27 +40,24 @@ class _EditPageDialogState extends State<EditPageDialog> {
                   return null;
                 },
                 onChanged: (value) {
-                  editPage.label = value;
+                  widget.page.label = value;
                 },
               ),
               IconButton(
                 padding: const EdgeInsets.all(32.0),
                 tooltip: "Icon wählen",
                 onPressed: () async {
-                  var iconData = await FlutterIconPicker.showIconPicker(context,
-                          iconPackMode: IconPack.fontAwesomeIcons) ??
-                      Icons.check;
+                  var iconData = await FlutterIconPicker.showIconPicker(context, iconPackMode: IconPack.fontAwesomeIcons) ?? Icons.check;
                   setState(() {
-                    icon = iconData;
+                    widget.page.icon = iconData;
                   });
                 },
-                icon: Icon(icon),
+                icon: Icon(widget.page.icon),
               ),
               ButtonBar(
                 children: [
                   TextButton(
-                    onPressed: () =>
-                        Navigator.of(context, rootNavigator: true).pop(),
+                    onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
                     child: Text("Abbrechen"),
                   ),
                   TextButton(
@@ -74,8 +66,7 @@ class _EditPageDialogState extends State<EditPageDialog> {
                       EasyLoading.show(status: 'Seite bearbeiten ...');
                       if (_editPageFormKey.currentState!.validate()) {
                         try {
-                          await Provider.of<ApiProvider>(context, listen: false)
-                              .editPage(editPage);
+                          await Provider.of<ApiProvider>(context, listen: false).editPage(widget.page);
 
                           Navigator.of(context, rootNavigator: true).pop();
                         } catch (e) {

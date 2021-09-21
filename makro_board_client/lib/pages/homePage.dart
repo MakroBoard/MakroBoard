@@ -33,13 +33,11 @@ class HomePage extends StatelessWidget {
         child: Container(
           child: StreamBuilder(
             stream: Provider.of<ApiProvider>(context, listen: false).pages,
-            initialData:
-                Provider.of<ApiProvider>(context, listen: false).currentPages,
+            initialData: Provider.of<ApiProvider>(context, listen: false).currentPages,
             builder: (context, snapshot) => ResponsiveGridList(
               desiredItemWidth: 200,
               minSpacing: 10,
-              children:
-                  _getPageWidgets(context, snapshot.data as List<models.Page>),
+              children: _getPageWidgets(context, snapshot.data as List<models.Page>),
             ),
           ),
         ),
@@ -66,7 +64,7 @@ class HomePage extends StatelessWidget {
     return showDialog(
       context: context,
       builder: (context) {
-        return EditPageDialog(page: page);
+        return EditPageDialog(page: page.clone());
       },
     );
   }

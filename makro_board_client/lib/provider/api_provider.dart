@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/material.dart' as material;
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:http/http.dart' as http;
 import 'package:makro_board_client/models/api/Request.dart';
@@ -16,6 +17,7 @@ import 'package:makro_board_client/models/Plugin.dart';
 import 'package:makro_board_client/models/ViewConfigValue.dart';
 import 'package:makro_board_client/models/client.dart';
 import 'package:makro_board_client/models/page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'env_provider.dart';
 
@@ -37,28 +39,21 @@ class ApiProvider {
   static const String removePanelUrl = "/api/layout/removepanel";
   static const String removePageUrl = "/api/layout/removepage";
 
-  Map<String, String> get _defaultHeader => <String, String>{
-        HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""),
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Accept-Language': _locale ?? "*"
-      };
+  Map<String, String> get _defaultHeader =>
+      <String, String>{HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""), 'Content-Type': 'application/json; charset=UTF-8', 'Accept-Language': _locale ?? "*"};
 
   List<Plugin> currentPlugins = [];
 
-  StreamController<List<Page>> streamPageController =
-      StreamController<List<Page>>.broadcast();
+  StreamController<List<Page>> streamPageController = StreamController<List<Page>>.broadcast();
   Stream<List<Page>> get pages => streamPageController.stream;
   List<Page> currentPages = [];
 
-  StreamController<List<Client>> streamClientController =
-      StreamController<List<Client>>.broadcast();
+  StreamController<List<Client>> streamClientController = StreamController<List<Client>>.broadcast();
   Stream<List<Client>> get clients => streamClientController.stream;
   List<Client> currentClients = [];
 
-  StreamController<bool> streamIsAuthenticatedController =
-      StreamController<bool>.broadcast();
-  Stream<bool> get isAuthenticatedStream =>
-      streamIsAuthenticatedController.stream;
+  StreamController<bool> streamIsAuthenticatedController = StreamController<bool>.broadcast();
+  Stream<bool> get isAuthenticatedStream => streamIsAuthenticatedController.stream;
   bool currentIsAuthenticated = false;
 
   HubConnection? _connection;
@@ -67,10 +62,15 @@ class ApiProvider {
 
   final EnvProvider envProvider;
   final NotificationProvider notificationProvider;
+  material.BuildContext? currentContext;
   ApiProvider({
     required this.envProvider, // ← The parameters of the constructur will define the generated binding
     required this.notificationProvider, // ← The parameters of the constructur will define the generated binding
   });
+
+  void updateContext(material.BuildContext context) {
+    currentContext = context;
+  }
 
   Future<bool> initialize(Uri serverUri, String locale) async {
     try {
@@ -296,8 +296,7 @@ class ApiProvider {
               var configValue = existingPanel.configValues.firstWhere(
                 (element) => element.symbolicName == symbolicName,
                 orElse: () {
-                  var result = ViewConfigValue(
-                      symbolicName: symbolicName, defaultValue: parameterValue);
+                  var result = ViewConfigValue(symbolicName: symbolicName, defaultValue: parameterValue);
                   existingPanel.configValues.add(result);
                   return result;
                 },
@@ -325,8 +324,7 @@ class ApiProvider {
         headers: _defaultHeader,
       );
 
-      var result =
-          _handleResponse(jsonResponse, (r) => CheckTokenResponse.fromJson(r));
+      var result = _handleResponse(jsonResponse, (r) => CheckTokenResponse.fromJson(r));
       currentIsAuthenticated = _checkResponse(result);
       streamIsAuthenticatedController.add(currentIsAuthenticated);
       return currentIsAuthenticated;
@@ -337,11 +335,9 @@ class ApiProvider {
   }
 
   Future<DateTime> submitCode(int code) async {
-    var response = await http.post(_serverUri!.replace(path: submitCodeUrl),
-        headers: _defaultHeader, body: json.encode(SubmitCodeRequest(code)));
+    var response = await http.post(_serverUri!.replace(path: submitCodeUrl), headers: _defaultHeader, body: json.encode(SubmitCodeRequest(code)));
 
-    var submitCodeResponse =
-        SubmitCodeResponse.fromJson(json.decode(response.body));
+    var submitCodeResponse = SubmitCodeResponse.fromJson(json.decode(response.body));
 
     var dateTime = DateTime.parse(submitCodeResponse.validUntil);
     Settings.setValue("server_code", code);
@@ -356,8 +352,7 @@ class ApiProvider {
         body: json.encode(ConfirmClientRequest(client)),
       );
 
-      var result = _handleResponse(
-          jsonResponse, (r) => ConfirmClientResponse.fromJson(r));
+      var result = _handleResponse(jsonResponse, (r) => ConfirmClientResponse.fromJson(r));
       _checkResponse(result);
     } on Exception catch (e) {
       print('never reached' + e.toString());
@@ -372,8 +367,7 @@ class ApiProvider {
         body: json.encode(RemoveClientRequest(client)),
       );
 
-      var result = _handleResponse(
-          jsonResponse, (r) => RemoveClientResponse.fromJson(r));
+      var result = _handleResponse(jsonResponse, (r) => RemoveClientResponse.fromJson(r));
       _checkResponse(result);
     } on Exception catch (e) {
       print('never reached' + e.toString());
@@ -388,8 +382,7 @@ class ApiProvider {
           headers: _defaultHeader,
         );
 
-        var jsonData =
-            AvailableControlsResponse.fromJson(json.decode(jsonResponse.body));
+        var jsonData = AvailableControlsResponse.fromJson(json.decode(jsonResponse.body));
         // currentPlugins = List.castFrom(jsonData).map((jsonPlugin) => Plugin.fromJson(jsonPlugin)).toList();
         currentPlugins = jsonData.plugins;
       }
@@ -401,8 +394,7 @@ class ApiProvider {
     return List.empty(growable: true);
   }
 
-  Future<String?> executeControl(
-      Control control, List<ViewConfigValue> configValues) async {
+  Future<String?> executeControl(Control control, List<ViewConfigValue> configValues) async {
     try {
       // notificationProvider.addSnackBarNotification(Notification(
       //   text: "Execute " + control.symbolicName,
@@ -414,8 +406,7 @@ class ApiProvider {
         body: json.encode(ExecuteRequest(control.symbolicName, configValues)),
       );
 
-      var result =
-          _handleResponse(jsonResponse, (r) => ExecuteResponse.fromJson(r));
+      var result = _handleResponse(jsonResponse, (r) => ExecuteResponse.fromJson(r));
 
       // notificationProvider.hideSnackBarNotification(Notification(
       //   text: "Execute " + control.symbolicName,
@@ -443,8 +434,7 @@ class ApiProvider {
       body: json.encode(AddPageRequest(page)),
     );
 
-    var result =
-        _handleResponse(jsonResponse, (r) => AddPageResponse.fromJson(r));
+    var result = _handleResponse(jsonResponse, (r) => AddPageResponse.fromJson(r));
     _checkResponse(result);
   }
 
@@ -455,8 +445,7 @@ class ApiProvider {
       body: json.encode(EditPageRequest(page)),
     );
 
-    var result =
-        _handleResponse(jsonResponse, (r) => EditPageResponse.fromJson(r));
+    var result = _handleResponse(jsonResponse, (r) => EditPageResponse.fromJson(r));
     _checkResponse(result);
   }
 
@@ -482,8 +471,7 @@ class ApiProvider {
       body: json.encode(AddGroupRequest(group)),
     );
 
-    var result =
-        _handleResponse(jsonResponse, (r) => AddGroupResponse.fromJson(r));
+    var result = _handleResponse(jsonResponse, (r) => AddGroupResponse.fromJson(r));
     _checkResponse(result);
   }
 
@@ -494,8 +482,7 @@ class ApiProvider {
       body: json.encode(EditGroupRequest(group)),
     );
 
-    var result =
-        _handleResponse(jsonResponse, (r) => EditGroupResponse.fromJson(r));
+    var result = _handleResponse(jsonResponse, (r) => EditGroupResponse.fromJson(r));
     _checkResponse(result);
   }
 
@@ -506,8 +493,7 @@ class ApiProvider {
         headers: _defaultHeader,
         body: json.encode(RemoveGroupRequest(group.id)),
       );
-      var result =
-          _handleResponse(jsonResponse, (r) => RemoveGroupResponse.fromJson(r));
+      var result = _handleResponse(jsonResponse, (r) => RemoveGroupResponse.fromJson(r));
       _checkResponse(result);
     } on Exception catch (e) {
       print('never reached' + e.toString());
@@ -521,8 +507,7 @@ class ApiProvider {
       body: json.encode(AddPanelRequest(panel)),
     );
 
-    var result =
-        _handleResponse(jsonResponse, (r) => AddPanelResponse.fromJson(r));
+    var result = _handleResponse(jsonResponse, (r) => AddPanelResponse.fromJson(r));
     _checkResponse(result);
   }
 
@@ -533,8 +518,7 @@ class ApiProvider {
       body: json.encode(EditPanelRequest(panel)),
     );
 
-    var result =
-        _handleResponse(jsonResponse, (r) => EditPanelResponse.fromJson(r));
+    var result = _handleResponse(jsonResponse, (r) => EditPanelResponse.fromJson(r));
     _checkResponse(result);
   }
 
@@ -545,16 +529,14 @@ class ApiProvider {
         headers: _defaultHeader,
         body: json.encode(RemovePanelRequest(panel.id)),
       );
-      var result =
-          _handleResponse(jsonResponse, (r) => RemovePanelResponse.fromJson(r));
+      var result = _handleResponse(jsonResponse, (r) => RemovePanelResponse.fromJson(r));
       _checkResponse(result);
     } on Exception catch (e) {
       print('never reached' + e.toString());
     }
   }
 
-  T? _handleResponse<T extends Response>(
-      http.Response response, T Function(Map<String, dynamic>) create) {
+  T? _handleResponse<T extends Response>(http.Response response, T Function(Map<String, dynamic>) create) {
     if (response.statusCode == 200) {
       var result = create(jsonDecode(response.body));
 
@@ -567,6 +549,12 @@ class ApiProvider {
         ));
       }
       return result;
+    } else if (currentContext != null) {
+      notificationProvider.addSnackBarNotification(Notification(
+        text: AppLocalizations.of(currentContext!)!.error_network_unexpectedresponse(response.statusCode, response.reasonPhrase ?? AppLocalizations.of(currentContext!)!.error_unexpected),
+        notificationType: NotificationType.error,
+        duration: Duration(seconds: 4),
+      ));
     }
 
     return null;
