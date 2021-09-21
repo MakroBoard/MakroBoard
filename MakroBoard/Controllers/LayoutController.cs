@@ -66,12 +66,12 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("editpage")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult<EditPageResponse>> PostAddPanel([FromBody] EditPageRequest editPageRequest)
+        public async Task<ActionResult<EditPageResponse>> PostEditPage([FromBody] EditPageRequest editPageRequest)
         {
-            var existingPage = await _Context.Pages.Where(x => x.ID == editPageRequest.Page.Id).Include(x => x.Groups).ThenInclude(g => g.Panels).ThenInclude(p=>p.ConfigParameters).FirstAsync();
+            var existingPage = await _Context.Pages.Where(x => x.ID == editPageRequest.Page.Id).Include(x => x.Groups).ThenInclude(g => g.Panels).ThenInclude(p=>p.ConfigParameters).FirstOrDefaultAsync();
             if (existingPage == null)
             {
-                return Conflict(new RemovePanelResponse { Status = ResponseStatus.Error, Error = "Panel to delete not found" });
+                return Conflict(new EditPageResponse { Status = ResponseStatus.Error, Error = "Page to edit not found" });
             }
 
             existingPage.Label = editPageRequest.Page.Label;
@@ -86,15 +86,15 @@ namespace MakroBoard.Controllers
             return Ok(new AddPanelResponse());
         }
 
-        [HttpPost("removepanel")]
+        [HttpPost("removepage")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult<RemovePageResponse>> PostRemoveGroup([FromBody] RemovePageRequest removePanelRequest)
+        public async Task<ActionResult<RemovePageResponse>> PostRemovePage([FromBody] RemovePageRequest removePanelRequest)
         {
             // Include Panels to cascade delete 
-            var pageToDelete = await _Context.Pages.Where(x => x.ID == removePanelRequest.PageId).Include(x=>x.Groups).ThenInclude(g=>g.Panels).FirstAsync();
+            var pageToDelete = await _Context.Pages.Where(x => x.ID == removePanelRequest.PageId).Include(x=>x.Groups).ThenInclude(g=>g.Panels).FirstOrDefaultAsync();
             if (pageToDelete == null)
             {
-                return Conflict(new RemovePanelResponse { Status = ResponseStatus.Error, Error = "Page to delete not found" });
+                return NotFound(new RemovePageResponse { Status = ResponseStatus.Error, Error = "Page to delete not found" });
             }
 
             _Context.Pages.Remove(pageToDelete);
@@ -153,10 +153,10 @@ namespace MakroBoard.Controllers
         public async Task<ActionResult<RemoveGroupResponse>> PostRemoveGroup([FromBody] RemoveGroupRequest removeGroupRequest)
         {
             // Include Panels to cascade delete 
-            var groupToDelete = await _Context.Groups.Where(x => x.ID == removeGroupRequest.GroupId).Include(x => x.Panels).FirstAsync();
+            var groupToDelete = await _Context.Groups.Where(x => x.ID == removeGroupRequest.GroupId).Include(x => x.Panels).FirstOrDefaultAsync();
             if (groupToDelete == null)
             {
-                return Conflict(new RemoveGroupResponse { Status = ResponseStatus.Error, Error = "Group to delete not found" });
+                return NotFound(new RemoveGroupResponse { Status = ResponseStatus.Error, Error = "Group to delete not found" });
             }
 
             _Context.Groups.Remove(groupToDelete);
@@ -207,13 +207,13 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("editpanel")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult<EditPanelResponse>> PostAddPanel([FromBody] EditPanelRequest editPanelRequest)
+        public async Task<ActionResult<EditPanelResponse>> PostEditPanel([FromBody] EditPanelRequest editPanelRequest)
         {
             // Include Panels to cascade delete 
-            var existingPanel = await _Context.Panels.Where(x => x.ID == editPanelRequest.Panel.ID).Include(x => x.ConfigParameters).FirstAsync();
+            var existingPanel = await _Context.Panels.Where(x => x.ID == editPanelRequest.Panel.ID).Include(x => x.ConfigParameters).FirstOrDefaultAsync();
             if (existingPanel == null)
             {
-                return Conflict(new RemovePanelResponse { Status = ResponseStatus.Error, Error = "Panel to delete not found" });
+                return NotFound(new RemovePanelResponse { Status = ResponseStatus.Error, Error = "Panel to edit not found" });
             }
 
             existingPanel.SymbolicName = editPanelRequest.Panel.SymbolicName;
@@ -236,13 +236,13 @@ namespace MakroBoard.Controllers
 
         [HttpPost("removepanel")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult<RemovePanelResponse>> PostRemoveGroup([FromBody] RemovePanelRequest removePanelRequest)
+        public async Task<ActionResult<RemovePanelResponse>> PostRemovePanel([FromBody] RemovePanelRequest removePanelRequest)
         {
             // Include Panels to cascade delete 
-            var panelToDelete = await _Context.Panels.Where(x => x.ID == removePanelRequest.PanelId).FirstAsync();
+            var panelToDelete = await _Context.Panels.Where(x => x.ID == removePanelRequest.PanelId).FirstOrDefaultAsync();
             if (panelToDelete == null)
             {
-                return Conflict(new RemovePanelResponse { Status = ResponseStatus.Error, Error = "Panel to delete not found" });
+                return NotFound(new RemovePanelResponse { Status = ResponseStatus.Error, Error = "Panel to delete not found" });
             }
 
             _Context.Panels.Remove(panelToDelete);

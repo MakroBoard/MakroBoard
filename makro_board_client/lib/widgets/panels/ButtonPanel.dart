@@ -13,10 +13,7 @@ class ButtonPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () async {
-        var result = await Provider.of<ApiProvider>(context, listen: false).executeControl(control, configValues);
-        if (result != null) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
-        }
+        await Provider.of<ApiProvider>(context, listen: false).executeControl(control, configValues);
       },
       child: Padding(
         padding: const EdgeInsets.all(16.0),

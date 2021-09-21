@@ -91,6 +91,7 @@ class ApiProvider {
       _connection!.on('AddOrUpdateToken', _onAddOrUpdateToken);
       _connection!.on('RemoveClient', _onRemoveClient);
       _connection!.on('AddOrUpdatePage', _onAddOrUpdatePage);
+      _connection!.on('RemovePage', _onRemovePage);
       _connection!.on('AddOrUpdateGroup', _onAddOrUpdateGroup);
       _connection!.on('RemoveGroup', _onRemoveGroup);
       _connection!.on('AddOrUpdatePanel', _onAddOrUpdatePanel);
@@ -159,6 +160,21 @@ class ApiProvider {
       } else {
         var index = currentPages.indexOf(existingPage);
         currentPages[index] = newPage;
+      }
+
+      streamPageController.add(currentPages);
+    }
+  }
+
+  void _onRemovePage(pages) async {
+    for (var page in pages) {
+      var existingPage = currentPages.firstWhere(
+        (element) => element.id == page["id"],
+        orElse: () => Page.empty(),
+      );
+
+      if (!existingPage.isEmpty) {
+        currentPages.remove(existingPage);
       }
 
       streamPageController.add(currentPages);
@@ -413,10 +429,13 @@ class ApiProvider {
       // ));
 
       if (result != null && result.status == ResponseStatus.Ok) {
-        notificationProvider.addSnackBarNotification(Notification(
-          text: result.result,
-          notificationType: NotificationType.success,
-        ));
+        notificationProvider.addSnackBarNotification(
+          Notification(
+            text: result.result,
+            notificationType: NotificationType.success,
+            duration: Duration(seconds: 2),
+          ),
+        );
       }
 
       if (_checkResponse(result)) {
@@ -456,8 +475,7 @@ class ApiProvider {
         headers: _defaultHeader,
         body: json.encode(RemovePageRequest(page.id)),
       );
-      var result =
-          _handleResponse(jsonResponse, (r) => RemovePageResponse.fromJson(r));
+      var result = _handleResponse(jsonResponse, (r) => RemovePageResponse.fromJson(r));
       _checkResponse(result);
     } on Exception catch (e) {
       print('never reached' + e.toString());
