@@ -248,6 +248,28 @@ Map<String, dynamic> _$EditPageResponseToJson(EditPageResponse instance) =>
       'error': instance.error,
     };
 
+RemovePageRequest _$RemovePageRequestFromJson(Map<String, dynamic> json) =>
+    RemovePageRequest(
+      json['pageId'] as int,
+    );
+
+Map<String, dynamic> _$RemovePageRequestToJson(RemovePageRequest instance) =>
+    <String, dynamic>{
+      'pageId': instance.pageId,
+    };
+
+RemovePageResponse _$RemovePageResponseFromJson(Map<String, dynamic> json) =>
+    RemovePageResponse(
+      _$enumDecode(_$ResponseStatusEnumMap, json['status']),
+      json['error'] as String?,
+    );
+
+Map<String, dynamic> _$RemovePageResponseToJson(RemovePageResponse instance) =>
+    <String, dynamic>{
+      'status': _$ResponseStatusEnumMap[instance.status],
+      'error': instance.error,
+    };
+
 AddGroupRequest _$AddGroupRequestFromJson(Map<String, dynamic> json) =>
     AddGroupRequest(
       Group.fromJson(json['group'] as Map<String, dynamic>),

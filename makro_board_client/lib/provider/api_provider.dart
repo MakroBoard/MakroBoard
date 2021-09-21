@@ -37,6 +37,7 @@ class ApiProvider {
   static const String editPanelUrl = "/api/layout/editpanel";
   static const String removeGroupUrl = "/api/layout/removegroup";
   static const String removePanelUrl = "/api/layout/removepanel";
+  static const String removePageUrl = "/api/layout/removepage";
 
   Map<String, String> get _defaultHeader =>
       <String, String>{HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""), 'Content-Type': 'application/json; charset=UTF-8', 'Accept-Language': _locale ?? "*"};
@@ -446,6 +447,21 @@ class ApiProvider {
 
     var result = _handleResponse(jsonResponse, (r) => EditPageResponse.fromJson(r));
     _checkResponse(result);
+  }
+
+  Future removePage(Page page) async {
+    try {
+      var jsonResponse = await http.post(
+        _serverUri!.replace(path: removePageUrl),
+        headers: _defaultHeader,
+        body: json.encode(RemovePageRequest(page.id)),
+      );
+      var result =
+          _handleResponse(jsonResponse, (r) => RemovePageResponse.fromJson(r));
+      _checkResponse(result);
+    } on Exception catch (e) {
+      print('never reached' + e.toString());
+    }
   }
 
   Future addGroup(Group group) async {
