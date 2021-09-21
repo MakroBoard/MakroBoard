@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:makro_board_client/dialogs/create_group_dialog.dart';
 import 'package:makro_board_client/widgets/EditModeSwitch.dart';
 import 'package:makro_board_client/widgets/GlobalSettings.dart';
@@ -31,30 +33,44 @@ class PagePage extends StatelessWidget {
           child: StreamBuilder(
             stream: initialPage.groupsStream,
             initialData: initialPage.groups,
-            builder: (context, snapshot) => initialPage.groups.length > 0
-                ? ResponsiveGridList(
-                    desiredItemWidth: 200,
-                    minSpacing: 10,
-                    children: _getGroupWidgets(context, snapshot.data as List<models.Group>),
-                  )
-                : Center(
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      runAlignment: WrapAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.hourglass_empty,
-                          size: 256,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        Text(
-                          "Leider ist die Seite noch Leer.",
-                          style: Theme.of(context).textTheme.headline2,
-                        ),
-                      ],
-                    ),
-                  ),
+            builder: (context, snapshot) {
+              var groups = snapshot.data as List<models.Group>;
+              var axisCount = min(max((MediaQuery.of(context).size.width / 400).round(), 1), groups.length);
+              return initialPage.groups.length > 0
+                  // ? ResponsiveGridList(
+                  //     desiredItemWidth: 200,
+                  //     minSpacing: 10,
+                  //     children: _getGroupWidgets(context, snapshot.data as List<models.Group>),
+                  //   )
+                  ? StaggeredGridView.countBuilder(
+                      key: ObjectKey(axisCount),
+                      crossAxisCount: axisCount,
+                      addAutomaticKeepAlives: false,
+                      itemCount: groups.length,
+                      itemBuilder: (BuildContext context, int index) => GroupCard(group: groups[index]),
+                      staggeredTileBuilder: (int index) => new StaggeredTile.fit(1),
+                      mainAxisSpacing: 4.0,
+                      crossAxisSpacing: 4.0,
+                    )
+                  : Center(
+                      child: Wrap(
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        runAlignment: WrapAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.hourglass_empty,
+                            size: 256,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          Text(
+                            "Leider ist die Seite noch Leer.",
+                            style: Theme.of(context).textTheme.headline2,
+                          ),
+                        ],
+                      ),
+                    );
+            },
           ),
         ),
       ),
