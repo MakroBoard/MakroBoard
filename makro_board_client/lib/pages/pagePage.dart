@@ -13,14 +13,14 @@ import 'package:makro_board_client/models/group.dart' as models;
 
 class PagePage extends StatelessWidget {
   final models.Page initialPage;
-  const PagePage({required Key key, required this.initialPage})
-      : super(key: key);
+  const PagePage({required Key key, required this.initialPage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MakroBoardAppBar(
         context: context,
+        icon: Icon(initialPage.icon),
         titleText: initialPage.label,
         additionalActions: [
           EditModeSwitch(),
@@ -35,8 +35,7 @@ class PagePage extends StatelessWidget {
                 ? ResponsiveGridList(
                     desiredItemWidth: 200,
                     minSpacing: 10,
-                    children: _getGroupWidgets(
-                        context, snapshot.data as List<models.Group>),
+                    children: _getGroupWidgets(context, snapshot.data as List<models.Group>),
                   )
                 : Center(
                     child: Wrap(
@@ -69,8 +68,7 @@ class PagePage extends StatelessWidget {
     );
   }
 
-  List<Widget> _getGroupWidgets(
-      BuildContext context, List<models.Group>? groups) {
+  List<Widget> _getGroupWidgets(BuildContext context, List<models.Group>? groups) {
     if (groups == null) {
       return <Widget>[];
     }

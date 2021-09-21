@@ -11,16 +11,19 @@ class EditPageDialog extends StatefulWidget {
   const EditPageDialog({Key? key, required this.page}) : super(key: key);
 
   @override
-  _EditPageDialogState createState() => _EditPageDialogState();
+  _EditPageDialogState createState() => _EditPageDialogState(page: page);
 }
 
 class _EditPageDialogState extends State<EditPageDialog> {
+  final models.Page page;
+  _EditPageDialogState({required this.page});
+
   @override
   Widget build(BuildContext context) {
     final _editPageFormKey = GlobalKey<FormState>();
 
     return SimpleDialog(
-      title: Text("Seite " + widget.page.label + " bearbeiten"),
+      title: Text("Seite " + page.label + " bearbeiten"),
       children: [
         Form(
           key: _editPageFormKey,
@@ -31,7 +34,7 @@ class _EditPageDialogState extends State<EditPageDialog> {
                   labelText: "Name",
                   prefixIcon: Icon(Icons.dns_outlined),
                 ),
-                initialValue: widget.page.label,
+                initialValue: page.label,
                 validator: (value) {
                   if (value == null) {
                     return "Um fortzufahren wird ein Name benötigt.";
@@ -40,7 +43,7 @@ class _EditPageDialogState extends State<EditPageDialog> {
                   return null;
                 },
                 onChanged: (value) {
-                  widget.page.label = value;
+                  page.label = value;
                 },
               ),
               IconButton(
@@ -49,10 +52,10 @@ class _EditPageDialogState extends State<EditPageDialog> {
                 onPressed: () async {
                   var iconData = await FlutterIconPicker.showIconPicker(context, iconPackMode: IconPack.fontAwesomeIcons) ?? Icons.check;
                   setState(() {
-                    widget.page.icon = iconData;
+                    page.icon = iconData;
                   });
                 },
-                icon: Icon(widget.page.icon),
+                icon: Icon(page.icon),
               ),
               ButtonBar(
                 children: [
@@ -66,7 +69,7 @@ class _EditPageDialogState extends State<EditPageDialog> {
                       EasyLoading.show(status: 'Seite bearbeiten ...');
                       if (_editPageFormKey.currentState!.validate()) {
                         try {
-                          await Provider.of<ApiProvider>(context, listen: false).editPage(widget.page);
+                          await Provider.of<ApiProvider>(context, listen: false).editPage(page);
 
                           Navigator.of(context, rootNavigator: true).pop();
                         } catch (e) {

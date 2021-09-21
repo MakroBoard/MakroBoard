@@ -38,6 +38,9 @@ class ControlPanel extends StatelessWidget {
                       case GroupContextMenu.edit:
                         _showEditPanelDialog(context, control, panel!);
                         break;
+                      case GroupContextMenu.addPanel:
+                        // Not available in this case.
+                        break;
                     }
                   },
                   itemBuilder: (context) => [

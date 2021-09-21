@@ -6,13 +6,25 @@ class MakroBoardAppBar extends AppBar {
   final String titleText;
   final bool showAdminPanel;
   final List<Widget> additionalActions;
-  MakroBoardAppBar(
-      {required this.context,
-      required this.titleText,
-      this.showAdminPanel = true,
-      this.additionalActions = const <Widget>[]})
-      : super(
-          title: Text(titleText),
+  final Widget? icon;
+
+  MakroBoardAppBar({
+    required this.context,
+    required this.titleText,
+    this.showAdminPanel = true,
+    this.additionalActions = const <Widget>[],
+    this.icon,
+  }) : super(
+          title: Row(
+            children: [
+              if (icon != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: icon,
+                ),
+              Text(titleText),
+            ],
+          ),
           actions: additionalActions +
               <Widget>[
                 TextButton(
@@ -21,8 +33,7 @@ class MakroBoardAppBar extends AppBar {
                     size: 24,
                     color: Colors.white,
                   ),
-                  onPressed: () =>
-                      MakroBoardRouter.of(context)!.updateShowSettings(true),
+                  onPressed: () => MakroBoardRouter.of(context)!.updateShowSettings(true),
                 ),
                 if (showAdminPanel)
                   TextButton(
@@ -31,8 +42,7 @@ class MakroBoardAppBar extends AppBar {
                       size: 24,
                       color: Colors.white,
                     ),
-                    onPressed: () =>
-                        MakroBoardRouter.of(context)!.updateShowConfig(true),
+                    onPressed: () => MakroBoardRouter.of(context)!.updateShowConfig(true),
                   )
               ],
         );

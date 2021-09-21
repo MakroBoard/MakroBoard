@@ -33,6 +33,7 @@ class _CreatePageDialogState extends State<CreatePageDialog> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextFormField(
+                  initialValue: pageLabel,
                   decoration: InputDecoration(
                     // border: OutlineInputBorder(),
                     labelText: "Name",

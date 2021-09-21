@@ -10,7 +10,6 @@ import 'package:makro_board_client/pages/splash_screen.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/widgets/MakroBoardRouter.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'pages/homePage.dart';
