@@ -17,5 +17,13 @@
   },
   "error_portrequired": "Port is requried to continue.",
   "error_systemportsnotallowed": "System ports are not allowed. Minimal port: 1024",
-  "error_dynamicportsnotallowed": "Dynamic ports are not allowed. Maximum port: 49151"
+  "error_dynamicportsnotallowed": "Dynamic ports are not allowed. Maximum port: 49151",
+  "error_network_unexpectedresponse": "The response from the host is malformed. ErrorCode: {errorCode}/{reason}",
+  "@error_network_unexpectedresponse": {
+    "placeholders": {
+      "errorCode": {},
+      "reason": {}
+    }
+  },
+  "error_unexpected": "Unexpected Error"
 }

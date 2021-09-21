@@ -62,6 +62,7 @@ class _SnackBarNotificationState extends State<SnackBarNotification> {
   BuildContext? _context;
   @override
   Widget build(BuildContext context) {
+    _context = context;
     return widget.child;
   }
 

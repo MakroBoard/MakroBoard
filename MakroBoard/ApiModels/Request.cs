@@ -119,6 +119,27 @@ namespace MakroBoard.ApiModels
 
     }
 
+
+    public class EditPageRequest : Request
+    {
+        public Page Page { get; set; }
+    }
+
+    public class EditPageResponse : Response
+    {
+
+    }
+
+    public class RemovePageRequest : Request
+    {
+        public int PageId { get; set; }
+    }
+
+    public class RemovePageResponse : Response
+    {
+
+    }
+
     public class AddGroupRequest : Request
     {
         public Group Group { get; set; }

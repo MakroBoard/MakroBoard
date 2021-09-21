@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/material.dart' as material;
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:http/http.dart' as http;
 import 'package:makro_board_client/models/api/Request.dart';
@@ -16,6 +17,7 @@ import 'package:makro_board_client/models/Plugin.dart';
 import 'package:makro_board_client/models/ViewConfigValue.dart';
 import 'package:makro_board_client/models/client.dart';
 import 'package:makro_board_client/models/page.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'env_provider.dart';
 
@@ -28,12 +30,14 @@ class ApiProvider {
   static const String getControlsUrl = "/api/controls/availablecontrols";
   static const String executeControlUrl = "/api/controls/execute";
   static const String addPageUrl = "/api/layout/addpage";
+  static const String editPageUrl = "/api/layout/editpage";
   static const String addGroupUrl = "/api/layout/addgroup";
   static const String editGroupUrl = "/api/layout/editgroup";
   static const String addPanelUrl = "/api/layout/addpanel";
   static const String editPanelUrl = "/api/layout/editpanel";
   static const String removeGroupUrl = "/api/layout/removegroup";
   static const String removePanelUrl = "/api/layout/removepanel";
+  static const String removePageUrl = "/api/layout/removepage";
 
   Map<String, String> get _defaultHeader =>
       <String, String>{HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""), 'Content-Type': 'application/json; charset=UTF-8', 'Accept-Language': _locale ?? "*"};
@@ -58,10 +62,15 @@ class ApiProvider {
 
   final EnvProvider envProvider;
   final NotificationProvider notificationProvider;
+  material.BuildContext? currentContext;
   ApiProvider({
     required this.envProvider, // ← The parameters of the constructur will define the generated binding
     required this.notificationProvider, // ← The parameters of the constructur will define the generated binding
   });
+
+  void updateContext(material.BuildContext context) {
+    currentContext = context;
+  }
 
   Future<bool> initialize(Uri serverUri, String locale) async {
     try {
@@ -82,6 +91,7 @@ class ApiProvider {
       _connection!.on('AddOrUpdateToken', _onAddOrUpdateToken);
       _connection!.on('RemoveClient', _onRemoveClient);
       _connection!.on('AddOrUpdatePage', _onAddOrUpdatePage);
+      _connection!.on('RemovePage', _onRemovePage);
       _connection!.on('AddOrUpdateGroup', _onAddOrUpdateGroup);
       _connection!.on('RemoveGroup', _onRemoveGroup);
       _connection!.on('AddOrUpdatePanel', _onAddOrUpdatePanel);
@@ -150,6 +160,21 @@ class ApiProvider {
       } else {
         var index = currentPages.indexOf(existingPage);
         currentPages[index] = newPage;
+      }
+
+      streamPageController.add(currentPages);
+    }
+  }
+
+  void _onRemovePage(pages) async {
+    for (var page in pages) {
+      var existingPage = currentPages.firstWhere(
+        (element) => element.id == page["id"],
+        orElse: () => Page.empty(),
+      );
+
+      if (!existingPage.isEmpty) {
+        currentPages.remove(existingPage);
       }
 
       streamPageController.add(currentPages);
@@ -404,10 +429,13 @@ class ApiProvider {
       // ));
 
       if (result != null && result.status == ResponseStatus.Ok) {
-        notificationProvider.addSnackBarNotification(Notification(
-          text: result.result,
-          notificationType: NotificationType.success,
-        ));
+        notificationProvider.addSnackBarNotification(
+          Notification(
+            text: result.result,
+            notificationType: NotificationType.success,
+            duration: Duration(seconds: 2),
+          ),
+        );
       }
 
       if (_checkResponse(result)) {
@@ -427,6 +455,31 @@ class ApiProvider {
 
     var result = _handleResponse(jsonResponse, (r) => AddPageResponse.fromJson(r));
     _checkResponse(result);
+  }
+
+  Future editPage(Page page) async {
+    var jsonResponse = await http.post(
+      _serverUri!.replace(path: editPageUrl),
+      headers: _defaultHeader,
+      body: json.encode(EditPageRequest(page)),
+    );
+
+    var result = _handleResponse(jsonResponse, (r) => EditPageResponse.fromJson(r));
+    _checkResponse(result);
+  }
+
+  Future removePage(Page page) async {
+    try {
+      var jsonResponse = await http.post(
+        _serverUri!.replace(path: removePageUrl),
+        headers: _defaultHeader,
+        body: json.encode(RemovePageRequest(page.id)),
+      );
+      var result = _handleResponse(jsonResponse, (r) => RemovePageResponse.fromJson(r));
+      _checkResponse(result);
+    } on Exception catch (e) {
+      print('never reached' + e.toString());
+    }
   }
 
   Future addGroup(Group group) async {
@@ -514,6 +567,12 @@ class ApiProvider {
         ));
       }
       return result;
+    } else if (currentContext != null) {
+      notificationProvider.addSnackBarNotification(Notification(
+        text: AppLocalizations.of(currentContext!)!.error_network_unexpectedresponse(response.statusCode, response.reasonPhrase ?? AppLocalizations.of(currentContext!)!.error_unexpected),
+        notificationType: NotificationType.error,
+        duration: Duration(seconds: 4),
+      ));
     }
 
     return null;
