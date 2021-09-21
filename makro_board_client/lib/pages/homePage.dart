@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:makro_board_client/dialogs/delete_dialog.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/widgets/EditModeSwitch.dart';
 import 'package:makro_board_client/widgets/GlobalSettings.dart';
@@ -70,6 +71,22 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  Future _showremovePageDialog(BuildContext context, models.Page page) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return DeleteDialog(
+          title: "Seite Löschen",
+          deleteText:
+              "Soll die Seite ${page.symbolicName} wirklich gelöscht werden?",
+          executeText: "Gruppe ${page.symbolicName} wird gelöscht ...",
+          deleteCallback: () =>
+              Provider.of<ApiProvider>(context, listen: false).removePage(page),
+        );
+      },
+    );
+  }
+
   List<Widget> _getPageWidgets(BuildContext context, List<models.Page>? pages) {
     if (pages == null) {
       return <Widget>[];
@@ -93,7 +110,7 @@ class HomePage extends StatelessWidget {
                         onSelected: (selectedValue) {
                           switch (selectedValue) {
                             case PageContextMenu.delete:
-                              // _removeGroupDialog(context, group);
+                              _showremovePageDialog(context, page);
                               break;
                             case PageContextMenu.edit:
                               _showEditPageDialog(context, page);

@@ -227,6 +227,29 @@ class EditPageResponse extends Response {
 }
 
 @JsonSerializable()
+class RemovePageRequest extends Request {
+  final int pageId;
+
+  RemovePageRequest(this.pageId);
+
+  factory RemovePageRequest.fromJson(Map<String, dynamic> json) =>
+      _$RemovePageRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RemovePageRequestToJson(this);
+}
+
+@JsonSerializable()
+class RemovePageResponse extends Response {
+  RemovePageResponse(ResponseStatus status, String? error)
+      : super(status, error);
+
+  factory RemovePageResponse.fromJson(Map<String, dynamic> json) =>
+      _$RemovePageResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$RemovePageResponseToJson(this);
+}
+
+@JsonSerializable()
 class AddGroupRequest extends Request {
   final Group group;
 
