@@ -41,7 +41,7 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("addpage")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult<ApiModels.AddPageResponse>> PostAddPAge([FromBody] ApiModels.AddPageRequest addPageRequest)
+        public async Task<ActionResult<AddPageResponse>> PostAddPAge([FromBody] AddPageRequest addPageRequest)
         {
             var newPage = new Data.Page
             {
@@ -59,6 +59,53 @@ namespace MakroBoard.Controllers
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, newPage);
             return Ok(new AddPageResponse());
         }
+
+
+        /// <summary>
+        /// POST: api/layout/addpage
+        /// </summary>
+        [HttpPost("editpage")]
+        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        public async Task<ActionResult<EditPageResponse>> PostAddPanel([FromBody] EditPageRequest editPageRequest)
+        {
+            var existingPage = await _Context.Pages.Where(x => x.ID == editPageRequest.Page.Id).Include(x => x.Groups).ThenInclude(g => g.Panels).ThenInclude(p=>p.ConfigParameters).FirstAsync();
+            if (existingPage == null)
+            {
+                return Conflict(new RemovePanelResponse { Status = ResponseStatus.Error, Error = "Panel to delete not found" });
+            }
+
+            existingPage.Label = editPageRequest.Page.Label;
+            existingPage.Icon = editPageRequest.Page.Icon;
+           
+            await _Context.SaveChangesAsync();
+
+            _logger.LogDebug("Edit Page {ID} => {Label}", existingPage.ID, existingPage.Label);
+
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, existingPage);
+
+            return Ok(new AddPanelResponse());
+        }
+
+        [HttpPost("removepanel")]
+        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        public async Task<ActionResult<RemovePageResponse>> PostRemoveGroup([FromBody] RemovePageRequest removePanelRequest)
+        {
+            // Include Panels to cascade delete 
+            var pageToDelete = await _Context.Pages.Where(x => x.ID == removePanelRequest.PageId).Include(x=>x.Groups).ThenInclude(g=>g.Panels).FirstAsync();
+            if (pageToDelete == null)
+            {
+                return Conflict(new RemovePanelResponse { Status = ResponseStatus.Error, Error = "Page to delete not found" });
+            }
+
+            _Context.Pages.Remove(pageToDelete);
+            await _Context.SaveChangesAsync();
+
+            _logger.LogDebug("Removed Page {Label}", pageToDelete.Label);
+
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.RemovePage, pageToDelete);
+            return Ok(new RemovePanelResponse());
+        }
+
 
         /// <summary>
         /// POST: api/layout/addgroup

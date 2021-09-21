@@ -80,51 +80,44 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  if (GlobalSettings.of(context)?.editMode == true)
-                    ListTile(
-                      onTap: () {
-                        selectedPageChanged(page);
-                      },
-                      title: Text(page.label),
-                      leading: Icon(page.icon),
-                      trailing: PopupMenuButton<PageContextMenu>(
-                        onSelected: (selectedValue) {
-                          switch (selectedValue) {
-                            case PageContextMenu.delete:
-                              // _removeGroupDialog(context, group);
-                              break;
-                            case PageContextMenu.edit:
-                              _showEditPageDialog(context, page);
-                              break;
-                          }
-                        },
-                        itemBuilder: (context) => [
-                          const PopupMenuItem<PageContextMenu>(
-                            value: PageContextMenu.delete,
-                            child: ListTile(
-                              leading: Icon(Icons.delete),
-                              title: Text('Seite Löschen'),
-                            ),
+                  ListTile(
+                    onTap: () {
+                      selectedPageChanged(page);
+                    },
+                    title: Text(page.label),
+                    leading: Icon(page.icon),
+                    trailing: (GlobalSettings.of(context)?.editMode == false)
+                        ? null
+                        : PopupMenuButton<PageContextMenu>(
+                            onSelected: (selectedValue) {
+                              switch (selectedValue) {
+                                case PageContextMenu.delete:
+                                  // _removeGroupDialog(context, group);
+                                  break;
+                                case PageContextMenu.edit:
+                                  _showEditPageDialog(context, page);
+                                  break;
+                              }
+                            },
+                            itemBuilder: (context) => [
+                              const PopupMenuItem<PageContextMenu>(
+                                value: PageContextMenu.delete,
+                                child: ListTile(
+                                  leading: Icon(Icons.delete),
+                                  title: Text('Seite Löschen'),
+                                ),
+                              ),
+                              const PopupMenuItem<PageContextMenu>(
+                                value: PageContextMenu.edit,
+                                child: ListTile(
+                                  leading: Icon(Icons.edit),
+                                  title: Text('Seite bearbeiten'),
+                                ),
+                              ),
+                            ],
+                            icon: Icon(Icons.more_vert),
                           ),
-                          const PopupMenuItem<PageContextMenu>(
-                            value: PageContextMenu.edit,
-                            child: ListTile(
-                              leading: Icon(Icons.edit),
-                              title: Text('Seite bearbeiten'),
-                            ),
-                          ),
-                        ],
-                        icon: Icon(Icons.more_vert),
-                      ),
-                    ),
-                  if (GlobalSettings.of(context)?.editMode == false)
-                    ListTile(
-                      onTap: () {
-                        selectedPageChanged(page);
-                      },
-                      title: Text(page.label),
-                      leading: Icon(page.icon),
-                    ),
+                  ),
                 ],
               ),
             ),

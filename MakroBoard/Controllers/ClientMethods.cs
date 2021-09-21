@@ -7,6 +7,7 @@
         public const string AddOrUpdateToken = "AddOrUpdateToken";
         public const string RemoveClient = "RemoveClient";
         public const string AddOrUpdatePage = "AddOrUpdatePage";
+        public const string RemovePage = "RemovePage";
         public const string AddOrUpdateGroup = "AddOrUpdateGroup"; 
         public const string RemoveGroup = "RemoveGroup";
         public const string AddOrUpdatePanel = "AddOrUpdatePanel";
