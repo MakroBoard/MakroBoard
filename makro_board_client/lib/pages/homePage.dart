@@ -82,6 +82,9 @@ class HomePage extends StatelessWidget {
                 children: [
                   if (GlobalSettings.of(context)?.editMode == true)
                     ListTile(
+                      onTap: () {
+                        selectedPageChanged(page);
+                      },
                       title: Text(page.label),
                       leading: Icon(page.icon),
                       trailing: PopupMenuButton<PageContextMenu>(
@@ -116,6 +119,9 @@ class HomePage extends StatelessWidget {
                     ),
                   if (GlobalSettings.of(context)?.editMode == false)
                     ListTile(
+                      onTap: () {
+                        selectedPageChanged(page);
+                      },
                       title: Text(page.label),
                       leading: Icon(page.icon),
                     ),
