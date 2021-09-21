@@ -117,7 +117,10 @@ class _MakroBoardAppState extends State<MakroBoardApp> {
           return route.didPop(result);
         },
       ),
-      builder: EasyLoading.init(),
+      builder: (context, widget) {
+        Provider.of<ApiProvider>(context, listen: false).updateContext(context);
+        return EasyLoading.init()(context, widget);
+      },
     );
   }
 
