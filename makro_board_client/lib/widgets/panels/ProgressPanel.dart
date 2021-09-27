@@ -13,7 +13,7 @@ class ProgressPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProgressBarControl(
       minValue: configValues.firstWhere(
-        (element) => element.symbolicName == "min",
+        (element) => element.symbolicName.split(".").last == "min",
         orElse: () {
           var newConfigValue = ViewConfigValue(symbolicName: "min", defaultValue: null);
           configValues.add(newConfigValue);
@@ -21,7 +21,7 @@ class ProgressPanel extends StatelessWidget {
         },
       ),
       maxValue: configValues.firstWhere(
-        (element) => element.symbolicName == "max",
+        (element) => element.symbolicName.split(".").last == "max",
         orElse: () {
           var newConfigValue = ViewConfigValue(symbolicName: "max", defaultValue: null);
           configValues.add(newConfigValue);
@@ -29,7 +29,7 @@ class ProgressPanel extends StatelessWidget {
         },
       ),
       value: configValues.firstWhere(
-        (element) => element.symbolicName == "value",
+        (element) => element.symbolicName.split(".").last == "value",
         orElse: () {
           var newConfigValue = ViewConfigValue(symbolicName: "value", defaultValue: null);
           configValues.add(newConfigValue);

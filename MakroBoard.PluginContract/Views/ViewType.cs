@@ -7,6 +7,7 @@
         Image,
         Slider,
         Text,
-        ProgressBar
+        ProgressBar,
+        List
     }
 }

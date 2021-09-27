@@ -17,26 +17,30 @@ namespace MakroBoard.ApiModels
 
     public class Control
     {
-        public Control(string symbolicName, View view, ConfigParameters configParameters)
+        public Control(string symbolicName, View view, ConfigParameters configParameters, IEnumerable<Control> subControls)
         {
             SymbolicName = symbolicName;
             View = view;
             ConfigParameters = configParameters;
+            SubControls = subControls;
         }
 
         public string SymbolicName { get; }
 
         public View View { get; }
         public ConfigParameters ConfigParameters { get; }
+
+        public IEnumerable<Control> SubControls { get; }
     }
 
     public class View
     {
-        public View(string viewType, ConfigParameters configParameters, ConfigParameters pluginParameters)
+        public View(string viewType, ConfigParameters configParameters, ConfigParameters pluginParameters, IList<View> subViews)
         {
             ViewType = viewType;
             ConfigParameters = configParameters;
             PluginParameters = pluginParameters;
+            SubViews = subViews;
         }
 
         public string ViewType { get; }
@@ -45,6 +49,8 @@ namespace MakroBoard.ApiModels
 
         public ConfigParameters ConfigParameters { get; }
         public ConfigParameters PluginParameters { get; }
+
+        public IList<View> SubViews { get; }
     }
 
     public class ConfigParameter

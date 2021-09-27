@@ -302,9 +302,10 @@ class ApiProvider {
             orElse: () => Panel.empty(),
           );
           if (!existingPanel.isEmpty) {
+            var controlName = panelData["controlName"];
             var values = panelData["values"] as List;
             for (var value in values) {
-              var symbolicName = value["symbolicName"];
+              var symbolicName = controlName + "." + value["symbolicName"];
               var parameterValue = value["value"];
 
               log('UpdatePanelData: $symbolicName => $parameterValue');

@@ -135,16 +135,27 @@ namespace MakroBoard.Controllers
                     return Ok(new ExecuteResponse(string.Empty) { Status = ResponseStatus.Error, Error = $"Failed to execute: { e.Message }" });
                 }
             }
-   
+
             return Ok(new ExecuteResponse(result));
         }
 
 
         private static MakroBoard.ApiModels.Plugin CreatePluginModel(string pluginName, IEnumerable<PluginContract.Control> controls)
         {
-            return new ApiModels.Plugin(pluginName, controls.Select(x => new ApiModels.Control(x.SymbolicName,
-                new ApiModels.View(x.View.Type.ToString(), ToApiConfigParameters(x.View.ConfigParameters), ToApiConfigParameters(x.View.PluginParameters)),
-                ToApiConfigParameters(x.ConfigParameters))));
+            return new ApiModels.Plugin(pluginName, controls.Select(ToApiControl));
+        }
+
+        private static MakroBoard.ApiModels.Control ToApiControl(PluginContract.Control control)
+        {
+            return new ApiModels.Control(control.SymbolicName, ToApiView(control.View), ToApiConfigParameters(control.ConfigParameters), control is PluginContract.ListControl listControl ? listControl.SubControls.Select(ToApiControl) : null);
+        }
+
+        private static MakroBoard.ApiModels.View ToApiView(PluginContract.Views.View view)
+        {
+            return new ApiModels.View(view.Type.ToString(),
+                ToApiConfigParameters(view.ConfigParameters),
+                ToApiConfigParameters(view.PluginParameters),
+                view is ListView lv ? lv.SubViews.Select(ToApiView).ToList() : null);
         }
 
         private static MakroBoard.ApiModels.ConfigParameters ToApiConfigParameters(PluginContract.Parameters.ConfigParameters configParameters)

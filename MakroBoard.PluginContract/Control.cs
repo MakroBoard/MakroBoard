@@ -16,7 +16,6 @@ namespace MakroBoard.PluginContract
 
         protected Control()
         {
-
             ConfigParameters = new ConfigParameters(_ConfigParameters);
         }
 
@@ -39,6 +38,11 @@ namespace MakroBoard.PluginContract
         }
 
         public void Subscribe(ParameterValues configParameters, int panelId, Action<PanelChangedEventArgs> onControlChanged)
+        {
+            InternalSubscribe(configParameters, panelId, onControlChanged);
+        }
+
+        internal virtual void InternalSubscribe(ParameterValues configParameters, int panelId, Action<PanelChangedEventArgs> onControlChanged)
         {
             _Subscriptions.TryAdd(panelId, onControlChanged);
             Task.Run(async () =>

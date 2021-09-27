@@ -132,7 +132,7 @@ namespace MakroBoard.Plugin
 
         private void OnControlChanged(PanelChangedEventArgs panelChangedEventArgs)
         {
-            _ = _HubContext.Clients.All.SendAsync(ClientMethods.UpdatePanelData, new PanelData(panelChangedEventArgs.PanelId, panelChangedEventArgs.ParameterValues.Select(x => new ConfigValue(x.ConfigParameter.SymbolicName, x.UntypedValue)).ToList()));
+            _ = _HubContext.Clients.All.SendAsync(ClientMethods.UpdatePanelData, new PanelData(panelChangedEventArgs.PanelId, panelChangedEventArgs.Control.SymbolicName, panelChangedEventArgs.ParameterValues.Select(x => new ConfigValue(x.ConfigParameter.SymbolicName, x.UntypedValue)).ToList()));
         }
     }
 }

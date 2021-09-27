@@ -1,14 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <OutputPath>..\PluginOutput\MakroBoard.Plugin.SystemInfo</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<OutputPath>..\PluginOutput\MakroBoard.Plugin.SystemInfo</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MakroBoard.PluginContract\MakroBoard.PluginContract.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Universe.CpuUsage" Version="2.2.497.598" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\MakroBoard.PluginContract\MakroBoard.PluginContract.csproj" />
+	</ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:makro_board_client/dialogs/delete_dialog.dart';
 import 'package:makro_board_client/dialogs/edit_panel_dialog.dart';
 import 'package:makro_board_client/models/Control.dart';
+import 'package:makro_board_client/models/View.dart';
 import 'package:makro_board_client/models/ViewConfigValue.dart';
 import 'package:makro_board_client/models/panel.dart';
 import 'package:makro_board_client/pages/pagePage.dart';
@@ -68,14 +69,27 @@ class ControlPanel extends StatelessWidget {
   }
 
   Widget _createControl(BuildContext context, Control control, List<ViewConfigValue> configValues) {
-    switch (control.view.viewType) {
+    return _createControlWithView(context, control, control.view, configValues);
+  }
+
+  Widget _createControlWithView(BuildContext context, Control control, View view, List<ViewConfigValue> configValues) {
+    switch (view.viewType) {
       case "Button":
         return ButtonPanel(configValues: configValues, control: control);
       case "Text":
         return TextPanel(configValues: configValues);
       case "ProgressBar":
         return ProgressPanel(configValues: configValues);
-
+      case "List":
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: control.view.subViews!.length,
+          itemBuilder: (context, index) {
+            var subControl = control.subControls![index];
+            return _createControlWithView(
+                context, subControl, control.view.subViews![index], configValues.where((element) => element.symbolicName.split(".").first == subControl.symbolicName).toList());
+          },
+        );
       default:
         return Text("Missing Control: " + control.view.viewType);
     }

@@ -12,9 +12,13 @@ namespace MakroBoard.Plugin.SystemInfo
         {
             if (_Controls == null)
             {
+                var memoryControl = new MemoryControl();
+                var cpuControl = new ProcessCpuControl();
                 _Controls = new List<Control>
                 {
-                    new MemoryControl()
+                    memoryControl,
+                    cpuControl,
+                    new ListControl("SystemInfo", new Control[]{memoryControl, cpuControl} )
                 };
             }
 

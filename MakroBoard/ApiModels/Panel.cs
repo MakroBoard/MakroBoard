@@ -27,13 +27,17 @@ namespace MakroBoard.ApiModels
 
     public class PanelData
     {
-        public PanelData(int panelId, List<ConfigValue> values)
+        public PanelData(int panelId, string controlName, List<ConfigValue> values)
         {
             PanelId = panelId;
+            ControlName = controlName;
             Values = values;
         }
 
         public int PanelId { get; }
+
+        public string ControlName { get; }
+
         public List<ConfigValue> Values { get; }
     }
 }
