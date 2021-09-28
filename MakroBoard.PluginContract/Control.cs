@@ -3,6 +3,7 @@ using NLog;
 using MakroBoard.PluginContract.Parameters;
 using MakroBoard.PluginContract.Views;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 
@@ -13,6 +14,7 @@ namespace MakroBoard.PluginContract
         private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
         private readonly IList<ConfigParameter> _ConfigParameters = new List<ConfigParameter>();
         private readonly IDictionary<int, Action<PanelChangedEventArgs>> _Subscriptions = new ConcurrentDictionary<int, Action<PanelChangedEventArgs>>();
+        private ParameterValues _LastParameterValues;
 
         protected Control()
         {
@@ -58,8 +60,15 @@ namespace MakroBoard.PluginContract
 
         }
 
-        protected void OnControlChanged(ParameterValues parameterValues)
+        protected void OnControlChanged(ParameterValues parameterValues, bool force = false)
         {
+            if (!force && _LastParameterValues != null && _LastParameterValues.Select(x => x.UntypedValue).SequenceEqual(parameterValues.Select(x => x.UntypedValue)))
+            {
+                return;
+            }
+
+            _LastParameterValues = parameterValues;
+
             foreach (var subscription in _Subscriptions)
             {
                 try

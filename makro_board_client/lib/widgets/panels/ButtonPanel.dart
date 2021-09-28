@@ -18,7 +18,7 @@ class ButtonPanel extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ChangeNotifierProvider.value(
-          value: configValues.firstWhere((element) => element.symbolicName == "label"),
+          value: configValues.firstWhere((element) => element.symbolicName.split(".").last == "label"),
           builder: (context, _) => Text(context.watch<ViewConfigValue>().value.toString()),
         ),
       ),

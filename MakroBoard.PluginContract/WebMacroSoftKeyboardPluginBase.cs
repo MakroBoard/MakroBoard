@@ -15,7 +15,10 @@ namespace MakroBoard.PluginContract
 
         public virtual async Task<Control> GetControl(string symbolicName)
         {
-            return await Task.FromResult<Control>(null);
+            var controls = await GetControls();
+            var control = controls.FirstOrDefault(x => x.SymbolicName.Equals(symbolicName, System.StringComparison.OrdinalIgnoreCase));
+
+            return await Task.FromResult(control).ConfigureAwait(false);
         }
 
         public virtual async Task<IEnumerable<Control>> GetControls()

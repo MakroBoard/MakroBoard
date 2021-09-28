@@ -1,19 +1,25 @@
-﻿using System;
+﻿using MakroBoard.PluginContract.Parameters;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MakroBoard.PluginContract.Views
 {
-    public sealed class SlideView : View
+    public sealed class SliderView : View
     {
         private readonly Func<double, string> _Execute;
 
-        public SlideView(double min, double max, [NotNull] Func<double, string> execute) : base(string.Empty)
+        public SliderView(double min, double max, [NotNull] Func<double, string> execute) : base(string.Empty)
         {
             Min = min;
             Max = max;
             _Execute = execute;
+
+            ValueParameter = new IntConfigParameter("value", 0);
+            AddPluginParameter(ValueParameter);
         }
 
+        public IntConfigParameter ValueParameter { get; }
+        
         public override ViewType Type => ViewType.Slider;
 
         public double Min { get; }

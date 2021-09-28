@@ -10,7 +10,7 @@ class TextPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ChangeNotifierProvider.value(
-        value: configValues.firstWhere((element) => element.symbolicName == "text", orElse: () => new ViewConfigValue(symbolicName: "text")),
+        value: configValues.firstWhere((element) => element.symbolicName.split(".").last == "text", orElse: () => new ViewConfigValue(symbolicName: "text")),
         builder: (context, _) => Text(context.watch<ViewConfigValue>().value.toString()),
       ),
     );

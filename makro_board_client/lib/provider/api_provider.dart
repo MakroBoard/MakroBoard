@@ -82,8 +82,8 @@ class ApiProvider {
           .withUrl(
               url,
               HttpConnectionOptions(
-                logging: (level, message) => print(message),
-              ))
+                  // logging: (level, message) => print(message),
+                  ))
           .withAutomaticReconnect()
           .build();
 

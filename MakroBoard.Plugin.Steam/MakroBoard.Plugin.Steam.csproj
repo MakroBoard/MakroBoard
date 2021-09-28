@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+	  <OutputPath>..\PluginOutput\MakroBoard.Plugin.Steam</OutputPath>
+	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	  <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MakroBoard.PluginContract\MakroBoard.PluginContract.csproj" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="SteamWebAPI2" Version="4.3.1" />
+	</ItemGroup>
+</Project>
