@@ -6,6 +6,8 @@ updates:
     schedule:
       interval: "daily"
       time: "11:00"  
+    open-pull-requests-limit: 20
+
       
   # Enable version updates for nuget
   - package-ecosystem: "nuget"
@@ -13,5 +15,6 @@ updates:
     schedule:
       interval: "daily"
       time: "11:00"
+    open-pull-requests-limit: 20
 
 
