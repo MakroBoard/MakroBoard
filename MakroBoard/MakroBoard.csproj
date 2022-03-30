@@ -24,7 +24,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="McMaster.NETCore.Plugins" Version="1.4.0" />
-		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.0-preview.3.21201.13" />
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.3" />
 		<PackageReference Include="BouncyCastle" Version="1.8.9">
 			<NoWarn>NU1701</NoWarn>
 		</PackageReference>
