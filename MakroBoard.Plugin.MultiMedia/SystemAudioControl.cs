@@ -1,7 +1,6 @@
 ﻿using MakroBoard.PluginContract;
 using MakroBoard.PluginContract.Parameters;
 using MakroBoard.PluginContract.Views;
-using System;
 using System.Timers;
 
 namespace MakroBoard.Plugin.Clock
