@@ -13,9 +13,12 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'pages/homePage.dart';
-import 'theme/theme.dart';
 
 class MakroBoardApp extends StatefulWidget {
+  final ThemeData? theme;
+
+  const MakroBoardApp({Key? key, required this.theme}) : super(key: key);
+
   // This widget is the root of your application.
   @override
   _MakroBoardAppState createState() => _MakroBoardAppState();
@@ -50,7 +53,7 @@ class _MakroBoardAppState extends State<MakroBoardApp> {
       //   // is not restarted.
       //   primarySwatch: Colors.blue,
       // ),
-      theme: makroBoardTheme,
+      theme: widget.theme,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: Navigator(
