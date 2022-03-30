@@ -52,7 +52,7 @@ class _EditPageDialogState extends State<EditPageDialog> {
                 onPressed: () async {
                   var iconData = await FlutterIconPicker.showIconPicker(
                         context,
-                        iconPackMode: IconPack.material,
+                        iconPackModes: [IconPack.material],
                         adaptiveDialog: true,
                       ) ??
                       Icons.check;

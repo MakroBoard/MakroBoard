@@ -54,7 +54,7 @@ class _CreatePageDialogState extends State<CreatePageDialog> {
                   padding: const EdgeInsets.all(32.0),
                   tooltip: "Icon wählen",
                   onPressed: () async {
-                    var iconData = await FlutterIconPicker.showIconPicker(context, iconPackMode: IconPack.fontAwesomeIcons) ?? Icons.check;
+                    var iconData = await FlutterIconPicker.showIconPicker(context, iconPackModes: [IconPack.fontAwesomeIcons]) ?? Icons.check;
                     setState(() {
                       icon = iconData;
                     });
