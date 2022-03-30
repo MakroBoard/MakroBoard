@@ -24,7 +24,7 @@ There is no released version so far, you have to follow the development steps be
 ### Requirements
 
 - IDE of your choise (We recommend VSCodium / VSCode / Visual Studio)
-- [Dotnet 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/5.0) for your OS
+- [Dotnet 6.0 SDK](https://dotnet.microsoft.com/download/dotnet/6.0) for your OS
 - [flutter](https://flutter.dev/docs/get-started/install) for your OS
 
 ### Optioal: Vscode Plugins
@@ -45,7 +45,7 @@ You can install them with:
 
 ### Building and starting the application
 
-We recommend to open 2 instances of vscode (or one vscode and one vs imstande), one in the root directory of the project and one in the makro_board_client directory.
+We recommend to open 2 instances of vscode (or one vscode and one vs instance), one in the root directory of the project and one in the makro_board_client directory.
 
 - to install the flutter dependencies go to the makro_board_client folder and run `flutter pub get`
 - to install the dotnet dependencies go to the projects root folder and run `dotnet restore`
