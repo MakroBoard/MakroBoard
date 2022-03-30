@@ -57,15 +57,28 @@ namespace MakroBoard.Plugin
             var plugins = new List<IMakroBoardPlugin>();
 
 
-            // Create an instance of plugin types
-            foreach (var loader in loaders)
-            {
-                foreach (var pluginType in loader.LoadDefaultAssembly().GetTypes().Where(t => typeof(IMakroBoardPlugin).IsAssignableFrom(t) && !t.IsAbstract))
+
+            try
+            {  // Create an instance of plugin types
+                foreach (var loader in loaders)
                 {
-                    _Logger.Info($"Loading Plugin {pluginType.Name}");
-                    // This assumes the implementation of IPlugin has a parameterless constructor
-                    plugins.Add((IMakroBoardPlugin)Activator.CreateInstance(pluginType));
+                    foreach (var pluginType in loader.LoadDefaultAssembly().GetTypes().Where(t => typeof(IMakroBoardPlugin).IsAssignableFrom(t) && !t.IsAbstract))
+                    {
+                        try
+                        {
+                            _Logger.Info($"Loading Plugin {pluginType.Name}");
+                            // This assumes the implementation of IPlugin has a parameterless constructor
+                            plugins.Add((IMakroBoardPlugin)Activator.CreateInstance(pluginType));
+                        }
+                        catch (Exception e)
+                        {
+                            _Logger.Error(e, $"Error Loading Plugin {pluginType.Name}");
+                        }
+                    }
                 }
+            }
+            catch (Exception e)
+            {
             }
 
             Plugins = plugins;
