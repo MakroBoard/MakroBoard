@@ -8,7 +8,7 @@ namespace MakroBoard.Plugin.Clock
     public class SystemAudioControl : Control
     {
         private readonly SliderView _SliderView;
-        private Timer  ;
+        private Timer _Timer;
 
         public SystemAudioControl()
         {
