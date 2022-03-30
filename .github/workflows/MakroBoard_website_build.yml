@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ (!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) && github.event_name == 'pull_request'}}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: nikeee/docfx-action@v1.0.0
       name: Build Documentation
       with:
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ ((!startsWith(github.ref, 'refs/tags/v')) && (!contains(github.event.head_commit.message, 'forcepublish')) && github.event_name == 'push' ) || (startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' && (contains(github.ref, '-beta'))) }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: add dev warning to index
       run: chmod +x ./packaging/Docs/adddevwarning.sh && ./packaging/Docs/adddevwarning.sh
     - uses: nikeee/docfx-action@v1.0.0
@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ (startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' && !(contains(github.ref, '-beta'))) || (contains(github.event.head_commit.message, 'forcepublish') && github.event_name == 'push') }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: nikeee/docfx-action@v1.0.0
       name: Build Documentation
       with:
