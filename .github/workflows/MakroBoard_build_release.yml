@@ -130,7 +130,7 @@ jobs:
         name: latest_linux_client_x64
     - name: Import GPG key
       id: import_gpg
-      uses: crazy-max/ghaction-import-gpg@v3
+      uses: crazy-max/ghaction-import-gpg@v4.3.0
       with:
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
     - name: GPG user IDs
@@ -221,7 +221,7 @@ jobs:
         name: latest_linux_host_x64
     - name: Import GPG key
       id: import_gpg
-      uses: crazy-max/ghaction-import-gpg@v3
+      uses: crazy-max/ghaction-import-gpg@v4.3.0
       with:
         gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
     - name: GPG user IDs
