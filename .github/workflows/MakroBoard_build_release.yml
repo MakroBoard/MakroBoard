@@ -267,7 +267,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
-        java-version: '17'
+        java-version: '11'
     - name: install Android SDK
       uses: android-actions/setup-android@v2
     - name: set Version
@@ -526,7 +526,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
-        java-version: '17'
+        java-version: '11'
     - name: install gsed
       run: brew install gnu-sed
     - name: set Version
@@ -575,7 +575,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         distribution: 'temurin'
-        java-version: '17'
+        java-version: '11'
     - name: install gsed
       run: brew install gnu-sed
     - name: set Version
@@ -626,6 +626,10 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: latest_web_client
+    - name: install .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.x.x
     - name: install gsed
       run: brew install gnu-sed
     - name: set Version
