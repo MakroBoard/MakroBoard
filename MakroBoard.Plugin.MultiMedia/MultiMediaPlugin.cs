@@ -1,11 +1,4 @@
-﻿using MakroBoard.PluginContract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MakroBoard.Plugin.MultiMedia
+﻿namespace MakroBoard.Plugin.MultiMedia
 {
     //public class MultiMediaPlugin : MakroBoardPluginBase
     //{
