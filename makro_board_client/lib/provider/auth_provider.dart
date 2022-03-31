@@ -17,14 +17,14 @@ class AuthProvider {
 
   Stream<LoginCode> submitCode() async* {
     while (!(await isAuthenticated())) {
-      var loginCode = await _getNewLoginCode();
+      var loginCode = await getNewLoginCode();
       Duration timerDuration = loginCode.validUntil.difference(DateTime.now());
       yield loginCode;
       await Future.delayed(timerDuration);
     }
   }
 
-  Future<LoginCode> _getNewLoginCode() async {
+  Future<LoginCode> getNewLoginCode() async {
     Random random = new Random();
 
     //Random 10000 - 99999

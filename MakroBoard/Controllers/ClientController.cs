@@ -79,7 +79,7 @@ namespace MakroBoard.Controllers
             {
                 client.Code = request.Code;
                 client.ValidUntil = DateTime.UtcNow.AddMinutes(0.5);
-                client.State = ClientState.None;
+                client.State = isLocalHost ? ClientState.Admin : ClientState.None;
 
                 _Context.Clients.Update(client);
 

@@ -116,7 +116,12 @@ class SelectServerPage extends StatelessWidget {
                                     serverUri = serverUri.replace(port: port);
                                     var apiProvider = Provider.of<ApiProvider>(context, listen: false);
                                     if (await apiProvider.initialize(serverUri, AppLocalizations.of(context)!.localeName)) {
-                                      var isAuthenticated = await Provider.of<AuthProvider>(context, listen: false).isAuthenticated();
+                                      var authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+                                      var loginCode = await authProvider.getNewLoginCode();
+                                      await Settings.setValue("server_code", loginCode.code);
+
+                                      var isAuthenticated = await authProvider.isAuthenticated();
                                       isAuthenticatedChanged(isAuthenticated);
                                       selectedServerChanged(serverUri);
                                       // If the form is valid, display a snackbar. In the real world,
