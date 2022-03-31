@@ -425,10 +425,6 @@ class ApiProvider {
 
       var result = _handleResponse(jsonResponse, (r) => ExecuteResponse.fromJson(r));
 
-      // notificationProvider.hideSnackBarNotification(Notification(
-      //   text: "Execute " + control.symbolicName,
-      // ));
-
       if (result != null && result.status == ResponseStatus.Ok) {
         notificationProvider.addSnackBarNotification(
           Notification(
