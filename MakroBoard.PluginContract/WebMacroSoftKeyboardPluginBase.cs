@@ -4,26 +4,30 @@ using System.Threading.Tasks;
 
 namespace MakroBoard.PluginContract
 {
-    public class MakroBoardPluginBase : IMakroBoardPlugin
+    public abstract class MakroBoardPluginBase : IMakroBoardPlugin
     {
         protected MakroBoardPluginBase()
         {
-
+            Controls = InitializeControls();
         }
 
+        protected abstract IReadOnlyCollection<Control> InitializeControls();
+
         public string SymbolicName => GetType().Name;
+
+        public IReadOnlyCollection<Control> Controls { get; }
 
         public virtual async Task<Control> GetControl(string symbolicName)
         {
             var controls = await GetControls();
             var control = controls.FirstOrDefault(x => x.SymbolicName.Equals(symbolicName, System.StringComparison.OrdinalIgnoreCase));
 
-            return await Task.FromResult(control).ConfigureAwait(false);
+            return control;
         }
 
-        public virtual async Task<IEnumerable<Control>> GetControls()
+        public virtual Task<IEnumerable<Control>> GetControls()
         {
-            return await Task.FromResult(Enumerable.Empty<Control>());
+            return Task.FromResult<IEnumerable<Control>>(Controls);
         }
     }
 }

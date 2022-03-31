@@ -8,7 +8,6 @@ import 'package:makro_board_client/widgets/MakroBoardAppBar.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:makro_board_client/models/page.dart' as models;
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:makro_board_client/dialogs/create_page_dialog.dart';
 import 'package:makro_board_client/dialogs/edit_page_dialog.dart';
 
@@ -75,11 +74,9 @@ class HomePage extends StatelessWidget {
       builder: (context) {
         return DeleteDialog(
           title: "Seite Löschen",
-          deleteText:
-              "Soll die Seite ${page.symbolicName} wirklich gelöscht werden?",
+          deleteText: "Soll die Seite ${page.symbolicName} wirklich gelöscht werden?",
           executeText: "Gruppe ${page.symbolicName} wird gelöscht ...",
-          deleteCallback: () =>
-              Provider.of<ApiProvider>(context, listen: false).removePage(page),
+          deleteCallback: () => Provider.of<ApiProvider>(context, listen: false).removePage(page),
         );
       },
     );

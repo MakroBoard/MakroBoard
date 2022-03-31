@@ -445,6 +445,8 @@ class ApiProvider {
     } on Exception catch (e) {
       print('never reached' + e.toString());
     }
+
+    return null;
   }
 
   Future addPage(Page page) async {

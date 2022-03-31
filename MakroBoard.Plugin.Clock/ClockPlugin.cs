@@ -1,24 +1,16 @@
 ﻿using MakroBoard.PluginContract;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MakroBoard.Plugin.Clock
 {
     class ClockPlugin : MakroBoardPluginBase
     {
-        private IEnumerable<Control> _Controls;
-        public override async Task<IEnumerable<Control>> GetControls()
+        protected override IReadOnlyCollection<Control> InitializeControls()
         {
-            if (_Controls == null)
+            return new List<Control>
             {
-                _Controls = new List<Control>
-                {
-                    new ClockControl()
-                };
-            }
-
-            return await Task.FromResult(_Controls).ConfigureAwait(false);
+                new ClockControl()
+            };
         }
     }
 }

@@ -9,7 +9,6 @@ import 'package:makro_board_client/widgets/GlobalSettings.dart';
 import 'package:makro_board_client/widgets/GroupCard.dart';
 import 'package:makro_board_client/widgets/SnackBarNotification.dart';
 import 'package:makro_board_client/widgets/MakroBoardAppBar.dart';
-import 'package:responsive_grid/responsive_grid.dart';
 import 'package:makro_board_client/models/page.dart' as models;
 import 'package:makro_board_client/models/group.dart' as models;
 
@@ -37,11 +36,6 @@ class PagePage extends StatelessWidget {
               var groups = snapshot.data as List<models.Group>;
               var axisCount = min(max((MediaQuery.of(context).size.width / 400).round(), 1), groups.length);
               return initialPage.groups.length > 0
-                  // ? ResponsiveGridList(
-                  //     desiredItemWidth: 200,
-                  //     minSpacing: 10,
-                  //     children: _getGroupWidgets(context, snapshot.data as List<models.Group>),
-                  //   )
                   ? StaggeredGridView.countBuilder(
                       key: ObjectKey(axisCount),
                       crossAxisCount: axisCount,
@@ -82,18 +76,6 @@ class PagePage extends StatelessWidget {
             )
           : null,
     );
-  }
-
-  List<Widget> _getGroupWidgets(BuildContext context, List<models.Group>? groups) {
-    if (groups == null) {
-      return <Widget>[];
-    }
-
-    return groups
-        .map<Widget>(
-          (group) => GroupCard(group: group),
-        )
-        .toList();
   }
 
   Future showCreateGroupDialog(BuildContext context, models.Page page) {

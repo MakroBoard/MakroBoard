@@ -48,10 +48,16 @@ class _ProgressBarControlState extends State<ProgressBarControl> {
         children: [
           Row(
             children: [
-              if (minValue != 0) Text(minValue.toString()),
+              if (minValue != 0)
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    minValue.toString(),
+                  ),
+                ),
               Expanded(
                 child: SizedBox(
-                  height: 50,
+                  height: 30,
                   child: Stack(
                     children: [
                       SizedBox.expand(
@@ -60,13 +66,21 @@ class _ProgressBarControlState extends State<ProgressBarControl> {
                         ),
                       ),
                       Center(
-                        child: Text(value.toString()),
+                        child: Text(
+                          value.toString(),
+                        ),
                       )
                     ],
                   ),
                 ),
               ),
-              Text(maxValue.toString()),
+              SizedBox(
+                width: 70,
+                child: Text(
+                  maxValue.toString(),
+                  textAlign: TextAlign.end,
+                ),
+              ),
             ],
           ),
         ],

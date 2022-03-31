@@ -69,7 +69,7 @@ class _SnackBarNotificationState extends State<SnackBarNotification> {
   Color? _getBackGroundColor(BuildContext context, noti.Notification notification) {
     switch (notification.notificationType) {
       case noti.NotificationType.info:
-        return Theme.of(context).accentColor;
+        return Theme.of(context).colorScheme.secondary;
       case noti.NotificationType.success:
         return Colors.green.shade600;
       case noti.NotificationType.error:
