@@ -235,6 +235,30 @@
   "shadowColor": "#ff000000",
   "splashColor": "#40cccccc",
   "splashFactory": "splash",
+  "switchTheme": {
+    "trackColor": {
+      "disabled": "#1f000000",
+      "dragged": "#52000000",
+      "empty": "#52000000",
+      "error": "#52000000",
+      "focused": "#52000000",
+      "hovered": "#52000000",
+      "pressed": "#52000000",
+      "scrolledUnder": "#52000000",
+      "selected": "#803c0105"
+    },
+    "thumbColor": {
+      "disabled": "#ffbdbdbd",
+      "dragged": "#fffafafa",
+      "empty": "#fffafafa",
+      "error": "#fffafafa",
+      "focused": "#fffafafa",
+      "hovered": "#fffafafa",
+      "pressed": "#fffafafa",
+      "scrolledUnder": "#fffafafa",
+      "selected": "#ff671a20"
+    }
+  },
   "textTheme": {
     "bodyLarge": {
       "color": "#ffffffff",
