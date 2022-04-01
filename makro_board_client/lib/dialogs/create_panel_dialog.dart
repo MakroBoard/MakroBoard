@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:makro_board_client/models/Control.dart';
-import 'package:makro_board_client/models/ViewConfigValue.dart';
+import 'package:makro_board_client/models/control.dart';
+import 'package:makro_board_client/models/view_config_value.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
-import 'package:makro_board_client/models/Plugin.dart' as models;
+import 'package:makro_board_client/models/plugin.dart' as models;
 import 'package:makro_board_client/models/group.dart' as models;
 import 'package:makro_board_client/models/panel.dart' as models;
-import 'package:makro_board_client/widgets/ConfigParameterInput.dart';
+import 'package:makro_board_client/widgets/config_parameter_input.dart';
 import 'package:provider/provider.dart';
 
 class CreatePanelDialog extends StatefulWidget {
@@ -65,8 +65,8 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
                   ),
                   Expanded(
                     child: selectedControl == null
-                        ? Center(child: Text("Bitte ein Control auswählen"))
-                        : Container(
+                        ? const Center(child: Text("Bitte ein Control auswählen"))
+                        : SizedBox(
                             height: 300,
                             width: 300,
                             child: Padding(
@@ -106,10 +106,10 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                    child: Text("Abbrechen"),
+                    child: const Text("Abbrechen"),
                   ),
                   TextButton(
-                    child: Text("Anlegen"),
+                    child: const Text("Anlegen"),
                     onPressed: () async {
                       EasyLoading.show(status: 'Neue Gruppe anlegen ...');
                       if (selectedPlugin != null && selectedControl != null && configValues != null && _createPanelFormKey.currentState!.validate()) {
@@ -146,10 +146,11 @@ class PanelSelector extends StatelessWidget {
   final Function(models.Plugin, Control) onPanelSelected;
   final Control? selectedControl;
 
-  PanelSelector({required this.plugins, required this.onPanelSelected, required this.selectedControl});
+  const PanelSelector({Key? key, required this.plugins, required this.onPanelSelected, required this.selectedControl}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 300,
       width: 300,
       child: Padding(

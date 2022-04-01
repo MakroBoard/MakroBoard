@@ -25,7 +25,7 @@ class AuthProvider {
   }
 
   Future<LoginCode> getNewLoginCode() async {
-    Random random = new Random();
+    var random = Random();
 
     //Random 10000 - 99999
     int randomNumber = 10000 + random.nextInt(89999);

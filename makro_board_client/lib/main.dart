@@ -8,11 +8,11 @@ import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/provider/auth_provider.dart';
 import 'package:makro_board_client/provider/env_provider.dart';
 import 'package:makro_board_client/provider/notification_provider.dart';
-import 'package:makro_board_client/widgets/GlobalSettings.dart';
+import 'package:makro_board_client/widgets/global_settings.dart';
 import 'package:provider/provider.dart';
 
-import 'MakroBoardApp.dart';
-import 'MakroboardHttpOverrides.dart';
+import 'makro_board_app.dart';
+import 'makroboard_http_overrides.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +21,7 @@ void main() async {
   final themeJson = jsonDecode(themeStr);
   final theme = ThemeDecoder.decodeThemeData(themeJson)!;
 
-  HttpOverrides.global = new MakroboardHttpOverrides();
+  HttpOverrides.global = MakroboardHttpOverrides();
   runApp(
     MultiProvider(
       providers: [

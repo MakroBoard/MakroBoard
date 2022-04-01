@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:makro_board_client/models/Control.dart';
-import 'package:makro_board_client/models/ViewConfigValue.dart';
+import 'package:makro_board_client/models/control.dart';
+import 'package:makro_board_client/models/view_config_value.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
-import 'package:makro_board_client/models/Plugin.dart' as models;
+import 'package:makro_board_client/models/plugin.dart' as models;
 import 'package:makro_board_client/models/panel.dart' as models;
-import 'package:makro_board_client/widgets/ConfigParameterInput.dart';
+import 'package:makro_board_client/widgets/config_parameter_input.dart';
 import 'package:provider/provider.dart';
 
 class EditPanelDialog extends StatelessWidget {
@@ -15,9 +15,10 @@ class EditPanelDialog extends StatelessWidget {
   final List<ViewConfigValue> configValues;
   final List<ViewConfigValue> viewConfigValues;
 
-  EditPanelDialog({required this.panel, required this.control})
+  EditPanelDialog({Key? key, required this.panel, required this.control})
       : configValues = control.configParameters.map((cp) => panel.configValues.firstWhere((element) => element.symbolicName == cp.symbolicName)).toList(),
-        viewConfigValues = control.view.configParameters.map((cp) => panel.configValues.firstWhere((element) => element.symbolicName == cp.symbolicName)).toList();
+        viewConfigValues = control.view.configParameters.map((cp) => panel.configValues.firstWhere((element) => element.symbolicName == cp.symbolicName)).toList(),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class EditPanelDialog extends StatelessWidget {
           key: _createPanelFormKey,
           child: Column(
             children: [
-              Container(
+              SizedBox(
                 height: 300,
                 width: 300,
                 child: Padding(
@@ -67,10 +68,10 @@ class EditPanelDialog extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                    child: Text("Abbrechen"),
+                    child: const Text("Abbrechen"),
                   ),
                   TextButton(
-                    child: Text("'Ändern'"),
+                    child: const Text("'Ändern'"),
                     onPressed: () async {
                       EasyLoading.show(status: 'Panel ändern ...');
                       if (_createPanelFormKey.currentState!.validate()) {
@@ -102,10 +103,11 @@ class PanelSelector extends StatelessWidget {
   final Function(models.Plugin, Control) onPanelSelected;
   final Control? selectedControl;
 
-  PanelSelector({required this.plugins, required this.onPanelSelected, required this.selectedControl});
+  const PanelSelector({Key? key, required this.plugins, required this.onPanelSelected, required this.selectedControl}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 300,
       width: 300,
       child: Padding(
@@ -118,15 +120,15 @@ class PanelSelector extends StatelessWidget {
               shrinkWrap: true,
               itemCount: plugin.controls.length,
               itemBuilder: (context, index) {
-                var control = plugin.controls[index];
+                var selectedControl = plugin.controls[index];
                 return Container(
-                  color: (selectedControl == control) ? Theme.of(context).primaryColor.withAlpha(128) : Colors.transparent,
+                  color: (selectedControl == selectedControl) ? Theme.of(context).primaryColor.withAlpha(128) : Colors.transparent,
                   child: ListTile(
-                    title: Text(control.symbolicName),
+                    title: Text(selectedControl.symbolicName),
                     subtitle: Text(plugin.pluginName),
                     onTap: () {
-                      if (selectedControl != control) {
-                        onPanelSelected(plugin, control);
+                      if (selectedControl != selectedControl) {
+                        onPanelSelected(plugin, selectedControl);
                       }
                     },
                   ),

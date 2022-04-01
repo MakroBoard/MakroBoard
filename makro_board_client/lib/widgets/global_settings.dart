@@ -5,25 +5,27 @@ class InheritedGlobalSettings extends InheritedWidget {
   final GlobalSettingsState data;
 
   // You must pass through a child and your state.
-  InheritedGlobalSettings({
+  const InheritedGlobalSettings({
+    Key? key,
     required this.data,
     required Widget child,
-  }) : super(child: child);
+  }) : super(key: key, child: child);
 
   // This is a built in method which you can use to check if
   // any state has changed. If not, no reason to rebuild all the widgets
   // that rely on your state.
   @override
-  bool updateShouldNotify(InheritedGlobalSettings old) => true;
+  bool updateShouldNotify(InheritedGlobalSettings oldWidget) => true;
 }
 
 class GlobalSettings extends StatefulWidget {
   // You must pass through a child.
   final Widget child;
 
-  GlobalSettings({
+  const GlobalSettings({
+    Key? key,
     required this.child,
-  });
+  }) : super(key: key);
 
   // This is the secret sauce. Write your own 'of' method that will behave
   // Exactly like MediaQuery.of and Theme.of
@@ -34,7 +36,7 @@ class GlobalSettings extends StatefulWidget {
   }
 
   @override
-  GlobalSettingsState createState() => new GlobalSettingsState();
+  GlobalSettingsState createState() => GlobalSettingsState();
 }
 
 class GlobalSettingsState extends State<GlobalSettings> {

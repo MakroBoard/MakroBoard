@@ -5,10 +5,10 @@ import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/router/page_action.dart';
 import 'package:makro_board_client/router/page_configuration.dart';
 import 'package:makro_board_client/router/page_state.dart';
-import 'package:makro_board_client/widgets/EditModeSwitch.dart';
-import 'package:makro_board_client/widgets/GlobalSettings.dart';
-import 'package:makro_board_client/widgets/SnackBarNotification.dart';
-import 'package:makro_board_client/widgets/MakroBoardAppBar.dart';
+import 'package:makro_board_client/widgets/edit_mode_switch.dart';
+import 'package:makro_board_client/widgets/global_settings.dart';
+import 'package:makro_board_client/widgets/snack_bar_notification.dart';
+import 'package:makro_board_client/widgets/makro_board_app_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 import 'package:makro_board_client/models/page.dart' as models;
@@ -16,7 +16,7 @@ import 'package:makro_board_client/dialogs/create_page_dialog.dart';
 import 'package:makro_board_client/dialogs/edit_page_dialog.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage();
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,26 +24,24 @@ class HomePage extends StatelessWidget {
       appBar: MakroBoardAppBar(
         context: context,
         titleText: "Home",
-        additionalActions: [
+        additionalActions: const [
           EditModeSwitch(),
         ],
       ),
       body: SnackBarNotification(
-        child: Container(
-          child: StreamBuilder(
-            stream: Provider.of<ApiProvider>(context, listen: false).pages,
-            initialData: Provider.of<ApiProvider>(context, listen: false).currentPages,
-            builder: (context, snapshot) => ResponsiveGridList(
-              desiredItemWidth: 200,
-              minSpacing: 10,
-              children: _getPageWidgets(context, snapshot.data as List<models.Page>),
-            ),
+        child: StreamBuilder(
+          stream: Provider.of<ApiProvider>(context, listen: false).pages,
+          initialData: Provider.of<ApiProvider>(context, listen: false).currentPages,
+          builder: (context, snapshot) => ResponsiveGridList(
+            desiredItemWidth: 200,
+            minSpacing: 10,
+            children: _getPageWidgets(context, snapshot.data as List<models.Page>),
           ),
         ),
       ),
       floatingActionButton: GlobalSettings.of(context)?.editMode == true
           ? FloatingActionButton(
-              child: Icon(Icons.add_box_outlined),
+              child: const Icon(Icons.add_box_outlined),
               onPressed: () => showCreatePageDialog(context),
               tooltip: "Add New Page",
             )
@@ -55,7 +53,7 @@ class HomePage extends StatelessWidget {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
-          return CreatePageDialog();
+          return const CreatePageDialog();
         });
   }
 
@@ -134,7 +132,7 @@ class HomePage extends StatelessWidget {
                                 ),
                               ),
                             ],
-                            icon: Icon(Icons.more_vert),
+                            icon: const Icon(Icons.more_vert),
                           ),
                   ),
                 ],

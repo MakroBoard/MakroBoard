@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:makro_board_client/models/ViewConfigParameter.dart';
-import 'package:makro_board_client/models/ViewConfigValue.dart';
+import 'package:makro_board_client/models/view_config_parameter.dart';
+import 'package:makro_board_client/models/view_config_value.dart';
 
 class ConfigParameterInput extends StatefulWidget {
   final ViewConfigParameter configParameter;
@@ -17,13 +17,11 @@ class ConfigParameterInput extends StatefulWidget {
 class _ConfigParameterInputState extends State<ConfigParameterInput> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        children: [
-          // Text(configParameter.symbolicName),
-          Flexible(child: _createConfigParameterInput(context, widget.configParameter, widget.configParameterValue)),
-        ],
-      ),
+    return Row(
+      children: [
+        // Text(configParameter.symbolicName),
+        Flexible(child: _createConfigParameterInput(context, widget.configParameter, widget.configParameterValue)),
+      ],
     );
   }
 

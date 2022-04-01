@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:makro_board_client/models/ViewConfigValue.dart';
+import 'package:makro_board_client/models/view_config_value.dart';
 
 class ProgressBarControl extends StatefulWidget {
   final ViewConfigValue minValue;
   final ViewConfigValue maxValue;
   final ViewConfigValue value;
 
-  ProgressBarControl({Key? key, required this.minValue, required this.maxValue, required this.value}) : super(key: key);
+  const ProgressBarControl({Key? key, required this.minValue, required this.maxValue, required this.value}) : super(key: key);
 
   @override
   _ProgressBarControlState createState() => _ProgressBarControlState();
@@ -43,48 +43,46 @@ class _ProgressBarControlState extends State<ProgressBarControl> {
     var value = widget.value.value as int? ?? 0;
 
     var progress = value / (maxValue - minValue);
-    return Container(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              if (minValue != 0)
-                SizedBox(
-                  width: 100,
-                  child: Text(
-                    minValue.toString(),
-                  ),
-                ),
-              Expanded(
-                child: SizedBox(
-                  height: 30,
-                  child: Stack(
-                    children: [
-                      SizedBox.expand(
-                        child: LinearProgressIndicator(
-                          value: progress,
-                        ),
-                      ),
-                      Center(
-                        child: Text(
-                          value.toString(),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+    return Column(
+      children: [
+        Row(
+          children: [
+            if (minValue != 0)
               SizedBox(
-                width: 70,
+                width: 100,
                 child: Text(
-                  maxValue.toString(),
-                  textAlign: TextAlign.end,
+                  minValue.toString(),
                 ),
               ),
-            ],
-          ),
-        ],
-      ),
+            Expanded(
+              child: SizedBox(
+                height: 30,
+                child: Stack(
+                  children: [
+                    SizedBox.expand(
+                      child: LinearProgressIndicator(
+                        value: progress,
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        value.toString(),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 70,
+              child: Text(
+                maxValue.toString(),
+                textAlign: TextAlign.end,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

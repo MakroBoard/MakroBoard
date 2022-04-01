@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:makro_board_client/widgets/AvailableClients.dart';
-import 'package:makro_board_client/widgets/AvailableControls.dart';
-import 'package:makro_board_client/widgets/SnackBarNotification.dart';
+import 'package:makro_board_client/widgets/available_clients.dart';
+import 'package:makro_board_client/widgets/available_controls.dart';
+import 'package:makro_board_client/widgets/snack_bar_notification.dart';
 
 class ConfigPage extends StatelessWidget {
-  const ConfigPage() : super();
+  const ConfigPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class ConfigPage extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          bottom: TabBar(
+          bottom: const TabBar(
             tabs: [
               Tab(
                 icon: Icon(Icons.devices),
@@ -24,9 +24,9 @@ class ConfigPage extends StatelessWidget {
               ),
             ],
           ),
-          title: Text('Administration'),
+          title: const Text('Administration'),
         ),
-        body: SnackBarNotification(
+        body: const SnackBarNotification(
           child: TabBarView(
             children: [
               AvailableClients(),

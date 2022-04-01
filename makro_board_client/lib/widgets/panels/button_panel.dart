@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:makro_board_client/models/Control.dart';
-import 'package:makro_board_client/models/ViewConfigValue.dart';
+import 'package:makro_board_client/models/control.dart';
+import 'package:makro_board_client/models/view_config_value.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:provider/provider.dart';
 
 class ButtonPanel extends StatelessWidget {
   final List<ViewConfigValue> configValues;
   final Control control;
-  const ButtonPanel({required this.configValues, required this.control}) : super();
+  const ButtonPanel({Key? key, required this.configValues, required this.control}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

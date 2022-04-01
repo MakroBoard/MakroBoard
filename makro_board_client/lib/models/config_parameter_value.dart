@@ -18,4 +18,4 @@ class ConfigParameterValue {
         value = json["pluginNvalueame"];
 }
 
-enum ConfigParameterType { Control, View }
+enum ConfigParameterType { control, view }

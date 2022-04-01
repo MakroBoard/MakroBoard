@@ -22,10 +22,10 @@ class DeleteDialog extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-              child: Text("Nein"),
+              child: const Text("Nein"),
             ),
             TextButton(
-              child: Text("Ja"),
+              child: const Text("Ja"),
               onPressed: () async {
                 EasyLoading.show(status: executeText);
                 await deleteCallback();

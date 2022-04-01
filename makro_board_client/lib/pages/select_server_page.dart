@@ -8,13 +8,13 @@ import 'package:makro_board_client/provider/auth_provider.dart';
 import 'package:makro_board_client/router/page_action.dart';
 import 'package:makro_board_client/router/page_configuration.dart';
 import 'package:makro_board_client/router/page_state.dart';
-import 'package:makro_board_client/widgets/SnackBarNotification.dart';
+import 'package:makro_board_client/widgets/snack_bar_notification.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SelectServerPage extends StatelessWidget {
-  const SelectServerPage();
+  const SelectServerPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class SelectServerPage extends StatelessWidget {
       body: SnackBarNotification(
         child: Center(
           child: Container(
-            constraints: BoxConstraints(maxWidth: 500),
+            constraints: const BoxConstraints(maxWidth: 500),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -37,12 +37,12 @@ class SelectServerPage extends StatelessWidget {
                       key: _loginFormKey,
                       child: Column(
                         children: [
-                          ListTile(
+                          const ListTile(
                             leading: Icon(Icons.cast_connected),
-                            title: const Text('Mit MakroBoard verbinden'),
+                            title: Text('Mit MakroBoard verbinden'),
                           ),
                           TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               // border: OutlineInputBorder(),
                               labelText: "Host",
                               prefixIcon: Icon(Icons.dns_outlined),
@@ -69,7 +69,7 @@ class SelectServerPage extends StatelessWidget {
                             },
                           ),
                           TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               // border: OutlineInputBorder(),
                               labelText: "Port",
                               prefixIcon: Icon(Icons.tag),
@@ -131,7 +131,7 @@ class SelectServerPage extends StatelessWidget {
                                   }
                                   EasyLoading.dismiss();
                                 },
-                                child: Text("Connect"),
+                                child: const Text("Connect"),
                               ),
                             ],
                           ),
@@ -145,11 +145,11 @@ class SelectServerPage extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        ListTile(
+                        const ListTile(
                           leading: Icon(Icons.cloud_download),
-                          title: const Text('Jetzt MakroBoard Host installieren'),
+                          title: Text('Jetzt MakroBoard Host installieren'),
                         ),
-                        Text("Wenn Sie noch keine MakroBoard Installation haben, ..."),
+                        const Text("Wenn Sie noch keine MakroBoard Installation haben, ..."),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: ElevatedButton.icon(
@@ -166,8 +166,8 @@ class SelectServerPage extends StatelessWidget {
                                 throw 'Could not launch $url';
                               }
                             },
-                            icon: Icon(Icons.file_download),
-                            label: Text("https://makroboard.app"),
+                            icon: const Icon(Icons.file_download),
+                            label: const Text("https://makroboard.app"),
                           ),
                         ),
                       ],

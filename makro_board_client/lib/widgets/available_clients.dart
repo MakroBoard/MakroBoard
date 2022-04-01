@@ -5,9 +5,7 @@ import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:provider/provider.dart';
 
 class AvailableClients extends StatelessWidget {
-  const AvailableClients({
-    Key? key,
-  }) : super(key: key);
+  const AvailableClients({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +14,7 @@ class AvailableClients extends StatelessWidget {
       stream: Provider.of<ApiProvider>(context, listen: false).clients,
       initialData: Provider.of<ApiProvider>(context, listen: false).currentClients,
       builder: (context, snapshot) => !snapshot.hasData
-          ? Text("No Code Available")
+          ? const Text("No Code Available")
           : ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
@@ -28,7 +26,7 @@ class AvailableClients extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         ListTile(
-                          leading: Icon(
+                          leading: const Icon(
                             Icons.device_unknown,
                           ),
                           title: Text("Client:" + client.clientIp),
@@ -44,13 +42,13 @@ class AvailableClients extends StatelessWidget {
                                 client.state >= ClientState.confirmed
                                     ? TextButton.icon(
                                         onPressed: () => {Provider.of<ApiProvider>(context, listen: false).removeClient(client)},
-                                        icon: Icon(Icons.remove),
-                                        label: Text("Löschen"),
+                                        icon: const Icon(Icons.remove),
+                                        label: const Text("Löschen"),
                                       )
                                     : TextButton.icon(
                                         onPressed: () => {Provider.of<ApiProvider>(context, listen: false).confirmClient(client)},
-                                        icon: Icon(Icons.check),
-                                        label: Text("Freischalten"),
+                                        icon: const Icon(Icons.check),
+                                        label: const Text("Freischalten"),
                                       ),
                             ],
                           ),

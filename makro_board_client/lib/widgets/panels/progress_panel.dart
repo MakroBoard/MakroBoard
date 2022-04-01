@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:makro_board_client/models/ViewConfigValue.dart';
+import 'package:makro_board_client/models/view_config_value.dart';
 
-import '../ProgressBarControl.dart';
+import '../progress_bar_control.dart';
 
 class ProgressPanel extends StatelessWidget {
   final List<ViewConfigValue> configValues;
   const ProgressPanel({
+    Key? key,
     required this.configValues,
-  }) : super();
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

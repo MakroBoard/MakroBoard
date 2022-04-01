@@ -12,9 +12,9 @@ import 'package:makro_board_client/models/panel.dart';
 import 'package:makro_board_client/provider/notification_provider.dart';
 
 import 'package:signalr_core/signalr_core.dart';
-import 'package:makro_board_client/models/Control.dart';
-import 'package:makro_board_client/models/Plugin.dart';
-import 'package:makro_board_client/models/ViewConfigValue.dart';
+import 'package:makro_board_client/models/control.dart';
+import 'package:makro_board_client/models/plugin.dart';
+import 'package:makro_board_client/models/view_config_value.dart';
 import 'package:makro_board_client/models/client.dart';
 import 'package:makro_board_client/models/page.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -98,7 +98,7 @@ class ApiProvider {
       _connection!.on('RemovePanel', _onRemovePanel);
       _connection!.on('UpdatePanelData', _onUpdatePanelData);
 
-      Completer c = new Completer();
+      Completer c = Completer();
       _connection!.on('Initialized', (_) => c.complete());
       await _connection!.start();
       await c.future;
@@ -425,12 +425,12 @@ class ApiProvider {
 
       var result = _handleResponse(jsonResponse, (r) => ExecuteResponse.fromJson(r));
 
-      if (result != null && result.status == ResponseStatus.Ok) {
+      if (result != null && result.status == ResponseStatus.ok) {
         notificationProvider.addSnackBarNotification(
           Notification(
             text: result.result,
             notificationType: NotificationType.success,
-            duration: Duration(seconds: 2),
+            duration: const Duration(seconds: 2),
           ),
         );
       }
@@ -557,7 +557,7 @@ class ApiProvider {
     if (response.statusCode == 200) {
       var result = create(jsonDecode(response.body));
 
-      if (result.status != ResponseStatus.Ok) {
+      if (result.status != ResponseStatus.ok) {
         // TODO Handle Error
 
         notificationProvider.addSnackBarNotification(Notification(
@@ -570,7 +570,7 @@ class ApiProvider {
       notificationProvider.addSnackBarNotification(Notification(
         text: AppLocalizations.of(currentContext!)!.error_network_unexpectedresponse(response.statusCode, response.reasonPhrase ?? AppLocalizations.of(currentContext!)!.error_unexpected),
         notificationType: NotificationType.error,
-        duration: Duration(seconds: 4),
+        duration: const Duration(seconds: 4),
       ));
     }
 
@@ -578,7 +578,7 @@ class ApiProvider {
   }
 
   bool _checkResponse(Response? response) {
-    if (response != null && response.status == ResponseStatus.Ok) {
+    if (response != null && response.status == ResponseStatus.ok) {
       return true;
     }
 

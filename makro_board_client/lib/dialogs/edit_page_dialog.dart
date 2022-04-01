@@ -11,30 +11,29 @@ class EditPageDialog extends StatefulWidget {
   const EditPageDialog({Key? key, required this.page}) : super(key: key);
 
   @override
-  _EditPageDialogState createState() => _EditPageDialogState(page: page);
+  _EditPageDialogState createState() => _EditPageDialogState();
 }
 
 class _EditPageDialogState extends State<EditPageDialog> {
-  final models.Page page;
-  _EditPageDialogState({required this.page});
+  _EditPageDialogState();
 
   @override
   Widget build(BuildContext context) {
     final _editPageFormKey = GlobalKey<FormState>();
 
     return SimpleDialog(
-      title: Text("Seite " + page.label + " bearbeiten"),
+      title: Text("Seite " + widget.page.label + " bearbeiten"),
       children: [
         Form(
           key: _editPageFormKey,
           child: Column(
             children: [
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Name",
                   prefixIcon: Icon(Icons.dns_outlined),
                 ),
-                initialValue: page.label,
+                initialValue: widget.page.label,
                 validator: (value) {
                   if (value == null) {
                     return "Um fortzufahren wird ein Name benötigt.";
@@ -43,7 +42,7 @@ class _EditPageDialogState extends State<EditPageDialog> {
                   return null;
                 },
                 onChanged: (value) {
-                  page.label = value;
+                  widget.page.label = value;
                 },
               ),
               IconButton(
@@ -57,24 +56,24 @@ class _EditPageDialogState extends State<EditPageDialog> {
                       ) ??
                       Icons.check;
                   setState(() {
-                    page.icon = iconData;
+                    widget.page.icon = iconData;
                   });
                 },
-                icon: Icon(page.icon),
+                icon: Icon(widget.page.icon),
               ),
               ButtonBar(
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                    child: Text("Abbrechen"),
+                    child: const Text("Abbrechen"),
                   ),
                   TextButton(
-                    child: Text("Speichern"),
+                    child: const Text("Speichern"),
                     onPressed: () async {
                       EasyLoading.show(status: 'Seite bearbeiten ...');
                       if (_editPageFormKey.currentState!.validate()) {
                         try {
-                          await Provider.of<ApiProvider>(context, listen: false).editPage(page);
+                          await Provider.of<ApiProvider>(context, listen: false).editPage(widget.page);
 
                           Navigator.of(context, rootNavigator: true).pop();
                         } catch (e) {

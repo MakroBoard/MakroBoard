@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'Control.dart';
+import 'control.dart';
 
 @JsonSerializable()
 class Plugin {

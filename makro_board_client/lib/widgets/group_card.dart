@@ -4,13 +4,13 @@ import 'package:makro_board_client/dialogs/delete_dialog.dart';
 import 'package:makro_board_client/dialogs/edit_group_dialog.dart';
 import 'package:makro_board_client/models/panel.dart' as models;
 import 'package:makro_board_client/models/group.dart' as models;
-import 'package:makro_board_client/models/Plugin.dart' as models;
-import 'package:makro_board_client/pages/pagePage.dart';
+import 'package:makro_board_client/models/plugin.dart' as models;
+import 'package:makro_board_client/pages/page_page.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'ControlPanel.dart';
-import 'GlobalSettings.dart';
+import 'control_panel.dart';
+import 'global_settings.dart';
 
 class GroupCard extends StatelessWidget {
   final models.Group group;
@@ -27,7 +27,7 @@ class GroupCard extends StatelessWidget {
             if (GlobalSettings.of(context)?.editMode == true)
               ListTile(
                 title: Text(group.label),
-                leading: Icon(Icons.done),
+                leading: const Icon(Icons.done),
                 trailing: PopupMenuButton<GroupContextMenu>(
                   onSelected: (selectedValue) {
                     switch (selectedValue) {
@@ -65,7 +65,7 @@ class GroupCard extends StatelessWidget {
                       ),
                     ),
                   ],
-                  icon: Icon(Icons.more_vert),
+                  icon: const Icon(Icons.more_vert),
                 ),
               ),
             FutureBuilder(
@@ -104,7 +104,7 @@ class GroupCard extends StatelessWidget {
 
   Widget _getGroupPanelWidgets(BuildContext context, List<models.Plugin>? plugins, List<models.Panel>? panels) {
     if (plugins == null || plugins.isEmpty || panels == null || panels.isEmpty) {
-      return Center(
+      return const Center(
         child: Text("Keine Panels konfiguriert"),
       );
     }

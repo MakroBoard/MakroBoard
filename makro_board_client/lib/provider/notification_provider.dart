@@ -1,7 +1,7 @@
 import 'dart:async';
 
 class NotificationProvider {
-  StreamController<NotificationUpdate> _streamSnackBarNotificationController = StreamController<NotificationUpdate>.broadcast();
+  final StreamController<NotificationUpdate> _streamSnackBarNotificationController = StreamController<NotificationUpdate>.broadcast();
   Stream<NotificationUpdate> get snackBarNotifications => _streamSnackBarNotificationController.stream;
 
   void addSnackBarNotification(Notification notification) {

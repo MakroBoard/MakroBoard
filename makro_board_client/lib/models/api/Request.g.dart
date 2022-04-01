@@ -47,8 +47,8 @@ K _$enumDecode<K, V>(
 }
 
 const _$ResponseStatusEnumMap = {
-  ResponseStatus.Ok: 0,
-  ResponseStatus.Error: 1,
+  ResponseStatus.ok: 0,
+  ResponseStatus.error: 1,
 };
 
 RequestTokensResponse _$RequestTokensResponseFromJson(

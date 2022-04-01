@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'ViewConfigParameter.dart';
-import 'View.dart';
+import 'view_config_parameter.dart';
+import 'view.dart';
 
 @JsonSerializable()
 class Control {

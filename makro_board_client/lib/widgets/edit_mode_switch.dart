@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'GlobalSettings.dart';
+import 'global_settings.dart';
 
 class EditModeSwitch extends StatelessWidget {
   const EditModeSwitch({

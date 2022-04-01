@@ -1,4 +1,4 @@
-import 'ViewConfigValue.dart';
+import 'view_config_value.dart';
 
 class Panel {
   final int id;
@@ -49,7 +49,7 @@ class Panel {
 
   bool get isEmpty => id < 0;
 
-  Panel clone () {
-    return Panel(id: id, groupId: groupId, pluginName: pluginName, symbolicName: symbolicName,order: order,configValues: configValues.map((c) => c.clone()).toList());
+  Panel clone() {
+    return Panel(id: id, groupId: groupId, pluginName: pluginName, symbolicName: symbolicName, order: order, configValues: configValues.map((c) => c.clone()).toList());
   }
 }

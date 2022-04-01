@@ -22,7 +22,7 @@ class EditGroupDialog extends StatelessWidget {
           child: Column(
             children: [
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Name",
                   prefixIcon: Icon(Icons.dns_outlined),
                 ),
@@ -42,10 +42,10 @@ class EditGroupDialog extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                    child: Text("Abbrechen"),
+                    child: const Text("Abbrechen"),
                   ),
                   TextButton(
-                    child: Text("Speichern"),
+                    child: const Text("Speichern"),
                     onPressed: () async {
                       EasyLoading.show(status: 'Gruppe bearbeiten ...');
                       if (_editGroupFormKey.currentState!.validate()) {

@@ -5,6 +5,6 @@ class NotFoundPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("TODO Not found Page");
+    return const Text("TODO Not found Page");
   }
 }

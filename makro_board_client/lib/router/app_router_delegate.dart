@@ -1,10 +1,10 @@
 import 'package:beamer/beamer.dart' as beamer;
 import 'package:flutter/material.dart';
 import 'package:makro_board_client/pages/config_page.dart';
-import 'package:makro_board_client/pages/homePage.dart';
+import 'package:makro_board_client/pages/home_page.dart';
 import 'package:makro_board_client/pages/login_page.dart';
 import 'package:makro_board_client/pages/not_found_page.dart';
-import 'package:makro_board_client/pages/pagePage.dart';
+import 'package:makro_board_client/pages/page_page.dart';
 import 'package:makro_board_client/pages/select_server_page.dart';
 import 'package:makro_board_client/pages/settings_page.dart';
 import 'package:makro_board_client/pages/splash_screen.dart';

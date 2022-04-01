@@ -26,19 +26,18 @@ class ViewConfigValue extends ChangeNotifier {
     };
   }
 
-ViewConfigValue clone () {
-  return ViewConfigValue(symbolicName: symbolicName, defaultValue: value);
-}
-
+  ViewConfigValue clone() {
+    return ViewConfigValue(symbolicName: symbolicName, defaultValue: value);
+  }
 }
 
 class ChangeNotifiers with ChangeNotifier {
   final List<ChangeNotifier> changeNotifiers;
   ChangeNotifiers({required this.changeNotifiers}) {
-    changeNotifiers.forEach((element) {
+    for (var element in changeNotifiers) {
       element.addListener(() {
         notifyListeners();
       });
-    });
+    }
   }
 }

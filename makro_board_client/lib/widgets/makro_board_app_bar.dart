@@ -14,12 +14,14 @@ class MakroBoardAppBar extends AppBar {
   final Widget? icon;
 
   MakroBoardAppBar({
+    Key? key,
     required this.context,
     required this.titleText,
     this.showAdminPanel = true,
     this.additionalActions = const <Widget>[],
     this.icon,
   }) : super(
+          key: key,
           title: Row(
             children: [
               if (icon != null)

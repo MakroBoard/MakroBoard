@@ -23,7 +23,7 @@ class _CreatePageDialogState extends State<CreatePageDialog> {
     final _createPageFormKey = GlobalKey<FormState>();
 
     return SimpleDialog(
-      title: Text("Neue Seite anlegen"),
+      title: const Text("Neue Seite anlegen"),
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -34,7 +34,7 @@ class _CreatePageDialogState extends State<CreatePageDialog> {
               children: [
                 TextFormField(
                   initialValue: pageLabel,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     // border: OutlineInputBorder(),
                     labelText: "Name",
                     prefixIcon: Icon(Icons.dns_outlined),
@@ -65,10 +65,10 @@ class _CreatePageDialogState extends State<CreatePageDialog> {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                      child: Text("Abbrechen"),
+                      child: const Text("Abbrechen"),
                     ),
                     TextButton(
-                      child: Text("Anlegen"),
+                      child: const Text("Anlegen"),
                       onPressed: () async {
                         EasyLoading.show(status: 'Neue Seite anlegen ...');
                         if (_createPageFormKey.currentState!.validate()) {

@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:makro_board_client/dialogs/delete_dialog.dart';
 import 'package:makro_board_client/dialogs/edit_panel_dialog.dart';
-import 'package:makro_board_client/models/Control.dart';
-import 'package:makro_board_client/models/View.dart';
-import 'package:makro_board_client/models/ViewConfigValue.dart';
+import 'package:makro_board_client/models/control.dart';
+import 'package:makro_board_client/models/view.dart';
+import 'package:makro_board_client/models/view_config_value.dart';
 import 'package:makro_board_client/models/panel.dart';
-import 'package:makro_board_client/pages/pagePage.dart';
+import 'package:makro_board_client/pages/page_page.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
-import 'package:makro_board_client/widgets/panels/ButtonPanel.dart';
+import 'package:makro_board_client/widgets/panels/button_panel.dart';
 import 'package:provider/provider.dart';
 
-import 'GlobalSettings.dart';
-import 'panels/ProgressPanel.dart';
-import 'panels/TextPanel.dart';
+import 'global_settings.dart';
+import 'panels/progress_panel.dart';
+import 'panels/text_panel.dart';
 
 class ControlPanel extends StatelessWidget {
   final Panel? panel;
   final Control control;
   final List<ViewConfigValue> configValues;
 
-  const ControlPanel({required this.panel, required this.control, required this.configValues});
+  const ControlPanel({Key? key, required this.panel, required this.control, required this.configValues}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class ControlPanel extends StatelessWidget {
                       ),
                     ),
                   ],
-                  icon: Icon(Icons.more_vert),
+                  icon: const Icon(Icons.more_vert),
                 ),
               ],
             )

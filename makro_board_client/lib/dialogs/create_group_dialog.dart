@@ -15,14 +15,14 @@ class CreateGroupDialog extends StatelessWidget {
     final _createGroupFormKey = GlobalKey<FormState>();
 
     return SimpleDialog(
-      title: Text("Neue Gruppe anlegen"),
+      title: const Text("Neue Gruppe anlegen"),
       children: [
         Form(
           key: _createGroupFormKey,
           child: Column(
             children: [
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: "Name",
                   prefixIcon: Icon(Icons.dns_outlined),
                 ),
@@ -41,10 +41,10 @@ class CreateGroupDialog extends StatelessWidget {
                 children: [
                   TextButton(
                     onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                    child: Text("Abbrechen"),
+                    child: const Text("Abbrechen"),
                   ),
                   TextButton(
-                    child: Text("Anlegen"),
+                    child: const Text("Anlegen"),
                     onPressed: () async {
                       EasyLoading.show(status: 'Neue Gruppe anlegen ...');
                       if (_createGroupFormKey.currentState!.validate()) {

@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen();
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -24,11 +24,28 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void initialize() async {
-    var minFuture = new Future.delayed(const Duration(seconds: 3));
+    var minFuture = Future.delayed(const Duration(seconds: 2));
 
     await Settings.init();
     _initializeEasyLoading();
+    var serverUri = loadServerUri();
+    var apiProvider = Provider.of<ApiProvider>(context, listen: false);
 
+    if (serverUri == null || !(await apiProvider.initialize(serverUri, AppLocalizations.of(context)!.localeName))) {
+      await minFuture;
+      Provider.of<AppState>(context, listen: false).setSplashFinished(selectServerPageConfig);
+    } else {
+      if (await apiProvider.isAuthenticated()) {
+        await minFuture;
+        Provider.of<AppState>(context, listen: false).setSplashFinished(homePageConfig);
+      } else {
+        await minFuture;
+        Provider.of<AppState>(context, listen: false).setSplashFinished(loginPageConfig);
+      }
+    }
+  }
+
+  Uri? loadServerUri() {
     Uri? serverUri;
 
     if (kIsWeb) {
@@ -45,21 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     }
 
-    var apiProvider = Provider.of<ApiProvider>(context, listen: false);
-
-    if (serverUri == null || !(await apiProvider.initialize(serverUri, AppLocalizations.of(context)!.localeName))) {
-      await minFuture;
-
-      Provider.of<AppState>(context, listen: false).setSplashFinished(selectServerPageConfig);
-    } else {
-      if (await apiProvider.isAuthenticated()) {
-        await minFuture;
-        Provider.of<AppState>(context, listen: false).setSplashFinished(homePageConfig);
-      } else {
-        await minFuture;
-        Provider.of<AppState>(context, listen: false).setSplashFinished(loginPageConfig);
-      }
-    }
+    return serverUri;
   }
 
   void _initializeEasyLoading() {
@@ -85,13 +88,13 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Theme.of(context).primaryColor,
       body: Center(
         child: Container(
-          constraints: BoxConstraints(maxWidth: 500),
+          constraints: const BoxConstraints(maxWidth: 500),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                margin: EdgeInsets.fromLTRB(0, 64, 64, 64),
-                decoration: BoxDecoration(
+                margin: const EdgeInsets.fromLTRB(0, 64, 64, 64),
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(8)),
                 ),
@@ -114,7 +117,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   animatedTexts: [
                     TypewriterAnimatedText(
                       'MakroBoard',
-                      speed: Duration(milliseconds: 200),
+                      speed: const Duration(milliseconds: 200),
                     ),
                   ],
                 ),
@@ -128,7 +131,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   animatedTexts: [
                     TypewriterAnimatedText(
                       'Console.WriteLine("' + AppLocalizations.of(context)!.hello + '")',
-                      speed: Duration(milliseconds: 65),
+                      speed: const Duration(milliseconds: 65),
                     ),
                   ],
                 ),

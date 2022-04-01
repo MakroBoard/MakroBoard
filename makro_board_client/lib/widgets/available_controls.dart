@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:makro_board_client/models/Plugin.dart';
-import 'package:makro_board_client/models/ViewConfigValue.dart';
+import 'package:makro_board_client/models/plugin.dart';
+import 'package:makro_board_client/models/view_config_value.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 
-import 'ConfigParameterInput.dart';
-import 'ControlPanel.dart';
+import 'config_parameter_input.dart';
+import 'control_panel.dart';
 
 class AvailableControls extends StatelessWidget {
-  const AvailableControls({
-    Key? key,
-  }) : super(key: key);
+  const AvailableControls({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +16,7 @@ class AvailableControls extends StatelessWidget {
       future: Provider.of<ApiProvider>(context, listen: false).getAvailableControls(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.none || !snapshot.hasData) {
-          return Text("No Code Available");
+          return const Text("No Code Available");
         }
 
         var plugins = snapshot.data as List<Plugin>;
