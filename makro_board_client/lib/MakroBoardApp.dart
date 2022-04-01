@@ -1,18 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:makro_board_client/models/page.dart' as models;
-import 'package:makro_board_client/pages/config_page.dart';
-import 'package:makro_board_client/pages/login_page.dart';
-import 'package:makro_board_client/pages/pagePage.dart';
-import 'package:makro_board_client/pages/select_server_page.dart';
-import 'package:makro_board_client/pages/settings_page.dart';
-import 'package:makro_board_client/pages/splash_screen.dart';
+
 import 'package:makro_board_client/provider/api_provider.dart';
-import 'package:makro_board_client/widgets/MakroBoardRouter.dart';
+import 'package:makro_board_client/router/app_back_button_dispatcher.dart';
+import 'package:makro_board_client/router/app_route_parser.dart';
+import 'package:makro_board_client/router/app_router_delegate.dart';
+import 'package:makro_board_client/router/page_configuration.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'pages/homePage.dart';
+import 'app_state.dart';
 
 class MakroBoardApp extends StatefulWidget {
   final ThemeData? theme;
@@ -25,110 +23,49 @@ class MakroBoardApp extends StatefulWidget {
 }
 
 class _MakroBoardAppState extends State<MakroBoardApp> {
-  Uri? _selectedServer;
-  var _isAuthenticated = false;
-  models.Page? _selectedPage;
+  final appState = AppState();
+
+  late AppRouterDelegate delegate;
+  late AppRouteParser parser;
+  late BackButtonDispatcher backButtonDispatcher;
+
+  @override
+  void initState() {
+    super.initState();
+
+    parser = AppRouteParser();
+
+    delegate = AppRouterDelegate(appState);
+    if (kIsWeb) {
+      var uri = Uri.base;
+      var config = parser.parseUri(uri);
+      appState.initialConfig = config;
+    } else {
+      appState.initialConfig = splashPageConfig;
+    }
+
+    backButtonDispatcher = AppBackButtonDispatcher(delegate);
+
+    Future.delayed(Duration.zero, () {
+      appState.init(context);
+
+      Provider.of<ApiProvider>(context, listen: false).updateContext(context);
+      EasyLoading.init()(context, widget);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<ApiProvider>(context, listen: false).isAuthenticatedStream.listen((isAuthenticated) {
-      if (_isAuthenticated != isAuthenticated) {
-        setState(() {
-          _isAuthenticated = isAuthenticated;
-        });
-      }
-    });
-
-    return MaterialApp(
-      title: 'MakroBoard',
-      theme: widget.theme,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: Navigator(
-        pages: [
-          if (_selectedServer == null)
-            MaterialPage(
-              key: ValueKey('SplashScreen'),
-              child: SplashScreen(
-                selectedServerChanged: _handleSelectedServer,
-              ),
-            ),
-          if (_selectedServer != null)
-            if (!_selectedServer!.hasPort || !_selectedServer!.hasAuthority)
-              MaterialPage(
-                key: ValueKey('SelectServerPage'),
-                child: SelectServerPage(
-                  selectedServerChanged: _handleSelectedServer,
-                  isAuthenticatedChanged: _handleIsAuthenticatedChanged,
-                ),
-              )
-            else if (!_isAuthenticated)
-              MaterialPage(
-                key: ValueKey('LoginPage'),
-                child: LoginPage(
-                    // selectedServerChanged: _handleSelectedServer,
-                    // isAuthenticatedChanged: _handleIsAuthenticatedChanged,
-                    ),
-              )
-            else
-              MaterialPage(
-                key: ValueKey('HomePage'),
-                child: HomePage(
-                  selectedPageChanged: _handleSelectedPageChanged,
-                ),
-              ),
-          if (_selectedServer != null && _selectedPage != null)
-            MaterialPage(
-              key: ValueKey('Page_' + _selectedPage!.symbolicName),
-              child: PagePage(
-                initialPage: _selectedPage!,
-                key: ValueKey(_selectedPage!.symbolicName),
-              ),
-            ),
-          if (MakroBoardRouter.of(context)!.showSettings)
-            MaterialPage(
-              key: ValueKey('Page_Settings'),
-              child: SettingsPage(),
-            ),
-          if (MakroBoardRouter.of(context)!.showConfig)
-            MaterialPage(
-              key: ValueKey('Page_Config'),
-              child: ConfigPage(),
-            ),
-        ],
-        onPopPage: (route, result) {
-          if (_selectedPage != null) {
-            _selectedPage = null;
-          }
-
-          var router = MakroBoardRouter.of(context);
-          router!.reset();
-
-          return route.didPop(result);
-        },
+    return ChangeNotifierProvider<AppState>(
+      create: (_) => appState,
+      child: MaterialApp.router(
+        routeInformationParser: parser,
+        routerDelegate: delegate,
+        theme: widget.theme,
+        title: "MakroBoard",
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
       ),
-      builder: (context, widget) {
-        Provider.of<ApiProvider>(context, listen: false).updateContext(context);
-        return EasyLoading.init()(context, widget);
-      },
     );
-  }
-
-  void _handleSelectedServer(selectedServer) {
-    setState(() {
-      _selectedServer = selectedServer;
-    });
-  }
-
-  void _handleIsAuthenticatedChanged(isAuthenticated) {
-    setState(() {
-      _isAuthenticated = isAuthenticated;
-    });
-  }
-
-  void _handleSelectedPageChanged(page) {
-    setState(() {
-      _selectedPage = page;
-    });
   }
 }

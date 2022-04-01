@@ -1,9 +1,9 @@
 name: makro_board_client
-description: A new Flutter project.
+description: MakroBoard Client.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -36,12 +36,13 @@ dependencies:
   responsive_grid: ^2.0.0
   page_transition: ^2.0.2
   enhanced_future_builder: ^1.0.3
-  flutter_iconpicker: 
+  beamer: ^1.2.0
+  flutter_iconpicker:
     git:
       url: https://github.com/Ahmadre/FlutterIconPicker.git
       ref: master
   json_annotation: ^4.0.0
-  flutter_staggered_grid_view : ^0.4.0
+  flutter_staggered_grid_view: ^0.4.0
   json_theme: ^3.3.1
 
   # The following adds the Cupertino Icons font to your application.

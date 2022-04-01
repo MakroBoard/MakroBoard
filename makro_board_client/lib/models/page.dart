@@ -12,9 +12,7 @@ class Page {
   String label;
   IconData icon;
   final List<Group> groups;
-
-  StreamController<List<Group>> streamGroupController =
-      StreamController<List<Group>>.broadcast();
+  StreamController<List<Group>> streamGroupController = StreamController<List<Group>>.broadcast();
   Stream<List<Group>> get groupsStream => streamGroupController.stream;
 
   Page({
@@ -41,15 +39,8 @@ class Page {
       : id = json["id"],
         symbolicName = json["symbolicName"],
         label = json["label"],
-        icon = json["icon"] != null && json["icon"] != ""
-            ? deserializeIcon(jsonDecode(json["icon"])) ??
-                Icons.not_interested_rounded
-            : Icons.not_interested,
-        groups = json["groups"] != null
-            ? List.castFrom(json["groups"])
-                .map<Group>((jsonGroup) => Group.fromJson(jsonGroup))
-                .toList()
-            : List.empty(growable: true);
+        icon = json["icon"] != null && json["icon"] != "" ? deserializeIcon(jsonDecode(json["icon"])) ?? Icons.not_interested_rounded : Icons.not_interested,
+        groups = json["groups"] != null ? List.castFrom(json["groups"]).map<Group>((jsonGroup) => Group.fromJson(jsonGroup)).toList() : List.empty(growable: true);
 
   Map<String, dynamic> toJson() {
     return {
@@ -68,11 +59,6 @@ class Page {
   }
 
   Page clone() {
-    return Page(
-        id: id,
-        symbolicName: symbolicName,
-        label: label,
-        icon: icon,
-        groups: groups);
+    return Page(id: id, symbolicName: symbolicName, label: label, icon: icon, groups: groups);
   }
 }

@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:makro_board_client/widgets/MakroBoardRouter.dart';
+import 'package:makro_board_client/router/page_action.dart';
+import 'package:makro_board_client/router/page_configuration.dart';
+import 'package:makro_board_client/router/page_state.dart';
+import 'package:provider/provider.dart';
+
+import '../app_state.dart';
 
 class MakroBoardAppBar extends AppBar {
   final BuildContext context;
@@ -33,7 +38,7 @@ class MakroBoardAppBar extends AppBar {
                     size: 24,
                     color: Colors.white,
                   ),
-                  onPressed: () => MakroBoardRouter.of(context)!.updateShowSettings(true),
+                  onPressed: () => Provider.of<AppState>(context, listen: false).navigateTo(PageAction(state: PageState.addPage, page: settingsPageConfig)),
                 ),
                 if (showAdminPanel)
                   TextButton(
@@ -42,7 +47,7 @@ class MakroBoardAppBar extends AppBar {
                       size: 24,
                       color: Colors.white,
                     ),
-                    onPressed: () => MakroBoardRouter.of(context)!.updateShowConfig(true),
+                    onPressed: () => Provider.of<AppState>(context, listen: false).navigateTo(PageAction(state: PageState.addPage, page: configPageConfig)),
                   )
               ],
         );

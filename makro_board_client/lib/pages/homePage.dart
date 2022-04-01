@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:makro_board_client/app_state.dart';
 import 'package:makro_board_client/dialogs/delete_dialog.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
+import 'package:makro_board_client/router/page_action.dart';
+import 'package:makro_board_client/router/page_configuration.dart';
+import 'package:makro_board_client/router/page_state.dart';
 import 'package:makro_board_client/widgets/EditModeSwitch.dart';
 import 'package:makro_board_client/widgets/GlobalSettings.dart';
 import 'package:makro_board_client/widgets/SnackBarNotification.dart';
@@ -12,11 +16,7 @@ import 'package:makro_board_client/dialogs/create_page_dialog.dart';
 import 'package:makro_board_client/dialogs/edit_page_dialog.dart';
 
 class HomePage extends StatelessWidget {
-  final ValueChanged<models.Page> selectedPageChanged;
-
-  const HomePage({
-    required this.selectedPageChanged,
-  });
+  const HomePage();
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +96,12 @@ class HomePage extends StatelessWidget {
                 children: [
                   ListTile(
                     onTap: () {
-                      selectedPageChanged(page);
+                      Provider.of<AppState>(context, listen: false).navigateTo(
+                        PageAction(
+                          state: PageState.addPage,
+                          page: pagePageConfig(page),
+                        ),
+                      );
                     },
                     title: Text(page.label),
                     leading: Icon(page.icon),

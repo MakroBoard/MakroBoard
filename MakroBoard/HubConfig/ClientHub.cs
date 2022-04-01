@@ -95,7 +95,7 @@ namespace MakroBoard.HubConfig
             var pages = await _DatabaseContext.Pages.Include(p => p.Groups).ThenInclude((g) => g.Panels).ThenInclude(p => p.ConfigParameters).ToListAsync();
             foreach (var page in pages)
             {
-                await Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, page);
+                await Clients.Caller.SendAsync(ClientMethods.AddOrUpdatePage, page);
             }
 
             await SubscribePanels();

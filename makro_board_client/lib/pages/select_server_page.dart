@@ -2,21 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:makro_board_client/app_state.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/provider/auth_provider.dart';
+import 'package:makro_board_client/router/page_action.dart';
+import 'package:makro_board_client/router/page_configuration.dart';
+import 'package:makro_board_client/router/page_state.dart';
 import 'package:makro_board_client/widgets/SnackBarNotification.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SelectServerPage extends StatelessWidget {
-  final ValueChanged<Uri?> selectedServerChanged;
-  final ValueChanged<bool> isAuthenticatedChanged;
-
-  SelectServerPage({
-    required this.selectedServerChanged,
-    required this.isAuthenticatedChanged,
-  });
+  const SelectServerPage();
 
   @override
   Widget build(BuildContext context) {
@@ -122,11 +120,11 @@ class SelectServerPage extends StatelessWidget {
                                       await Settings.setValue("server_code", loginCode.code);
 
                                       var isAuthenticated = await authProvider.isAuthenticated();
-                                      isAuthenticatedChanged(isAuthenticated);
-                                      selectedServerChanged(serverUri);
-                                      // If the form is valid, display a snackbar. In the real world,
-                                      // you'd often call a server or save the information in a database.
-                                      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Processing Data')));
+                                      if (isAuthenticated) {
+                                        Provider.of<AppState>(context, listen: false).navigateTo(PageAction(state: PageState.replaceAll, page: homePageConfig));
+                                      } else {
+                                        Provider.of<AppState>(context, listen: false).navigateTo(PageAction(state: PageState.replaceAll, page: loginPageConfig));
+                                      }
                                     } else {
                                       EasyLoading.showError("Es konnte keine Verbindung hergestellt werden: " + serverUri.toString(), dismissOnTap: true);
                                     }
