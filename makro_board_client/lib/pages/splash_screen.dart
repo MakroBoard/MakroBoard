@@ -2,17 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:makro_board_client/app_state.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:makro_board_client/router/page_configuration.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
-  final ValueChanged<Uri?> selectedServerChanged;
-
-  SplashScreen({
-    required this.selectedServerChanged,
-  });
+  const SplashScreen();
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -27,8 +25,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void initialize() async {
     var minFuture = new Future.delayed(const Duration(seconds: 3));
-    await Settings.init();
 
+    await Settings.init();
     _initializeEasyLoading();
 
     Uri? serverUri;
@@ -50,13 +48,18 @@ class _SplashScreenState extends State<SplashScreen> {
     var apiProvider = Provider.of<ApiProvider>(context, listen: false);
 
     if (serverUri == null || !(await apiProvider.initialize(serverUri, AppLocalizations.of(context)!.localeName))) {
-      serverUri = Uri();
-    } else {
-      await apiProvider.isAuthenticated();
-    }
+      await minFuture;
 
-    await minFuture;
-    this.widget.selectedServerChanged(serverUri);
+      Provider.of<AppState>(context, listen: false).setSplashFinished(selectServerPageConfig);
+    } else {
+      if (await apiProvider.isAuthenticated()) {
+        await minFuture;
+        Provider.of<AppState>(context, listen: false).setSplashFinished(homePageConfig);
+      } else {
+        await minFuture;
+        Provider.of<AppState>(context, listen: false).setSplashFinished(loginPageConfig);
+      }
+    }
   }
 
   void _initializeEasyLoading() {
