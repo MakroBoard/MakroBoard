@@ -14,7 +14,7 @@ import 'package:makro_board_client/models/group.dart' as models;
 
 class PagePage extends StatelessWidget {
   final models.Page initialPage;
-  const PagePage({required Key key, required this.initialPage}) : super(key: key);
+  const PagePage({Key? key, required this.initialPage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
