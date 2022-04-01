@@ -13,7 +13,7 @@ Web and full documentation: [makroboard.app](https://makroboard.app)
 
 Community: 
 
-![Discord](https://discordapp.com/api/guilds/889571217789550723/widget.png?style=banner3)
+[![Discord](https://discordapp.com/api/guilds/889571217789550723/widget.png?style=banner3)](https://discord.com/invite/E6dsScJV)
 
 ## Installation
 
