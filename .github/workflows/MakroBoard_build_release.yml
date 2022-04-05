@@ -129,11 +129,13 @@ jobs:
       with:
         name: latest_linux_client_x64
     - name: Import GPG key
+      if: ${{ github.event_name != 'pull_request' }}
       id: import_gpg
       uses: crazy-max/ghaction-import-gpg@v4
       with:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
     - name: GPG user IDs
+      if: ${{ github.event_name != 'pull_request' }}
       run: |
         echo "fingerprint: ${{ steps.import_gpg.outputs.fingerprint }}"
         echo "keyid:       ${{ steps.import_gpg.outputs.keyid }}"
@@ -144,13 +146,18 @@ jobs:
     - name: prepare appimage linxuclient x64 dir
       run: mkdir -p ./appimage/MakroBoard_client_x64.AppDir &&  cp -rf ./linuxclient_x64/* ./appimage/MakroBoard_client_x64.AppDir/ && chmod +x ./appimage/MakroBoard_client_x64.AppDir/MakroBoardClient && cp ./packaging/AppImage/linuxclient_Apprun ./appimage/MakroBoard_client_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_client_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_client_x64.AppDir/MakroBoardClient.png && cp ./packaging/AppImage/linuxclient_desktop ./appimage/MakroBoard_client_x64.AppDir/MakroBoard_client_x64.desktop
     - name: build appimage linuxclient x64 beta
-      if: ${{ (contains(github.ref, '-beta')) }}
+      if: ${{ (contains(github.ref, '-beta')) && github.event_name != 'pull_request' }}
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_client_x64.AppDir/ MakroBoard_client_x64.AppImage --sign
       env:
           ARCH: x86_64
     - name: build appimage linuxclient x64
-      if: ${{ !(contains(github.ref, '-beta')) }}
+      if: ${{ !(contains(github.ref, '-beta')) && github.event_name != 'pull_request' }}
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_client_x64.AppDir/ MakroBoard_client_x64.AppImage --sign -u 'gh-releases-zsync|MakroBoard|MakroBoard|latest|MakroBoard_client_x64.AppImage.zsync'
+      env:
+          ARCH: x86_64
+    - name: build appimage linuxclient x64 PR
+      if: ${{ github.event_name == 'pull_request' }}
+      run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_client_x64.AppDir/ MakroBoard_client_x64.AppImage
       env:
           ARCH: x86_64
     - name: copy linux client appimage x64
@@ -220,11 +227,13 @@ jobs:
       with:
         name: latest_linux_host_x64
     - name: Import GPG key
+      if: ${{ github.event_name != 'pull_request' }}
       id: import_gpg
       uses: crazy-max/ghaction-import-gpg@v4
       with:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
     - name: GPG user IDs
+      if: ${{ github.event_name != 'pull_request' }}
       run: |
         echo "fingerprint: ${{ steps.import_gpg.outputs.fingerprint }}"
         echo "keyid:       ${{ steps.import_gpg.outputs.keyid }}"
@@ -235,15 +244,20 @@ jobs:
     - name: prepare appimage linxhost x64 dir
       run: mkdir -p ./appimage/MakroBoard_host_x64.AppDir &&  cp -rf ./linuxhost_x64/* ./appimage/MakroBoard_host_x64.AppDir/ && chmod +x ./appimage/MakroBoard_host_x64.AppDir/MakroBoard && cp ./packaging/AppImage/linuxhost_Apprun ./appimage/MakroBoard_host_x64.AppDir/AppRun && chmod +x ./appimage/MakroBoard_host_x64.AppDir/AppRun && cp ./packaging/logo.png ./appimage/MakroBoard_host_x64.AppDir/MakroBoardHost.png && cp ./packaging/AppImage/linuxhost_desktop ./appimage/MakroBoard_host_x64.AppDir/MakroBoard_host_x64.desktop
     - name: build appimage linuxhost x64 beta
-      if: ${{ (contains(github.ref, '-beta')) }}
+      if: ${{ (contains(github.ref, '-beta')) && github.event_name != 'pull_request' }}
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_host_x64.AppDir/ MakroBoard_host_x64.AppImage --sign
       env:
           ARCH: x86_64
     - name: build appimage linuxhost x64
-      if: ${{ !(contains(github.ref, '-beta')) }}
+      if: ${{ !(contains(github.ref, '-beta')) && github.event_name != 'pull_request' }}
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_host_x64.AppDir/ MakroBoard_host_x64.AppImage --sign -u 'gh-releases-zsync|MakroBoard|MakroBoard|latest|MakroBoard_host_x64.AppImage.zsync'
       env:
           ARCH: x86_64
+    - name: build appimage linuxhost x64 PR
+      if: ${{ github.event_name != 'pull_request' }}
+      run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_host_x64.AppDir/ MakroBoard_host_x64.AppImage
+      env:
+          ARCH: x86_64      
     - name: copy linux host appimage x64
       run: mkdir -p upload/linuxhost_appimage_x64/ && cp -rf MakroBoard_host_x64.AppImage* upload/linuxhost_appimage_x64/
     - name: upload artifact linux Host x64 appimage
