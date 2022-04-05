@@ -50,7 +50,6 @@ class _MakroBoardAppState extends State<MakroBoardApp> {
       appState.init(context);
 
       Provider.of<ApiProvider>(context, listen: false).updateContext(context);
-      EasyLoading.init()(context, widget);
     });
   }
 
@@ -65,6 +64,7 @@ class _MakroBoardAppState extends State<MakroBoardApp> {
         title: "MakroBoard",
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
+        builder: EasyLoading.init(),
       ),
     );
   }
