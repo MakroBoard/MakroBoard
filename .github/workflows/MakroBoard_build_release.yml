@@ -254,7 +254,7 @@ jobs:
       env:
           ARCH: x86_64
     - name: build appimage linuxhost x64 PR
-      if: ${{ github.event_name != 'pull_request' }}
+      if: ${{ github.event_name == 'pull_request' }}
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_host_x64.AppDir/ MakroBoard_host_x64.AppImage
       env:
           ARCH: x86_64      
