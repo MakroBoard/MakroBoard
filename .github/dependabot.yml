@@ -19,7 +19,7 @@ updates:
     open-pull-requests-limit: 20
 
   - package-ecosystem: "pub"
-    directory: "/"
+    directory: "/makro_board_client/"
     schedule:
       interval: "daily"
       time: "11:00"  
