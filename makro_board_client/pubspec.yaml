@@ -42,7 +42,7 @@ dependencies:
       url: https://github.com/Ahmadre/FlutterIconPicker.git
       ref: master
   json_annotation: ^4.0.0
-  flutter_staggered_grid_view: ^0.4.0
+  flutter_staggered_grid_view: ">=0.4.0 <0.7.0"
   json_theme: ^3.3.1
 
   # The following adds the Cupertino Icons font to your application.
