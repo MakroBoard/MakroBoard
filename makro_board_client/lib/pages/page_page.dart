@@ -35,13 +35,15 @@ class PagePage extends StatelessWidget {
             var groups = snapshot.data as List<models.Group>;
             var axisCount = min(max((MediaQuery.of(context).size.width / 400).round(), 1), groups.length);
             return initialPage.groups.isNotEmpty
-                ? StaggeredGridView.countBuilder(
+                ? MasonryGridView.count(
                     key: ObjectKey(axisCount),
                     crossAxisCount: axisCount,
-                    addAutomaticKeepAlives: false,
                     itemCount: groups.length,
-                    itemBuilder: (BuildContext context, int index) => GroupCard(group: groups[index]),
-                    staggeredTileBuilder: (int index) => const StaggeredTile.fit(1),
+                    itemBuilder: (BuildContext context, int index) => StaggeredGridTile.fit(
+                      crossAxisCellCount: 1,
+                      child: GroupCard(group: groups[index]),
+                    ),
+                    // staggeredTileBuilder: (int index) => const Tile.fit(1),
                     mainAxisSpacing: 4.0,
                     crossAxisSpacing: 4.0,
                   )
