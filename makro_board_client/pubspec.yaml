@@ -29,7 +29,7 @@ dependencies:
   intl: ^0.17.0
   signalr_core: ^1.1.0
   provider: ">=5.0.0 <7.0.0"
-  url_launcher: ^6.1.0
+  url_launcher: ^6.1.2
   flutter_settings_screens: ^0.3.0-null-safety
   flutter_easyloading: ^3.0.0
   animated_text_kit: ^4.2.0
