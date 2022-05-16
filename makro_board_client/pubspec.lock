@@ -377,7 +377,7 @@ packages:
       name: json_schema2
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1+2"
+    version: "2.0.2"
   json_serializable:
     dependency: "direct dev"
     description:
@@ -391,7 +391,7 @@ packages:
       name: json_theme
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.3.1"
+    version: "4.0.0"
   lints:
     dependency: transitive
     description:
@@ -587,7 +587,7 @@ packages:
       name: rest_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.1"
+    version: "2.1.4"
   shared_preferences:
     dependency: transitive
     description:
@@ -873,6 +873,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
+  yaon:
+    dependency: transitive
+    description:
+      name: yaon
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0+1"
 sdks:
   dart: ">=2.16.0 <3.0.0"
   flutter: ">=2.8.0"
