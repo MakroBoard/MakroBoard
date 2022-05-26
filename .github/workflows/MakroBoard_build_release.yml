@@ -131,7 +131,7 @@ jobs:
     - name: Import GPG key
       if: ${{ github.event_name != 'pull_request' }}
       id: import_gpg
-      uses: crazy-max/ghaction-import-gpg@v4
+      uses: crazy-max/ghaction-import-gpg@v5
       with:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
     - name: GPG user IDs
@@ -229,7 +229,7 @@ jobs:
     - name: Import GPG key
       if: ${{ github.event_name != 'pull_request' }}
       id: import_gpg
-      uses: crazy-max/ghaction-import-gpg@v4
+      uses: crazy-max/ghaction-import-gpg@v5
       with:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
     - name: GPG user IDs
