@@ -262,7 +262,7 @@ packages:
       name: flutter_settings_screens
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.2-null-safety"
+    version: "0.3.3-null-safety+1"
   flutter_spinkit:
     dependency: transitive
     description:
@@ -468,7 +468,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.9"
+    version: "2.0.11"
   path_provider_android:
     dependency: transitive
     description:
@@ -552,7 +552,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.2"
+    version: "6.0.3"
   pub_semver:
     dependency: transitive
     description:
@@ -594,7 +594,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.13"
+    version: "2.0.15"
   shared_preferences_android:
     dependency: transitive
     description:
