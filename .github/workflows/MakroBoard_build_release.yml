@@ -183,7 +183,7 @@ jobs:
     - name: Display structure of downloaded files
       run: ls -R
     - name: Setup .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.x.x
     - name: set Version
@@ -389,7 +389,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1
     - name: install .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.x.x
     - name: install Wix
@@ -441,7 +441,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1
     - name: install .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.x.x
     - name: set Version
@@ -488,7 +488,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1
     - name: install .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.x.x
     - name: install Wix
@@ -641,7 +641,7 @@ jobs:
       with:
         name: latest_web_client
     - name: install .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.x.x
     - name: install gsed
