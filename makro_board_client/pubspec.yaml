@@ -35,7 +35,7 @@ dependencies:
   animated_text_kit: ^4.2.0
   responsive_grid: ^2.1.0
   page_transition: ^2.0.2
-  enhanced_future_builder: ^1.0.3
+  enhanced_future_builder: ^2.0.0
   beamer: ^1.2.0
   flutter_iconpicker: ^3.1.4+1
   json_annotation: ^4.5.0
