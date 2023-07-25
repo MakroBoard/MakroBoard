@@ -39,8 +39,11 @@ class ApiProvider {
   static const String removePanelUrl = "/api/layout/removepanel";
   static const String removePageUrl = "/api/layout/removepage";
 
-  Map<String, String> get _defaultHeader =>
-      <String, String>{HttpHeaders.authorizationHeader: Settings.getValue("server_token", ""), 'Content-Type': 'application/json; charset=UTF-8', 'Accept-Language': _locale ?? "*"};
+  Map<String, String> get _defaultHeader => <String, String>{
+        HttpHeaders.authorizationHeader: Settings.getValue("server_token", defaultValue: "") ?? "",
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept-Language': _locale ?? "*"
+      };
 
   List<Plugin> currentPlugins = [];
 

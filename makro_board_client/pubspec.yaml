@@ -25,9 +25,12 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  http: ^0.13.1
-  intl: ^0.17.0
-  signalr_core: ^1.1.0
+  http: ^1.1.0
+  intl: ^0.18.0
+  signalr_core:
+    git:
+      url: https://github.com/RCSandberg/signalr_core.git
+      ref: feature/bump-dart-and-package-versions
   provider: ">=5.0.0 <7.0.0"
   url_launcher: ^6.1.0
   flutter_settings_screens: ^0.3.0-null-safety
@@ -35,12 +38,12 @@ dependencies:
   animated_text_kit: ^4.2.0
   responsive_grid: ^2.1.0
   page_transition: ^2.0.2
-  enhanced_future_builder: ^1.0.3
+  enhanced_future_builder: ^2.0.0
   beamer: ^1.2.0
   flutter_iconpicker: ^3.1.4+1
   json_annotation: ^4.5.0
   flutter_staggered_grid_view: ">=0.4.0 <0.7.0"
-  json_theme: ^3.3.1
+  json_theme: ^6.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -50,7 +53,7 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^2.0.0
   json_serializable: ^6.2.0
-  flutter_lints: ^1.0.0
+  flutter_lints: ^2.0.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

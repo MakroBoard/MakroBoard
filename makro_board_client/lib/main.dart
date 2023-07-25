@@ -1,9 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:json_theme/json_theme.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/provider/auth_provider.dart';
 import 'package:makro_board_client/provider/env_provider.dart';
@@ -17,9 +14,9 @@ import 'makroboard_http_overrides.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final themeStr = await rootBundle.loadString('assets/appainter_theme.json');
-  final themeJson = jsonDecode(themeStr);
-  final theme = ThemeDecoder.decodeThemeData(themeJson)!;
+  // final themeStr = await rootBundle.loadString('assets/appainter_theme.json');
+  // final themeJson = jsonDecode(themeStr);
+  // final theme = ThemeDecoder.decodeThemeData(themeJson)!;
 
   HttpOverrides.global = MakroboardHttpOverrides();
   runApp(
@@ -31,7 +28,12 @@ void main() async {
         Provider<AuthProvider>(create: (c) => AuthProvider(apiProvider: Provider.of(c, listen: false)))
       ],
       child: GlobalSettings(
-        child: MakroBoardApp(theme: theme),
+        child: MakroBoardApp(
+          theme: ThemeData(
+            useMaterial3: true,
+            colorSchemeSeed: const Color.fromARGB(255, 255, 86, 7),
+          ),
+        ),
       ),
     ),
   );

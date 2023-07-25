@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:makro_board_client/dialogs/delete_dialog.dart';
 import 'package:makro_board_client/dialogs/edit_panel_dialog.dart';
 import 'package:makro_board_client/models/control.dart';
-import 'package:makro_board_client/models/view.dart';
+import 'package:makro_board_client/models/view.dart' as view;
 import 'package:makro_board_client/models/view_config_value.dart';
 import 'package:makro_board_client/models/panel.dart';
 import 'package:makro_board_client/pages/page_page.dart';
@@ -72,7 +72,7 @@ class ControlPanel extends StatelessWidget {
     return _createControlWithView(context, control, control.view, configValues);
   }
 
-  Widget _createControlWithView(BuildContext context, Control control, View view, List<ViewConfigValue> configValues) {
+  Widget _createControlWithView(BuildContext context, Control control, view.View view, List<ViewConfigValue> configValues) {
     switch (view.viewType) {
       case "Button":
         return ButtonPanel(configValues: configValues, control: control);

@@ -9,7 +9,7 @@ class AvailableClients extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var ownCode = Settings.getValue("server_code", 0);
+    var ownCode = Settings.getValue("server_code", defaultValue: 0);
     return StreamBuilder<List<Client>>(
       stream: Provider.of<ApiProvider>(context, listen: false).clients,
       initialData: Provider.of<ApiProvider>(context, listen: false).currentClients,

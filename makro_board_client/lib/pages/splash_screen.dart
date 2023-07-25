@@ -51,10 +51,9 @@ class _SplashScreenState extends State<SplashScreen> {
     if (kIsWeb) {
       serverUri = Uri.base;
     } else {
-      var serverUriString = Settings.getValue<String>("server_host", "");
+      var serverUriString = Settings.getValue<String>("server_host", defaultValue: "") ?? "";
       if (serverUriString.isNotEmpty) {
-        var portString = Settings.getValue("server_port", "5001");
-        var port = portString.isNotEmpty ? int.parse(portString) : 5001;
+        var port = Settings.getValue<int>("server_port", defaultValue: 5001);
         serverUri = Uri.tryParse(serverUriString);
         if (serverUri != null) {
           serverUri = serverUri.replace(port: port);

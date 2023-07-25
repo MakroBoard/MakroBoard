@@ -47,7 +47,7 @@ class SelectServerPage extends StatelessWidget {
                               labelText: "Host",
                               prefixIcon: Icon(Icons.dns_outlined),
                             ),
-                            initialValue: Settings.getValue("server_host", "https://"),
+                            initialValue: Settings.getValue("server_host", defaultValue: "https://"),
                             validator: (value) {
                               if (value == null || value == "https://") {
                                 return "Um fortzufahren wird ein Host benötigt.";
@@ -75,7 +75,7 @@ class SelectServerPage extends StatelessWidget {
                               prefixIcon: Icon(Icons.tag),
                             ),
                             keyboardType: TextInputType.number,
-                            initialValue: Settings.getValue("server_port", "5001"),
+                            initialValue: Settings.getValue("server_port", defaultValue: "5001"),
                             inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly], // Only number
                             validator: (value) {
                               if (value == null) {
@@ -104,8 +104,8 @@ class SelectServerPage extends StatelessWidget {
                                 onPressed: () async {
                                   EasyLoading.show(status: 'verbinden ...');
                                   if (_loginFormKey.currentState!.validate()) {
-                                    var port = int.parse(Settings.getValue("server_port", "0"));
-                                    var serverUriString = Settings.getValue("server_host", "");
+                                    var port = Settings.getValue("server_port", defaultValue: 0);
+                                    var serverUriString = Settings.getValue("server_host", defaultValue: "") ?? "";
                                     if (port == 0) {
                                       await Settings.setValue("server_port", "5001");
                                       port = 5001;
