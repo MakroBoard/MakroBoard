@@ -13,10 +13,10 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  SplashScreenState createState() => SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -129,7 +129,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 child: AnimatedTextKit(
                   animatedTexts: [
                     TypewriterAnimatedText(
-                      'Console.WriteLine("' + AppLocalizations.of(context)!.hello + '")',
+                      'Console.WriteLine("${AppLocalizations.of(context)!.hello}")',
                       speed: const Duration(milliseconds: 65),
                     ),
                   ],

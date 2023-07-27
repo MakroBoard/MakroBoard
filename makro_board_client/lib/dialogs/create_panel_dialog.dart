@@ -14,10 +14,10 @@ class CreatePanelDialog extends StatefulWidget {
   const CreatePanelDialog({Key? key, required this.group}) : super(key: key);
 
   @override
-  _CreatePanelDialogState createState() => _CreatePanelDialogState();
+  CreatePanelDialogState createState() => CreatePanelDialogState();
 }
 
-class _CreatePanelDialogState extends State<CreatePanelDialog> {
+class CreatePanelDialogState extends State<CreatePanelDialog> {
   models.Plugin? selectedPlugin;
   Control? selectedControl;
   List<ViewConfigValue>? configValues;
@@ -34,13 +34,13 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final _createPanelFormKey = GlobalKey<FormState>();
+    final createPanelFormKey = GlobalKey<FormState>();
 
     return SimpleDialog(
-      title: Text("Panel zur Gruppe " + widget.group.label + " hinzufügen"),
+      title: Text("Panel zur Gruppe ${widget.group.label} hinzufügen"),
       children: [
         Form(
-          key: _createPanelFormKey,
+          key: createPanelFormKey,
           child: Column(
             children: [
               Row(
@@ -83,7 +83,7 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
                                     itemBuilder: (context, index) => ConfigParameterInput(
                                       configParameter: selectedControl!.view.configParameters[index],
                                       configParameterValue: viewConfigValues![index],
-                                      formKey: _createPanelFormKey,
+                                      formKey: createPanelFormKey,
                                     ),
                                   ),
                                   ListView.builder(
@@ -92,7 +92,7 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
                                     itemBuilder: (context, index) => ConfigParameterInput(
                                       configParameter: selectedControl!.configParameters[index],
                                       configParameterValue: configValues![index],
-                                      formKey: _createPanelFormKey,
+                                      formKey: createPanelFormKey,
                                     ),
                                   ),
                                 ],
@@ -112,7 +112,7 @@ class _CreatePanelDialogState extends State<CreatePanelDialog> {
                     child: const Text("Anlegen"),
                     onPressed: () async {
                       EasyLoading.show(status: 'Neue Gruppe anlegen ...');
-                      if (selectedPlugin != null && selectedControl != null && configValues != null && _createPanelFormKey.currentState!.validate()) {
+                      if (selectedPlugin != null && selectedControl != null && configValues != null && createPanelFormKey.currentState!.validate()) {
                         try {
                           await Provider.of<ApiProvider>(context, listen: false).addPanel(
                             models.Panel.createNew(

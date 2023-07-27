@@ -18,7 +18,7 @@ class SelectServerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _loginFormKey = GlobalKey<FormState>();
+    final loginFormKey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       // appBar: MakroBoardAppBar(title: "MakroBoard", showSettings: false).getAppBar(context),
@@ -34,7 +34,7 @@ class SelectServerPage extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Form(
-                      key: _loginFormKey,
+                      key: loginFormKey,
                       child: Column(
                         children: [
                           const ListTile(
@@ -103,7 +103,7 @@ class SelectServerPage extends StatelessWidget {
                               TextButton(
                                 onPressed: () async {
                                   EasyLoading.show(status: 'verbinden ...');
-                                  if (_loginFormKey.currentState!.validate()) {
+                                  if (loginFormKey.currentState!.validate()) {
                                     var port = Settings.getValue("server_port", defaultValue: 0);
                                     var serverUriString = Settings.getValue("server_host", defaultValue: "") ?? "";
                                     if (port == 0) {
@@ -126,7 +126,7 @@ class SelectServerPage extends StatelessWidget {
                                         Provider.of<AppState>(context, listen: false).navigateTo(PageAction(state: PageState.replaceAll, page: loginPageConfig));
                                       }
                                     } else {
-                                      EasyLoading.showError("Es konnte keine Verbindung hergestellt werden: " + serverUri.toString(), dismissOnTap: true);
+                                      EasyLoading.showError("Es konnte keine Verbindung hergestellt werden: $serverUri", dismissOnTap: true);
                                     }
                                   }
                                   EasyLoading.dismiss();
@@ -154,13 +154,14 @@ class SelectServerPage extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: ElevatedButton.icon(
                             onPressed: () async {
-                              var url = "https://makroboard.app";
-                              if (await canLaunch(url)) {
-                                await launch(
+                              var url = Uri.parse("https://makroboard.app");
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(
                                   url,
-                                  forceSafariVC: true,
-                                  forceWebView: true,
-                                  headers: <String, String>{'my_header_key': 'my_header_value'},
+                                  mode: LaunchMode.inAppWebView,
+                                  webViewConfiguration: const WebViewConfiguration(
+                                    headers: <String, String>{'my_header_key': 'my_header_value'},
+                                  ),
                                 );
                               } else {
                                 throw 'Could not launch $url';

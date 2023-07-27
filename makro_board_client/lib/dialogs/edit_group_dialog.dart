@@ -10,15 +10,15 @@ class EditGroupDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _editGroupFormKey = GlobalKey<FormState>();
+    final editGroupFormKey = GlobalKey<FormState>();
 
     var editGroup = group.clone();
 
     return SimpleDialog(
-      title: Text("Gruppe " + editGroup.label + " bearbeiten"),
+      title: Text("Gruppe ${editGroup.label} bearbeiten"),
       children: [
         Form(
-          key: _editGroupFormKey,
+          key: editGroupFormKey,
           child: Column(
             children: [
               TextFormField(
@@ -48,7 +48,7 @@ class EditGroupDialog extends StatelessWidget {
                     child: const Text("Speichern"),
                     onPressed: () async {
                       EasyLoading.show(status: 'Gruppe bearbeiten ...');
-                      if (_editGroupFormKey.currentState!.validate()) {
+                      if (editGroupFormKey.currentState!.validate()) {
                         try {
                           await Provider.of<ApiProvider>(context, listen: false).editGroup(editGroup);
 

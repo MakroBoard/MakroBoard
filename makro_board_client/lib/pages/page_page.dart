@@ -60,7 +60,7 @@ class PagePage extends StatelessWidget {
                         ),
                         Text(
                           "Leider ist die Seite noch Leer.",
-                          style: Theme.of(context).textTheme.headline2,
+                          style: Theme.of(context).textTheme.displayMedium,
                         ),
                       ],
                     ),
@@ -70,9 +70,9 @@ class PagePage extends StatelessWidget {
       ),
       floatingActionButton: GlobalSettings.of(context)?.editMode == true
           ? FloatingActionButton(
-              child: const Icon(Icons.add_box_outlined),
               onPressed: () => showCreateGroupDialog(context, initialPage),
               tooltip: "Neue Gruppe Anlegen",
+              child: const Icon(Icons.add_box_outlined),
             )
           : null,
     );

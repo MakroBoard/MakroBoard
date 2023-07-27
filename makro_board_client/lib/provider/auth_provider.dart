@@ -34,7 +34,7 @@ class AuthProvider {
       var dateTime = await apiProvider.submitCode(randomNumber);
       return LoginCode(code: randomNumber, validUntil: dateTime);
     } on Exception catch (e) {
-      print('never reached' + e.toString());
+      print('never reached$e');
     }
 
     return LoginCode(code: -1, validUntil: DateTime.now());

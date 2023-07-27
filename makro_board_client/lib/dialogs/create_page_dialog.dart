@@ -11,16 +11,16 @@ class CreatePageDialog extends StatefulWidget {
   const CreatePageDialog({Key? key}) : super(key: key);
 
   @override
-  _CreatePageDialogState createState() => _CreatePageDialogState();
+  CreatePageDialogState createState() => CreatePageDialogState();
 }
 
-class _CreatePageDialogState extends State<CreatePageDialog> {
+class CreatePageDialogState extends State<CreatePageDialog> {
   String pageLabel = "";
   IconData icon = Icons.check;
 
   @override
   Widget build(BuildContext context) {
-    final _createPageFormKey = GlobalKey<FormState>();
+    final createPageFormKey = GlobalKey<FormState>();
 
     return SimpleDialog(
       title: const Text("Neue Seite anlegen"),
@@ -28,7 +28,7 @@ class _CreatePageDialogState extends State<CreatePageDialog> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Form(
-            key: _createPageFormKey,
+            key: createPageFormKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -71,13 +71,13 @@ class _CreatePageDialogState extends State<CreatePageDialog> {
                       child: const Text("Anlegen"),
                       onPressed: () async {
                         EasyLoading.show(status: 'Neue Seite anlegen ...');
-                        if (_createPageFormKey.currentState!.validate()) {
+                        if (createPageFormKey.currentState!.validate()) {
                           try {
                             await Provider.of<ApiProvider>(context, listen: false).addPage(models.Page.createNew(label: pageLabel, icon: icon));
 
                             Navigator.of(context, rootNavigator: true).pop();
                           } catch (e) {
-                            log('Exception: ' + e.toString());
+                            log('Exception: $e');
                             // TODO Fehler anzeigen?
                           }
                         }

@@ -19,10 +19,10 @@ class MakroBoardApp extends StatefulWidget {
 
   // This widget is the root of your application.
   @override
-  _MakroBoardAppState createState() => _MakroBoardAppState();
+  MakroBoardAppState createState() => MakroBoardAppState();
 }
 
-class _MakroBoardAppState extends State<MakroBoardApp> {
+class MakroBoardAppState extends State<MakroBoardApp> {
   final appState = AppState();
 
   late AppRouterDelegate delegate;

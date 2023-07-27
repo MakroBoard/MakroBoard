@@ -22,13 +22,13 @@ class EditPanelDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _createPanelFormKey = GlobalKey<FormState>();
+    final createPanelFormKey = GlobalKey<FormState>();
 
     return SimpleDialog(
-      title: Text("Panel " + panel.symbolicName + " bearbeiten"),
+      title: Text("Panel ${panel.symbolicName} bearbeiten"),
       children: [
         Form(
-          key: _createPanelFormKey,
+          key: createPanelFormKey,
           child: Column(
             children: [
               SizedBox(
@@ -48,7 +48,7 @@ class EditPanelDialog extends StatelessWidget {
                         itemBuilder: (context, index) => ConfigParameterInput(
                           configParameter: control.view.configParameters[index],
                           configParameterValue: viewConfigValues[index],
-                          formKey: _createPanelFormKey,
+                          formKey: createPanelFormKey,
                         ),
                       ),
                       ListView.builder(
@@ -57,7 +57,7 @@ class EditPanelDialog extends StatelessWidget {
                         itemBuilder: (context, index) => ConfigParameterInput(
                           configParameter: control.configParameters[index],
                           configParameterValue: configValues[index],
-                          formKey: _createPanelFormKey,
+                          formKey: createPanelFormKey,
                         ),
                       ),
                     ],
@@ -74,7 +74,7 @@ class EditPanelDialog extends StatelessWidget {
                     child: const Text("'Ändern'"),
                     onPressed: () async {
                       EasyLoading.show(status: 'Panel ändern ...');
-                      if (_createPanelFormKey.currentState!.validate()) {
+                      if (createPanelFormKey.currentState!.validate()) {
                         try {
                           await Provider.of<ApiProvider>(context, listen: false).editPanel(
                             panel,

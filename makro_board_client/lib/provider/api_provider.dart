@@ -349,7 +349,7 @@ class ApiProvider {
       streamIsAuthenticatedController.add(currentIsAuthenticated);
       return currentIsAuthenticated;
     } on Exception catch (e) {
-      log('Exception: ' + e.toString());
+      log('Exception: $e', error: e);
       return false;
     }
   }
@@ -375,7 +375,7 @@ class ApiProvider {
       var result = _handleResponse(jsonResponse, (r) => ConfirmClientResponse.fromJson(r));
       _checkResponse(result);
     } on Exception catch (e) {
-      print('never reached' + e.toString());
+      log('never reached$e', error: e);
     }
   }
 
@@ -390,7 +390,7 @@ class ApiProvider {
       var result = _handleResponse(jsonResponse, (r) => RemoveClientResponse.fromJson(r));
       _checkResponse(result);
     } on Exception catch (e) {
-      print('never reached' + e.toString());
+      log('never reached$e', error: e);
     }
   }
 
@@ -408,7 +408,7 @@ class ApiProvider {
       }
       return currentPlugins;
     } on Exception catch (e) {
-      print('never reached' + e.toString());
+      log('never reached$e', error: e);
     }
 
     return List.empty(growable: true);
@@ -442,7 +442,7 @@ class ApiProvider {
         return result?.result;
       }
     } on Exception catch (e) {
-      print('never reached' + e.toString());
+      log('never reached$e', error: e);
     }
 
     return null;
@@ -480,7 +480,7 @@ class ApiProvider {
       var result = _handleResponse(jsonResponse, (r) => RemovePageResponse.fromJson(r));
       _checkResponse(result);
     } on Exception catch (e) {
-      print('never reached' + e.toString());
+      log('never reached$e', error: e);
     }
   }
 
@@ -516,7 +516,7 @@ class ApiProvider {
       var result = _handleResponse(jsonResponse, (r) => RemoveGroupResponse.fromJson(r));
       _checkResponse(result);
     } on Exception catch (e) {
-      print('never reached' + e.toString());
+      log('never reached$e', error: e);
     }
   }
 
@@ -552,7 +552,7 @@ class ApiProvider {
       var result = _handleResponse(jsonResponse, (r) => RemovePanelResponse.fromJson(r));
       _checkResponse(result);
     } on Exception catch (e) {
-      print('never reached' + e.toString());
+      log('never reached$e', error: e);
     }
   }
 

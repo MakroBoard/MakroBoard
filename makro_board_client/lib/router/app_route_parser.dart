@@ -4,11 +4,6 @@ import 'page_configuration.dart';
 import 'pages.dart';
 
 class AppRouteParser extends RouteInformationParser<PageConfiguration> {
-  PageConfiguration parseUrl(String url) {
-    final uri = Uri.parse(url);
-    return parseUri(uri);
-  }
-
   PageConfiguration parseUri(Uri uri) {
     if (uri.pathSegments.isEmpty) {
       return splashPageConfig;
@@ -47,28 +42,28 @@ class AppRouteParser extends RouteInformationParser<PageConfiguration> {
 
   @override
   Future<PageConfiguration> parseRouteInformation(RouteInformation routeInformation) async {
-    return parseUrl(routeInformation.location!);
+    return parseUri(routeInformation.uri);
   }
 
   @override
   RouteInformation restoreRouteInformation(PageConfiguration configuration) {
     switch (configuration.uiPage) {
       case Pages.splash:
-        return const RouteInformation(location: "/" + splashPath);
+        return RouteInformation(uri: Uri.parse("/$splashPath"));
       case Pages.home:
-        return const RouteInformation(location: "/");
+        return RouteInformation(uri: Uri.parse("/"));
       case Pages.login:
-        return const RouteInformation(location: "/" + loginPath);
+        return RouteInformation(uri: Uri.parse("/$loginPath"));
       case Pages.selectserver:
-        return const RouteInformation(location: "/" + selectServerPath);
+        return RouteInformation(uri: Uri.parse("/$selectServerPath"));
       case Pages.config:
-        return const RouteInformation(location: "/" + configPath);
+        return RouteInformation(uri: Uri.parse("/$configPath"));
       case Pages.settings:
-        return const RouteInformation(location: "/" + settingsPath);
+        return RouteInformation(uri: Uri.parse("/$settingsPath"));
       case Pages.page:
-        return RouteInformation(location: "/" + pagePath + "/" + (configuration as PagePageConfiguration).page.id.toString());
+        return RouteInformation(uri: Uri.parse("/$pagePath/${(configuration as PagePageConfiguration).page.id}"));
       default:
-        return const RouteInformation(location: "/" + notFoundPath);
+        return RouteInformation(uri: Uri.parse("/$notFoundPath"));
     }
   }
 }

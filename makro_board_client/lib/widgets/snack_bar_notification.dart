@@ -10,10 +10,10 @@ class SnackBarNotification extends StatefulWidget {
   const SnackBarNotification({Key? key, required this.child}) : super(key: key);
 
   @override
-  _SnackBarNotificationState createState() => _SnackBarNotificationState();
+  SnackBarNotificationState createState() => SnackBarNotificationState();
 }
 
-class _SnackBarNotificationState extends State<SnackBarNotification> {
+class SnackBarNotificationState extends State<SnackBarNotification> {
   // ignore: cancel_subscriptions
   StreamSubscription? _snackBarNotifications;
 
@@ -71,7 +71,7 @@ class _SnackBarNotificationState extends State<SnackBarNotification> {
       case noti.NotificationType.success:
         return Colors.green.shade600;
       case noti.NotificationType.error:
-        return Theme.of(context).errorColor;
+        return Theme.of(context).colorScheme.error;
     }
   }
 }

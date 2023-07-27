@@ -51,355 +51,278 @@ const _$ResponseStatusEnumMap = {
   ResponseStatus.error: 1,
 };
 
-RequestTokensResponse _$RequestTokensResponseFromJson(
-        Map<String, dynamic> json) =>
-    RequestTokensResponse(
-      (json['clients'] as List<dynamic>)
-          .map((e) => Client.fromJson(e as Map<String, dynamic>))
-          .toList(),
+RequestTokensResponse _$RequestTokensResponseFromJson(Map<String, dynamic> json) => RequestTokensResponse(
+      (json['clients'] as List<dynamic>).map((e) => Client.fromJson(e as Map<String, dynamic>)).toList(),
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$RequestTokensResponseToJson(
-        RequestTokensResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$RequestTokensResponseToJson(RequestTokensResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
       'clients': instance.clients,
     };
 
-CheckTokenResponse _$CheckTokenResponseFromJson(Map<String, dynamic> json) =>
-    CheckTokenResponse(
+CheckTokenResponse _$CheckTokenResponseFromJson(Map<String, dynamic> json) => CheckTokenResponse(
       json['isValid'] as bool,
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$CheckTokenResponseToJson(CheckTokenResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$CheckTokenResponseToJson(CheckTokenResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
       'isValid': instance.isValid,
     };
 
-SubmitCodeRequest _$SubmitCodeRequestFromJson(Map<String, dynamic> json) =>
-    SubmitCodeRequest(
+SubmitCodeRequest _$SubmitCodeRequestFromJson(Map<String, dynamic> json) => SubmitCodeRequest(
       json['code'] as int,
     );
 
-Map<String, dynamic> _$SubmitCodeRequestToJson(SubmitCodeRequest instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$SubmitCodeRequestToJson(SubmitCodeRequest instance) => <String, dynamic>{
       'code': instance.code,
     };
 
-SubmitCodeResponse _$SubmitCodeResponseFromJson(Map<String, dynamic> json) =>
-    SubmitCodeResponse(
+SubmitCodeResponse _$SubmitCodeResponseFromJson(Map<String, dynamic> json) => SubmitCodeResponse(
       json['validUntil'] as String,
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$SubmitCodeResponseToJson(SubmitCodeResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$SubmitCodeResponseToJson(SubmitCodeResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
       'validUntil': instance.validUntil,
     };
 
-ConfirmClientRequest _$ConfirmClientRequestFromJson(
-        Map<String, dynamic> json) =>
-    ConfirmClientRequest(
+ConfirmClientRequest _$ConfirmClientRequestFromJson(Map<String, dynamic> json) => ConfirmClientRequest(
       Client.fromJson(json['client'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$ConfirmClientRequestToJson(
-        ConfirmClientRequest instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ConfirmClientRequestToJson(ConfirmClientRequest instance) => <String, dynamic>{
       'client': instance.client,
     };
 
-ConfirmClientResponse _$ConfirmClientResponseFromJson(
-        Map<String, dynamic> json) =>
-    ConfirmClientResponse(
+ConfirmClientResponse _$ConfirmClientResponseFromJson(Map<String, dynamic> json) => ConfirmClientResponse(
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$ConfirmClientResponseToJson(
-        ConfirmClientResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ConfirmClientResponseToJson(ConfirmClientResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
     };
 
-RemoveClientRequest _$RemoveClientRequestFromJson(Map<String, dynamic> json) =>
-    RemoveClientRequest(
+RemoveClientRequest _$RemoveClientRequestFromJson(Map<String, dynamic> json) => RemoveClientRequest(
       Client.fromJson(json['client'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$RemoveClientRequestToJson(
-        RemoveClientRequest instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$RemoveClientRequestToJson(RemoveClientRequest instance) => <String, dynamic>{
       'client': instance.client,
     };
 
-RemoveClientResponse _$RemoveClientResponseFromJson(
-        Map<String, dynamic> json) =>
-    RemoveClientResponse(
+RemoveClientResponse _$RemoveClientResponseFromJson(Map<String, dynamic> json) => RemoveClientResponse(
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$RemoveClientResponseToJson(
-        RemoveClientResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$RemoveClientResponseToJson(RemoveClientResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
     };
 
-AvailableControlsResponse _$AvailableControlsResponseFromJson(
-        Map<String, dynamic> json) =>
-    AvailableControlsResponse(
-      (json['plugins'] as List<dynamic>)
-          .map((e) => Plugin.fromJson(e as Map<String, dynamic>))
-          .toList(),
+AvailableControlsResponse _$AvailableControlsResponseFromJson(Map<String, dynamic> json) => AvailableControlsResponse(
+      (json['plugins'] as List<dynamic>).map((e) => Plugin.fromJson(e as Map<String, dynamic>)).toList(),
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$AvailableControlsResponseToJson(
-        AvailableControlsResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$AvailableControlsResponseToJson(AvailableControlsResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
       'plugins': instance.plugins,
     };
 
-ExecuteRequest _$ExecuteRequestFromJson(Map<String, dynamic> json) =>
-    ExecuteRequest(
+ExecuteRequest _$ExecuteRequestFromJson(Map<String, dynamic> json) => ExecuteRequest(
       json['symbolicName'] as String,
-      (json['configValues'] as List<dynamic>)
-          .map((e) => ViewConfigValue.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      (json['configValues'] as List<dynamic>).map((e) => ViewConfigValue.fromJson(e as Map<String, dynamic>)).toList(),
     );
 
-Map<String, dynamic> _$ExecuteRequestToJson(ExecuteRequest instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ExecuteRequestToJson(ExecuteRequest instance) => <String, dynamic>{
       'symbolicName': instance.symbolicName,
       'configValues': instance.configValues,
     };
 
-ExecuteResponse _$ExecuteResponseFromJson(Map<String, dynamic> json) =>
-    ExecuteResponse(
+ExecuteResponse _$ExecuteResponseFromJson(Map<String, dynamic> json) => ExecuteResponse(
       json['result'] as String,
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$ExecuteResponseToJson(ExecuteResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ExecuteResponseToJson(ExecuteResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
       'result': instance.result,
     };
 
-AddPageRequest _$AddPageRequestFromJson(Map<String, dynamic> json) =>
-    AddPageRequest(
+AddPageRequest _$AddPageRequestFromJson(Map<String, dynamic> json) => AddPageRequest(
       Page.fromJson(json['page'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$AddPageRequestToJson(AddPageRequest instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$AddPageRequestToJson(AddPageRequest instance) => <String, dynamic>{
       'page': instance.page,
     };
 
-AddPageResponse _$AddPageResponseFromJson(Map<String, dynamic> json) =>
-    AddPageResponse(
+AddPageResponse _$AddPageResponseFromJson(Map<String, dynamic> json) => AddPageResponse(
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$AddPageResponseToJson(AddPageResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$AddPageResponseToJson(AddPageResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
     };
 
-EditPageRequest _$EditPageRequestFromJson(Map<String, dynamic> json) =>
-    EditPageRequest(
+EditPageRequest _$EditPageRequestFromJson(Map<String, dynamic> json) => EditPageRequest(
       Page.fromJson(json['page'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$EditPageRequestToJson(EditPageRequest instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$EditPageRequestToJson(EditPageRequest instance) => <String, dynamic>{
       'page': instance.page,
     };
 
-EditPageResponse _$EditPageResponseFromJson(Map<String, dynamic> json) =>
-    EditPageResponse(
+EditPageResponse _$EditPageResponseFromJson(Map<String, dynamic> json) => EditPageResponse(
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$EditPageResponseToJson(EditPageResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$EditPageResponseToJson(EditPageResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
     };
 
-RemovePageRequest _$RemovePageRequestFromJson(Map<String, dynamic> json) =>
-    RemovePageRequest(
+RemovePageRequest _$RemovePageRequestFromJson(Map<String, dynamic> json) => RemovePageRequest(
       json['pageId'] as int,
     );
 
-Map<String, dynamic> _$RemovePageRequestToJson(RemovePageRequest instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$RemovePageRequestToJson(RemovePageRequest instance) => <String, dynamic>{
       'pageId': instance.pageId,
     };
 
-RemovePageResponse _$RemovePageResponseFromJson(Map<String, dynamic> json) =>
-    RemovePageResponse(
+RemovePageResponse _$RemovePageResponseFromJson(Map<String, dynamic> json) => RemovePageResponse(
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$RemovePageResponseToJson(RemovePageResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$RemovePageResponseToJson(RemovePageResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
     };
 
-AddGroupRequest _$AddGroupRequestFromJson(Map<String, dynamic> json) =>
-    AddGroupRequest(
+AddGroupRequest _$AddGroupRequestFromJson(Map<String, dynamic> json) => AddGroupRequest(
       Group.fromJson(json['group'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$AddGroupRequestToJson(AddGroupRequest instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$AddGroupRequestToJson(AddGroupRequest instance) => <String, dynamic>{
       'group': instance.group,
     };
 
-AddGroupResponse _$AddGroupResponseFromJson(Map<String, dynamic> json) =>
-    AddGroupResponse(
+AddGroupResponse _$AddGroupResponseFromJson(Map<String, dynamic> json) => AddGroupResponse(
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$AddGroupResponseToJson(AddGroupResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$AddGroupResponseToJson(AddGroupResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
     };
 
-EditGroupRequest _$EditGroupRequestFromJson(Map<String, dynamic> json) =>
-    EditGroupRequest(
+EditGroupRequest _$EditGroupRequestFromJson(Map<String, dynamic> json) => EditGroupRequest(
       Group.fromJson(json['group'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$EditGroupRequestToJson(EditGroupRequest instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$EditGroupRequestToJson(EditGroupRequest instance) => <String, dynamic>{
       'group': instance.group,
     };
 
-EditGroupResponse _$EditGroupResponseFromJson(Map<String, dynamic> json) =>
-    EditGroupResponse(
+EditGroupResponse _$EditGroupResponseFromJson(Map<String, dynamic> json) => EditGroupResponse(
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$EditGroupResponseToJson(EditGroupResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$EditGroupResponseToJson(EditGroupResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
     };
 
-RemoveGroupRequest _$RemoveGroupRequestFromJson(Map<String, dynamic> json) =>
-    RemoveGroupRequest(
+RemoveGroupRequest _$RemoveGroupRequestFromJson(Map<String, dynamic> json) => RemoveGroupRequest(
       json['groupId'] as int,
     );
 
-Map<String, dynamic> _$RemoveGroupRequestToJson(RemoveGroupRequest instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$RemoveGroupRequestToJson(RemoveGroupRequest instance) => <String, dynamic>{
       'groupId': instance.groupId,
     };
 
-RemoveGroupResponse _$RemoveGroupResponseFromJson(Map<String, dynamic> json) =>
-    RemoveGroupResponse(
+RemoveGroupResponse _$RemoveGroupResponseFromJson(Map<String, dynamic> json) => RemoveGroupResponse(
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$RemoveGroupResponseToJson(
-        RemoveGroupResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$RemoveGroupResponseToJson(RemoveGroupResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
     };
 
-AddPanelRequest _$AddPanelRequestFromJson(Map<String, dynamic> json) =>
-    AddPanelRequest(
+AddPanelRequest _$AddPanelRequestFromJson(Map<String, dynamic> json) => AddPanelRequest(
       Panel.fromJson(json['panel'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$AddPanelRequestToJson(AddPanelRequest instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$AddPanelRequestToJson(AddPanelRequest instance) => <String, dynamic>{
       'panel': instance.panel,
     };
 
-AddPanelResponse _$AddPanelResponseFromJson(Map<String, dynamic> json) =>
-    AddPanelResponse(
+AddPanelResponse _$AddPanelResponseFromJson(Map<String, dynamic> json) => AddPanelResponse(
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$AddPanelResponseToJson(AddPanelResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$AddPanelResponseToJson(AddPanelResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
     };
 
-EditPanelRequest _$EditPanelRequestFromJson(Map<String, dynamic> json) =>
-    EditPanelRequest(
+EditPanelRequest _$EditPanelRequestFromJson(Map<String, dynamic> json) => EditPanelRequest(
       Panel.fromJson(json['panel'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$EditPanelRequestToJson(EditPanelRequest instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$EditPanelRequestToJson(EditPanelRequest instance) => <String, dynamic>{
       'panel': instance.panel,
     };
 
-EditPanelResponse _$EditPanelResponseFromJson(Map<String, dynamic> json) =>
-    EditPanelResponse(
+EditPanelResponse _$EditPanelResponseFromJson(Map<String, dynamic> json) => EditPanelResponse(
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$EditPanelResponseToJson(EditPanelResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$EditPanelResponseToJson(EditPanelResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
     };
 
-RemovePanelRequest _$RemovePanelRequestFromJson(Map<String, dynamic> json) =>
-    RemovePanelRequest(
+RemovePanelRequest _$RemovePanelRequestFromJson(Map<String, dynamic> json) => RemovePanelRequest(
       json['panelId'] as int,
     );
 
-Map<String, dynamic> _$RemovePanelRequestToJson(RemovePanelRequest instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$RemovePanelRequestToJson(RemovePanelRequest instance) => <String, dynamic>{
       'panelId': instance.panelId,
     };
 
-RemovePanelResponse _$RemovePanelResponseFromJson(Map<String, dynamic> json) =>
-    RemovePanelResponse(
+RemovePanelResponse _$RemovePanelResponseFromJson(Map<String, dynamic> json) => RemovePanelResponse(
       _$enumDecode(_$ResponseStatusEnumMap, json['status']),
       json['error'] as String?,
     );
 
-Map<String, dynamic> _$RemovePanelResponseToJson(
-        RemovePanelResponse instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$RemovePanelResponseToJson(RemovePanelResponse instance) => <String, dynamic>{
       'status': _$ResponseStatusEnumMap[instance.status],
       'error': instance.error,
     };

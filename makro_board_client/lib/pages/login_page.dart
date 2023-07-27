@@ -10,10 +10,10 @@ class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
                                 snapshot.data!.code.toString(),
                                 style: const TextStyle(fontSize: 64),
                               ),
-                              Text("Code gültig bis: " + DateFormat("HH:mm:ss").format(snapshot.data!.validUntil.toLocal())),
+                              Text("Code gültig bis: ${DateFormat("HH:mm:ss").format(snapshot.data!.validUntil.toLocal())}"),
                             ],
                           ),
                   ),

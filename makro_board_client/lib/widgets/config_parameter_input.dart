@@ -11,10 +11,10 @@ class ConfigParameterInput extends StatefulWidget {
   const ConfigParameterInput({Key? key, required this.configParameter, required this.configParameterValue, this.formKey}) : super(key: key);
 
   @override
-  _ConfigParameterInputState createState() => _ConfigParameterInputState();
+  ConfigParameterInputState createState() => ConfigParameterInputState();
 }
 
-class _ConfigParameterInputState extends State<ConfigParameterInput> {
+class ConfigParameterInputState extends State<ConfigParameterInput> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -39,7 +39,7 @@ class _ConfigParameterInputState extends State<ConfigParameterInput> {
             if (configParameter.validationRegEx != null && configParameter.validationRegEx!.isNotEmpty) {
               var foundValue = RegExp(configParameter.validationRegEx!).stringMatch(value!);
               if (foundValue == null || foundValue != value) {
-                return "Value doesn´t match \"" + configParameter.validationRegEx! + "\"";
+                return "Value doesn´t match \"${configParameter.validationRegEx!}\"";
               }
             }
             return null;
@@ -64,7 +64,7 @@ class _ConfigParameterInputState extends State<ConfigParameterInput> {
           },
         );
       default:
-        return Text("No Input definded for " + configParameter.configParameterType.toString());
+        return Text("No Input definded for ${configParameter.configParameterType}");
     }
   }
 }

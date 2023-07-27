@@ -29,8 +29,8 @@ class AvailableClients extends StatelessWidget {
                           leading: const Icon(
                             Icons.device_unknown,
                           ),
-                          title: Text("Client:" + client.clientIp),
-                          subtitle: Text("Token: " + client.code.toString()),
+                          title: Text("Client:${client.clientIp}"),
+                          subtitle: Text("Token: ${client.code}"),
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(68.0, 0, 0, 0),

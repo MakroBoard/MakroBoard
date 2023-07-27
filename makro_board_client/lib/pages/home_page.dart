@@ -41,9 +41,9 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButton: GlobalSettings.of(context)?.editMode == true
           ? FloatingActionButton(
-              child: const Icon(Icons.add_box_outlined),
               onPressed: () => showCreatePageDialog(context),
               tooltip: "Add New Page",
+              child: const Icon(Icons.add_box_outlined),
             )
           : null,
     );

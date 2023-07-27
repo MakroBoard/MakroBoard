@@ -12,13 +12,13 @@ class CreateGroupDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String groupLabel = "";
-    final _createGroupFormKey = GlobalKey<FormState>();
+    final createGroupFormKey = GlobalKey<FormState>();
 
     return SimpleDialog(
       title: const Text("Neue Gruppe anlegen"),
       children: [
         Form(
-          key: _createGroupFormKey,
+          key: createGroupFormKey,
           child: Column(
             children: [
               TextFormField(
@@ -47,7 +47,7 @@ class CreateGroupDialog extends StatelessWidget {
                     child: const Text("Anlegen"),
                     onPressed: () async {
                       EasyLoading.show(status: 'Neue Gruppe anlegen ...');
-                      if (_createGroupFormKey.currentState!.validate()) {
+                      if (createGroupFormKey.currentState!.validate()) {
                         try {
                           await Provider.of<ApiProvider>(context, listen: false).addGroup(models.Group.createNew(label: groupLabel, pageId: page.id));
 

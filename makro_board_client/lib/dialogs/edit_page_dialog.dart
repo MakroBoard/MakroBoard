@@ -11,21 +11,21 @@ class EditPageDialog extends StatefulWidget {
   const EditPageDialog({Key? key, required this.page}) : super(key: key);
 
   @override
-  _EditPageDialogState createState() => _EditPageDialogState();
+  EditPageDialogState createState() => EditPageDialogState();
 }
 
-class _EditPageDialogState extends State<EditPageDialog> {
-  _EditPageDialogState();
+class EditPageDialogState extends State<EditPageDialog> {
+  EditPageDialogState();
 
   @override
   Widget build(BuildContext context) {
-    final _editPageFormKey = GlobalKey<FormState>();
+    final editPageFormKey = GlobalKey<FormState>();
 
     return SimpleDialog(
-      title: Text("Seite " + widget.page.label + " bearbeiten"),
+      title: Text("Seite ${widget.page.label} bearbeiten"),
       children: [
         Form(
-          key: _editPageFormKey,
+          key: editPageFormKey,
           child: Column(
             children: [
               TextFormField(
@@ -71,7 +71,7 @@ class _EditPageDialogState extends State<EditPageDialog> {
                     child: const Text("Speichern"),
                     onPressed: () async {
                       EasyLoading.show(status: 'Seite bearbeiten ...');
-                      if (_editPageFormKey.currentState!.validate()) {
+                      if (editPageFormKey.currentState!.validate()) {
                         try {
                           await Provider.of<ApiProvider>(context, listen: false).editPage(widget.page);
 

@@ -91,7 +91,7 @@ class ControlPanel extends StatelessWidget {
           },
         );
       default:
-        return Text("Missing Control: " + control.view.viewType);
+        return Text("Missing Control: ${control.view.viewType}");
     }
   }
 

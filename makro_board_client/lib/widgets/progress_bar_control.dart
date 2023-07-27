@@ -9,10 +9,10 @@ class ProgressBarControl extends StatefulWidget {
   const ProgressBarControl({Key? key, required this.minValue, required this.maxValue, required this.value}) : super(key: key);
 
   @override
-  _ProgressBarControlState createState() => _ProgressBarControlState();
+  ProgressBarControlState createState() => ProgressBarControlState();
 }
 
-class _ProgressBarControlState extends State<ProgressBarControl> {
+class ProgressBarControlState extends State<ProgressBarControl> {
   @override
   void initState() {
     widget.minValue.addListener(updateProgressBar);
