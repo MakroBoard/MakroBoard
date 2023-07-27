@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
 	  <OutputPath>..\PluginOutput\MakroBoard.Plugin.Steam</OutputPath>
 	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	  <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
@@ -13,6 +13,6 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="SteamWebAPI2" Version="4.3.2" />
+		<PackageReference Include="SteamWebAPI2" Version="4.4.1" />
 	</ItemGroup>
 </Project>
