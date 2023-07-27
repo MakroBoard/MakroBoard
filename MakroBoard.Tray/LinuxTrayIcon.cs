@@ -7,7 +7,7 @@ using Gdk;
 
 namespace MakroBoard.Tray
 {
-    internal class LinuxTrayIcon : ITrayIcon
+    internal sealed class LinuxTrayIcon : ITrayIcon
     {
 
 #if Linux

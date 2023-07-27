@@ -46,7 +46,7 @@ namespace MakroBoard
             }
 
             services.AddScoped<AuthenticatedClientAttribute>();
-            services.AddScoped<AuthenticatedAdmin>();
+            services.AddScoped<AuthenticatedAdminAttribute>();
             services.AddSingleton<PluginContext>();
             services.AddSignalR(o => { o.EnableDetailedErrors = _Env.IsDevelopment(); });
             services.AddControllersWithViews();

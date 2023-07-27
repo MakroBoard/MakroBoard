@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace MakroBoard.Plugin.ShellExecute
 {
-    internal class ShellExecuteControl : Control
+    internal sealed class ShellExecuteControl : Control
     {
         private readonly Logger _Logger = LogManager.GetCurrentClassLogger();
         private const string _ConfigExecutable = "executable";

@@ -17,11 +17,4 @@
 
         public string ValidationRegEx { get; }
     }
-
-    public class ListConfigParameter : ConfigParameter
-    {
-        public ListConfigParameter(string symbolicName) : base(symbolicName)
-        {
-        }
-    }
 }

@@ -3,7 +3,7 @@ using System;
 
 namespace MakroBoard.Tray
 {
-    internal class MacOsTrayIcon : ITrayIcon
+    internal sealed class MacOsTrayIcon : ITrayIcon
     {
         public void Remove()
         {

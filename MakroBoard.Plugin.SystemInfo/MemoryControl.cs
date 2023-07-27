@@ -7,15 +7,16 @@ namespace MakroBoard.Plugin.SystemInfo
 {
     public class MemoryControl : Control
     {
+        private const string _SymbolicName = "MemoryUsage";
         private Timer _Timer;
         private readonly ProgressBarView _ProgressBarView;
 
         public MemoryControl()
         {
-            _ProgressBarView = new ProgressBarView(SymbolicName);
+            _ProgressBarView = new ProgressBarView(_SymbolicName);
         }
 
-        public override string SymbolicName => "MemoryUsage";
+        public override string SymbolicName => _SymbolicName;
 
         public override View View => _ProgressBarView;
 

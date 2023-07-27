@@ -43,7 +43,7 @@ namespace MakroBoard.Controllers
         /// POST: api/layout/addpage
         /// </summary>
         [HttpPost("addpage")]
-        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        [ServiceFilter(typeof(AuthenticatedAdminAttribute))]
         public async Task<ActionResult<AddPageResponse>> PostAddPAge([FromBody] AddPageRequest addPageRequest, CancellationToken cancellationToken)
         {
             var newPage = new Data.Page
@@ -68,7 +68,7 @@ namespace MakroBoard.Controllers
         /// POST: api/layout/addpage
         /// </summary>
         [HttpPost("editpage")]
-        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        [ServiceFilter(typeof(AuthenticatedAdminAttribute))]
         public async Task<ActionResult<EditPageResponse>> PostEditPage([FromBody] EditPageRequest editPageRequest, CancellationToken cancellationToken)
         {
             var existingPage = await _Context.Pages.Where(x => x.ID == editPageRequest.Page.Id).Include(x => x.Groups).ThenInclude(g => g.Panels).ThenInclude(p => p.ConfigParameters).FirstOrDefaultAsync(cancellationToken);
@@ -90,7 +90,7 @@ namespace MakroBoard.Controllers
         }
 
         [HttpPost("removepage")]
-        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        [ServiceFilter(typeof(AuthenticatedAdminAttribute))]
         public async Task<ActionResult<RemovePageResponse>> PostRemovePage([FromBody] RemovePageRequest removePanelRequest, CancellationToken cancellationToken)
         {
             // Include Panels to cascade delete 
@@ -114,7 +114,7 @@ namespace MakroBoard.Controllers
         /// POST: api/layout/addgroup
         /// </summary>
         [HttpPost("addgroup")]
-        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        [ServiceFilter(typeof(AuthenticatedAdminAttribute))]
         public async Task<ActionResult<AddGroupResponse>> PostAddGroup([FromBody] ApiModels.AddGroupRequest addGroupRequest, CancellationToken cancellationToken)
         {
             var newGroup = new Data.Group
@@ -152,7 +152,7 @@ namespace MakroBoard.Controllers
         }
 
         [HttpPost("removegroup")]
-        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        [ServiceFilter(typeof(AuthenticatedAdminAttribute))]
         public async Task<ActionResult<RemoveGroupResponse>> PostRemoveGroup([FromBody] RemoveGroupRequest removeGroupRequest, CancellationToken cancellationToken)
         {
             // Include Panels to cascade delete 
@@ -175,7 +175,7 @@ namespace MakroBoard.Controllers
         /// POST: api/layout/addpage
         /// </summary>
         [HttpPost("addpanel")]
-        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        [ServiceFilter(typeof(AuthenticatedAdminAttribute))]
         public async Task<ActionResult<AddPanelResponse>> PostAddPanel([FromBody] AddPanelRequest addPanelRequest, CancellationToken cancellationToken)
         {
             var newPanel = new Data.Panel
@@ -209,7 +209,7 @@ namespace MakroBoard.Controllers
         /// POST: api/layout/addpage
         /// </summary>
         [HttpPost("editpanel")]
-        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        [ServiceFilter(typeof(AuthenticatedAdminAttribute))]
         public async Task<ActionResult<EditPanelResponse>> PostEditPanel([FromBody] EditPanelRequest editPanelRequest, CancellationToken cancellationToken)
         {
             // Include Panels to cascade delete 
@@ -238,7 +238,7 @@ namespace MakroBoard.Controllers
         }
 
         [HttpPost("removepanel")]
-        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        [ServiceFilter(typeof(AuthenticatedAdminAttribute))]
         public async Task<ActionResult<RemovePanelResponse>> PostRemovePanel([FromBody] RemovePanelRequest removePanelRequest, CancellationToken cancellationToken)
         {
             // Include Panels to cascade delete 

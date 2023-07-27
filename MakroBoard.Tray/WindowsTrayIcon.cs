@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace MakroBoard.Tray
 {
-    internal class WindowsTrayIcon : ITrayIcon
+    internal sealed class WindowsTrayIcon : ITrayIcon
     {
         public void Show(ITrayMenu trayMenu)
         {
@@ -47,7 +47,7 @@ namespace MakroBoard.Tray
 
 #if WINDOWS
 
-        public class RelayCommand : ICommand
+        public sealed class RelayCommand : ICommand
         {
 
             readonly Action<object> _execute;

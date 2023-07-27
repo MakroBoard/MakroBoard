@@ -13,7 +13,7 @@ namespace MakroBoard.PluginContract
         {
             SymbolicName = symbolicName;
             SubControls = subControls;
-            View = new ListView(SymbolicName, SubControls.Select(x => x.View).ToList());
+            View = new ListView(symbolicName, SubControls.Select(x => x.View).ToList());
             foreach (var configParameter in SubControls.SelectMany(x => x.ConfigParameters))
             {
                 AddConfigParameter(configParameter);

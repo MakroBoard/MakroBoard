@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MakroBoard.Plugin.SystemInfo
 {
-    class SystemInfoPlugin : MakroBoardPluginBase
+    public sealed class SystemInfoPlugin : MakroBoardPluginBase
     {
         protected override IReadOnlyCollection<Control> InitializeControls()
         {

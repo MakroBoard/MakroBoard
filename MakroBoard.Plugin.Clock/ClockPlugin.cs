@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MakroBoard.Plugin.Clock
 {
-    class ClockPlugin : MakroBoardPluginBase
+    public sealed class  ClockPlugin : MakroBoardPluginBase
     {
         protected override IReadOnlyCollection<Control> InitializeControls()
         {

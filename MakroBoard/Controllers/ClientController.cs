@@ -129,7 +129,7 @@ namespace MakroBoard.Controllers
         /// POST: api/client/confirmclient
         /// </summary>
         [HttpPost("confirmclient")]
-        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        [ServiceFilter(typeof(AuthenticatedAdminAttribute))]
         public async Task<ActionResult> PostConfirmClient([FromBody] ConfirmClientRequest request, CancellationToken cancellationToken)
         {
             var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(request.Client.ClientIp) && x.Code.Equals(request.Client.Code), cancellationToken).ConfigureAwait(false);
@@ -156,7 +156,7 @@ namespace MakroBoard.Controllers
         /// <summary>
         /// GET: api/client/confirmclient
         [HttpPost("removeClient")]
-        [ServiceFilter(typeof(AuthenticatedAdmin))]
+        [ServiceFilter(typeof(AuthenticatedAdminAttribute))]
         public async Task<ActionResult> PostRemoveClient([FromBody] RemoveClientRequest request, CancellationToken cancellationToken)
         {
             var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(request.Client.ClientIp), cancellationToken).ConfigureAwait(false);
