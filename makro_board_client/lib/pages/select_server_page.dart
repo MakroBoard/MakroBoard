@@ -112,14 +112,17 @@ class SelectServerPage extends StatelessWidget {
                                     }
                                     var serverUri = Uri.parse(serverUriString);
                                     serverUri = serverUri.replace(port: port);
+                                    if (!context.mounted) return;
                                     var apiProvider = Provider.of<ApiProvider>(context, listen: false);
                                     if (await apiProvider.initialize(serverUri, AppLocalizations.of(context)!.localeName)) {
+                                      if (!context.mounted) return;
                                       var authProvider = Provider.of<AuthProvider>(context, listen: false);
 
                                       var loginCode = await authProvider.getNewLoginCode();
                                       await Settings.setValue("server_code", loginCode.code);
 
                                       var isAuthenticated = await authProvider.isAuthenticated();
+                                      if (!context.mounted) return;
                                       if (isAuthenticated) {
                                         Provider.of<AppState>(context, listen: false).navigateTo(PageAction(state: PageState.replaceAll, page: homePageConfig));
                                       } else {

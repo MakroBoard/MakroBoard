@@ -52,6 +52,7 @@ class EditGroupDialog extends StatelessWidget {
                         try {
                           await Provider.of<ApiProvider>(context, listen: false).editGroup(editGroup);
 
+                          if (!context.mounted) return;
                           Navigator.of(context, rootNavigator: true).pop();
                         } catch (e) {
                           // TODO Fehler anzeigen?

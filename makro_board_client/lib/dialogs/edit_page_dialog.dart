@@ -74,7 +74,7 @@ class EditPageDialogState extends State<EditPageDialog> {
                       if (editPageFormKey.currentState!.validate()) {
                         try {
                           await Provider.of<ApiProvider>(context, listen: false).editPage(widget.page);
-
+                          if (!context.mounted) return;
                           Navigator.of(context, rootNavigator: true).pop();
                         } catch (e) {
                           // TODO Fehler anzeigen?

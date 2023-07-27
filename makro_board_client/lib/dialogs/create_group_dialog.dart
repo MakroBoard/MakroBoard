@@ -50,7 +50,7 @@ class CreateGroupDialog extends StatelessWidget {
                       if (createGroupFormKey.currentState!.validate()) {
                         try {
                           await Provider.of<ApiProvider>(context, listen: false).addGroup(models.Group.createNew(label: groupLabel, pageId: page.id));
-
+                          if (!context.mounted) return;
                           Navigator.of(context, rootNavigator: true).pop();
                         } catch (e) {
                           // TODO Fehler anzeigen?

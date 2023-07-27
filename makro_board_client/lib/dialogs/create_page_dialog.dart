@@ -74,7 +74,7 @@ class CreatePageDialogState extends State<CreatePageDialog> {
                         if (createPageFormKey.currentState!.validate()) {
                           try {
                             await Provider.of<ApiProvider>(context, listen: false).addPage(models.Page.createNew(label: pageLabel, icon: icon));
-
+                            if (!context.mounted) return;
                             Navigator.of(context, rootNavigator: true).pop();
                           } catch (e) {
                             log('Exception: $e');

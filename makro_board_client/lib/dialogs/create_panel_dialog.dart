@@ -122,7 +122,7 @@ class CreatePanelDialogState extends State<CreatePanelDialog> {
                               configValues: configValues! + viewConfigValues!,
                             ),
                           );
-
+                          if (!context.mounted) return;
                           Navigator.of(context, rootNavigator: true).pop();
                         } catch (e) {
                           // TODO Fehler anzeigen?

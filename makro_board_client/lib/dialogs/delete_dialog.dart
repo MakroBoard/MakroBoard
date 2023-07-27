@@ -30,6 +30,7 @@ class DeleteDialog extends StatelessWidget {
                 EasyLoading.show(status: executeText);
                 await deleteCallback();
                 EasyLoading.dismiss();
+                if (!context.mounted) return;
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),

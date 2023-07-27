@@ -79,7 +79,7 @@ class EditPanelDialog extends StatelessWidget {
                           await Provider.of<ApiProvider>(context, listen: false).editPanel(
                             panel,
                           );
-
+                          if (!context.mounted) return;
                           Navigator.of(context, rootNavigator: true).pop();
                         } catch (e) {
                           // TODO Fehler anzeigen?

@@ -29,17 +29,21 @@ class SplashScreenState extends State<SplashScreen> {
     await Settings.init();
     _initializeEasyLoading();
     var serverUri = loadServerUri();
+    if (!context.mounted) return;
     var apiProvider = Provider.of<ApiProvider>(context, listen: false);
 
     if (serverUri == null || !(await apiProvider.initialize(serverUri, AppLocalizations.of(context)!.localeName))) {
       await minFuture;
+      if (!context.mounted) return;
       Provider.of<AppState>(context, listen: false).setSplashFinished(selectServerPageConfig);
     } else {
       if (await apiProvider.isAuthenticated()) {
         await minFuture;
+        if (!context.mounted) return;
         Provider.of<AppState>(context, listen: false).setSplashFinished(homePageConfig);
       } else {
         await minFuture;
+        if (!context.mounted) return;
         Provider.of<AppState>(context, listen: false).setSplashFinished(loginPageConfig);
       }
     }
