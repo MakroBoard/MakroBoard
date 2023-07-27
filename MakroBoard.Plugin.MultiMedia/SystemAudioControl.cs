@@ -19,7 +19,7 @@ namespace MakroBoard.Plugin.Clock
 
         public override View View => _SliderView;
 
-        private string UpdateAudio(double value)
+        private static string UpdateAudio(double value)
         {
             return string.Empty;
         }

@@ -9,7 +9,7 @@ namespace MakroBoard.ApiModels
         public int Height { get; set; }
         public string PluginName { get; set; }
         public string SymbolicName { get; set; }
-        public List<ConfigValue> ConfigValues { get; set; }
+        public IList<ConfigValue> ConfigValues { get; set; }
         public int GroupId { get; set; }
     }
 
@@ -38,6 +38,6 @@ namespace MakroBoard.ApiModels
 
         public string ControlName { get; }
 
-        public List<ConfigValue> Values { get; }
+        public IList<ConfigValue> Values { get; }
     }
 }

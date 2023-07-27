@@ -28,7 +28,7 @@ namespace MakroBoard.Data
         public int Order {get; set;}
 
         [InverseProperty("Group")]
-        public List<Panel> Panels {get; set;}
+        public IList<Panel> Panels {get; set;}
 
     }
 

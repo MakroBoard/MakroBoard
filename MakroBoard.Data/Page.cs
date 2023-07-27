@@ -17,7 +17,7 @@ namespace MakroBoard.Data
         public string Icon { get; set; }
 
         [InverseProperty("Page")]
-        public List<Group> Groups { get; set; }
+        public IList<Group> Groups { get; set; }
 
     }
 

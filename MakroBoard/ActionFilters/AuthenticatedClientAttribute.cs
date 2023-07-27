@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace MakroBoard.ActionFilters
 {
-    public class AuthenticatedClient : ActionFilterAttribute
+    public class AuthenticatedClientAttribute : ActionFilterAttribute
     {
         private readonly DatabaseContext _Context;
         private readonly IHubContext<ClientHub> _ClientHub;
         private readonly ClientState _MinClientState;
 
-        public AuthenticatedClient(DatabaseContext context, IHubContext<ClientHub> clientHub) : this(context, clientHub, ClientState.Confirmed)
+        public AuthenticatedClientAttribute(DatabaseContext context, IHubContext<ClientHub> clientHub) : this(context, clientHub, ClientState.Confirmed)
         {
         }
 
-        protected AuthenticatedClient(DatabaseContext context, IHubContext<ClientHub> clientHub, ClientState minClientState)
+        protected AuthenticatedClientAttribute(DatabaseContext context, IHubContext<ClientHub> clientHub, ClientState minClientState)
         {
             _Context = context;
             _ClientHub = clientHub;
@@ -28,10 +28,11 @@ namespace MakroBoard.ActionFilters
 
         public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
+            var cancellationToken = context.HttpContext.RequestAborted;
             if (context.HttpContext.Request.Headers.TryGetValue("authorization", out var token))
             {
                 var clientIp = context.HttpContext.Connection.RemoteIpAddress;
-                var client = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(clientIp.ToString()));
+                var client = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(clientIp.ToString()), cancellationToken);
 
                 if (client != null)
                 {
@@ -40,29 +41,15 @@ namespace MakroBoard.ActionFilters
                         await base.OnActionExecutionAsync(context, next);
                         return;
                     }
-                    else
-                    {
-                        client.State = ClientState.None;
-                        client.Token = null;
-                        await _Context.SaveChangesAsync();
-                        await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, client);
-                    }
-                }
-            }
-            else
-            {
 
+                    client.State = ClientState.None;
+                    client.Token = null;
+                    await _Context.SaveChangesAsync(cancellationToken);
+                    await _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, client, cancellationToken);
+                }
             }
 
             context.Result = new UnauthorizedResult();
-
-        }
-    }
-
-    public class AuthenticatedAdmin : AuthenticatedClient
-    {
-        public AuthenticatedAdmin(DatabaseContext context, IHubContext<ClientHub> clientHub) : base(context, clientHub, ClientState.Admin)
-        {
         }
     }
 }

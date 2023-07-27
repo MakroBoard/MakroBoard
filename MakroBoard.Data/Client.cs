@@ -22,7 +22,7 @@ namespace MakroBoard.Data
         public ClientState State { get; set; }
 
         [JsonIgnore]
-        public List<Session> Sessions { get; set; }
+        public ICollection<Session> Sessions { get; set; }
 
         public void CreateNewToken(string seed)
         {

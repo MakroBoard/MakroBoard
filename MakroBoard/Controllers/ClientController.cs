@@ -9,6 +9,7 @@ using MakroBoard.ActionFilters;
 using MakroBoard.Data;
 using MakroBoard.HubConfig;
 using MakroBoard.ApiModels;
+using System.Threading;
 
 // QR Code auf Localhost
 // auf Handy -> Code anzeigen
@@ -33,21 +34,21 @@ namespace MakroBoard.Controllers
 
         // GET: api/client/requesttokens
         [HttpGet("requesttokens")]
-        public async Task<ActionResult<ApiModels.RequestTokensResponse>> GetRequestTokens()
+        public async Task<ActionResult<RequestTokensResponse>> GetRequestTokens(CancellationToken cancellationToken)
         {
             var currentTime = DateTime.Now;
-            var currentClients = await _Context.Clients.Where(x => x.State == ClientState.None && x.ValidUntil < currentTime).ToArrayAsync();
+            var currentClients = await _Context.Clients.Where(x => x.State == ClientState.None && x.ValidUntil < currentTime).ToArrayAsync(cancellationToken);
             var result = currentClients.Select(ApiModels.Client.FromDataClient).ToArray();
-            return Ok(new ApiModels.RequestTokensResponse(result));
+            return Ok(new RequestTokensResponse(result));
         }
 
         [HttpGet("checktoken")]
-        [ServiceFilter(typeof(AuthenticatedClient))]
-        public async Task<ActionResult<ApiModels.CheckTokenResponse>> GetCheckToken([FromHeader] string authorization)
+        [ServiceFilter(typeof(AuthenticatedClientAttribute))]
+        public async Task<ActionResult<CheckTokenResponse>> GetCheckToken([FromHeader] string authorization, CancellationToken cancellationToken)
         {
             var clientIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
 
-            var client = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(clientIp));
+            var client = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(clientIp), cancellationToken).ConfigureAwait(false);
 
             var result = false;
             if (client != null)
@@ -58,7 +59,7 @@ namespace MakroBoard.Controllers
                 }
                 else
                 {
-                    await PostRemoveClient(new RemoveClientRequest { Client = new ApiModels.Client { ClientIp = client.ClientIp } });
+                    await PostRemoveClient(new RemoveClientRequest { Client = new ApiModels.Client { ClientIp = client.ClientIp } }, cancellationToken).ConfigureAwait(false);
                 }
             }
             return Ok(new CheckTokenResponse(result));
@@ -68,13 +69,13 @@ namespace MakroBoard.Controllers
         /// GET: api/client/submittoken
         //[HttpGet("submittoken")]
         [HttpPost("submitcode")]
-        public async Task<ActionResult<DateTime>> PostSubmitCode([FromBody] SubmitCodeRequest request)
+        public async Task<ActionResult<DateTime>> PostSubmitCode([FromBody] SubmitCodeRequest request, CancellationToken cancellationToken)
         {
             var isLocalHost = System.Net.IPAddress.IsLoopback(Request.HttpContext.Connection.RemoteIpAddress);
             var clientIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
 
 
-            var client = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(clientIp));
+            var client = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(clientIp), cancellationToken).ConfigureAwait(false);
             if (client != null)
             {
                 client.Code = request.Code;
@@ -100,28 +101,28 @@ namespace MakroBoard.Controllers
                     client.CreateNewToken(Constants.Seed);
                 }
 
-                await _Context.Clients.AddAsync(client);
+                await _Context.Clients.AddAsync(client, cancellationToken);
 
                 _Logger.LogDebug("Add new Client: {ClientIp} - {Code}", client.ClientIp, client.Code);
             }
 
-            await _Context.SaveChangesAsync();
+            await _Context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             // TODO Groups
-            _ = _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, client);
+            _ = _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, client, cancellationToken);
 
             if (isLocalHost)
             {
-                await SendToken(ApiModels.Client.FromDataClient(client));
+                await SendToken(ApiModels.Client.FromDataClient(client), cancellationToken).ConfigureAwait(false);
             }
 
             return Ok(new SubmitCodeResponse(client.ValidUntil));
         }
 
-        private async Task SendToken(ApiModels.Client client)
+        private async Task SendToken(ApiModels.Client client, CancellationToken cancellationToken)
         {
-            var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(client.ClientIp)).ToListAsync()).Select(x => x.ClientSignalrId);
-            _ = _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, client.Token);
+            var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(client.ClientIp)).ToListAsync(cancellationToken).ConfigureAwait(false)).Select(x => x.ClientSignalrId);
+            _ = _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, client.Token, cancellationToken);
         }
 
         /// <summary>
@@ -129,9 +130,9 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("confirmclient")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult> PostConfirmClient([FromBody] ApiModels.ConfirmClientRequest request)
+        public async Task<ActionResult> PostConfirmClient([FromBody] ConfirmClientRequest request, CancellationToken cancellationToken)
         {
-            var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(request.Client.ClientIp) && x.Code.Equals(request.Client.Code));
+            var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(request.Client.ClientIp) && x.Code.Equals(request.Client.Code), cancellationToken).ConfigureAwait(false);
             if (currentClient == null)
             {
                 return BadRequest("No suitable client found.");
@@ -140,13 +141,13 @@ namespace MakroBoard.Controllers
             currentClient.CreateNewToken(Constants.Seed);
             currentClient.State = ClientState.Confirmed;
 
-            await _Context.SaveChangesAsync();
+            await _Context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             _Logger.LogDebug("Confirm Client: {ClientIp} - {Code}", currentClient.ClientIp, currentClient.Code);
 
-            _ = _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, currentClient);
+            _ = _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.AddOrUpdateClient, currentClient, cancellationToken);
 
-            await SendToken(ApiModels.Client.FromDataClient(currentClient));
+            await SendToken(ApiModels.Client.FromDataClient(currentClient), cancellationToken).ConfigureAwait(false);
 
 
             return Ok(new ConfirmClientResponse());
@@ -156,9 +157,9 @@ namespace MakroBoard.Controllers
         /// GET: api/client/confirmclient
         [HttpPost("removeClient")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult> PostRemoveClient([FromBody] ApiModels.RemoveClientRequest request)
+        public async Task<ActionResult> PostRemoveClient([FromBody] RemoveClientRequest request, CancellationToken cancellationToken)
         {
-            var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(request.Client.ClientIp));
+            var currentClient = await _Context.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(request.Client.ClientIp), cancellationToken).ConfigureAwait(false);
             if (currentClient == null)
             {
                 return BadRequest(new RemoveClientResponse { Status = ResponseStatus.Error, Error = "No suitable client found." });
@@ -171,14 +172,14 @@ namespace MakroBoard.Controllers
             }
 
             _Context.Clients.Remove(currentClient);
-            await _Context.SaveChangesAsync();
+            await _Context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             _Logger.LogDebug("Remove Client: {ClientIp} - {Code}", currentClient.ClientIp, currentClient.Code);
 
-            var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(request.Client.ClientIp)).ToListAsync()).Select(x => x.ClientSignalrId);
-            _ = _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, string.Empty);
+            var targetClients = (await _Context.Sessions.Where(x => x.Client.ClientIp.Equals(request.Client.ClientIp)).ToListAsync(cancellationToken).ConfigureAwait(false)).Select(x => x.ClientSignalrId);
+            _ = _ClientHub.Clients.Clients(targetClients).SendAsync(ClientMethods.AddOrUpdateToken, string.Empty, cancellationToken);
 
-            _ = _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.RemoveClient, request.Client);
+            _ = _ClientHub.Clients.Group(ClientGroups.AdminGroup).SendAsync(ClientMethods.RemoveClient, request.Client, cancellationToken);
 
 
             return Ok(new RemoveClientResponse());

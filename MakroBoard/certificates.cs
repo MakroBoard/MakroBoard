@@ -13,7 +13,7 @@ using Org.BouncyCastle.Pkcs;
 
 namespace MakroBoard
 {
-    internal class Certificates
+    internal static class Certificates
     {
         public static X509Certificate2 GenerateCertificate(string subject)
         {

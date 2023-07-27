@@ -45,7 +45,7 @@ namespace MakroBoard
                 services.AddDatabaseDeveloperPageExceptionFilter();
             }
 
-            services.AddScoped<AuthenticatedClient>();
+            services.AddScoped<AuthenticatedClientAttribute>();
             services.AddScoped<AuthenticatedAdmin>();
             services.AddSingleton<PluginContext>();
             services.AddSignalR(o => { o.EnableDetailedErrors = _Env.IsDevelopment(); });

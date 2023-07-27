@@ -33,7 +33,7 @@ namespace MakroBoard.Controllers
         // GET: api/client/requesttokens
         [HttpGet("availablecontrols")]
         //[ServiceFilter(typeof(AuthenticatedAdmin))]
-        [ServiceFilter(typeof(AuthenticatedClient))]
+        [ServiceFilter(typeof(AuthenticatedClientAttribute))]
         public async Task<ActionResult<AvailableControlsResponse>> GetAvailableControls()
         {
             var plugins = _PluginContext.Plugins;
@@ -54,7 +54,7 @@ namespace MakroBoard.Controllers
         /// POST: api/controls/confirmclient
         /// </summary>
         [HttpPost("execute")]
-        [ServiceFilter(typeof(AuthenticatedClient))]
+        [ServiceFilter(typeof(AuthenticatedClientAttribute))]
         public async Task<ActionResult<ExecuteResponse>> PostExecute([FromBody] ExecuteRequest executeRequest)
         {
             var plugins = _PluginContext.Plugins;

@@ -59,13 +59,14 @@ namespace MakroBoard.HubConfig
                 return;
             }
 
+            var cancellationToken = ctx.RequestAborted;
             var isLocalHost = IsLocalHost(ipAddress);
 
-            var existingClient = await _DatabaseContext.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(ipAddress.ToString())).ConfigureAwait(false);
+            var existingClient = await _DatabaseContext.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(ipAddress.ToString()), cancellationToken).ConfigureAwait(false);
 
             if (existingClient == null)
             {
-                existingClient = new Data.Client { ClientIp = ipAddress.ToString(), RegisterDate = DateTime.UtcNow, State = isLocalHost ? ClientState.Admin : ClientState.None };
+                existingClient = new Client { ClientIp = ipAddress.ToString(), RegisterDate = DateTime.UtcNow, State = isLocalHost ? ClientState.Admin : ClientState.None };
                 if (isLocalHost)
                 {
                     existingClient.CreateNewToken(Constants.Seed);
@@ -74,17 +75,17 @@ namespace MakroBoard.HubConfig
 
             existingClient.LastConnection = DateTime.UtcNow;
 
-            await _DatabaseContext.Sessions.AddAsync(new Session { ClientSignalrId = Context.ConnectionId, Client = existingClient }).ConfigureAwait(false);
-            await _DatabaseContext.SaveChangesAsync().ConfigureAwait(false);
+            await _DatabaseContext.Sessions.AddAsync(new Session { ClientSignalrId = Context.ConnectionId, Client = existingClient }, cancellationToken).ConfigureAwait(false);
+            await _DatabaseContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             if (isLocalHost)
             {
-                await Groups.AddToGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup).ConfigureAwait(false);
+                await Groups.AddToGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup, cancellationToken).ConfigureAwait(false);
 
-                var clients = await _DatabaseContext.Clients.ToListAsync().ConfigureAwait(false);//.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
+                var clients = await _DatabaseContext.Clients.ToListAsync(cancellationToken).ConfigureAwait(false);//.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
                 foreach (var client in clients)
                 {
-                    await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateClient, client).ConfigureAwait(false);
+                    await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateClient, client, cancellationToken).ConfigureAwait(false);
                 }
             }
             else
@@ -92,34 +93,33 @@ namespace MakroBoard.HubConfig
                 // Any sync needed?
             }
 
-            var pages = await _DatabaseContext.Pages.Include(p => p.Groups).ThenInclude((g) => g.Panels).ThenInclude(p => p.ConfigParameters).ToListAsync().ConfigureAwait(false);
+            var pages = await _DatabaseContext.Pages.Include(p => p.Groups).ThenInclude((g) => g.Panels).ThenInclude(p => p.ConfigParameters).ToListAsync(cancellationToken).ConfigureAwait(false);
             foreach (var page in pages)
             {
-                await Clients.Caller.SendAsync(ClientMethods.AddOrUpdatePage, page).ConfigureAwait(false);
+                await Clients.Caller.SendAsync(ClientMethods.AddOrUpdatePage, page, cancellationToken).ConfigureAwait(false);
             }
 
             await SubscribePanels().ConfigureAwait(false);
             if (isLocalHost)
             {
-                await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token).ConfigureAwait(false);
+                await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token, cancellationToken).ConfigureAwait(false);
             }
 
-            await Clients.Caller.SendAsync(ClientMethods.Initialized).ConfigureAwait(false);
+            await Clients.Caller.SendAsync(ClientMethods.Initialized, cancellationToken).ConfigureAwait(false);
 
             await base.OnConnectedAsync().ConfigureAwait(false);
         }
 
         public async override Task OnDisconnectedAsync(Exception exception)
         {
-            var ip = Context.GetHttpContext().Connection.RemoteIpAddress.ToString();
-
-            var sessionToRemove = await _DatabaseContext.Sessions.FirstOrDefaultAsync(x => x.ClientSignalrId == Context.ConnectionId).ConfigureAwait(false);
+            var cancellationToken = Context.ConnectionAborted;
+            var sessionToRemove = await _DatabaseContext.Sessions.FirstOrDefaultAsync(x => x.ClientSignalrId == Context.ConnectionId, cancellationToken).ConfigureAwait(false);
             if (sessionToRemove != null)
             {
-                var test = _DatabaseContext.Sessions.Remove(sessionToRemove);
+                _DatabaseContext.Sessions.Remove(sessionToRemove);
             }
 
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup).ConfigureAwait(false);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup, cancellationToken).ConfigureAwait(false);
 
             await base.OnDisconnectedAsync(exception).ConfigureAwait(false);
         }

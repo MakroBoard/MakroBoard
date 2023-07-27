@@ -89,7 +89,7 @@ namespace MakroBoard.ApiModels
             Plugins = plugins;
         }
 
-        public List<Plugin> Plugins { get; }
+        public IList<Plugin> Plugins { get; }
     }
 
     public class ExecuteRequest : Request

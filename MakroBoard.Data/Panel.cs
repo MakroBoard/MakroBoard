@@ -28,7 +28,7 @@ namespace MakroBoard.Data
         public Group Group {get; set; }
 
         [InverseProperty("Panel")]
-        public List<ConfigParameterValue> ConfigParameters {get; set;}
+        public IList<ConfigParameterValue> ConfigParameters {get; set;}
 
     }
 

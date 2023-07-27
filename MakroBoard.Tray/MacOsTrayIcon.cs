@@ -7,12 +7,12 @@ namespace MakroBoard.Tray
     {
         public void Remove()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void Show(ITrayMenu trayMenu)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

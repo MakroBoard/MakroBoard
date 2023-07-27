@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using MakroBoard.ApiModels;
 using System;
 using System.Globalization;
+using System.Threading;
 
 // QR Code auf Localhost
 // auf Handy -> Code anzeigen
@@ -24,7 +25,7 @@ namespace MakroBoard.Controllers
     [Route("api/[controller]")]
     public partial class LayoutController : ControllerBase
     {
-        private readonly ILogger<LayoutController> _logger;
+        private readonly ILogger<LayoutController> _Logger;
         private readonly DatabaseContext _Context;
         private readonly PluginContext _PluginContext;
         private readonly IHubContext<ClientHub> _ClientHub;
@@ -32,7 +33,7 @@ namespace MakroBoard.Controllers
 
         public LayoutController(ILogger<LayoutController> logger, DatabaseContext context, IHubContext<ClientHub> clientHub, PluginContext pluginContext)
         {
-            _logger = logger;
+            _Logger = logger;
             _Context = context;
             _ClientHub = clientHub;
             _PluginContext = pluginContext;
@@ -43,7 +44,7 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("addpage")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult<AddPageResponse>> PostAddPAge([FromBody] AddPageRequest addPageRequest)
+        public async Task<ActionResult<AddPageResponse>> PostAddPAge([FromBody] AddPageRequest addPageRequest, CancellationToken cancellationToken)
         {
             var newPage = new Data.Page
             {
@@ -54,11 +55,11 @@ namespace MakroBoard.Controllers
             };
             _Context.Pages.Add(newPage);
 
-            await _Context.SaveChangesAsync();
+            await _Context.SaveChangesAsync(cancellationToken);
 
-            _logger.LogDebug("Added new Page {Label}", newPage.Label);
+            _Logger.LogDebug("Added new Page {Label}", newPage.Label);
 
-            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, newPage);
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, newPage, cancellationToken);
             return Ok(new AddPageResponse());
         }
 
@@ -68,9 +69,9 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("editpage")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult<EditPageResponse>> PostEditPage([FromBody] EditPageRequest editPageRequest)
+        public async Task<ActionResult<EditPageResponse>> PostEditPage([FromBody] EditPageRequest editPageRequest, CancellationToken cancellationToken)
         {
-            var existingPage = await _Context.Pages.Where(x => x.ID == editPageRequest.Page.Id).Include(x => x.Groups).ThenInclude(g => g.Panels).ThenInclude(p => p.ConfigParameters).FirstOrDefaultAsync();
+            var existingPage = await _Context.Pages.Where(x => x.ID == editPageRequest.Page.Id).Include(x => x.Groups).ThenInclude(g => g.Panels).ThenInclude(p => p.ConfigParameters).FirstOrDefaultAsync(cancellationToken);
             if (existingPage == null)
             {
                 return Conflict(new EditPageResponse { Status = ResponseStatus.Error, Error = "Page to edit not found" });
@@ -79,32 +80,32 @@ namespace MakroBoard.Controllers
             existingPage.Label = editPageRequest.Page.Label;
             existingPage.Icon = editPageRequest.Page.Icon;
 
-            await _Context.SaveChangesAsync();
+            await _Context.SaveChangesAsync(cancellationToken);
 
-            _logger.LogDebug("Edit Page {ID} => {Label}", existingPage.ID, existingPage.Label);
+            _Logger.LogDebug("Edit Page {ID} => {Label}", existingPage.ID, existingPage.Label);
 
-            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, existingPage);
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePage, existingPage, cancellationToken);
 
             return Ok(new AddPanelResponse());
         }
 
         [HttpPost("removepage")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult<RemovePageResponse>> PostRemovePage([FromBody] RemovePageRequest removePanelRequest)
+        public async Task<ActionResult<RemovePageResponse>> PostRemovePage([FromBody] RemovePageRequest removePanelRequest, CancellationToken cancellationToken)
         {
             // Include Panels to cascade delete 
-            var pageToDelete = await _Context.Pages.Where(x => x.ID == removePanelRequest.PageId).Include(x => x.Groups).ThenInclude(g => g.Panels).FirstOrDefaultAsync();
+            var pageToDelete = await _Context.Pages.Where(x => x.ID == removePanelRequest.PageId).Include(x => x.Groups).ThenInclude(g => g.Panels).FirstOrDefaultAsync(cancellationToken);
             if (pageToDelete == null)
             {
                 return NotFound(new RemovePageResponse { Status = ResponseStatus.Error, Error = "Page to delete not found" });
             }
 
             _Context.Pages.Remove(pageToDelete);
-            await _Context.SaveChangesAsync();
+            await _Context.SaveChangesAsync(cancellationToken);
 
-            _logger.LogDebug("Removed Page {Label}", pageToDelete.Label);
+            _Logger.LogDebug("Removed Page {Label}", pageToDelete.Label);
 
-            await _ClientHub.Clients.All.SendAsync(ClientMethods.RemovePage, pageToDelete);
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.RemovePage, pageToDelete, cancellationToken);
             return Ok(new RemovePanelResponse());
         }
 
@@ -114,7 +115,7 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("addgroup")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult<AddGroupResponse>> PostAddGroup([FromBody] ApiModels.AddGroupRequest addGroupRequest)
+        public async Task<ActionResult<AddGroupResponse>> PostAddGroup([FromBody] ApiModels.AddGroupRequest addGroupRequest, CancellationToken cancellationToken)
         {
             var newGroup = new Data.Group
             {
@@ -124,11 +125,11 @@ namespace MakroBoard.Controllers
             };
             _Context.Groups.Add(newGroup);
 
-            await _Context.SaveChangesAsync();
+            await _Context.SaveChangesAsync(cancellationToken);
 
-            _logger.LogDebug("Added new Group {Label}", newGroup.Label);
+            _Logger.LogDebug("Added new Group {Label}", newGroup.Label);
 
-            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdateGroup, newGroup);
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdateGroup, newGroup, cancellationToken);
             return Ok(new AddGroupResponse());
         }
 
@@ -137,36 +138,36 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("editgroup")]
         [LocalHost]
-        public async Task<ActionResult<EditGroupResponse>> PostEditGroup([FromBody] EditGroupRequest editGroupRequest)
+        public async Task<ActionResult<EditGroupResponse>> PostEditGroup([FromBody] EditGroupRequest editGroupRequest, CancellationToken cancellationToken)
         {
-            var newGroup = _Context.Groups.Find(editGroupRequest.Group.Id);
+            var newGroup = await _Context.Groups.FindAsync(editGroupRequest.Group.Id, cancellationToken).ConfigureAwait(false);
             newGroup.Label = editGroupRequest.Group.Label;
 
-            await _Context.SaveChangesAsync();
+            await _Context.SaveChangesAsync(cancellationToken);
 
-            _logger.LogDebug("Group {Label} edited", newGroup.Label);
+            _Logger.LogDebug("Group {Label} edited", newGroup.Label);
 
-            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdateGroup, newGroup);
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdateGroup, newGroup, cancellationToken);
             return Ok(new EditGroupResponse());
         }
 
         [HttpPost("removegroup")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult<RemoveGroupResponse>> PostRemoveGroup([FromBody] RemoveGroupRequest removeGroupRequest)
+        public async Task<ActionResult<RemoveGroupResponse>> PostRemoveGroup([FromBody] RemoveGroupRequest removeGroupRequest, CancellationToken cancellationToken)
         {
             // Include Panels to cascade delete 
-            var groupToDelete = await _Context.Groups.Where(x => x.ID == removeGroupRequest.GroupId).Include(x => x.Panels).FirstOrDefaultAsync();
+            var groupToDelete = await _Context.Groups.Where(x => x.ID == removeGroupRequest.GroupId).Include(x => x.Panels).FirstOrDefaultAsync(cancellationToken);
             if (groupToDelete == null)
             {
                 return NotFound(new RemoveGroupResponse { Status = ResponseStatus.Error, Error = "Group to delete not found" });
             }
 
             _Context.Groups.Remove(groupToDelete);
-            await _Context.SaveChangesAsync();
+            await _Context.SaveChangesAsync(cancellationToken);
 
-            _logger.LogDebug("Removed Group {Label}", groupToDelete.Label);
+            _Logger.LogDebug("Removed Group {Label}", groupToDelete.Label);
 
-            await _ClientHub.Clients.All.SendAsync(ClientMethods.RemoveGroup, groupToDelete);
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.RemoveGroup, groupToDelete, cancellationToken);
             return Ok(new RemoveGroupResponse());
         }
 
@@ -175,7 +176,7 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("addpanel")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult<AddPanelResponse>> PostAddPanel([FromBody] AddPanelRequest addPanelRequest)
+        public async Task<ActionResult<AddPanelResponse>> PostAddPanel([FromBody] AddPanelRequest addPanelRequest, CancellationToken cancellationToken)
         {
             var newPanel = new Data.Panel
             {
@@ -193,11 +194,11 @@ namespace MakroBoard.Controllers
 
             _Context.Panels.Add(newPanel);
 
-            await _Context.SaveChangesAsync();
+            await _Context.SaveChangesAsync(cancellationToken);
 
-            _logger.LogDebug("Added new Panel {SymbolicName}({PluginName})", newPanel.SymbolicName, newPanel.PluginName);
+            _Logger.LogDebug("Added new Panel {SymbolicName}({PluginName})", newPanel.SymbolicName, newPanel.PluginName);
 
-            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePanel, newPanel);
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePanel, newPanel, cancellationToken);
 
             await _PluginContext.Subscribe(newPanel.ID, addPanelRequest.Panel.PluginName, addPanelRequest.Panel.SymbolicName, newPanel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value, StringComparer.Ordinal));
 
@@ -209,10 +210,10 @@ namespace MakroBoard.Controllers
         /// </summary>
         [HttpPost("editpanel")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult<EditPanelResponse>> PostEditPanel([FromBody] EditPanelRequest editPanelRequest)
+        public async Task<ActionResult<EditPanelResponse>> PostEditPanel([FromBody] EditPanelRequest editPanelRequest, CancellationToken cancellationToken)
         {
             // Include Panels to cascade delete 
-            var existingPanel = await _Context.Panels.Where(x => x.ID == editPanelRequest.Panel.ID).Include(x => x.ConfigParameters).FirstOrDefaultAsync();
+            var existingPanel = await _Context.Panels.Where(x => x.ID == editPanelRequest.Panel.ID).Include(x => x.ConfigParameters).FirstOrDefaultAsync(cancellationToken);
             if (existingPanel == null)
             {
                 return NotFound(new RemovePanelResponse { Status = ResponseStatus.Error, Error = "Panel to edit not found" });
@@ -220,16 +221,16 @@ namespace MakroBoard.Controllers
 
             existingPanel.SymbolicName = editPanelRequest.Panel.SymbolicName;
             existingPanel.GroupId = editPanelRequest.Panel.GroupId;
-            existingPanel.ConfigParameters.ForEach(cp =>
+            foreach (var cp in existingPanel.ConfigParameters)
             {
-                cp.Value = editPanelRequest.Panel.ConfigValues.Find(x => x.SymbolicName.Equals(cp.SymbolicName, StringComparison.Ordinal))?.Value?.ToString() ?? cp.Value;
-            });
+                cp.Value = editPanelRequest.Panel.ConfigValues.FirstOrDefault(x => x.SymbolicName.Equals(cp.SymbolicName, StringComparison.Ordinal))?.Value?.ToString() ?? cp.Value;
+            }
 
-            await _Context.SaveChangesAsync();
+            await _Context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            _logger.LogDebug("Edit Panel {ID} => {SymbolicName}({PluginName})", existingPanel.ID, existingPanel.SymbolicName, existingPanel.PluginName);
+            _Logger.LogDebug("Edit Panel {ID} => {SymbolicName}({PluginName})", existingPanel.ID, existingPanel.SymbolicName, existingPanel.PluginName);
 
-            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePanel, existingPanel).ConfigureAwait(false);
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePanel, existingPanel, cancellationToken).ConfigureAwait(false);
 
             await _PluginContext.Subscribe(existingPanel.ID, existingPanel.PluginName, existingPanel.SymbolicName, existingPanel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value, StringComparer.Ordinal)).ConfigureAwait(false);
 
@@ -238,21 +239,21 @@ namespace MakroBoard.Controllers
 
         [HttpPost("removepanel")]
         [ServiceFilter(typeof(AuthenticatedAdmin))]
-        public async Task<ActionResult<RemovePanelResponse>> PostRemovePanel([FromBody] RemovePanelRequest removePanelRequest)
+        public async Task<ActionResult<RemovePanelResponse>> PostRemovePanel([FromBody] RemovePanelRequest removePanelRequest, CancellationToken cancellationToken)
         {
             // Include Panels to cascade delete 
-            var panelToDelete = await _Context.Panels.Where(x => x.ID == removePanelRequest.PanelId).FirstOrDefaultAsync().ConfigureAwait(false);
+            var panelToDelete = await _Context.Panels.Where(x => x.ID == removePanelRequest.PanelId).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
             if (panelToDelete == null)
             {
                 return NotFound(new RemovePanelResponse { Status = ResponseStatus.Error, Error = "Panel to delete not found" });
             }
 
             _Context.Panels.Remove(panelToDelete);
-            await _Context.SaveChangesAsync().ConfigureAwait(false);
+            await _Context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            _logger.LogDebug("Removed Panel {Label}", panelToDelete.SymbolicName);
+            _Logger.LogDebug("Removed Panel {Label}", panelToDelete.SymbolicName);
 
-            await _ClientHub.Clients.All.SendAsync(ClientMethods.RemovePanel, panelToDelete).ConfigureAwait(false);
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.RemovePanel, panelToDelete, cancellationToken).ConfigureAwait(false);
             return Ok(new RemovePanelResponse());
         }
 
