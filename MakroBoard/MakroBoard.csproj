@@ -25,6 +25,10 @@
 	<ItemGroup>
 		<PackageReference Include="BouncyCastle.Cryptography" Version="2.2.1" />
 		<PackageReference Include="McMaster.NETCore.Plugins" Version="1.4.0" />
+		<PackageReference Include="Meziantou.Analyzer" Version="2.0.76">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0-preview.6.23329.11" />
 		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.0-preview.6.23329.11" />
 		<!--<PackageReference Include="Prise" Version="2.1.0" />-->

@@ -22,4 +22,11 @@
 		<PackageReference Include="GtkSharp" Version="3.24.24.*" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="Meziantou.Analyzer" Version="2.0.76">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
+
 </Project>

@@ -9,6 +9,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Meziantou.Analyzer" Version="2.0.76">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Universe.CpuUsage" Version="2.2.497.598" />
 	</ItemGroup>
 	<ItemGroup>
