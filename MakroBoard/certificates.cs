@@ -55,7 +55,6 @@ namespace MakroBoard
                 certificate = new X509Certificate2(ms.ToArray(), exportpw, X509KeyStorageFlags.Exportable);
             }
 
-            //Console.WriteLine($"Generated cert with thumbprint {certificate.Thumbprint}");
             return certificate;
         }
 
@@ -69,7 +68,6 @@ namespace MakroBoard
                 var collection = userStore.Certificates.Find(X509FindType.FindBySubjectName, subject, validOnly: false);
                 if (collection.Count > 0)
                 {
-                    //Console.WriteLine($"loaded cert with thumbprint {collection[0].Thumbprint}");
                     return collection[0];
                 }
                 userStore.Close();

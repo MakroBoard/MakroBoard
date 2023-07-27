@@ -1,20 +1,21 @@
-﻿namespace MakroBoard.Plugin.MultiMedia
+﻿using MakroBoard.Plugin.Clock;
+using MakroBoard.PluginContract;
+using System.Collections.Generic;
+
+namespace MakroBoard.Plugin.MultiMedia
 {
-    //public class MultiMediaPlugin : MakroBoardPluginBase
-    //{
-    //    private IEnumerable<Control> _Controls;
+    public class MultiMediaPlugin : MakroBoardPluginBase
+    {
+        private List<Control>? _Controls;
 
-    //    public override async Task<IEnumerable<Control>> GetControls()
-    //    {
-    //        if (_Controls == null)
-    //        {
-    //            _Controls = new List<Control>
-    //            {
-    //                new SystemAudioControl()
-    //            };
-    //        }
+        protected override IReadOnlyCollection<Control> InitializeControls()
+        {
+            _Controls ??= new List<Control>
+                {
+                    new SystemAudioControl(),
+                };
 
-    //        return await Task.FromResult(_Controls).ConfigureAwait(false);
-    //    }
-    //}
+            return _Controls;
+        }
+    }
 }

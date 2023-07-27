@@ -69,7 +69,9 @@ namespace MakroBoard.Plugin
                         {
                             _Logger.Info($"Loading Plugin {pluginType.Name}");
                             // This assumes the implementation of IPlugin has a parameterless constructor
-                            plugins.Add((IMakroBoardPlugin)Activator.CreateInstance(pluginType));
+                            var plugin = (IMakroBoardPlugin)Activator.CreateInstance(pluginType);
+                            plugin.Initialize();
+                            plugins.Add(plugin);
                         }
                         catch (Exception e)
                         {

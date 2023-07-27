@@ -113,10 +113,6 @@ namespace MakroBoard.Controllers
                                                 throw new NotSupportedException("This is not yet supported!");
                                         }
                                     }
-                                    else
-                                    {
-                                        //cv.Add(new StringC(c.SymbolicName, c.Value));
-                                    }
                                 }
                                 result = bv.Execute(cv);
                                 break;

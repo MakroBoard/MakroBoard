@@ -140,7 +140,7 @@ namespace MakroBoard.Controllers
         [LocalHost]
         public async Task<ActionResult<EditGroupResponse>> PostEditGroup([FromBody] EditGroupRequest editGroupRequest, CancellationToken cancellationToken)
         {
-            var newGroup = await _Context.Groups.FindAsync(editGroupRequest.Group.Id, cancellationToken).ConfigureAwait(false);
+            var newGroup = await _Context.Groups.FindAsync(new object[] { editGroupRequest.Group.Id }, cancellationToken).ConfigureAwait(false);
             newGroup.Label = editGroupRequest.Group.Label;
 
             await _Context.SaveChangesAsync(cancellationToken);

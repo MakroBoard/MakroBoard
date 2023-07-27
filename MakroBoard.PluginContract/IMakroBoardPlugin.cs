@@ -10,5 +10,6 @@ namespace MakroBoard.PluginContract
         Task<IEnumerable<Control>> GetControls();
 
         Task<Control> GetControl(string symbolicName);
+        void Initialize();
     }
 }

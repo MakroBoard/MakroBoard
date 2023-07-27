@@ -8,6 +8,10 @@ namespace MakroBoard.PluginContract
     {
         protected MakroBoardPluginBase()
         {
+        }
+
+        public void Initialize()
+        {
             Controls = InitializeControls();
         }
 
@@ -15,7 +19,7 @@ namespace MakroBoard.PluginContract
 
         public string SymbolicName => GetType().Name;
 
-        public IReadOnlyCollection<Control> Controls { get; }
+        public IReadOnlyCollection<Control> Controls { get; private set; }
 
         public virtual async Task<Control> GetControl(string symbolicName)
         {

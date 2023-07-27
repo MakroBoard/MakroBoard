@@ -44,7 +44,6 @@ namespace MakroBoard.HubConfig
                     continue;
                 }
 
-                //_PluginContext.Subscribe(panel.ID, control, CreateParameterValues(control, panel.ConfigParameters));
                 _ = _PluginContext.Subscribe(panel.ID, panel.PluginName, panel.SymbolicName, panel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value, StringComparer.Ordinal));
             }
         }
@@ -82,7 +81,7 @@ namespace MakroBoard.HubConfig
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup, cancellationToken).ConfigureAwait(false);
 
-                var clients = await _DatabaseContext.Clients.ToListAsync(cancellationToken).ConfigureAwait(false);//.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
+                var clients = await _DatabaseContext.Clients.ToListAsync(cancellationToken).ConfigureAwait(false);
                 foreach (var client in clients)
                 {
                     await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateClient, client, cancellationToken).ConfigureAwait(false);

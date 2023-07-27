@@ -16,7 +16,7 @@ namespace MakroBoard.Plugin.SystemInfo
         
         public ProcessCpuControl()
         {
-            _ProgressBarView = new ProgressBarView(SymbolicName);
+            _ProgressBarView = new ProgressBarView(nameof(ProcessCpuControl));
         }
 
         public override string SymbolicName => nameof(ProcessCpuControl);
