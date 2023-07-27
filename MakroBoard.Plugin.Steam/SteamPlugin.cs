@@ -9,7 +9,7 @@ namespace MakroBoard.Plugin.Steam
         {
             return new List<Control>
             {
-               new CsGoServerStatusControl()
+               new CsGoServerStatusControl(),
             };
         }
     }

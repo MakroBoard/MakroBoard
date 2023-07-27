@@ -18,7 +18,7 @@ namespace MakroBoard.ApiModels
     public enum ResponseStatus
     {
         Ok,
-        Error
+        Error,
     }
 
     public class RequestTokensResponse : Response

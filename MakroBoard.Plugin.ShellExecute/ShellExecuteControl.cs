@@ -4,12 +4,13 @@ using NLog;
 using MakroBoard.PluginContract;
 using MakroBoard.PluginContract.Parameters;
 using MakroBoard.PluginContract.Views;
+using System.Globalization;
 
 namespace MakroBoard.Plugin.ShellExecute
 {
     internal class ShellExecuteControl : Control
     {
-        private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _Logger = LogManager.GetCurrentClassLogger();
         private const string _ConfigExecutable = "executable";
         private const string _ConfigArguments = "arguments";
         private const string _ConfigWaitForExit = "Wait for Exit";
@@ -19,15 +20,14 @@ namespace MakroBoard.Plugin.ShellExecute
             View = new ButtonView($"Execute", ExecuteCommand);
             AddConfigParameter(new StringConfigParameter(_ConfigExecutable, string.Empty, ".*"));
             AddConfigParameter(new StringConfigParameter(_ConfigArguments, string.Empty, ".*"));
-            AddConfigParameter(new BoolConfigParameter(_ConfigWaitForExit, false));
-            //AddConfigParameter(new BoolConfigParameter(_ConfigCommand, false));
+            AddConfigParameter(new BoolConfigParameter(_ConfigWaitForExit, defaultValue: false));
         }
 
         private string ExecuteCommand(ParameterValues arg)
         {
             if (!arg.TryGetConfigValue(_ConfigExecutable, out var command) || command?.UntypedValue == null || string.IsNullOrEmpty(command.UntypedValue.ToString()))
             {
-                _logger.Error("No Command defined!", arg, command);
+                _Logger.Error("No Command defined!", arg, command);
                 return "No Command defined!";
             }
 
@@ -43,22 +43,22 @@ namespace MakroBoard.Plugin.ShellExecute
             {
                 var process = Process.Start(new ProcessStartInfo(command.UntypedValue.ToString(), arguments?.UntypedValue?.ToString())
                 {
-                    UseShellExecute = true
+                    UseShellExecute = true,
                 });
                 if (waitForExit)
                 {
                     process.WaitForExit();
-                    _logger.Debug($"Successfully exited. ExitCode: {process.ExitCode}", arg, command);
-                    return $"Successfully exited. ExitCode: {process.ExitCode}";
+                    _Logger.Debug(CultureInfo.InvariantCulture, "Successfully exited. ExitCode: {exitCode}", process.ExitCode);
+                    return string.Create(CultureInfo.InvariantCulture, $"Successfully exited. ExitCode: {process.ExitCode}");
                 }
             }
             catch (Exception e)
             {
-                _logger.Error("Could not execute command", arg, command, e);
+                _Logger.Error(e, "Could not execute command");
                 return "Could not execute command";
             }
 
-            _logger.Debug("Successfully started!", arg, command);
+            _Logger.Debug("Successfully started!");
             return "Successfully Started!";
         }
 

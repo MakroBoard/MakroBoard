@@ -13,12 +13,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace MakroBoard.Plugin
 {
     public class PluginContext
     {
-        private static readonly ILogger _Logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger _Logger = LogManager.GetCurrentClassLogger();
         private readonly IHubContext<ClientHub> _HubContext;
 
         public PluginContext(IHubContext<ClientHub> hubContext)
@@ -28,7 +29,7 @@ namespace MakroBoard.Plugin
 
         public IList<IMakroBoardPlugin> Plugins { get; private set; }
 
-        public async Task InitializePlugins()
+        public Task InitializePlugins()
         {
             var pathToBinDebug = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -79,11 +80,12 @@ namespace MakroBoard.Plugin
             }
             catch (Exception e)
             {
+                _Logger.Error(e, "Error Loading Plugins");
             }
 
             Plugins = plugins;
 
-            await Task.CompletedTask;
+            return Task.CompletedTask;
         }
 
         public void Subscribe(int panelId, PluginContract.Control control, ParameterValues parameterValues)
@@ -91,15 +93,15 @@ namespace MakroBoard.Plugin
             control.Subscribe(parameterValues, panelId, OnControlChanged);
         }
 
-        public async Task Subscribe(int panelId, string pluginName, string controlName, Dictionary<string, string> configParameters)
+        public async Task Subscribe(int panelId, string pluginName, string controlName, IReadOnlyDictionary<string, string> configParameters)
         {
             var plugin = Plugins.First(x => x.SymbolicName.Equals(pluginName, StringComparison.OrdinalIgnoreCase));
-            var control = await plugin.GetControl(controlName);
+            var control = await plugin.GetControl(controlName).ConfigureAwait(false);
 
             control.Subscribe(CreateParameterValues(control, configParameters), panelId, OnControlChanged);
         }
 
-        private static ParameterValues CreateParameterValues(PluginContract.Control control, Dictionary<string, string> configParameters)
+        private static ParameterValues CreateParameterValues(PluginContract.Control control, IReadOnlyDictionary<string, string> configParameters)
         {
             var parameterValues = new ParameterValues();
 
@@ -109,7 +111,7 @@ namespace MakroBoard.Plugin
                 switch (controlConfigParameter)
                 {
                     case IntConfigParameter icp:
-                        parameterValues.Add(new IntParameterValue(icp, int.Parse(configParameter.Value)));
+                        parameterValues.Add(new IntParameterValue(icp, int.Parse(configParameter.Value, CultureInfo.InvariantCulture)));
                         break;
                     case StringConfigParameter scp:
                         parameterValues.Add(new StringParameterValue(scp, configParameter.Value));
@@ -118,7 +120,7 @@ namespace MakroBoard.Plugin
                         parameterValues.Add(new BoolParameterValue(bcp, configParameter.Value != null ? bool.Parse(configParameter.Value) : bcp.DefaultValue));
                         break;
                     default:
-                        throw new NotImplementedException($"{controlConfigParameter.GetType().Name} is not yet implemented!");
+                        throw new NotSupportedException($"{controlConfigParameter?.GetType().Name} is not yet implemented!");
                 }
             }
 
@@ -136,7 +138,7 @@ namespace MakroBoard.Plugin
                         parameterValues.Add(new BoolParameterValue(bcp, bcp.DefaultValue));
                         break;
                     default:
-                        throw new NotImplementedException($"{pluginParameter.GetType().Name} is not yet implemented!");
+                        throw new NotSupportedException($"{pluginParameter.GetType().Name} is not yet implemented!");
                 }
             }
 

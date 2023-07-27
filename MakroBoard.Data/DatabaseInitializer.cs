@@ -10,14 +10,14 @@ namespace MakroBoard.Data
         public static async Task Initialize(DatabaseContext context)
         {
             LogManager.GetCurrentClassLogger().Info($"Initialize Database: {context.Database.GetConnectionString()}");
-            await context.Database.EnsureCreatedAsync();
+            await context.Database.EnsureCreatedAsync().ConfigureAwait(false);
             context.Database.GetConnectionString();
             if (context.Sessions.Any())
             {
                 context.Sessions.RemoveRange(context.Sessions);
             }
-          
-            await context.SaveChangesAsync();
+
+            await context.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

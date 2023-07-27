@@ -75,7 +75,7 @@ class SelectServerPage extends StatelessWidget {
                               prefixIcon: Icon(Icons.tag),
                             ),
                             keyboardType: TextInputType.number,
-                            initialValue: Settings.getValue("server_port", defaultValue: "5001"),
+                            initialValue: Settings.getValue("server_port", defaultValue: 5001).toString(),
                             inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly], // Only number
                             validator: (value) {
                               if (value == null) {
@@ -94,7 +94,7 @@ class SelectServerPage extends StatelessWidget {
                               return null;
                             },
                             onChanged: (value) async {
-                              await Settings.setValue("server_port", value);
+                              await Settings.setValue("server_port", int.parse(value));
                             },
                           ),
                           ButtonBar(
@@ -107,7 +107,7 @@ class SelectServerPage extends StatelessWidget {
                                     var port = Settings.getValue("server_port", defaultValue: 0);
                                     var serverUriString = Settings.getValue("server_host", defaultValue: "") ?? "";
                                     if (port == 0) {
-                                      await Settings.setValue("server_port", "5001");
+                                      await Settings.setValue("server_port", 5001);
                                       port = 5001;
                                     }
                                     var serverUri = Uri.parse(serverUriString);

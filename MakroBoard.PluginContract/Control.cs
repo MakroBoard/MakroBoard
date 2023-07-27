@@ -11,8 +11,8 @@ namespace MakroBoard.PluginContract
 {
     public abstract class Control
     {
-        private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
-        private readonly IList<ConfigParameter> _ConfigParameters = new List<ConfigParameter>();
+        private readonly Logger _Logger = LogManager.GetCurrentClassLogger();
+        private readonly List<ConfigParameter> _ConfigParameters = new();
         private readonly IDictionary<int, Action<PanelChangedEventArgs>> _Subscriptions = new ConcurrentDictionary<int, Action<PanelChangedEventArgs>>();
         private ParameterValues _LastParameterValues;
 
@@ -47,10 +47,10 @@ namespace MakroBoard.PluginContract
         internal virtual void InternalSubscribe(ParameterValues configParameters, int panelId, Action<PanelChangedEventArgs> onControlChanged)
         {
             _Subscriptions.TryAdd(panelId, onControlChanged);
-            Task.Run(async () =>
+            _ = Task.Run(async () =>
             {
                 // Delay Subscribe To be sure connection is established
-                await Task.Delay(1000);
+                await Task.Delay(1000).ConfigureAwait(false);
                 Subscribe(configParameters);
             });
         }
@@ -77,7 +77,7 @@ namespace MakroBoard.PluginContract
                 }
                 catch (Exception e)
                 {
-                    _logger.Error(e, "Can not send PanelChanged for Subscription");
+                    _Logger.Error(e, "Can not send PanelChanged for Subscription");
                 }
             }
         }

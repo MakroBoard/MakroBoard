@@ -13,7 +13,7 @@ namespace MakroBoard.Plugin.SystemInfo
             {
                 memoryControl,
                 cpuControl,
-                new ListControl("SystemInfo", new Control[]{memoryControl, cpuControl} )
+                new ListControl("SystemInfo", new Control[]{memoryControl, cpuControl} ),
             };
         }
     }

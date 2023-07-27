@@ -52,7 +52,7 @@ namespace MakroBoard.Controllers
             var result = false;
             if (client != null)
             {
-                if (client.Token.Equals(authorization))
+                if (client.Token.Equals(authorization, StringComparison.Ordinal))
                 {
                     result = client.State >= ClientState.Confirmed;
                 }
@@ -92,7 +92,7 @@ namespace MakroBoard.Controllers
                     Code = request.Code,
                     ValidUntil = DateTime.UtcNow.AddMinutes(5),
                     ClientIp = clientIp,
-                    State = isLocalHost ? ClientState.Admin : ClientState.None
+                    State = isLocalHost ? ClientState.Admin : ClientState.None,
                 };
 
                 if (isLocalHost)
@@ -164,7 +164,7 @@ namespace MakroBoard.Controllers
                 return BadRequest(new RemoveClientResponse { Status = ResponseStatus.Error, Error = "No suitable client found." });
             }
 
-            if (Request.HttpContext.Connection.RemoteIpAddress.ToString().Equals(currentClient.ClientIp))
+            if (Request.HttpContext.Connection.RemoteIpAddress.ToString().Equals(currentClient.ClientIp, StringComparison.Ordinal))
             {
                 _Logger.LogWarning("Client can not delete him self.");
                 return Conflict(new RemoveClientResponse { Status = ResponseStatus.Error, Error = "Client can not delete him self." });

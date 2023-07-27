@@ -9,7 +9,7 @@ namespace MakroBoard.Plugin.ShellExecute
         {
             return new List<Control>
             {
-                new ShellExecuteControl()
+                new ShellExecuteControl(),
             };
         }
     }

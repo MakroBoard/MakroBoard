@@ -24,7 +24,7 @@ namespace MakroBoard.Tray
                 contextMenu.Items.Add(new MenuItem { Header = menuEntry.Title, Command = new RelayCommand(o => menuEntry.Clicked?.Invoke(menuEntry)) });
             }
 
-            var iconPath = Process.GetCurrentProcess().MainModule.FileName;
+            var iconPath = Environment.ProcessPath;
 
             _ = new TaskbarIcon
             {
@@ -54,7 +54,7 @@ namespace MakroBoard.Tray
             readonly Predicate<object> _canExecute;
 
 
-            public RelayCommand(Action<object> execute) : this(execute, null) { }
+            public RelayCommand(Action<object> execute) : this(execute, canExecute: null) { }
             public RelayCommand(Action<object> execute, Predicate<object> canExecute)
             {
                 _execute = execute ?? throw new

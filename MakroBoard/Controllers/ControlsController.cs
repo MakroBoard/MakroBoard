@@ -97,10 +97,10 @@ namespace MakroBoard.Controllers
                                                         cv.Add(new BoolParameterValue(bcp, jsonElement.GetInt32() > 0));
                                                         break;
                                                     case JsonValueKind.True:
-                                                        cv.Add(new BoolParameterValue(bcp, true));
+                                                        cv.Add(new BoolParameterValue(bcp, value: true));
                                                         break;
                                                     case JsonValueKind.False:
-                                                        cv.Add(new BoolParameterValue(bcp, false));
+                                                        cv.Add(new BoolParameterValue(bcp, value: false));
                                                         break;
                                                     case JsonValueKind.Null:
                                                         break;
@@ -130,9 +130,9 @@ namespace MakroBoard.Controllers
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError($"Failed to execute: { e.Message }");
+                    _logger.LogError(e, "Failed to execute: {message}", e.Message);
 
-                    return Ok(new ExecuteResponse(string.Empty) { Status = ResponseStatus.Error, Error = $"Failed to execute: { e.Message }" });
+                    return Ok(new ExecuteResponse(string.Empty) { Status = ResponseStatus.Error, Error = $"Failed to execute: {e.Message}" });
                 }
             }
 

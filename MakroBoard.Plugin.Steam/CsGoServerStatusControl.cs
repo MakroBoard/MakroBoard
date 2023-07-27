@@ -12,9 +12,9 @@ using System.Timers;
 
 namespace MakroBoard.Plugin.Steam
 {
-    public class CsGoServerStatusControl : Control, IDisposable
+    public class CsGoServerStatusControl : Control
     {
-        private readonly ILogger _Logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _Logger = LogManager.GetCurrentClassLogger();
         private readonly TextView _TextView;
         private Timer _Timer;
         private readonly SteamWebInterfaceFactory _Factory;
@@ -35,42 +35,36 @@ namespace MakroBoard.Plugin.Steam
             {
                 _Timer = new Timer(10000);
                 _Timer.Elapsed += OnTimerTick;
-                OnTimerTick(null, null);
+                OnTimerTick(s: null, a: null);
             }
         }
 
         private void OnTimerTick(object s, ElapsedEventArgs a)
         {
             _Timer.Stop();
-            Task.Run(async () =>
-            {
-                try
-                {
-                    var webInterface = _Factory.CreateSteamWebInterface<CSGOServers>();
-                    var status = await webInterface.GetGameServerStatusAsync();
+            _ = Task.Run(async () =>
+             {
+                 try
+                 {
+                     var webInterface = _Factory.CreateSteamWebInterface<CSGOServers>();
+                     var status = await webInterface.GetGameServerStatusAsync().ConfigureAwait(false);
 
-                    OnControlChanged(new ParameterValues() { new StringParameterValue(_TextView.TextParameter, $"CSGO Servers: {status.Data.Matchmaking.OnlineServers}\nCSGO Players: {status.Data.Matchmaking.OnlinePlayers}\nCSGO Players Searching: {status.Data.Matchmaking.SearchingPlayers}") });
-                }
-                catch(HttpRequestException requestException) when (requestException.StatusCode == HttpStatusCode.Forbidden)
-                {
-                    _Logger.Error("Getting Steam Status forbidden.");
-                    OnControlChanged(new ParameterValues() { new StringParameterValue(_TextView.TextParameter, $"Wrong or no Steam API Key configured!") });
-                }
-                catch (Exception ex)
-                {
-                    _Logger.Error(ex, "Error getting Steam Status");
-                }
-                finally
-                {
-                    _Timer.Start();
-                }
-            });
-
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
+                     OnControlChanged(new ParameterValues() { new StringParameterValue(_TextView.TextParameter, $"CSGO Servers: {status.Data.Matchmaking.OnlineServers}\nCSGO Players: {status.Data.Matchmaking.OnlinePlayers}\nCSGO Players Searching: {status.Data.Matchmaking.SearchingPlayers}") });
+                 }
+                 catch (HttpRequestException requestException) when (requestException.StatusCode == HttpStatusCode.Forbidden)
+                 {
+                     _Logger.Error("Getting Steam Status forbidden.");
+                     OnControlChanged(new ParameterValues() { new StringParameterValue(_TextView.TextParameter, $"Wrong or no Steam API Key configured!") });
+                 }
+                 catch (Exception ex)
+                 {
+                     _Logger.Error(ex, "Error getting Steam Status");
+                 }
+                 finally
+                 {
+                     _Timer.Start();
+                 }
+             });
         }
     }
 }

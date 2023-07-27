@@ -66,7 +66,7 @@ namespace MakroBoard
             userStore.Open(OpenFlags.OpenExistingOnly);
             if (userStore.IsOpen)
             {
-                var collection = userStore.Certificates.Find(X509FindType.FindBySubjectName, subject, false);
+                var collection = userStore.Certificates.Find(X509FindType.FindBySubjectName, subject, validOnly: false);
                 if (collection.Count > 0)
                 {
                     //Console.WriteLine($"loaded cert with thumbprint {collection[0].Thumbprint}");

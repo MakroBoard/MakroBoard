@@ -26,7 +26,7 @@ namespace MakroBoard.Data
 
         public void CreateNewToken(string seed)
         {
-            byte[] bytes = SHA512.Create().ComputeHash(Encoding.UTF8.GetBytes($"WMSK_{ClientIp}{Code}{DateTime.Now:O}{seed}{new Random().Next()}"));
+            byte[] bytes = SHA512.HashData(Encoding.UTF8.GetBytes($"WMSK_{ClientIp}{Code}{DateTime.Now:O}{seed}{new Random().Next()}"));
             var token = Convert.ToBase64String(bytes);
             Token = token;
         }
@@ -37,7 +37,7 @@ namespace MakroBoard.Data
         None = 0,
         Blocked = 10,
         Confirmed = 100,
-        Admin = 1000
+        Admin = 1000,
     }
 
     public class Session

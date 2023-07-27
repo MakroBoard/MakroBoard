@@ -8,7 +8,7 @@ namespace MakroBoard.Plugin.Keyboard
 {
     public class TextControl : Control
     {
-        private readonly ILogger _Logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _Logger = LogManager.GetCurrentClassLogger();
         private const string _ConfigChar = "char";
         public TextControl() : base()
         {

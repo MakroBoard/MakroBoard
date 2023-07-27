@@ -19,22 +19,25 @@ using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using NLog;
+using System.Globalization;
 
 namespace MakroBoard
 {
     public class Program
     {
+        private const string _LocalHost = "https://localhost:";
+
         // NLog: setup the logger first to catch all errors :)
-        private static Logger _Logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-        private static X509Certificate2 _Certificate;
-        private static TrayIcon _TrayIcon;
-        private static Localsettings _Localsettings;
+        private static readonly Logger _Logger = LogManager.Setup(c => c.LoadConfigurationFromFile("nlog.config")).GetCurrentClassLogger();
+        private X509Certificate2 _Certificate;
+        private Localsettings _Localsettings;
+        private TrayIcon _TrayIcon;
         private IHost _Host;
 
-        public static async Task Main(string[] args)
+        public static Task Main(string[] args)
         {
             var program = new Program();
-            await program.Start(args);
+            return program.Start(args);
         }
 
         private async Task Start(string[] args)
@@ -45,24 +48,26 @@ namespace MakroBoard
                 ShowTrayIcon();
 
                 _Logger.Debug("init log");
-                _Logger.Debug($"Using Data Directory: { Constants.DataDirectory}");
+                _Logger.Debug($"Using Data Directory: {Constants.DataDirectory}");
                 InitializeDataDir();
-                await InitializeInstanceSeed();
+                await InitializeInstanceSeed().ConfigureAwait(false);
                 InitializeCertificate();
                 InitializeConfig();
 
                 using (_Host = CreateHostBuilder(args).Build())
                 {
-                    using var scope = _Host.Services.CreateScope();
+                    var scope = _Host.Services.CreateAsyncScope();
+                    await using (scope.ConfigureAwait(false))
+                    {
+                        var services = scope.ServiceProvider;
 
-                    var services = scope.ServiceProvider;
+                        await CreateDbIfNotExists(services).ConfigureAwait(false);
+                        await LoadPlugins(services).ConfigureAwait(false);
 
-                    await CreateDbIfNotExists(services);
-                    await LoadPlugins(services);
+                        _Logger.Info("Server Started");
 
-                    _Logger.Info("Server Started");
-
-                    _Host.Run();
+                        await _Host.RunAsync().ConfigureAwait(false);
+                    }
                 }
             }
             catch (Exception ex)
@@ -74,7 +79,7 @@ namespace MakroBoard
             finally
             {
                 // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
-                NLog.LogManager.Shutdown();
+                LogManager.Shutdown();
             }
         }
 
@@ -87,17 +92,20 @@ namespace MakroBoard
                 {
                     new TrayMenuItem("MakroBoard öffnen", i =>
                     {
-                        var process = Process.Start(new ProcessStartInfo("https://localhost:" + _Localsettings.Port.ToString())
+                        Process.Start(new ProcessStartInfo(string.Create(CultureInfo.InvariantCulture,$"{_LocalHost}{_Localsettings.Port}"))
                         {
-                            UseShellExecute = true
+                            UseShellExecute = true,
                         });
 
                     }),
                     new TrayMenuItem("Beenden", async i =>
                     {
                         _TrayIcon.Remove();
-                        await _Host?.StopAsync();
-                    })
+                        if(_Host != null)
+                        {
+                            await _Host.StopAsync().ConfigureAwait(false);
+                        }
+                    }),
                 }));
             });
 #if WINDOWS
@@ -110,12 +118,12 @@ namespace MakroBoard
         {
             if (File.Exists(Constants.SeedFileName))
             {
-                Constants.Seed = await File.ReadAllTextAsync(Constants.SeedFileName);
+                Constants.Seed = await File.ReadAllTextAsync(Constants.SeedFileName).ConfigureAwait(false);
             }
             else
             {
-                Constants.Seed = Encoding.UTF8.GetString(SHA512.Create().ComputeHash(Encoding.UTF8.GetBytes($"WMSK_{DateTime.Now:O}{new Random().Next()}")));
-                await File.WriteAllTextAsync(Constants.SeedFileName, Constants.Seed);
+                Constants.Seed = Encoding.UTF8.GetString(SHA512.HashData(Encoding.UTF8.GetBytes(string.Create(CultureInfo.InvariantCulture, $"WMSK_{DateTime.Now:O}{new Random().Next()}"))));
+                await File.WriteAllTextAsync(Constants.SeedFileName, Constants.Seed).ConfigureAwait(false);
             }
         }
 
@@ -127,7 +135,7 @@ namespace MakroBoard
             }
         }
 
-        private static void InitializeConfig()
+        private void InitializeConfig()
         {
             try
             {
@@ -140,23 +148,21 @@ namespace MakroBoard
                 {
                     _Localsettings = JsonSerializer.Deserialize<Localsettings>(File.ReadAllText(Constants.LocalSettingsFileName));
 
-                    if (!_Localsettings.validatesettings())
+                    if (!_Localsettings.Validatesettings())
                     {
-                        var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-                        logger.Info("localsettings are not valid, starting with default config!");
+                        _Logger.Info("localsettings are not valid, starting with default config!");
                         _Localsettings = new Localsettings();
                     }
                 }
             }
             catch (Exception ex)
             {
-                var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-                logger.Error(ex, "An error occurred creating or reading the the localsettings file. starting with default config!");
+                _Logger.Error(ex, "An error occurred creating or reading the the localsettings file. starting with default config!");
                 _Localsettings = new Localsettings();
             }
         }
 
-        private static void InitializeCertificate()
+        private void InitializeCertificate()
         {
             var cert = Certificates.LoadCertificate("MakroBoard");
             if (cert == null)
@@ -168,7 +174,7 @@ namespace MakroBoard
             _Certificate = cert;
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        public IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
@@ -195,7 +201,7 @@ namespace MakroBoard
             try
             {
                 var context = services.GetRequiredService<DatabaseContext>();
-                await DatabaseInitializer.Initialize(context);
+                await DatabaseInitializer.Initialize(context).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -209,7 +215,7 @@ namespace MakroBoard
             try
             {
                 var context = services.GetRequiredService<PluginContext>();
-                await context.InitializePlugins();
+                await context.InitializePlugins().ConfigureAwait(false);
             }
             catch (Exception ex)
             {

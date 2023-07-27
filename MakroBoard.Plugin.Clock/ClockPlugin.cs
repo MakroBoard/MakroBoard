@@ -9,7 +9,7 @@ namespace MakroBoard.Plugin.Clock
         {
             return new List<Control>
             {
-                new ClockControl()
+                new ClockControl(),
             };
         }
     }

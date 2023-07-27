@@ -10,7 +10,7 @@ namespace MakroBoard.Plugin.Keyboard
 
     public class KeyboardControl : Control
     {
-        private readonly ILogger _logger = LogManager.GetCurrentClassLogger();
+        private readonly Logger _Logger = LogManager.GetCurrentClassLogger();
         private const string _ConfigChar = "char";
         private readonly Robot _Robot;
 
@@ -26,12 +26,11 @@ namespace MakroBoard.Plugin.Keyboard
         {
             if (configValues.TryGetConfigValue(_ConfigChar, out var configValue))
             {
-                // TODO Better Convert
                 _Robot.Type(configValue.UntypedValue.ToString());
-                _logger.Debug($"Pressed {configValue.UntypedValue}");
+                _Logger.Debug($"Pressed {configValue.UntypedValue}");
                 return $"Pressed {configValue.UntypedValue}";
             }
-            _logger.Debug("Config value not found!");
+            _Logger.Debug("Config value not found!");
             return "Config value not found!";
         }
 

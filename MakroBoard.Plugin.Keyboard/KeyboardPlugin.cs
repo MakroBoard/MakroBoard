@@ -10,7 +10,7 @@ namespace MakroBoard.Plugin.Keyboard
             return new List<Control>
             {
                 new KeyboardControl(),
-                new TextControl()
+                new TextControl(),
             };
         }
     }

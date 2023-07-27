@@ -8,6 +8,6 @@
         Slider,
         Text,
         ProgressBar,
-        List
+        List,
     }
 }

@@ -37,7 +37,7 @@ namespace MakroBoard.HubConfig
                     continue;
                 }
 
-                var control = await plugin.GetControl(panel.SymbolicName);
+                var control = await plugin.GetControl(panel.SymbolicName).ConfigureAwait(false);
                 if (control == null)
                 {
                     // Skip Panels where control is no more available
@@ -45,7 +45,7 @@ namespace MakroBoard.HubConfig
                 }
 
                 //_PluginContext.Subscribe(panel.ID, control, CreateParameterValues(control, panel.ConfigParameters));
-                _ = _PluginContext.Subscribe(panel.ID, panel.PluginName, panel.SymbolicName, panel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value));
+                _ = _PluginContext.Subscribe(panel.ID, panel.PluginName, panel.SymbolicName, panel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value, StringComparer.Ordinal));
             }
         }
 
@@ -61,7 +61,7 @@ namespace MakroBoard.HubConfig
 
             var isLocalHost = IsLocalHost(ipAddress);
 
-            var existingClient = await _DatabaseContext.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(ipAddress.ToString()));
+            var existingClient = await _DatabaseContext.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(ipAddress.ToString())).ConfigureAwait(false);
 
             if (existingClient == null)
             {
@@ -74,17 +74,17 @@ namespace MakroBoard.HubConfig
 
             existingClient.LastConnection = DateTime.UtcNow;
 
-            await _DatabaseContext.Sessions.AddAsync(new Session { ClientSignalrId = Context.ConnectionId, Client = existingClient });
-            await _DatabaseContext.SaveChangesAsync();
+            await _DatabaseContext.Sessions.AddAsync(new Session { ClientSignalrId = Context.ConnectionId, Client = existingClient }).ConfigureAwait(false);
+            await _DatabaseContext.SaveChangesAsync().ConfigureAwait(false);
 
             if (isLocalHost)
             {
-                await Groups.AddToGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup);
+                await Groups.AddToGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup).ConfigureAwait(false);
 
-                var clients = await _DatabaseContext.Clients.ToListAsync();//.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
+                var clients = await _DatabaseContext.Clients.ToListAsync().ConfigureAwait(false);//.Where(x => x.State == ClientState.None && x.ValidUntil > DateTime.UtcNow || x.State == ClientState.Confirmed).ToListAsync();
                 foreach (var client in clients)
                 {
-                    await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateClient, client);
+                    await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateClient, client).ConfigureAwait(false);
                 }
             }
             else
@@ -92,36 +92,36 @@ namespace MakroBoard.HubConfig
                 // Any sync needed?
             }
 
-            var pages = await _DatabaseContext.Pages.Include(p => p.Groups).ThenInclude((g) => g.Panels).ThenInclude(p => p.ConfigParameters).ToListAsync();
+            var pages = await _DatabaseContext.Pages.Include(p => p.Groups).ThenInclude((g) => g.Panels).ThenInclude(p => p.ConfigParameters).ToListAsync().ConfigureAwait(false);
             foreach (var page in pages)
             {
-                await Clients.Caller.SendAsync(ClientMethods.AddOrUpdatePage, page);
+                await Clients.Caller.SendAsync(ClientMethods.AddOrUpdatePage, page).ConfigureAwait(false);
             }
 
-            await SubscribePanels();
-            if(isLocalHost)
+            await SubscribePanels().ConfigureAwait(false);
+            if (isLocalHost)
             {
-                await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token);
+                await Clients.Caller.SendAsync(ClientMethods.AddOrUpdateToken, existingClient.Token).ConfigureAwait(false);
             }
 
-            await Clients.Caller.SendAsync(ClientMethods.Initialized);
+            await Clients.Caller.SendAsync(ClientMethods.Initialized).ConfigureAwait(false);
 
-            await base.OnConnectedAsync();
+            await base.OnConnectedAsync().ConfigureAwait(false);
         }
 
         public async override Task OnDisconnectedAsync(Exception exception)
         {
             var ip = Context.GetHttpContext().Connection.RemoteIpAddress.ToString();
 
-            var sessionToRemove = await _DatabaseContext.Sessions.FirstOrDefaultAsync(x => x.ClientSignalrId == Context.ConnectionId);
+            var sessionToRemove = await _DatabaseContext.Sessions.FirstOrDefaultAsync(x => x.ClientSignalrId == Context.ConnectionId).ConfigureAwait(false);
             if (sessionToRemove != null)
             {
                 var test = _DatabaseContext.Sessions.Remove(sessionToRemove);
             }
 
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, ClientGroups.AdminGroup).ConfigureAwait(false);
 
-            await base.OnDisconnectedAsync(exception);
+            await base.OnDisconnectedAsync(exception).ConfigureAwait(false);
         }
     }
 }

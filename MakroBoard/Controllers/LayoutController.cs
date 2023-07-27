@@ -11,6 +11,8 @@ using MakroBoard.HubConfig;
 using MakroBoard.Plugin;
 using Microsoft.EntityFrameworkCore;
 using MakroBoard.ApiModels;
+using System;
+using System.Globalization;
 
 // QR Code auf Localhost
 // auf Handy -> Code anzeigen
@@ -20,7 +22,7 @@ namespace MakroBoard.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class LayoutController : ControllerBase
+    public partial class LayoutController : ControllerBase
     {
         private readonly ILogger<LayoutController> _logger;
         private readonly DatabaseContext _Context;
@@ -48,7 +50,7 @@ namespace MakroBoard.Controllers
                 SymbolicName = ConvertToSymbolicName(addPageRequest.Page.Label),
                 Label = addPageRequest.Page.Label,
                 Icon = addPageRequest.Page.Icon,
-                Groups = new List<Data.Group>()
+                Groups = new List<Data.Group>(),
             };
             _Context.Pages.Add(newPage);
 
@@ -68,7 +70,7 @@ namespace MakroBoard.Controllers
         [ServiceFilter(typeof(AuthenticatedAdmin))]
         public async Task<ActionResult<EditPageResponse>> PostEditPage([FromBody] EditPageRequest editPageRequest)
         {
-            var existingPage = await _Context.Pages.Where(x => x.ID == editPageRequest.Page.Id).Include(x => x.Groups).ThenInclude(g => g.Panels).ThenInclude(p=>p.ConfigParameters).FirstOrDefaultAsync();
+            var existingPage = await _Context.Pages.Where(x => x.ID == editPageRequest.Page.Id).Include(x => x.Groups).ThenInclude(g => g.Panels).ThenInclude(p => p.ConfigParameters).FirstOrDefaultAsync();
             if (existingPage == null)
             {
                 return Conflict(new EditPageResponse { Status = ResponseStatus.Error, Error = "Page to edit not found" });
@@ -76,7 +78,7 @@ namespace MakroBoard.Controllers
 
             existingPage.Label = editPageRequest.Page.Label;
             existingPage.Icon = editPageRequest.Page.Icon;
-           
+
             await _Context.SaveChangesAsync();
 
             _logger.LogDebug("Edit Page {ID} => {Label}", existingPage.ID, existingPage.Label);
@@ -91,7 +93,7 @@ namespace MakroBoard.Controllers
         public async Task<ActionResult<RemovePageResponse>> PostRemovePage([FromBody] RemovePageRequest removePanelRequest)
         {
             // Include Panels to cascade delete 
-            var pageToDelete = await _Context.Pages.Where(x => x.ID == removePanelRequest.PageId).Include(x=>x.Groups).ThenInclude(g=>g.Panels).FirstOrDefaultAsync();
+            var pageToDelete = await _Context.Pages.Where(x => x.ID == removePanelRequest.PageId).Include(x => x.Groups).ThenInclude(g => g.Panels).FirstOrDefaultAsync();
             if (pageToDelete == null)
             {
                 return NotFound(new RemovePageResponse { Status = ResponseStatus.Error, Error = "Page to delete not found" });
@@ -118,7 +120,7 @@ namespace MakroBoard.Controllers
             {
                 SymbolicName = ConvertToSymbolicName(addGroupRequest.Group.Label),
                 Label = addGroupRequest.Group.Label,
-                PageID = addGroupRequest.Group.PageID
+                PageID = addGroupRequest.Group.PageID,
             };
             _Context.Groups.Add(newGroup);
 
@@ -179,7 +181,7 @@ namespace MakroBoard.Controllers
             {
                 SymbolicName = addPanelRequest.Panel.SymbolicName,
                 PluginName = addPanelRequest.Panel.PluginName,
-                GroupId = addPanelRequest.Panel.GroupId
+                GroupId = addPanelRequest.Panel.GroupId,
             };
 
             newPanel.ConfigParameters = addPanelRequest.Panel.ConfigValues.Select(x => new Data.ConfigParameterValue
@@ -197,7 +199,7 @@ namespace MakroBoard.Controllers
 
             await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePanel, newPanel);
 
-            await _PluginContext.Subscribe(newPanel.ID, addPanelRequest.Panel.PluginName, addPanelRequest.Panel.SymbolicName, newPanel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value));
+            await _PluginContext.Subscribe(newPanel.ID, addPanelRequest.Panel.PluginName, addPanelRequest.Panel.SymbolicName, newPanel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value, StringComparer.Ordinal));
 
             return Ok(new AddPanelResponse());
         }
@@ -220,16 +222,16 @@ namespace MakroBoard.Controllers
             existingPanel.GroupId = editPanelRequest.Panel.GroupId;
             existingPanel.ConfigParameters.ForEach(cp =>
             {
-                cp.Value = editPanelRequest.Panel.ConfigValues.FirstOrDefault(x => x.SymbolicName.Equals(cp.SymbolicName)).Value?.ToString() ?? cp.Value;
+                cp.Value = editPanelRequest.Panel.ConfigValues.Find(x => x.SymbolicName.Equals(cp.SymbolicName, StringComparison.Ordinal))?.Value?.ToString() ?? cp.Value;
             });
 
             await _Context.SaveChangesAsync();
 
             _logger.LogDebug("Edit Panel {ID} => {SymbolicName}({PluginName})", existingPanel.ID, existingPanel.SymbolicName, existingPanel.PluginName);
 
-            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePanel, existingPanel);
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.AddOrUpdatePanel, existingPanel).ConfigureAwait(false);
 
-            await _PluginContext.Subscribe(existingPanel.ID, existingPanel.PluginName, existingPanel.SymbolicName, existingPanel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value));
+            await _PluginContext.Subscribe(existingPanel.ID, existingPanel.PluginName, existingPanel.SymbolicName, existingPanel.ConfigParameters.ToDictionary(x => x.SymbolicName, x => x.Value, StringComparer.Ordinal)).ConfigureAwait(false);
 
             return Ok(new AddPanelResponse());
         }
@@ -239,24 +241,27 @@ namespace MakroBoard.Controllers
         public async Task<ActionResult<RemovePanelResponse>> PostRemovePanel([FromBody] RemovePanelRequest removePanelRequest)
         {
             // Include Panels to cascade delete 
-            var panelToDelete = await _Context.Panels.Where(x => x.ID == removePanelRequest.PanelId).FirstOrDefaultAsync();
+            var panelToDelete = await _Context.Panels.Where(x => x.ID == removePanelRequest.PanelId).FirstOrDefaultAsync().ConfigureAwait(false);
             if (panelToDelete == null)
             {
                 return NotFound(new RemovePanelResponse { Status = ResponseStatus.Error, Error = "Panel to delete not found" });
             }
 
             _Context.Panels.Remove(panelToDelete);
-            await _Context.SaveChangesAsync();
+            await _Context.SaveChangesAsync().ConfigureAwait(false);
 
             _logger.LogDebug("Removed Panel {Label}", panelToDelete.SymbolicName);
 
-            await _ClientHub.Clients.All.SendAsync(ClientMethods.RemovePanel, panelToDelete);
+            await _ClientHub.Clients.All.SendAsync(ClientMethods.RemovePanel, panelToDelete).ConfigureAwait(false);
             return Ok(new RemovePanelResponse());
         }
 
         private static string ConvertToSymbolicName(string name)
         {
-            return Regex.Replace(name, @"\s+", "-").ToLower();
+            return ConvertToSymbolicNameRegEx().Replace(name, "-").ToLower(CultureInfo.InvariantCulture);
         }
+
+        [GeneratedRegex(@"\s+", RegexOptions.None, matchTimeoutMilliseconds: 1000)]
+        private static partial Regex ConvertToSymbolicNameRegEx();
     }
 }
