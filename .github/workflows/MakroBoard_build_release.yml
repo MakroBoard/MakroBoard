@@ -183,9 +183,10 @@ jobs:
     - name: Display structure of downloaded files
       run: ls -R
     - name: Setup .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.x.x
+        dotnet-version: 8.x.x
+        dotnet-quality: 'preview'
     - name: set Version
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV
@@ -389,9 +390,10 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1
     - name: install .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.x.x
+        dotnet-version: 8.x.x
+        dotnet-quality: 'preview'
     - name: install Wix
       run: Invoke-WebRequest -Uri $($($(Invoke-WebRequest -Uri https://api.github.com/repos/wixtoolset/wix3/releases/latest).Content | ConvertFrom-Json).assets | Where-Object {$_.browser_download_url -Like "*wix*-binaries.zip"}).browser_download_url -OutFile "wix.zip" && Expand-Archive ./wix.zip && Remove-Item ./wix.zip
     - name: Add wix to path
@@ -441,7 +443,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1
     - name: install .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.x.x
         dotnet-quality: 'preview'
@@ -489,7 +491,7 @@ jobs:
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1
     - name: install .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.x.x
         dotnet-quality: 'preview'
@@ -643,7 +645,7 @@ jobs:
       with:
         name: latest_web_client
     - name: install .NET
-      uses: actions/setup-dotnet@v2
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.x.x
         dotnet-quality: 'preview'
