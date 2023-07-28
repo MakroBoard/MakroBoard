@@ -444,6 +444,7 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 8.x.x
+        dotnet-quality: 'preview'
     - name: set Version
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV
@@ -491,6 +492,7 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 8.x.x
+        dotnet-quality: 'preview'
     - name: install Wix
       run: Invoke-WebRequest -Uri $($($(Invoke-WebRequest -Uri https://api.github.com/repos/wixtoolset/wix3/releases/latest).Content | ConvertFrom-Json).assets | Where-Object {$_.browser_download_url -Like "*wix*-binaries.zip"}).browser_download_url -OutFile "wix.zip" && Expand-Archive ./wix.zip && Remove-Item ./wix.zip
     - name: Add wix to path
@@ -643,7 +645,8 @@ jobs:
     - name: install .NET
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: 6.x.x
+        dotnet-version: 8.x.x
+        dotnet-quality: 'preview'
     - name: install gsed
       run: brew install gnu-sed
     - name: set Version
