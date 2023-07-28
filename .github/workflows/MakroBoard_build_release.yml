@@ -77,7 +77,7 @@ jobs:
     - name: install flutter
       uses: subosito/flutter-action@v2
       with:
-        channel: 'stable'
+        channel: 'beta'
     - name: install cmake
       uses: jwlawson/actions-setup-cmake@v1
       with:
@@ -276,7 +276,7 @@ jobs:
     - name: install flutter
       uses: subosito/flutter-action@v2
       with:
-        channel: 'stable'
+        channel: 'beta'
     - name: install java
       uses: actions/setup-java@v3
       with:
@@ -330,7 +330,7 @@ jobs:
     - name: install flutter
       uses: subosito/flutter-action@v2
       with:
-        channel: 'stable'
+        channel: 'beta'
     - name: set Version
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
       run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV
@@ -535,7 +535,7 @@ jobs:
     - name: install flutter
       uses: subosito/flutter-action@v2
       with:
-        channel: 'stable'
+        channel: 'beta'
     - name: install java
       uses: actions/setup-java@v3
       with:
@@ -584,7 +584,7 @@ jobs:
     - name: install flutter
       uses: subosito/flutter-action@v2
       with:
-        channel: 'stable'
+        channel: 'beta'
     - name: install java
       uses: actions/setup-java@v3
       with:
