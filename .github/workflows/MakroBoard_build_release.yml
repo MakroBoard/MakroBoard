@@ -57,7 +57,7 @@ jobs:
       run: flutter doctor -v
     - name: flutter build web
       working-directory: ./makro_board_client
-      run: flutter build web --verbose
+      run: flutter build web --verbose --no-tree-shake-icons
     - name: copy web client
       run: mkdir -p upload/web && cp -rf ./makro_board_client/build/web/* upload/web/
     - name: upload artifact web client
