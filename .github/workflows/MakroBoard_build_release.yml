@@ -2,7 +2,7 @@ name: MakroBoard_build_release
 
 on:
   push:
-    branches: 
+    branches:
     - main
     - develop
     tags: [ v**]
@@ -14,7 +14,7 @@ on:
     - '!.github/workflows/MakroBoard_website_build.yml'
     - '!.github/workflows/MakroBoard_clean_workflowruns.yml'
   pull_request:
-    branches: 
+    branches:
     - main
     - develop
     tags: [ v**]
@@ -36,13 +36,13 @@ jobs:
     - name: install flutter
       uses: subosito/flutter-action@v2
       with:
-        channel: 'stable'
+        channel: 'beta'
     - name: set Version
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV
     - name: set Version
       if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV
     - name: set client version
       run: 'sed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
       working-directory: ./makro_board_client
@@ -66,9 +66,9 @@ jobs:
         name: latest_web_client
         path: upload/
         retention-days: 1
-  
-  
-  
+
+
+
   build_linux_client_x64:
     runs-on: ubuntu-latest
     steps:
@@ -86,10 +86,10 @@ jobs:
       run: sudo apt-get update && sudo apt-get install libidn11 jq curl wget ninja-build clang tar pkg-config cmake-data libblkid-dev libgtk-3-dev liblzma-dev -y
     - name: set Version
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV
     - name: set Version
       if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV
     - name: set client version
       run: 'sed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
       working-directory: ./makro_board_client
@@ -188,10 +188,10 @@ jobs:
         dotnet-version: 6.x.x
     - name: set Version
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV
     - name: set Version
       if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV
     - name: set dotnetversionnumber
       run:  echo "MAKROBOARDNETVER=$(echo \"$MAKROBOARDVER\" | sed 's|+|.|g')" >> $GITHUB_ENV
       shell: bash
@@ -257,7 +257,7 @@ jobs:
       if: ${{ github.event_name == 'pull_request' }}
       run: ./appimagetool-x86_64.AppImage ./appimage/MakroBoard_host_x64.AppDir/ MakroBoard_host_x64.AppImage
       env:
-          ARCH: x86_64      
+          ARCH: x86_64
     - name: copy linux host appimage x64
       run: mkdir -p upload/linuxhost_appimage_x64/ && cp -rf MakroBoard_host_x64.AppImage* upload/linuxhost_appimage_x64/
     - name: upload artifact linux Host x64 appimage
@@ -286,10 +286,10 @@ jobs:
       uses: android-actions/setup-android@v2
     - name: set Version
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV
     - name: set Version
       if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV
     - name: set client version
       run: 'sed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
       working-directory: ./makro_board_client
@@ -333,18 +333,18 @@ jobs:
         channel: 'stable'
     - name: set Version
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV
       shell: bash
     - name: set Version
       if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV
       shell: bash
     - name: set client version
       run: 'sed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
       working-directory: ./makro_board_client
       shell: bash
     # - name: Add flutter to path
-    #   run: echo "$env:GITHUB_WORKSPACE\flutter\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append 
+    #   run: echo "$env:GITHUB_WORKSPACE\flutter\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
     #  test if no more need since flutter-action@v2.5
     # - name: Add flutter to path
     #   run: echo "$FLUTTER_ROOT" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
@@ -359,7 +359,7 @@ jobs:
       run: flutter pub get
     - name: flutter disable analytics
       working-directory: ${{ github.workspace }}\makro_board_client
-      run: flutter config --no-analytics    
+      run: flutter config --no-analytics
     - name: flutter doctor
       working-directory: ${{ github.workspace }}\makro_board_client
       run: flutter doctor -v
@@ -394,19 +394,19 @@ jobs:
         dotnet-version: 6.x.x
     - name: install Wix
       run: Invoke-WebRequest -Uri $($($(Invoke-WebRequest -Uri https://api.github.com/repos/wixtoolset/wix3/releases/latest).Content | ConvertFrom-Json).assets | Where-Object {$_.browser_download_url -Like "*wix*-binaries.zip"}).browser_download_url -OutFile "wix.zip" && Expand-Archive ./wix.zip && Remove-Item ./wix.zip
-    - name: Add wix to path 
+    - name: Add wix to path
       run: echo "$env:GITHUB_WORKSPACE\wix" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
     - name: set Version
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV
       shell: bash
     - name: set Version
       if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV
       shell: bash
     - name: set dotnetversionnumber
       run:  echo "MAKROBOARDNETVER=$(echo $MAKROBOARDVER | sed 's|+|.|g')" >> $GITHUB_ENV
-      shell: bash   
+      shell: bash
     - name: set client msi version
       run: sed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDNETVER\" M|g" Product.wxs
       working-directory: ./MakroBoardClient.Setup
@@ -446,26 +446,26 @@ jobs:
         dotnet-version: 6.x.x
     - name: set Version
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV
       shell: bash
     - name: set Version
       if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV
       shell: bash
     - name: set dotnetversionnumber
       run:  echo "MAKROBOARDNETVER=$(echo $MAKROBOARDVER | sed 's|+|.|g')" >> $GITHUB_ENV
-      shell: bash   
+      shell: bash
     - name: copy web to dotnet
       run: Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\web\*") -Destination $($env:GITHUB_WORKSPACE + "\MakroBoard\wwwroot\")
     - name: Restore dependencies
       run: dotnet restore
     - name: Build Windows dotnet MakroBoard
-      run: dotnet publish MakroBoard\MakroBoard.csproj -r win-x64 -c release --output Release -p:Version=$ENV:MAKROBOARDNETVER 
+      run: dotnet publish MakroBoard\MakroBoard.csproj -r win-x64 -c release --output Release -p:Version=$ENV:MAKROBOARDNETVER
     - name: Build global Windows dotnet MakroBoard Plugins
-      run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\global") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_ -p:Version=$ENV:MAKROBOARDNETVER" } 
+      run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\global") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_ -p:Version=$ENV:MAKROBOARDNETVER" }
     - name: Build windows Windows dotnet MakroBoard Plugins
       run: Get-Content $($env:GITHUB_WORKSPACE + "\packaging\plugins\windows") | ForEach-Object {Start-Process -FilePath "dotnet" -ArgumentList "publish MakroBoard.Plugin.$_\MakroBoard.Plugin.$_.csproj -r win-x64 -c release --output Release\Plugins\MakroBoard.Plugin.$_ -p:Version=$ENV:MAKROBOARDNETVER" }
-    - name: copy windows host x64 
+    - name: copy windows host x64
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\Release\*") -Destination $($env:GITHUB_WORKSPACE + "\upload\windowshost_x64\")
     - name: upload artifact windows client x64 msi
       uses: actions/upload-artifact@v3
@@ -493,22 +493,22 @@ jobs:
         dotnet-version: 6.x.x
     - name: install Wix
       run: Invoke-WebRequest -Uri $($($(Invoke-WebRequest -Uri https://api.github.com/repos/wixtoolset/wix3/releases/latest).Content | ConvertFrom-Json).assets | Where-Object {$_.browser_download_url -Like "*wix*-binaries.zip"}).browser_download_url -OutFile "wix.zip" && Expand-Archive ./wix.zip && Remove-Item ./wix.zip
-    - name: Add wix to path 
+    - name: Add wix to path
       run: echo "$env:GITHUB_WORKSPACE\wix" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
     - name: set Version
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | sed 's|refs/heads/||g' | sed 's|refs/tags/v||g' | sed 's|-beta||g' )" >> $GITHUB_ENV
       shell: bash
     - name: set Version
       if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV
       shell: bash
     - name: set dotnetversionnumber
       run:  echo "MAKROBOARDNETVER=$(echo $MAKROBOARDVER | sed 's|+|.|g')" >> $GITHUB_ENV
-      shell: bash   
+      shell: bash
     - name: set host msi version
       run: sed -i "s|Version=\".*\" M|Version=\"$MAKROBOARDNETVER\" M|g" Product.wxs
-      working-directory: ./MakroBoard.Setup 
+      working-directory: ./MakroBoard.Setup
       shell: bash
     - name: copy windows host bin
       run: New-Item -ItemType Directory -Path $($env:GITHUB_WORKSPACE + "\Release") && Copy-Item -Recurse -Path $($env:GITHUB_WORKSPACE + "\windowshost_x64\*") -Destination $($env:GITHUB_WORKSPACE + "\Release\")
@@ -545,11 +545,11 @@ jobs:
       run: brew install gnu-sed
     - name: set Version
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | gsed 's|refs/heads/||g' | gsed 's|refs/tags/v||g' | gsed 's|-beta||g' )" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | gsed 's|refs/heads/||g' | gsed 's|refs/tags/v||g' | gsed 's|-beta||g' )" >> $GITHUB_ENV
       shell: bash
     - name: set Version
       if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV
       shell: bash
     - name: set client version
       run: 'gsed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
@@ -575,7 +575,7 @@ jobs:
         name: latest_ios_client
         path: upload/
         retention-days: 1
-    
+
   build_macos_client_x64:
     runs-on: macos-latest
     steps:
@@ -594,11 +594,11 @@ jobs:
       run: brew install gnu-sed
     - name: set Version
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | gsed 's|refs/heads/||g' | gsed 's|refs/tags/v||g' | gsed 's|-beta||g' )" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | gsed 's|refs/heads/||g' | gsed 's|refs/tags/v||g' | gsed 's|-beta||g' )" >> $GITHUB_ENV
       shell: bash
     - name: set Version
       if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV
       shell: bash
     - name: set client version
       run: 'gsed -i "s|version: .*$|version: $MAKROBOARDVER|g" pubspec.yaml'
@@ -648,15 +648,15 @@ jobs:
       run: brew install gnu-sed
     - name: set Version
       if: ${{ (startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | gsed 's|refs/heads/||g' | gsed 's|refs/tags/v||g' | gsed 's|-beta||g' )" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=$(echo ${GITHUB_REF} | gsed 's|refs/heads/||g' | gsed 's|refs/tags/v||g' | gsed 's|-beta||g' )" >> $GITHUB_ENV
       shell: bash
     - name: set Version
       if: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
-      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV  
+      run:  echo "MAKROBOARDVER=1.0.0+1" >> $GITHUB_ENV
       shell: bash
     - name: set dotnetversionnumber
       run:  echo "MAKROBOARDNETVER=$(echo $MAKROBOARDVER | gsed 's|+|.|g')" >> $GITHUB_ENV
-      shell: bash   
+      shell: bash
     - name: copy web to dotnet
       run: cp -rf ./web/* ./MakroBoard/wwwroot/
     - name: Restore dependencies
@@ -718,7 +718,7 @@ jobs:
           ./latest_windows_client_x64_msi/windowsclient_x64_msi/MakroBoard_Client.msi
           ./latest_windows_host_x64_msi/windowshost_x64_msi/MakroBoard_Host.msi
        env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}     
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
      - name: pre Release
        if: ${{ (contains(github.ref, '-beta')) }}
        uses: softprops/action-gh-release@v1
