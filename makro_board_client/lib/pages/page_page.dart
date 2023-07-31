@@ -12,6 +12,8 @@ import 'package:makro_board_client/widgets/makro_board_app_bar.dart';
 import 'package:makro_board_client/models/page.dart' as models;
 import 'package:makro_board_client/models/group.dart' as models;
 
+import '../widgets/no_content.dart';
+
 class PagePage extends StatelessWidget {
   final models.Page initialPage;
   const PagePage({Key? key, required this.initialPage}) : super(key: key);
@@ -47,23 +49,11 @@ class PagePage extends StatelessWidget {
                     mainAxisSpacing: 4.0,
                     crossAxisSpacing: 4.0,
                   )
-                : Center(
-                    child: Wrap(
-                      alignment: WrapAlignment.center,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      runAlignment: WrapAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.hourglass_empty,
-                          size: 256,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        Text(
-                          "Leider ist die Seite noch Leer.",
-                          style: Theme.of(context).textTheme.displayMedium,
-                        ),
-                      ],
-                    ),
+                : NoContent(
+                    label: "Leider ist die Seite noch Leer.",
+                    iconData: Icons.hourglass_empty,
+                    addNewFunction: () => showCreateGroupDialog(context, initialPage),
+                    addNewLabel: "Neue Gruppe anlegen",
                   );
           },
         ),

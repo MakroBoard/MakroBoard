@@ -7,6 +7,7 @@ import 'package:makro_board_client/router/page_configuration.dart';
 import 'package:makro_board_client/router/page_state.dart';
 import 'package:makro_board_client/widgets/edit_mode_switch.dart';
 import 'package:makro_board_client/widgets/global_settings.dart';
+import 'package:makro_board_client/widgets/no_content.dart';
 import 'package:makro_board_client/widgets/snack_bar_notification.dart';
 import 'package:makro_board_client/widgets/makro_board_app_bar.dart';
 import 'package:provider/provider.dart';
@@ -32,11 +33,23 @@ class HomePage extends StatelessWidget {
         child: StreamBuilder(
           stream: Provider.of<ApiProvider>(context, listen: false).pages,
           initialData: Provider.of<ApiProvider>(context, listen: false).currentPages,
-          builder: (context, snapshot) => ResponsiveGridList(
-            desiredItemWidth: 200,
-            minSpacing: 10,
-            children: _getPageWidgets(context, snapshot.data as List<models.Page>),
-          ),
+          builder: (context, snapshot) {
+            var pages = snapshot.data as List<models.Page>;
+            if (pages.isEmpty) {
+              return NoContent(
+                label: "Leider gibt es noch keine Seite.",
+                iconData: Icons.hourglass_empty,
+                addNewFunction: () => showCreatePageDialog(context),
+                addNewLabel: "Neue Seite anlegen",
+              );
+            }
+
+            return ResponsiveGridList(
+              desiredItemWidth: 400,
+              minSpacing: 10,
+              children: _getPageWidgets(context, pages),
+            );
+          },
         ),
       ),
       floatingActionButton: GlobalSettings.of(context)?.editMode == true
@@ -81,66 +94,77 @@ class HomePage extends StatelessWidget {
   }
 
   List<Widget> _getPageWidgets(BuildContext context, List<models.Page>? pages) {
-    if (pages == null) {
+    if (pages == null || pages.isEmpty) {
       return <Widget>[];
     }
 
-    return pages
-        .map<Widget>(
-          (page) => Card(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  ListTile(
-                    onTap: () {
-                      Provider.of<AppState>(context, listen: false).navigateTo(
-                        PageAction(
-                          state: PageState.addPage,
-                          page: pagePageConfig(page),
+    var pageWidgets = pages.map<Widget>(
+      (page) => InkWell(
+        onTap: () {
+          Provider.of<AppState>(context, listen: false).navigateTo(
+            PageAction(
+              state: PageState.addPage,
+              page: pagePageConfig(page),
+            ),
+          );
+        },
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                ListTile(
+                  title: Text(page.label),
+                  leading: Icon(page.icon),
+                  trailing: (GlobalSettings.of(context)?.editMode == false)
+                      ? null
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              onPressed: () => _showremovePageDialog(context, page),
+                              icon: const Icon(Icons.delete),
+                              tooltip: "Seite Löschen",
+                            ),
+                            IconButton(
+                              onPressed: () => _showEditPageDialog(context, page),
+                              icon: const Icon(Icons.edit),
+                              tooltip: "Seite bearbeiten",
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                    title: Text(page.label),
-                    leading: Icon(page.icon),
-                    trailing: (GlobalSettings.of(context)?.editMode == false)
-                        ? null
-                        : PopupMenuButton<PageContextMenu>(
-                            onSelected: (selectedValue) {
-                              switch (selectedValue) {
-                                case PageContextMenu.delete:
-                                  _showremovePageDialog(context, page);
-                                  break;
-                                case PageContextMenu.edit:
-                                  _showEditPageDialog(context, page);
-                                  break;
-                              }
-                            },
-                            itemBuilder: (context) => [
-                              const PopupMenuItem<PageContextMenu>(
-                                value: PageContextMenu.delete,
-                                child: ListTile(
-                                  leading: Icon(Icons.delete),
-                                  title: Text('Seite Löschen'),
-                                ),
-                              ),
-                              const PopupMenuItem<PageContextMenu>(
-                                value: PageContextMenu.edit,
-                                child: ListTile(
-                                  leading: Icon(Icons.edit),
-                                  title: Text('Seite bearbeiten'),
-                                ),
-                              ),
-                            ],
-                            icon: const Icon(Icons.more_vert),
-                          ),
-                  ),
-                ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+    if (GlobalSettings.of(context)?.editMode == true) {
+      pageWidgets = pageWidgets.followedBy(
+        <Widget>[
+          InkWell(
+            onTap: () => showCreatePageDialog(context),
+            child: const Card(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: Text("Neue Seite anlegen"),
+                      leading: Icon(Icons.add),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        )
-        .toList();
+        ],
+      );
+    }
+
+    return pageWidgets.toList();
   }
 }
 

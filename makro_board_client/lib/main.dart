@@ -31,7 +31,7 @@ void main() async {
         child: MakroBoardApp(
           theme: ThemeData(
             useMaterial3: true,
-            colorSchemeSeed: const Color.fromARGB(255, 255, 86, 7),
+            colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 255, 86, 7), brightness: Brightness.dark),
           ),
         ),
       ),

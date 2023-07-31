@@ -79,32 +79,10 @@ namespace MakroBoard.Controllers
                                         switch (configParameter)
                                         {
                                             case StringConfigParameter scp:
-                                                cv.Add(new StringParameterValue(scp, jsonElement.GetString()));
+                                                LoadStringConfigParameter(cv, jsonElement, scp);
                                                 break;
                                             case BoolConfigParameter bcp:
-                                                switch (jsonElement.ValueKind)
-                                                {
-                                                    case JsonValueKind.Undefined:
-                                                        break;
-                                                    case JsonValueKind.Object:
-                                                        break;
-                                                    case JsonValueKind.Array:
-                                                        break;
-                                                    case JsonValueKind.String:
-                                                        cv.Add(new BoolParameterValue(bcp, bool.Parse(jsonElement.GetString())));
-                                                        break;
-                                                    case JsonValueKind.Number:
-                                                        cv.Add(new BoolParameterValue(bcp, jsonElement.GetInt32() > 0));
-                                                        break;
-                                                    case JsonValueKind.True:
-                                                        cv.Add(new BoolParameterValue(bcp, value: true));
-                                                        break;
-                                                    case JsonValueKind.False:
-                                                        cv.Add(new BoolParameterValue(bcp, value: false));
-                                                        break;
-                                                    case JsonValueKind.Null:
-                                                        break;
-                                                }
+                                                LoadBoolConfigParameter(cv, jsonElement, bcp);
                                                 break;
                                             case null:
                                                 // ignore Parameter
@@ -135,6 +113,37 @@ namespace MakroBoard.Controllers
             return Ok(new ExecuteResponse(result));
         }
 
+        private static void LoadStringConfigParameter(ParameterValues cv, JsonElement jsonElement, StringConfigParameter scp)
+        {
+            cv.Add(new StringParameterValue(scp, jsonElement.GetString()));
+        }
+
+        private static void LoadBoolConfigParameter(ParameterValues cv, JsonElement jsonElement, BoolConfigParameter bcp)
+        {
+            switch (jsonElement.ValueKind)
+            {
+                case JsonValueKind.Undefined:
+                    break;
+                case JsonValueKind.Object:
+                    break;
+                case JsonValueKind.Array:
+                    break;
+                case JsonValueKind.String:
+                    cv.Add(new BoolParameterValue(bcp, bool.Parse(jsonElement.GetString())));
+                    break;
+                case JsonValueKind.Number:
+                    cv.Add(new BoolParameterValue(bcp, jsonElement.GetInt32() > 0));
+                    break;
+                case JsonValueKind.True:
+                    cv.Add(new BoolParameterValue(bcp, value: true));
+                    break;
+                case JsonValueKind.False:
+                    cv.Add(new BoolParameterValue(bcp, value: false));
+                    break;
+                case JsonValueKind.Null:
+                    break;
+            }
+        }
 
         private static MakroBoard.ApiModels.Plugin CreatePluginModel(string pluginName, IEnumerable<PluginContract.Control> controls)
         {

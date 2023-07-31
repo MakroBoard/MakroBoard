@@ -70,10 +70,13 @@ class CreatePageDialogState extends State<CreatePageDialog> {
                     TextButton(
                       child: const Text("Anlegen"),
                       onPressed: () async {
-                        EasyLoading.show(status: 'Neue Seite anlegen ...');
+                        await EasyLoading.show(status: 'Neue Seite anlegen ...');
                         if (createPageFormKey.currentState!.validate()) {
                           try {
-                            await Provider.of<ApiProvider>(context, listen: false).addPage(models.Page.createNew(label: pageLabel, icon: icon));
+                            if (context.mounted) {
+                              var apiProvider = Provider.of<ApiProvider>(context, listen: false);
+                              await apiProvider.addPage(models.Page.createNew(label: pageLabel, icon: icon));
+                            }
                             if (!context.mounted) return;
                             Navigator.of(context, rootNavigator: true).pop();
                           } catch (e) {
@@ -81,7 +84,7 @@ class CreatePageDialogState extends State<CreatePageDialog> {
                             // TODO Fehler anzeigen?
                           }
                         }
-                        EasyLoading.dismiss();
+                        await EasyLoading.dismiss();
                       },
                     ),
                   ],
