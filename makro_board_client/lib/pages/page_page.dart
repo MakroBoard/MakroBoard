@@ -36,15 +36,33 @@ class PagePage extends StatelessWidget {
           builder: (context, snapshot) {
             var groups = snapshot.data as List<models.Group>;
             var axisCount = min(max((MediaQuery.of(context).size.width / 400).round(), 1), groups.length);
+            var editMode = GlobalSettings.of(context)?.editMode == true;
             return initialPage.groups.isNotEmpty
                 ? MasonryGridView.count(
                     key: ObjectKey(axisCount),
                     crossAxisCount: axisCount,
-                    itemCount: groups.length,
-                    itemBuilder: (BuildContext context, int index) => StaggeredGridTile.fit(
-                      crossAxisCellCount: 1,
-                      child: GroupCard(group: groups[index]),
-                    ),
+                    itemCount: groups.length + (editMode ? 1 : 0),
+                    itemBuilder: (BuildContext context, int index) {
+                      if (editMode && index >= groups.length) {
+                        return InkWell(
+                          onTap: () => showCreateGroupDialog(context, initialPage),
+                          child: const Card(
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    title: Text("Neue Gruppe anlegen"),
+                                    leading: Icon(Icons.add),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                      return GroupCard(group: groups[index]);
+                    },
                     // staggeredTileBuilder: (int index) => const Tile.fit(1),
                     mainAxisSpacing: 4.0,
                     crossAxisSpacing: 4.0,

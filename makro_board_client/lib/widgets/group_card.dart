@@ -26,48 +26,17 @@ class GroupCard extends StatelessWidget {
           children: [
             if (GlobalSettings.of(context)?.editMode == true)
               ListTile(
-                title: Text(group.label),
-                leading: const Icon(Icons.done),
-                trailing: PopupMenuButton<GroupContextMenu>(
-                  onSelected: (selectedValue) {
-                    switch (selectedValue) {
-                      case GroupContextMenu.delete:
-                        _removeGroupDialog(context, group);
-                        break;
-                      case GroupContextMenu.edit:
-                        _showEditGroupDialog(context, group);
-                        break;
-                      case GroupContextMenu.addPanel:
-                        _showAddPanelDialog(context, group);
-                        break;
-                    }
-                  },
-                  itemBuilder: (context) => [
-                    const PopupMenuItem<GroupContextMenu>(
-                      value: GroupContextMenu.delete,
-                      child: ListTile(
-                        leading: Icon(Icons.delete),
-                        title: Text('Gruppe Löschen'),
-                      ),
-                    ),
-                    const PopupMenuItem<GroupContextMenu>(
-                      value: GroupContextMenu.edit,
-                      child: ListTile(
-                        leading: Icon(Icons.edit),
-                        title: Text('Gruppe bearbeiten'),
-                      ),
-                    ),
-                    const PopupMenuItem<GroupContextMenu>(
-                      value: GroupContextMenu.addPanel,
-                      child: ListTile(
-                        leading: Icon(Icons.add),
-                        title: Text('Panel hinzufügen'),
-                      ),
-                    ),
-                  ],
-                  icon: const Icon(Icons.more_vert),
-                ),
-              ),
+                  title: Text(group.label),
+                  leading: const Icon(Icons.done),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(onPressed: () => _removeGroupDialog(context, group), icon: const Icon(Icons.delete)),
+                      IconButton(onPressed: () => _showEditGroupDialog(context, group), icon: const Icon(Icons.edit)),
+                      IconButton(onPressed: () => _showAddPanelDialog(context, group), icon: const Icon(Icons.add)),
+                    ],
+                  )),
             FutureBuilder(
               future: Provider.of<ApiProvider>(context, listen: false).getAvailableControls(),
               builder: (context, availableControlsSnapShot) => StreamBuilder(
