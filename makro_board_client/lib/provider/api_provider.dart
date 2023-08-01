@@ -59,6 +59,10 @@ class ApiProvider {
   Stream<bool> get isAuthenticatedStream => streamIsAuthenticatedController.stream;
   bool currentIsAuthenticated = false;
 
+  StreamController<List<Uri>> streamFoundServerController = StreamController<List<Uri>>.broadcast();
+  Stream<List<Uri>> get foundServerStream => streamFoundServerController.stream;
+  List<Uri> foundServers = [];
+
   HubConnection? _connection;
   Uri? _serverUri;
   String? _locale;
@@ -73,6 +77,28 @@ class ApiProvider {
 
   void updateContext(material.BuildContext context) {
     currentContext = context;
+  }
+
+  void reciveHostBroadCast() {
+    RawDatagramSocket.bind(InternetAddress.anyIPv4, 9876).then((RawDatagramSocket udpSocket) {
+      udpSocket.broadcastEnabled = true;
+      udpSocket.forEach((e) {
+        if (e == RawSocketEvent.read) {
+          var dg = udpSocket.receive();
+          if (dg != null) {
+            var decodedData = utf8.decode(dg.data);
+            if (decodedData.startsWith("makroboard:")) {
+              var serverUrl = decodedData.substring(11);
+              var uri = Uri.tryParse(serverUrl);
+              if (uri != null && !foundServers.contains(uri)) {
+                foundServers.add(uri);
+                streamFoundServerController.add(foundServers);
+              }
+            }
+          }
+        }
+      });
+    });
   }
 
   Future<bool> initialize(Uri serverUri, String locale) async {

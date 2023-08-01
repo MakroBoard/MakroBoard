@@ -13,8 +13,21 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class SelectServerPage extends StatelessWidget {
+class SelectServerPage extends StatefulWidget {
   const SelectServerPage({Key? key}) : super(key: key);
+
+  @override
+  State<SelectServerPage> createState() => _SelectServerPageState();
+}
+
+class _SelectServerPageState extends State<SelectServerPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      Provider.of<ApiProvider>(context, listen: false).reciveHostBroadCast();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +43,65 @@ class SelectServerPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Card(
+                    child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      const ListTile(
+                        leading: Icon(Icons.cloud_queue),
+                        title: Text("Server auswählen"),
+                      ),
+                      StreamBuilder(
+                        stream: Provider.of<ApiProvider>(context, listen: false).foundServerStream,
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Text("Kein MacroBoard Server gefunden.");
+                          }
+
+                          var foundServers = snapshot.data as List<Uri>;
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: foundServers.length,
+                            itemBuilder: (context, i) => Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton.icon(
+                                onPressed: () async {
+                                  EasyLoading.show(status: 'verbinden ...');
+                                  var serverToConnect = foundServers[i];
+                                  await Settings.setValue("server_host", serverToConnect.host);
+                                  await Settings.setValue("server_port", serverToConnect.port);
+                                  if (!context.mounted) return;
+                                  var apiProvider = Provider.of<ApiProvider>(context, listen: false);
+                                  if (await apiProvider.initialize(serverToConnect, AppLocalizations.of(context)!.localeName)) {
+                                    if (!context.mounted) return;
+                                    var authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+                                    var loginCode = await authProvider.getNewLoginCode();
+                                    await Settings.setValue("server_code", loginCode.code);
+
+                                    var isAuthenticated = await authProvider.isAuthenticated();
+                                    if (!context.mounted) return;
+                                    if (isAuthenticated) {
+                                      Provider.of<AppState>(context, listen: false).navigateTo(PageAction(state: PageState.replaceAll, page: homePageConfig));
+                                    } else {
+                                      Provider.of<AppState>(context, listen: false).navigateTo(PageAction(state: PageState.replaceAll, page: loginPageConfig));
+                                    }
+                                  } else {
+                                    EasyLoading.showError("Es konnte keine Verbindung hergestellt werden: $serverToConnect", dismissOnTap: true);
+                                  }
+                                  EasyLoading.dismiss();
+                                },
+                                label: Text("Connect ${foundServers[i]}"),
+                                icon: const Icon(Icons.connected_tv),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                )),
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
