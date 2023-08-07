@@ -25,5 +25,8 @@
       "reason": {}
     }
   },
-  "error_unexpected": "Unexpected Error"
+  "error_unexpected": "Unexpected Error",
+  "server_selection_no_server_found": "No MacroBoard Server found in local network",
+  "server_selection_select_server": "Select server",
+  "server_selection_connecting": "connecting ..."
 }

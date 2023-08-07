@@ -596,8 +596,10 @@ class ApiProvider {
       }
       return result;
     } else if (currentContext != null) {
+      var localization = AppLocalizations.of(currentContext!);
+
       notificationProvider.addSnackBarNotification(Notification(
-        text: AppLocalizations.of(currentContext!)!.error_network_unexpectedresponse(response.statusCode, response.reasonPhrase ?? AppLocalizations.of(currentContext!)!.error_unexpected),
+        text: localization?.error_network_unexpectedresponse(response.statusCode, response.reasonPhrase ?? localization.error_unexpected) ?? "Unexpected Error: $response.statusCode",
         notificationType: NotificationType.error,
         duration: const Duration(seconds: 4),
       ));

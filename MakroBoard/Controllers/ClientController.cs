@@ -10,6 +10,7 @@ using MakroBoard.Data;
 using MakroBoard.HubConfig;
 using MakroBoard.ApiModels;
 using System.Threading;
+using MakroBoard.Extensions;
 
 // QR Code auf Localhost
 // auf Handy -> Code anzeigen
@@ -71,7 +72,7 @@ namespace MakroBoard.Controllers
         [HttpPost("submitcode")]
         public async Task<ActionResult<DateTime>> PostSubmitCode([FromBody] SubmitCodeRequest request, CancellationToken cancellationToken)
         {
-            var isLocalHost = System.Net.IPAddress.IsLoopback(Request.HttpContext.Connection.RemoteIpAddress);
+            var isLocalHost = Request.HttpContext.Connection.RemoteIpAddress.IsLocalHost();
             var clientIp = Request.HttpContext.Connection.RemoteIpAddress.ToString();
 
 

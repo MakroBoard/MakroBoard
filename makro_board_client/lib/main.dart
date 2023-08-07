@@ -25,7 +25,7 @@ void main() async {
         Provider<EnvProvider>(create: (c) => EnvProvider()),
         Provider<NotificationProvider>(create: (c) => NotificationProvider()),
         Provider<ApiProvider>(create: (c) => ApiProvider(envProvider: Provider.of(c, listen: false), notificationProvider: Provider.of(c, listen: false))),
-        Provider<AuthProvider>(create: (c) => AuthProvider(apiProvider: Provider.of(c, listen: false)))
+        Provider<AuthProvider>(create: (c) => AuthProvider(apiProvider: Provider.of(c, listen: false))),
       ],
       child: GlobalSettings(
         child: MakroBoardApp(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:makro_board_client/app_state.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
 import 'package:makro_board_client/provider/auth_provider.dart';
@@ -48,15 +49,24 @@ class _SelectServerPageState extends State<SelectServerPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
-                      const ListTile(
+                      ListTile(
                         leading: Icon(Icons.cloud_queue),
-                        title: Text("Server auswählen"),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(AppLocalizations.of(context)!.server_selection_select_server),
+                            SpinKitThreeBounce(
+                              color: Theme.of(context).highlightColor,
+                              size: 24,
+                            ),
+                          ],
+                        ),
                       ),
                       StreamBuilder(
                         stream: Provider.of<ApiProvider>(context, listen: false).foundServerStream,
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
-                            return const Text("Kein MacroBoard Server gefunden.");
+                            return Text(AppLocalizations.of(context)!.server_selection_no_server_found);
                           }
 
                           var foundServers = snapshot.data as List<Uri>;
@@ -67,7 +77,7 @@ class _SelectServerPageState extends State<SelectServerPage> {
                               padding: const EdgeInsets.all(8.0),
                               child: ElevatedButton.icon(
                                 onPressed: () async {
-                                  EasyLoading.show(status: 'verbinden ...');
+                                  EasyLoading.show(status: AppLocalizations.of(context)!.server_selection_connecting);
                                   var serverToConnect = foundServers[i];
                                   await Settings.setValue("server_host", serverToConnect.host);
                                   await Settings.setValue("server_port", serverToConnect.port);
@@ -174,7 +184,7 @@ class _SelectServerPageState extends State<SelectServerPage> {
                             children: [
                               TextButton(
                                 onPressed: () async {
-                                  EasyLoading.show(status: 'verbinden ...');
+                                  EasyLoading.show(status: AppLocalizations.of(context)!.server_selection_connecting);
                                   if (loginFormKey.currentState!.validate()) {
                                     var port = Settings.getValue("server_port", defaultValue: 0);
                                     var serverUriString = Settings.getValue("server_host", defaultValue: "") ?? "";

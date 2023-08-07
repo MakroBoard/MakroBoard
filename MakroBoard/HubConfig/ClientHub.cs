@@ -7,6 +7,7 @@ using MakroBoard.Controllers;
 using MakroBoard.Data;
 using MakroBoard.Plugin;
 using System.Linq;
+using MakroBoard.Extensions;
 
 namespace MakroBoard.HubConfig
 {
@@ -21,10 +22,7 @@ namespace MakroBoard.HubConfig
             _PluginContext = pluginContext;
         }
 
-        private static bool IsLocalHost(IPAddress ipAddress)
-        {
-            return IPAddress.IsLoopback(ipAddress);
-        }
+
 
         private async Task SubscribePanels()
         {
@@ -59,7 +57,7 @@ namespace MakroBoard.HubConfig
             }
 
             var cancellationToken = ctx.RequestAborted;
-            var isLocalHost = IsLocalHost(ipAddress);
+            var isLocalHost = ipAddress.IsLocalHost();
 
             var existingClient = await _DatabaseContext.Clients.FirstOrDefaultAsync(x => x.ClientIp.Equals(ipAddress.ToString()), cancellationToken).ConfigureAwait(false);
 
@@ -71,7 +69,7 @@ namespace MakroBoard.HubConfig
                     existingClient.CreateNewToken(Constants.Seed);
                 }
             }
-
+          
             existingClient.LastConnection = DateTime.UtcNow;
 
             await _DatabaseContext.Sessions.AddAsync(new Session { ClientSignalrId = Context.ConnectionId, Client = existingClient }, cancellationToken).ConfigureAwait(false);

@@ -6,5 +6,8 @@
   "error_hostrequired": "Um fortzufahren wird ein Host benötigt.",
   "error_portrequired": "Um fortzufahren wird ein Port benötigt.",
   "error_systemportsnotallowed": "System Ports dürfen nicht verwendet werden. Min. Port: 1024",
-  "error_dynamicportsnotallowed": "Dynamische Ports dürfen nicht verwendet werden. Max. Port: 49151"
+  "error_dynamicportsnotallowed": "Dynamische Ports dürfen nicht verwendet werden. Max. Port: 49151",
+  "server_selection_no_server_found": "Bisher wurde kein MacroBoard Server im lokalen Netzwork gefunden",
+  "server_selection_select_server": "Server auswählen",
+  "server_selection_connecting": "verbinend ..."
 }
