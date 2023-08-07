@@ -40,8 +40,9 @@ class _SelectServerPageState extends State<SelectServerPage> {
         child: Center(
           child: Container(
             constraints: const BoxConstraints(maxWidth: 500),
+            padding: const EdgeInsets.only(top: 64.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Card(
@@ -50,7 +51,7 @@ class _SelectServerPageState extends State<SelectServerPage> {
                   child: Column(
                     children: [
                       ListTile(
-                        leading: Icon(Icons.cloud_queue),
+                        leading: const Icon(Icons.cloud_queue),
                         title: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -113,116 +114,119 @@ class _SelectServerPageState extends State<SelectServerPage> {
                   ),
                 )),
                 Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Form(
-                      key: loginFormKey,
-                      child: Column(
-                        children: [
-                          const ListTile(
-                            leading: Icon(Icons.cast_connected),
-                            title: Text('Mit MakroBoard verbinden'),
-                          ),
-                          TextFormField(
-                            decoration: const InputDecoration(
-                              // border: OutlineInputBorder(),
-                              labelText: "Host",
-                              prefixIcon: Icon(Icons.dns_outlined),
-                            ),
-                            initialValue: Settings.getValue("server_host", defaultValue: "https://"),
-                            validator: (value) {
-                              if (value == null || value == "https://") {
-                                return "Um fortzufahren wird ein Host benötigt.";
-                              }
-
-                              var uri = Uri.tryParse(value);
-                              if (uri == null) {
-                                return "Der Host \"value\" ist keine gültige URI";
-                              }
-                              if (!uri.isScheme("https")) {
-                                return "Der Host ist kein https-Host";
-                              }
-                              return null;
-                            },
-                            onChanged: (value) async {
-                              if (value != "" && value != "https://" && value.startsWith("https://")) {
-                                await Settings.setValue("server_host", value);
-                              }
-                            },
-                          ),
-                          TextFormField(
-                            decoration: const InputDecoration(
-                              // border: OutlineInputBorder(),
-                              labelText: "Port",
-                              prefixIcon: Icon(Icons.tag),
-                            ),
-                            keyboardType: TextInputType.number,
-                            initialValue: Settings.getValue("server_port", defaultValue: 5001).toString(),
-                            inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly], // Only number
-                            validator: (value) {
-                              if (value == null) {
-                                return "Um fortzufahren wird ein Port benötigt.";
-                              }
-
-                              var port = int.parse(value);
-                              if (port < 1024) {
-                                return "System Ports dürfen nicht verwendet werden. Min. Port: 1024";
-                              }
-
-                              if (port > 49151) {
-                                return "Dynamic Ports dürfen nicht verwendet werden. Max. Port: 49151";
-                              }
-
-                              return null;
-                            },
-                            onChanged: (value) async {
-                              await Settings.setValue("server_port", int.parse(value));
-                            },
-                          ),
-                          ButtonBar(
-                            alignment: MainAxisAlignment.center,
+                  child: ExpansionTile(
+                    leading: const Icon(Icons.cast_connected),
+                    title: const Text('Mit MakroBoard verbinden'),
+                    initiallyExpanded: false,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Form(
+                          key: loginFormKey,
+                          child: Column(
                             children: [
-                              TextButton(
-                                onPressed: () async {
-                                  EasyLoading.show(status: AppLocalizations.of(context)!.server_selection_connecting);
-                                  if (loginFormKey.currentState!.validate()) {
-                                    var port = Settings.getValue("server_port", defaultValue: 0);
-                                    var serverUriString = Settings.getValue("server_host", defaultValue: "") ?? "";
-                                    if (port == 0) {
-                                      await Settings.setValue("server_port", 5001);
-                                      port = 5001;
-                                    }
-                                    var serverUri = Uri.parse(serverUriString);
-                                    serverUri = serverUri.replace(port: port);
-                                    if (!context.mounted) return;
-                                    var apiProvider = Provider.of<ApiProvider>(context, listen: false);
-                                    if (await apiProvider.initialize(serverUri, AppLocalizations.of(context)!.localeName)) {
-                                      if (!context.mounted) return;
-                                      var authProvider = Provider.of<AuthProvider>(context, listen: false);
-
-                                      var loginCode = await authProvider.getNewLoginCode();
-                                      await Settings.setValue("server_code", loginCode.code);
-
-                                      var isAuthenticated = await authProvider.isAuthenticated();
-                                      if (!context.mounted) return;
-                                      if (isAuthenticated) {
-                                        Provider.of<AppState>(context, listen: false).navigateTo(PageAction(state: PageState.replaceAll, page: homePageConfig));
-                                      } else {
-                                        Provider.of<AppState>(context, listen: false).navigateTo(PageAction(state: PageState.replaceAll, page: loginPageConfig));
-                                      }
-                                    } else {
-                                      EasyLoading.showError("Es konnte keine Verbindung hergestellt werden: $serverUri", dismissOnTap: true);
-                                    }
+                              TextFormField(
+                                decoration: const InputDecoration(
+                                  // border: OutlineInputBorder(),
+                                  labelText: "Host",
+                                  prefixIcon: Icon(Icons.dns_outlined),
+                                ),
+                                initialValue: Settings.getValue("server_host", defaultValue: "https://"),
+                                validator: (value) {
+                                  if (value == null || value == "https://") {
+                                    return "Um fortzufahren wird ein Host benötigt.";
                                   }
-                                  EasyLoading.dismiss();
+
+                                  var uri = Uri.tryParse(value);
+                                  if (uri == null) {
+                                    return "Der Host \"value\" ist keine gültige URI";
+                                  }
+                                  if (!uri.isScheme("https")) {
+                                    return "Der Host ist kein https-Host";
+                                  }
+                                  return null;
                                 },
-                                child: const Text("Connect"),
+                                onChanged: (value) async {
+                                  if (value != "" && value != "https://" && value.startsWith("https://")) {
+                                    await Settings.setValue("server_host", value);
+                                  }
+                                },
+                              ),
+                              TextFormField(
+                                decoration: const InputDecoration(
+                                  // border: OutlineInputBorder(),
+                                  labelText: "Port",
+                                  prefixIcon: Icon(Icons.tag),
+                                ),
+                                keyboardType: TextInputType.number,
+                                initialValue: Settings.getValue("server_port", defaultValue: 5001).toString(),
+                                inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly], // Only number
+                                validator: (value) {
+                                  if (value == null) {
+                                    return "Um fortzufahren wird ein Port benötigt.";
+                                  }
+
+                                  var port = int.parse(value);
+                                  if (port < 1024) {
+                                    return "System Ports dürfen nicht verwendet werden. Min. Port: 1024";
+                                  }
+
+                                  if (port > 49151) {
+                                    return "Dynamic Ports dürfen nicht verwendet werden. Max. Port: 49151";
+                                  }
+
+                                  return null;
+                                },
+                                onChanged: (value) async {
+                                  await Settings.setValue("server_port", int.parse(value));
+                                },
+                              ),
+                              ButtonBar(
+                                alignment: MainAxisAlignment.center,
+                                children: [
+                                  TextButton(
+                                    onPressed: () async {
+                                      EasyLoading.show(status: AppLocalizations.of(context)!.server_selection_connecting);
+                                      if (loginFormKey.currentState!.validate()) {
+                                        var port = Settings.getValue("server_port", defaultValue: 0);
+                                        var serverUriString = Settings.getValue("server_host", defaultValue: "") ?? "";
+                                        if (port == 0) {
+                                          await Settings.setValue("server_port", 5001);
+                                          port = 5001;
+                                        }
+                                        var serverUri = Uri.parse(serverUriString);
+                                        serverUri = serverUri.replace(port: port);
+                                        if (!context.mounted) return;
+                                        var apiProvider = Provider.of<ApiProvider>(context, listen: false);
+                                        if (await apiProvider.initialize(serverUri, AppLocalizations.of(context)!.localeName)) {
+                                          if (!context.mounted) return;
+                                          var authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+                                          var loginCode = await authProvider.getNewLoginCode();
+                                          await Settings.setValue("server_code", loginCode.code);
+
+                                          var isAuthenticated = await authProvider.isAuthenticated();
+                                          if (!context.mounted) return;
+                                          if (isAuthenticated) {
+                                            Provider.of<AppState>(context, listen: false).navigateTo(PageAction(state: PageState.replaceAll, page: homePageConfig));
+                                          } else {
+                                            Provider.of<AppState>(context, listen: false).navigateTo(PageAction(state: PageState.replaceAll, page: loginPageConfig));
+                                          }
+                                        } else {
+                                          EasyLoading.showError("Es konnte keine Verbindung hergestellt werden: $serverUri", dismissOnTap: true);
+                                        }
+                                      }
+                                      EasyLoading.dismiss();
+                                    },
+                                    child: const Text("Connect"),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
                 Card(

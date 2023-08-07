@@ -56,11 +56,16 @@ class SplashScreenState extends State<SplashScreen> {
       serverUri = Uri.base;
     } else {
       var serverUriString = Settings.getValue<String>("server_host", defaultValue: "") ?? "";
+
       if (serverUriString.isNotEmpty) {
         var port = Settings.getValue<int>("server_port", defaultValue: 5001);
-        serverUri = Uri.tryParse(serverUriString);
-        if (serverUri != null) {
-          serverUri = serverUri.replace(port: port);
+        if (serverUriString.startsWith("http")) {
+          serverUri = Uri.tryParse(serverUriString);
+          if (serverUri != null) {
+            serverUri = serverUri.replace(port: port, scheme: "https");
+          }
+        } else {
+          serverUri = Uri(host: serverUriString, port: port, scheme: "https");
         }
       }
     }
