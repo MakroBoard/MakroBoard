@@ -42,7 +42,7 @@ namespace MakroBoard.Controllers
             foreach (var plugin in plugins)
             {
                 var pluginControls = await plugin.GetControls().ConfigureAwait(false);
-                result.Add(CreatePluginModel(plugin.SymbolicName, pluginControls));
+                result.Add(CreatePluginModel(plugin.SymbolicName, plugin.Title, pluginControls));
             }
 
             return Ok(new AvailableControlsResponse(result));
@@ -145,9 +145,14 @@ namespace MakroBoard.Controllers
             }
         }
 
-        private static MakroBoard.ApiModels.Plugin CreatePluginModel(string pluginName, IEnumerable<PluginContract.Control> controls)
+        private static MakroBoard.ApiModels.Plugin CreatePluginModel(string pluginName, PluginContract.LocalizableString title, IEnumerable<PluginContract.Control> controls)
         {
-            return new ApiModels.Plugin(pluginName, controls.Select(ToApiControl));
+            return new ApiModels.Plugin(pluginName, ToApiLocalizableString(title), controls.Select(ToApiControl));
+        }
+
+        private static MakroBoard.ApiModels.LocalizableString ToApiLocalizableString(PluginContract.LocalizableString localizableString)
+        {
+            return new ApiModels.LocalizableString(localizableString.LocaleStrings.ToDictionary(l => l.Key.Name, l => l.Value, StringComparer.OrdinalIgnoreCase));
         }
 
         private static MakroBoard.ApiModels.Control ToApiControl(PluginContract.Control control)

@@ -7,6 +7,8 @@ namespace MakroBoard.PluginContract
     {
         string SymbolicName { get; }
 
+        LocalizableString Title { get; }
+
         Task<IEnumerable<Control>> GetControls();
 
         Task<Control> GetControl(string symbolicName);

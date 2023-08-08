@@ -5,6 +5,8 @@ namespace MakroBoard.Plugin.Steam
 {
     public class SteamPlugin : MakroBoardPluginBase
     {
+        public override LocalizableString Title => new(Resource.ResourceManager, nameof(Resource.Title));
+
         protected override IReadOnlyCollection<Control> InitializeControls()
         {
             return new List<Control>

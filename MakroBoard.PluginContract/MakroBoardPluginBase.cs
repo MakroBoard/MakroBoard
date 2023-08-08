@@ -21,6 +21,8 @@ namespace MakroBoard.PluginContract
 
         public IReadOnlyCollection<Control> Controls { get; private set; }
 
+        public abstract LocalizableString Title { get; }
+
         public virtual async Task<Control> GetControl(string symbolicName)
         {
             var controls = await GetControls().ConfigureAwait(false);

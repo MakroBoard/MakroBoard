@@ -8,6 +8,8 @@ namespace MakroBoard.Plugin.MultiMedia
     {
         private List<Control>? _Controls;
 
+        public override LocalizableString Title => new(Resource.ResourceManager, nameof(Resource.Title));
+
         protected override IReadOnlyCollection<Control> InitializeControls()
         {
             _Controls ??= new List<Control>
