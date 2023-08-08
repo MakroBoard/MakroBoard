@@ -38,7 +38,7 @@ class AvailableControls extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              plugin.pluginName,
+              plugin.title.getText(),
               textAlign: TextAlign.left,
             ),
           ),

@@ -75,7 +75,7 @@ class CreatePanelDialogState extends State<CreatePanelDialog> {
                                 children: [
                                   ListTile(
                                     title: Text(selectedControl!.symbolicName),
-                                    subtitle: Text(selectedPlugin!.pluginName),
+                                    subtitle: Text(selectedPlugin!.title.getText()),
                                   ),
                                   ListView.builder(
                                     shrinkWrap: true,
@@ -168,7 +168,7 @@ class PanelSelector extends StatelessWidget {
                   color: (selectedControl == control) ? Theme.of(context).primaryColor.withAlpha(128) : Colors.transparent,
                   child: ListTile(
                     title: Text(control.symbolicName),
-                    subtitle: Text(plugin.pluginName),
+                    subtitle: Text(plugin.title.getText()),
                     onTap: () {
                       if (selectedControl != control) {
                         onPanelSelected(plugin, control);

@@ -125,7 +125,7 @@ class PanelSelector extends StatelessWidget {
                   color: (selectedControl == selectedControl) ? Theme.of(context).primaryColor.withAlpha(128) : Colors.transparent,
                   child: ListTile(
                     title: Text(selectedControl.symbolicName),
-                    subtitle: Text(plugin.pluginName),
+                    subtitle: Text(plugin.title.getText()),
                     onTap: () {
                       if (selectedControl != selectedControl) {
                         onPanelSelected(plugin, selectedControl);

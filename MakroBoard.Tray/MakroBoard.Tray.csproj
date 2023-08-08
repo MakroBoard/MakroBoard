@@ -4,6 +4,7 @@
 		<TargetFrameworks>net8.0-windows</TargetFrameworks>
 		<DefineConstants>Windows</DefineConstants>
 		<UseWPF>true</UseWPF>
+		<NeutralLanguage>en-US</NeutralLanguage>
   	</PropertyGroup>
   	<PropertyGroup Condition="$([MSBuild]::IsOsPlatform('OSX'))">
    		<TargetFramework>net8.0</TargetFramework>

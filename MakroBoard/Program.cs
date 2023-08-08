@@ -17,7 +17,6 @@ using MakroBoard.Tray.Menu;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using NLog;
 using System.Globalization;
 
@@ -42,7 +41,6 @@ namespace MakroBoard
 
         private async Task Start(string[] args)
         {
-
             try
             {
                 ShowTrayIcon();
