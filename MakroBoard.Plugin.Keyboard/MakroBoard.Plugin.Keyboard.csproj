@@ -15,7 +15,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Desktop.Robot" Version="1.5.0" />
-		<PackageReference Include="Meziantou.Analyzer" Version="2.0.81">
+		<PackageReference Include="Meziantou.Analyzer" Version="2.0.82">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
