@@ -7,7 +7,7 @@ namespace MakroBoard.PluginContract.Views
 
         public TextView(string label) : base(label)
         {
-            TextParameter = new StringConfigParameter("text", string.Empty);
+            TextParameter = new StringConfigParameter("text", LocalizableString.Empty, string.Empty);
             AddPluginParameter(TextParameter);
         }
 

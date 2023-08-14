@@ -18,9 +18,9 @@ namespace MakroBoard.Plugin.ShellExecute
         public ShellExecuteControl() : base()
         {
             View = new ButtonView($"Execute", ExecuteCommand);
-            AddConfigParameter(new StringConfigParameter(_ConfigExecutable, string.Empty, ".*"));
-            AddConfigParameter(new StringConfigParameter(_ConfigArguments, string.Empty, ".*"));
-            AddConfigParameter(new BoolConfigParameter(_ConfigWaitForExit, defaultValue: false));
+            AddConfigParameter(new StringConfigParameter(_ConfigExecutable, new LocalizableString(Resource.ResourceManager, nameof(Resource.Application)), string.Empty, ".*"));
+            AddConfigParameter(new StringConfigParameter(_ConfigArguments, new LocalizableString(Resource.ResourceManager, nameof(Resource.Arguments)), string.Empty, ".*"));
+            AddConfigParameter(new BoolConfigParameter(_ConfigWaitForExit, new LocalizableString(Resource.ResourceManager, nameof(Resource.WaitForExit)), defaultValue: false));
         }
 
         private string ExecuteCommand(ParameterValues arg)

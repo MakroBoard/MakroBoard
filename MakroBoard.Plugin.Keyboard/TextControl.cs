@@ -15,7 +15,7 @@ namespace MakroBoard.Plugin.Keyboard
             _Robot = new Robot();
 
             View = new ButtonView($"Write Text", ExecuteText);
-            AddConfigParameter(new StringConfigParameter(_ConfigChar, string.Empty));
+            AddConfigParameter(new StringConfigParameter(_ConfigChar,new LocalizableString(Resource.ResourceManager, nameof(Resource.Text)), string.Empty));
         }
 
         private string ExecuteText(ParameterValues configValues)

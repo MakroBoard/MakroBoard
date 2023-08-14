@@ -6,9 +6,9 @@ namespace MakroBoard.PluginContract.Views
     {
         public ProgressBarView(string label) : base(label)
         {
-            Min = new IntConfigParameter("min", 0);
-            Max = new IntConfigParameter("max", 100);
-            Value = new IntConfigParameter("value", 0);
+            Min = new IntConfigParameter("min", LocalizableString.Empty, 0);
+            Max = new IntConfigParameter("max", LocalizableString.Empty, 100);
+            Value = new IntConfigParameter("value", LocalizableString.Empty, 0);
             AddPluginParameter(Min);
             AddPluginParameter(Max);
             AddPluginParameter(Value);

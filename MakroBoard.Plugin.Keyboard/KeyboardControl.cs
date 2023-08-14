@@ -19,7 +19,7 @@ namespace MakroBoard.Plugin.Keyboard
         {
             _Robot = new Robot();
             View = new ButtonView($"Press Key", ExecuteChar);
-            AddConfigParameter(new StringConfigParameter(_ConfigChar, string.Empty, "[\x00-\x7F]"));
+            AddConfigParameter(new StringConfigParameter(_ConfigChar, new LocalizableString(Resource.ResourceManager, nameof(Resource.Character)), string.Empty, "[\x00-\x7F]"));
         }
 
         private string ExecuteChar(ParameterValues configValues)

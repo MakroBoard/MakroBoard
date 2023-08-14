@@ -14,7 +14,7 @@ namespace MakroBoard.PluginContract.Views
             Max = max;
             _Execute = execute;
 
-            ValueParameter = new IntConfigParameter("value", 0);
+            ValueParameter = new IntConfigParameter("value", LocalizableString.Empty, 0);
             AddPluginParameter(ValueParameter);
         }
 

@@ -11,6 +11,7 @@ namespace MakroBoard.PluginContract
         private static ConcurrentDictionary<ResourceManager, IList<CultureInfo>> _CultureCache = new ConcurrentDictionary<ResourceManager, IList<CultureInfo>>();
 
         public IDictionary<CultureInfo, string> LocaleStrings { get; set; }
+        public static LocalizableString Empty => null;
 
         public LocalizableString()
         {

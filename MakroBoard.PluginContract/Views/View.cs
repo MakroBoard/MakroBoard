@@ -11,7 +11,7 @@ namespace MakroBoard.PluginContract.Views
 
         protected View(string label)
         {
-            _ConfigParameters.Add(new StringConfigParameter("label", label, ".*"));
+            _ConfigParameters.Add(new StringConfigParameter("label", new LocalizableString(Resource.ResourceManager, nameof(Resource.Label)), label, ".*"));
             ConfigParameters = new ConfigParameters(_ConfigParameters);
             PluginParameters = new ConfigParameters(_PluginParameters);
         }

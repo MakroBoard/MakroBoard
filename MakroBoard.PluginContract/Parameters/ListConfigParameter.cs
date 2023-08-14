@@ -2,7 +2,7 @@
 {
     public class ListConfigParameter : ConfigParameter
     {
-        public ListConfigParameter(string symbolicName) : base(symbolicName)
+        public ListConfigParameter(string symbolicName) : base(symbolicName, LocalizableString.Empty)
         {
         }
     }

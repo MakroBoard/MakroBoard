@@ -31,7 +31,7 @@ class ConfigParameterInputState extends State<ConfigParameterInput> {
         return TextFormField(
           decoration: InputDecoration(
             // border: OutlineInputBorder(),
-            labelText: configParameter.symbolicName,
+            labelText: configParameter.label?.getText() ?? configParameter.symbolicName,
           ),
           initialValue: configValue.value.toString(),
           // TODO

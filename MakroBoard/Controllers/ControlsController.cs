@@ -10,6 +10,7 @@ using MakroBoard.PluginContract.Parameters;
 using MakroBoard.PluginContract.Views;
 using MakroBoard.Plugin;
 using MakroBoard.ApiModels;
+using MakroBoard.Extensions;
 
 // QR Code auf Localhost
 // auf Handy -> Code anzeigen
@@ -42,7 +43,7 @@ namespace MakroBoard.Controllers
             foreach (var plugin in plugins)
             {
                 var pluginControls = await plugin.GetControls().ConfigureAwait(false);
-                result.Add(CreatePluginModel(plugin.SymbolicName, plugin.Title, plugin.PluginIcon, pluginControls));
+                result.Add(plugin.ToApiPlugin(pluginControls));
             }
 
             return Ok(new AvailableControlsResponse(result));
@@ -66,7 +67,7 @@ namespace MakroBoard.Controllers
             }
 
             var contentType = imageData.FileType.Trim('.');
-            if(contentType.Equals("svg", StringComparison.OrdinalIgnoreCase))
+            if (contentType.Equals("svg", StringComparison.OrdinalIgnoreCase))
             {
                 contentType += "+xml";
             }
@@ -166,45 +167,6 @@ namespace MakroBoard.Controllers
                 case JsonValueKind.Null:
                     break;
             }
-        }
-
-        private static MakroBoard.ApiModels.Plugin CreatePluginModel(string pluginName, PluginContract.LocalizableString title, string icon, IEnumerable<PluginContract.Control> controls)
-        {
-            return new ApiModels.Plugin(pluginName, ToApiLocalizableString(title), icon, controls.Select(ToApiControl));
-        }
-
-        private static MakroBoard.ApiModels.LocalizableString ToApiLocalizableString(PluginContract.LocalizableString localizableString)
-        {
-            return new ApiModels.LocalizableString(localizableString.LocaleStrings.ToDictionary(l => l.Key.Name, l => l.Value, StringComparer.OrdinalIgnoreCase));
-        }
-
-        private static MakroBoard.ApiModels.Control ToApiControl(PluginContract.Control control)
-        {
-            return new ApiModels.Control(control.SymbolicName, ToApiView(control.View), ToApiConfigParameters(control.ConfigParameters), control is PluginContract.ListControl listControl ? listControl.SubControls.Select(ToApiControl) : null);
-        }
-
-        private static MakroBoard.ApiModels.View ToApiView(PluginContract.Views.View view)
-        {
-            return new ApiModels.View(view.Type.ToString(),
-                ToApiConfigParameters(view.ConfigParameters),
-                ToApiConfigParameters(view.PluginParameters),
-                view is ListView lv ? lv.SubViews.Select(ToApiView).ToList() : null);
-        }
-
-        private static MakroBoard.ApiModels.ConfigParameters ToApiConfigParameters(PluginContract.Parameters.ConfigParameters configParameters)
-        {
-            return new ApiModels.ConfigParameters(configParameters.Select(c => CreateConfigParameter(c)).ToList());
-        }
-
-        private static MakroBoard.ApiModels.ConfigParameter CreateConfigParameter(PluginContract.Parameters.ConfigParameter configParameter)
-        {
-            return configParameter switch
-            {
-                StringConfigParameter scp => new ApiModels.ConfigParameter(configParameter.SymbolicName, scp.DefaultValue, scp.ValidationRegEx),
-                IntConfigParameter icp => new ApiModels.ConfigParameter(configParameter.SymbolicName, icp.MinValue, icp.MaxValue),
-                BoolConfigParameter bcp => new ApiModels.ConfigParameter(configParameter.SymbolicName, bcp.DefaultValue),
-                _ => throw new ArgumentOutOfRangeException(nameof(configParameter), $"ConfigParameterType {configParameter.GetType().FullName} is not yet supported!"),
-            };
         }
     }
 }
