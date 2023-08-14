@@ -7,6 +7,13 @@
             Value = value;
         }
 
+        public StringParameterValue(EnumConfigParameter configParameter, string value) : base(configParameter, value)
+        {
+            Value = value;
+        }
+
         public string Value { get; }
     }
+
+
 }

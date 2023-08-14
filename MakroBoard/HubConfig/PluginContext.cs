@@ -136,6 +136,9 @@ namespace MakroBoard.Plugin
                     case BoolConfigParameter bcp:
                         parameterValues.Add(new BoolParameterValue(bcp, configParameter.Value != null ? bool.Parse(configParameter.Value) : bcp.DefaultValue));
                         break;
+                    case EnumConfigParameter ecp:
+                        parameterValues.Add(new StringParameterValue(ecp, configParameter.Value));
+                        break;
                     default:
                         throw new NotSupportedException($"{controlConfigParameter?.GetType().Name} is not yet implemented!");
                 }
@@ -153,6 +156,9 @@ namespace MakroBoard.Plugin
                         break;
                     case BoolConfigParameter bcp:
                         parameterValues.Add(new BoolParameterValue(bcp, bcp.DefaultValue));
+                        break;
+                    case EnumConfigParameter ecp:
+                        parameterValues.Add(new StringParameterValue(ecp, ecp.DefaultEnumItemId));
                         break;
                     default:
                         throw new NotSupportedException($"{pluginParameter.GetType().Name} is not yet implemented!");

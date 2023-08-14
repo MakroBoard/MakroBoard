@@ -15,12 +15,22 @@ namespace MakroBoard.Extensions
 
         public static ApiModels.LocalizableString ToApiLocalizableString(this PluginContract.LocalizableString localizableString)
         {
-            if(localizableString == null)
+            if (localizableString == null)
             {
                 return null;
             }
 
             return new ApiModels.LocalizableString(localizableString.LocaleStrings.ToDictionary(l => l.Key.Name, l => l.Value, StringComparer.OrdinalIgnoreCase));
+        }
+
+        public static ApiModels.EnumItems ToApiEnumItems(this IReadOnlyCollection<EnumConfigParameter.EnumItem> enumItems)
+        {
+            return new ApiModels.EnumItems(enumItems.Select(e => e.ToApiEnumItem()).ToList());
+        }
+
+        public static ApiModels.EnumItem ToApiEnumItem(this EnumConfigParameter.EnumItem enumItem)
+        {
+            return new ApiModels.EnumItem(enumItem.Id, enumItem.Label.ToApiLocalizableString());
         }
 
         public static ApiModels.Control ToApiControl(this PluginContract.Control control)
@@ -48,6 +58,7 @@ namespace MakroBoard.Extensions
                 StringConfigParameter scp => new ApiModels.ConfigParameter(configParameter.SymbolicName, configParameter.Label.ToApiLocalizableString(), scp.DefaultValue, scp.ValidationRegEx),
                 IntConfigParameter icp => new ApiModels.ConfigParameter(configParameter.SymbolicName, configParameter.Label.ToApiLocalizableString(), icp.MinValue, icp.MaxValue),
                 BoolConfigParameter bcp => new ApiModels.ConfigParameter(configParameter.SymbolicName, configParameter.Label.ToApiLocalizableString(), bcp.DefaultValue),
+                EnumConfigParameter ecp => new ApiModels.ConfigParameter(configParameter.SymbolicName, configParameter.Label.ToApiLocalizableString(), ecp.EnumItems.ToApiEnumItems(), ecp.DefaultEnumItemId),
                 _ => throw new ArgumentOutOfRangeException(nameof(configParameter), $"ConfigParameterType {configParameter.GetType().FullName} is not yet supported!"),
             };
         }

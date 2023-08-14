@@ -10,6 +10,7 @@ class ViewConfigParameter {
   final String? validationRegEx;
   final int? minValue;
   final int? maxValue;
+  final List<EnumItem>? enumItems;
 
   ViewConfigParameter({
     required this.configParameterType,
@@ -19,6 +20,7 @@ class ViewConfigParameter {
     required this.validationRegEx,
     required this.minValue,
     required this.maxValue,
+    required this.enumItems,
   });
 
   ViewConfigParameter.fromJson(Map<String, dynamic> json)
@@ -28,7 +30,23 @@ class ViewConfigParameter {
         defaultValue = json["defaultValue"],
         validationRegEx = json["validationRegEx"],
         minValue = json["minValue"],
-        maxValue = json["maxValue"];
+        maxValue = json["maxValue"],
+        enumItems = json.containsKey("enumItems") && json["enumItems"] != null ? List.castFrom(json["enumItems"]).map<EnumItem>((jsonEnumItem) => EnumItem.fromJson(jsonEnumItem)).toList() : null;
+}
+
+@JsonSerializable()
+class EnumItem {
+  final String id;
+  final LocalizableString label;
+
+  EnumItem({
+    required this.id,
+    required this.label,
+  });
+
+  EnumItem.fromJson(Map<String, dynamic> json)
+      : id = json["id"],
+        label = LocalizableString.fromJson(json["label"] as Map<String, dynamic>);
 }
 
 enum ConfigParameterType {
@@ -36,6 +54,8 @@ enum ConfigParameterType {
   string,
   int,
   bool,
+  // TODO rename all to type
+  enumType,
 }
 
 extension ConfigParameterTypeIndex on ConfigParameterType {
@@ -47,6 +67,8 @@ extension ConfigParameterTypeIndex on ConfigParameterType {
             return ConfigParameterType.int;
           case 'bool':
             return ConfigParameterType.bool;
+          case 'enum':
+            return ConfigParameterType.enumType;
           default:
             throw RangeError("enum ConfigParameterType contains no value '$name'");
         }

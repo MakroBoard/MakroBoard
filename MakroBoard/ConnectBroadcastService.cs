@@ -6,6 +6,8 @@ using System;
 using System.Net.Sockets;
 using System.Text;
 using System.Net;
+using Org.BouncyCastle.Utilities.Net;
+using System.Linq;
 
 namespace MakroBoard
 {
@@ -35,10 +37,17 @@ namespace MakroBoard
         private void DoWork(object state)
         {
             var hostName = Dns.GetHostName();
-
+            
             // TODO get Port
             var data = Encoding.UTF8.GetBytes($@"makroboard:https:\\{hostName}:5001");
             _UdpClient.Send(data, data.Length, "255.255.255.255", _Port);
+
+            var hostAdress = Dns.GetHostAddresses(string.Empty).Where(i => i.AddressFamily == AddressFamily.InterNetwork).FirstOrDefault();
+            if(hostAdress  != null)
+            {
+                data = Encoding.UTF8.GetBytes($@"makroboard:https:\\{hostAdress}:5001");
+                _UdpClient.Send(data, data.Length, "255.255.255.255", _Port);
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

@@ -70,6 +70,33 @@ namespace MakroBoard.Plugin.Keyboard {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Control (ctrl).
+        /// </summary>
+        internal static string KeyControl {
+            get {
+                return ResourceManager.GetString("KeyControl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No modifier.
+        /// </summary>
+        internal static string KeyNone {
+            get {
+                return ResourceManager.GetString("KeyNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modifier.
+        /// </summary>
+        internal static string Modifier {
+            get {
+                return ResourceManager.GetString("Modifier", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Text.
         /// </summary>
         internal static string Text {

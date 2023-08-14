@@ -63,6 +63,23 @@ class ConfigParameterInputState extends State<ConfigParameterInput> {
             widget.formKey?.currentState!.validate();
           },
         );
+      case ConfigParameterType.enumType:
+        if (configParameter.enumItems == null || configParameter.enumItems!.isEmpty) {
+          return const Text("No EnumItems are defined!");
+        }
+        return DropdownButtonFormField<String>(
+          items: configParameter.enumItems!
+              .map((EnumItem e) => DropdownMenuItem<String>(
+                    value: e.id,
+                    child: Text(e.label.getText()),
+                  ))
+              .toList(),
+          value: configValue.value?.toString() ?? configParameter.defaultValue.toString(),
+          onChanged: (value) {
+            configValue.value = value;
+            widget.formKey?.currentState!.validate();
+          },
+        );
       default:
         return Text("No Input definded for ${configParameter.configParameterType}");
     }

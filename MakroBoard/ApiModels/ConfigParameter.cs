@@ -1,4 +1,6 @@
-﻿namespace MakroBoard.ApiModels
+﻿using System.Collections.ObjectModel;
+
+namespace MakroBoard.ApiModels
 {
     public class ConfigParameter
     {
@@ -28,12 +30,28 @@
             DefaultValue = defaultValue;
         }
 
+        public ConfigParameter(string symbolicName, LocalizableString label, EnumItems enumItems, string defaultValue) : this(symbolicName, label)
+        {
+            ParameterType = "enum";
+            EnumItems = enumItems;
+            DefaultValue = defaultValue;
+        }
+
+
         public string SymbolicName { get; }
+
         public LocalizableString Label { get; }
+
         public string ParameterType { get; }
+
+        public EnumItems EnumItems { get; }
+
         public object DefaultValue { get; }
+
         public string ValidationRegEx { get; }
+
         public int MinValue { get; }
+
         public int MaxValue { get; }
     }
 }

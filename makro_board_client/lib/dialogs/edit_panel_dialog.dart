@@ -70,7 +70,7 @@ class EditPanelDialog extends StatelessWidget {
                     child: const Text("Abbrechen"),
                   ),
                   TextButton(
-                    child: const Text("'Ändern'"),
+                    child: const Text("Ändern"),
                     onPressed: () async {
                       EasyLoading.show(status: 'Panel ändern ...');
                       if (createPanelFormKey.currentState!.validate()) {
@@ -81,7 +81,7 @@ class EditPanelDialog extends StatelessWidget {
                           if (!context.mounted) return;
                           Navigator.of(context, rootNavigator: true).pop();
                         } catch (e) {
-                          // TODO Fehler anzeigen?
+                          // TODO Fehler acvnzeigen?
                         }
                       }
                       EasyLoading.dismiss();

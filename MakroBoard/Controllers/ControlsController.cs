@@ -108,6 +108,9 @@ namespace MakroBoard.Controllers
                                             case BoolConfigParameter bcp:
                                                 LoadBoolConfigParameter(cv, jsonElement, bcp);
                                                 break;
+                                            case EnumConfigParameter ecp:
+                                                LoadEnumConfigParameter(cv, jsonElement, ecp);
+                                                break;
                                             case null:
                                                 // ignore Parameter
                                                 break;
@@ -163,6 +166,30 @@ namespace MakroBoard.Controllers
                     break;
                 case JsonValueKind.False:
                     cv.Add(new BoolParameterValue(bcp, value: false));
+                    break;
+                case JsonValueKind.Null:
+                    break;
+            }
+        }
+
+        private static void LoadEnumConfigParameter(ParameterValues cv, JsonElement jsonElement, EnumConfigParameter ecp)
+        {
+            switch (jsonElement.ValueKind)
+            {
+                case JsonValueKind.Undefined:
+                    break;
+                case JsonValueKind.Object:
+                    break;
+                case JsonValueKind.Array:
+                    break;
+                case JsonValueKind.String:
+                    cv.Add(new StringParameterValue(ecp, jsonElement.GetString()));
+                    break;
+                case JsonValueKind.Number:
+                    break;
+                case JsonValueKind.True:
+                    break;
+                case JsonValueKind.False:
                     break;
                 case JsonValueKind.Null:
                     break;
