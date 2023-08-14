@@ -9,6 +9,8 @@ import 'package:makro_board_client/models/panel.dart' as models;
 import 'package:makro_board_client/widgets/config_parameter_input.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/panel_selector.dart';
+
 class CreatePanelDialog extends StatefulWidget {
   final models.Group group;
   const CreatePanelDialog({Key? key, required this.group}) : super(key: key);
@@ -75,7 +77,6 @@ class CreatePanelDialogState extends State<CreatePanelDialog> {
                                 children: [
                                   ListTile(
                                     title: Text(selectedControl!.symbolicName),
-                                    subtitle: Text(selectedPlugin!.title.getText()),
                                   ),
                                   ListView.builder(
                                     shrinkWrap: true,
@@ -137,50 +138,6 @@ class CreatePanelDialogState extends State<CreatePanelDialog> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class PanelSelector extends StatelessWidget {
-  final List<models.Plugin> plugins;
-  final Function(models.Plugin, Control) onPanelSelected;
-  final Control? selectedControl;
-
-  const PanelSelector({Key? key, required this.plugins, required this.onPanelSelected, required this.selectedControl}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 300,
-      width: 300,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
-          itemCount: plugins.length,
-          itemBuilder: (context, pluginIndex) {
-            var plugin = plugins[pluginIndex];
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: plugin.controls.length,
-              itemBuilder: (context, index) {
-                var control = plugin.controls[index];
-                return Container(
-                  color: (selectedControl == control) ? Theme.of(context).primaryColor.withAlpha(128) : Colors.transparent,
-                  child: ListTile(
-                    title: Text(control.symbolicName),
-                    subtitle: Text(plugin.title.getText()),
-                    onTap: () {
-                      if (selectedControl != control) {
-                        onPanelSelected(plugin, control);
-                      }
-                    },
-                  ),
-                );
-              },
-            );
-          },
-        ),
-      ),
     );
   }
 }

@@ -21,19 +21,19 @@ namespace MakroBoard.Controllers
     [Route("api/[controller]")]
     public class ControlsController : ControllerBase
     {
-        private readonly ILogger<ControlsController> _logger;
+        private readonly ILogger<ControlsController> _Logger;
         private readonly PluginContext _PluginContext;
 
         public ControlsController(ILogger<ControlsController> logger, PluginContext pluginContext)
         {
-            _logger = logger;
+            _Logger = logger;
             _PluginContext = pluginContext;
         }
 
         // GET: api/client/requesttokens
         [HttpGet("availablecontrols")]
         //[ServiceFilter(typeof(AuthenticatedAdmin))]
-        [ServiceFilter(typeof(AuthenticatedClientAttribute))]
+        //[ServiceFilter(typeof(AuthenticatedClientAttribute))]
         public async Task<ActionResult<AvailableControlsResponse>> GetAvailableControls()
         {
             var plugins = _PluginContext.Plugins;
@@ -42,13 +42,36 @@ namespace MakroBoard.Controllers
             foreach (var plugin in plugins)
             {
                 var pluginControls = await plugin.GetControls().ConfigureAwait(false);
-                result.Add(CreatePluginModel(plugin.SymbolicName, plugin.Title, pluginControls));
+                result.Add(CreatePluginModel(plugin.SymbolicName, plugin.Title, plugin.PluginIcon, pluginControls));
             }
 
             return Ok(new AvailableControlsResponse(result));
         }
 
+        [HttpGet("{pluginName}/image/{imageName}")]
+        public async Task<ActionResult> GetImage([FromRoute] string pluginName, [FromRoute] string imageName)
+        {
+            var plugin = _PluginContext.Plugins.FirstOrDefault(x => x.SymbolicName.Equals(pluginName, StringComparison.OrdinalIgnoreCase));
+            if (plugin == null)
+            {
+                _Logger.LogError("Failed to load image. Plugin {pluginName} not found", pluginName);
+                return Ok(new ExecuteResponse(string.Empty) { Status = ResponseStatus.Error, Error = $"Failed to load image. Plugin {pluginName} not found" });
+            }
 
+            var imageData = plugin.LoadImage(imageName);
+            if (imageData == null)
+            {
+                _Logger.LogError("Failed to load image. Image {imageName} not found", imageName);
+                return Ok(new ExecuteResponse(string.Empty) { Status = ResponseStatus.Error, Error = $"Failed to load image. Image {imageName} not found" });
+            }
+
+            var contentType = imageData.FileType.Trim('.');
+            if(contentType.Equals("svg", StringComparison.OrdinalIgnoreCase))
+            {
+                contentType += "+xml";
+            }
+            return base.File(imageData.Data, $"image/{contentType}");
+        }
 
         /// <summary>
         /// POST: api/controls/confirmclient
@@ -104,7 +127,7 @@ namespace MakroBoard.Controllers
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Failed to execute: {message}", e.Message);
+                    _Logger.LogError(e, "Failed to execute: {message}", e.Message);
 
                     return Ok(new ExecuteResponse(string.Empty) { Status = ResponseStatus.Error, Error = $"Failed to execute: {e.Message}" });
                 }
@@ -145,9 +168,9 @@ namespace MakroBoard.Controllers
             }
         }
 
-        private static MakroBoard.ApiModels.Plugin CreatePluginModel(string pluginName, PluginContract.LocalizableString title, IEnumerable<PluginContract.Control> controls)
+        private static MakroBoard.ApiModels.Plugin CreatePluginModel(string pluginName, PluginContract.LocalizableString title, string icon, IEnumerable<PluginContract.Control> controls)
         {
-            return new ApiModels.Plugin(pluginName, ToApiLocalizableString(title), controls.Select(ToApiControl));
+            return new ApiModels.Plugin(pluginName, ToApiLocalizableString(title), icon, controls.Select(ToApiControl));
         }
 
         private static MakroBoard.ApiModels.LocalizableString ToApiLocalizableString(PluginContract.LocalizableString localizableString)

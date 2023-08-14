@@ -423,8 +423,9 @@ class ApiProvider {
   Future<List<Plugin>> getAvailableControls() async {
     try {
       if (currentPlugins.isEmpty) {
+        var avcontrols = _serverUri!.replace(path: getControlsUrl);
         var jsonResponse = await http.get(
-          _serverUri!.replace(path: getControlsUrl),
+          avcontrols,
           headers: _defaultHeader,
         );
 
@@ -438,6 +439,11 @@ class ApiProvider {
     }
 
     return List.empty(growable: true);
+  }
+
+  Uri getImageUrl(String pluginName, String imageName) {
+    var result = _serverUri!.replace(path: "/api/controls/$pluginName/image/$imageName");
+    return result;
   }
 
   Future<String?> executeControl(Control control, List<ViewConfigValue> configValues) async {

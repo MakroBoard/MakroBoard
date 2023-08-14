@@ -21,6 +21,7 @@ namespace MakroBoard.Plugin
     {
         private static readonly Logger _Logger = LogManager.GetCurrentClassLogger();
         private readonly IHubContext<ClientHub> _HubContext;
+        private string _PluginsDir;
 
         public PluginContext(IHubContext<ClientHub> hubContext)
         {
@@ -29,22 +30,35 @@ namespace MakroBoard.Plugin
 
         public IList<IMakroBoardPlugin> Plugins { get; private set; }
 
+        public string PluginsDirectory
+        {
+            get
+            {
+                if (_PluginsDir != null)
+                {
+                    return _PluginsDir;
+                }
+
+                var pathToBinDebug = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                _PluginsDir = Path.GetFullPath("Plugins");
+                if (!Directory.Exists(_PluginsDir))
+                {
+                    _PluginsDir = Path.GetFullPath(Path.Combine(pathToBinDebug, "../../../../PluginOutput"));
+                }
+
+                return _PluginsDir;
+            }
+        }
+
+
         public Task InitializePlugins()
         {
-            var pathToBinDebug = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            var pluginDir = Path.GetFullPath("Plugins");
-            if (!Directory.Exists(pluginDir))
-            {
-                pluginDir = Path.GetFullPath(Path.Combine(pathToBinDebug, "../../../../PluginOutput"));
-            }
-
-            _Logger.Info($"Using PluginDirectory: \"{pluginDir}\"");
+            _Logger.Info($"Using PluginDirectory: \"{PluginsDirectory}\"");
 
             var loaders = new List<PluginLoader>();
 
             // create plugin loaders            
-            foreach (var dir in Directory.GetDirectories(pluginDir))
+            foreach (var dir in Directory.GetDirectories(PluginsDirectory))
             {
                 var dirName = Path.GetFileName(dir);
                 var pluginDll = Path.Combine(dir, dirName + ".dll");
@@ -63,14 +77,15 @@ namespace MakroBoard.Plugin
             {  // Create an instance of plugin types
                 foreach (var loader in loaders)
                 {
-                    foreach (var pluginType in loader.LoadDefaultAssembly().GetTypes().Where(t => typeof(IMakroBoardPlugin).IsAssignableFrom(t) && !t.IsAbstract))
+                    var assembly = loader.LoadDefaultAssembly();
+                    foreach (var pluginType in assembly.GetTypes().Where(t => typeof(IMakroBoardPlugin).IsAssignableFrom(t) && !t.IsAbstract))
                     {
                         try
                         {
                             _Logger.Info($"Loading Plugin {pluginType.Name}");
                             // This assumes the implementation of IPlugin has a parameterless constructor
                             var plugin = (IMakroBoardPlugin)Activator.CreateInstance(pluginType);
-                            plugin.Initialize();
+                            plugin.Initialize(Path.GetDirectoryName(assembly.Location));
                             plugins.Add(plugin);
                         }
                         catch (Exception e)
