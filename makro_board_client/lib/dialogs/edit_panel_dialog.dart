@@ -3,7 +3,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:makro_board_client/models/control.dart';
 import 'package:makro_board_client/models/view_config_value.dart';
 import 'package:makro_board_client/provider/api_provider.dart';
-import 'package:makro_board_client/models/plugin.dart' as models;
 import 'package:makro_board_client/models/panel.dart' as models;
 import 'package:makro_board_client/widgets/config_parameter_input.dart';
 import 'package:provider/provider.dart';

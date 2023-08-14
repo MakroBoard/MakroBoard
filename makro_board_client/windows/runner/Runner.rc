@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "app.makroboard" "\0"
-            VALUE "FileDescription", "A new Flutter project." "\0"
+            VALUE "FileDescription", "A board to control it." "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "makro_board_client" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2021 app.makroboard. All rights reserved." "\0"
             VALUE "OriginalFilename", "makro_board_client.exe" "\0"
-            VALUE "ProductName", "makro_board_client" "\0"
+            VALUE "ProductName", "MakroBaord" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
