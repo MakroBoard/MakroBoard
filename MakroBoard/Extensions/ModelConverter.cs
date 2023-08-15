@@ -3,17 +3,18 @@ using MakroBoard.PluginContract.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MakroBoard.PluginContract;
 
 namespace MakroBoard.Extensions
 {
     internal static class ModelConverter
     {
-        public static ApiModels.Plugin ToApiPlugin(this PluginContract.IMakroBoardPlugin plugin, IEnumerable<PluginContract.Control> controls)
+        public static ApiModels.Plugin ToApiPlugin(this IMakroBoardPlugin plugin, IEnumerable<Control> controls)
         {
-            return new ApiModels.Plugin(plugin.SymbolicName, plugin.Title.ToApiLocalizableString(), plugin.PluginIcon, controls.Select(ToApiControl));
+            return new ApiModels.Plugin(plugin.SymbolicName, plugin.Title.ToApiLocalizableString(), plugin.PluginIcon.ToApiImage(), controls.Select(ToApiControl));
         }
 
-        public static ApiModels.LocalizableString ToApiLocalizableString(this PluginContract.LocalizableString localizableString)
+        public static ApiModels.LocalizableString ToApiLocalizableString(this LocalizableString localizableString)
         {
             if (localizableString == null)
             {
@@ -21,6 +22,11 @@ namespace MakroBoard.Extensions
             }
 
             return new ApiModels.LocalizableString(localizableString.LocaleStrings.ToDictionary(l => l.Key.Name, l => l.Value, StringComparer.OrdinalIgnoreCase));
+        }
+
+        public static ApiModels.Image ToApiImage(this Image image)
+        {
+            return new ApiModels.Image(image.Name, image.Type.ToStringFast().ToLower(System.Globalization.CultureInfo.InvariantCulture));
         }
 
         public static ApiModels.EnumItems ToApiEnumItems(this IReadOnlyCollection<EnumConfigParameter.EnumItem> enumItems)
@@ -33,9 +39,9 @@ namespace MakroBoard.Extensions
             return new ApiModels.EnumItem(enumItem.Id, enumItem.Label.ToApiLocalizableString());
         }
 
-        public static ApiModels.Control ToApiControl(this PluginContract.Control control)
+        public static ApiModels.Control ToApiControl(this Control control)
         {
-            return new ApiModels.Control(control.SymbolicName, control.View.ToApiView(), ToApiConfigParameters(control.ConfigParameters), control is PluginContract.ListControl listControl ? listControl.SubControls.Select(ToApiControl) : null);
+            return new ApiModels.Control(control.SymbolicName, control.View.ToApiView(), ToApiConfigParameters(control.ConfigParameters), control is ListControl listControl ? listControl.SubControls.Select(ToApiControl) : null);
         }
 
         public static ApiModels.View ToApiView(this View view)

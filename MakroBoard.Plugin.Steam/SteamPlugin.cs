@@ -7,7 +7,7 @@ namespace MakroBoard.Plugin.Steam
     {
         public override LocalizableString Title => new(Resource.ResourceManager, nameof(Resource.Title));
 
-        public override string PluginIcon => "steam";
+        public override Image PluginIcon { get; } = new Image("steam", ImageType.Svg);
 
         protected override IReadOnlyCollection<Control> InitializeControls()
         {

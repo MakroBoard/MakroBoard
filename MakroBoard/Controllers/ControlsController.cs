@@ -52,6 +52,8 @@ namespace MakroBoard.Controllers
         [HttpGet("{pluginName}/image/{imageName}")]
         public async Task<ActionResult> GetImage([FromRoute] string pluginName, [FromRoute] string imageName)
         {
+            _Logger.LogInformation("GetImage {pluginName} {imageName}", pluginName, imageName);
+
             var plugin = _PluginContext.Plugins.FirstOrDefault(x => x.SymbolicName.Equals(pluginName, StringComparison.OrdinalIgnoreCase));
             if (plugin == null)
             {

@@ -7,7 +7,7 @@ namespace MakroBoard.Plugin.SystemInfo
     {
         public override LocalizableString Title => new(Resource.ResourceManager, nameof(Resource.Title));
 
-        public override string PluginIcon => "information-variant-box-outline";
+        public override Image PluginIcon { get; } = new Image("information-variant-box-outline", ImageType.Svg);
 
         protected override IReadOnlyCollection<Control> InitializeControls()
         {

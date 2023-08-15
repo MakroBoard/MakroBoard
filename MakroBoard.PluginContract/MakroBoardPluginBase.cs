@@ -28,7 +28,7 @@ namespace MakroBoard.PluginContract
 
         public abstract LocalizableString Title { get; }
 
-        public virtual string PluginIcon => string.Empty;
+        public virtual Image PluginIcon => null;
 
         public virtual async Task<Control> GetControl(string symbolicName)
         {

@@ -9,7 +9,7 @@ namespace MakroBoard.PluginContract
 
         LocalizableString Title { get; }
 
-        public string PluginIcon { get; }
+        public Image PluginIcon { get; }
 
         Task<IEnumerable<Control>> GetControls();
 

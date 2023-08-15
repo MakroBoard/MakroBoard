@@ -4,7 +4,7 @@ namespace MakroBoard.ApiModels
 {
     public class Plugin
     {
-        public Plugin(string pluginName, LocalizableString title, string icon, IEnumerable<Control> controls)
+        public Plugin(string pluginName, LocalizableString title, Image icon, IEnumerable<Control> controls)
         {
             PluginName = pluginName;
             Title = title;
@@ -16,7 +16,7 @@ namespace MakroBoard.ApiModels
 
         public LocalizableString Title { get; }
 
-        public string Icon { get; }
+        public Image Icon { get; }
 
         public IEnumerable<Control> Controls { get; }
     }

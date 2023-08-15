@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:makro_board_client/models/control.dart';
 import 'package:makro_board_client/models/plugin.dart' as models;
-import 'package:makro_board_client/provider/api_provider.dart';
-import 'package:provider/provider.dart';
+
+import 'image_widget.dart';
 
 class PanelSelector extends StatelessWidget {
   final List<models.Plugin> plugins;
@@ -29,14 +28,12 @@ class PanelSelector extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (plugin.icon.isNotEmpty)
-                    SvgPicture.network(
-                      Provider.of<ApiProvider>(context, listen: false).getImageUrl(plugin.pluginName, plugin.icon).toString(),
-                      height: 32,
-                      width: 32,
-                      colorFilter: ColorFilter.mode(Theme.of(context).textTheme.titleMedium!.color!, BlendMode.srcIn),
+                  if (plugin.icon != null)
+                    ImageWidget(
+                      pluginName: plugin.pluginName,
+                      image: plugin.icon!,
                     ),
-                  if (plugin.icon.isEmpty)
+                  if (plugin.icon == null)
                     const SizedBox(
                       width: 32,
                       height: 32,

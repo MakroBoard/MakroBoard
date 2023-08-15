@@ -7,7 +7,7 @@ namespace MakroBoard.Plugin.Keyboard
     {
         public override LocalizableString Title => new(Resource.ResourceManager, nameof(Resource.Title));
 
-        public override string PluginIcon => "keyboard-settings-outline";
+        public override Image PluginIcon { get; } = new Image("keyboard-settings-outline", ImageType.Svg);
 
         protected override IReadOnlyCollection<Control> InitializeControls()
         {

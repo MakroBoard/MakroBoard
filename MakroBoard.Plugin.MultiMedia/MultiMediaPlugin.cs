@@ -10,7 +10,7 @@ namespace MakroBoard.Plugin.MultiMedia
 
         public override LocalizableString Title => new(Resource.ResourceManager, nameof(Resource.Title));
 
-        public override string PluginIcon => "multimedia";
+        public override Image PluginIcon { get; } = new Image("multimedia", ImageType.Svg);
 
         protected override IReadOnlyCollection<Control> InitializeControls()
         {

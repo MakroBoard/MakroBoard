@@ -7,7 +7,7 @@ namespace MakroBoard.Plugin.ShellExecute
     {
         public override LocalizableString Title => new(Resource.ResourceManager, nameof(Resource.Title));
 
-        public override string PluginIcon => "console";
+        public override Image PluginIcon { get; } = new Image("console", ImageType.Svg);
 
         protected override IReadOnlyCollection<Control> InitializeControls()
         {
